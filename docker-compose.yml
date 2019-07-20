@@ -26,7 +26,7 @@ services:
    - .:/t4d
    - ./config/database.yml.docker:/t4d/config/database.yml
   ports:
-   - 80:3000
+   - 3000:3000
   depends_on:
    - postgres
  nginx:
@@ -37,6 +37,7 @@ services:
    - ./prod/ssl/data/certbot/conf:/etc/letsencrypt
    - ./prod/ssl/data/certbot/www:/var/www/certbot
   ports:
+   - 80:80
    - 443:443
   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
  certbot:
