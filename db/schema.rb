@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_04_163226) do
+ActiveRecord::Schema.define(version: 2020_09_11_185325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
 #   Unknown type 'mobile_services' for column 'service'
 
   create_table "audits", force: :cascade do |t|
+    t.integer "audit_id"
     t.string "associated_id"
     t.string "associated_type"
     t.integer "user_id"
@@ -64,7 +65,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.integer "version", default: 0
     t.string "comment"
     t.datetime "created_at"
-    t.index ["action", "id", "version"], name: "auditable_index"
+    t.index ["action", "audit_id", "version"], name: "auditable_index"
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["user_id", "user_role"], name: "user_index"
@@ -248,6 +249,10 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.index ["region_id"], name: "index_districts_on_region_id"
   end
 
+  create_table "ecto_schema_migrations", primary_key: "version", id: :bigint, default: nil, force: :cascade do |t|
+    t.datetime "inserted_at", precision: 0
+  end
+
   create_table "glossaries", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -264,6 +269,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.bigint "maturity_rubric_id", null: false
     t.string "locale", null: false
     t.string "description", default: "", null: false
+    t.string "description_html"
     t.index ["maturity_rubric_id"], name: "index_maturity_rubric_descriptions_on_maturity_rubric_id"
   end
 
@@ -272,6 +278,48 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "oauth_access_grants", force: :cascade do |t|
+    t.bigint "resource_owner_id", null: false
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false
+    t.text "redirect_uri", null: false
+    t.datetime "created_at", null: false
+    t.datetime "revoked_at"
+    t.string "scopes", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_grants_on_application_id"
+    t.index ["resource_owner_id"], name: "index_oauth_access_grants_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
+  end
+
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.bigint "resource_owner_id"
+    t.bigint "application_id", null: false
+    t.string "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.string "scopes"
+    t.string "previous_refresh_token", default: "", null: false
+    t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
+  end
+
+  create_table "oauth_applications", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "uid", null: false
+    t.string "secret", null: false
+    t.text "redirect_uri", null: false
+    t.string "scopes", default: "", null: false
+    t.boolean "confidential", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   create_table "offices", force: :cascade do |t|
@@ -378,9 +426,9 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   create_table "playbook_descriptions", force: :cascade do |t|
     t.bigint "playbook_id"
     t.string "locale", null: false
-    t.string "overview", default: "", null: false
-    t.string "audience", default: "", null: false
-    t.string "outcomes", default: "", null: false
+    t.string "overview", default: ""
+    t.string "audience", default: ""
+    t.string "outcomes", default: ""
     t.index ["playbook_id"], name: "index_playbook_descriptions_on_playbook_id"
   end
 
@@ -408,12 +456,6 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "plays_subplays", force: :cascade do |t|
-    t.bigint "parent_play_id", null: false
-    t.bigint "child_play_id", null: false
-    t.index ["parent_play_id", "child_play_id"], name: "play_rel_index", unique: true
-  end
-
   create_table "plays_tasks", force: :cascade do |t|
     t.bigint "play_id", null: false
     t.bigint "task_id", null: false
@@ -438,7 +480,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   create_table "principle_descriptions", force: :cascade do |t|
     t.bigint "digital_principle_id"
     t.string "locale", null: false
-    t.string "description", default: "", null: false
+    t.string "description", default: ""
     t.index ["digital_principle_id"], name: "index_principle_descriptions_on_digital_principle_id"
   end
 
@@ -603,6 +645,7 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
     t.bigint "rubric_category_id", null: false
     t.string "locale", null: false
     t.string "description", default: "", null: false
+    t.string "description_html"
     t.index ["rubric_category_id"], name: "index_rubric_category_descriptions_on_rubric_category_id"
   end
 
@@ -645,8 +688,8 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   create_table "stylesheets", force: :cascade do |t|
     t.string "portal"
     t.string "background_color"
-    t.string "about_page", default: "", null: false
-    t.string "footer_content", default: "", null: false
+    t.jsonb "about_page", default: {}, null: false
+    t.jsonb "footer_content", default: {}, null: false
     t.string "header_logo"
   end
 
@@ -677,9 +720,9 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   create_table "task_descriptions", force: :cascade do |t|
     t.bigint "task_id"
     t.string "locale", null: false
-    t.string "description", default: "", null: false
-    t.string "prerequisites", default: "", null: false
-    t.string "outcomes", default: "", null: false
+    t.string "description", default: ""
+    t.string "prerequisites", default: ""
+    t.string "outcomes", default: ""
     t.index ["task_id"], name: "index_task_descriptions_on_task_id"
   end
 
@@ -873,6 +916,8 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   add_foreign_key "deploys", "users"
   add_foreign_key "districts", "regions"
   add_foreign_key "maturity_rubric_descriptions", "maturity_rubrics"
+  add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "offices", "countries"
   add_foreign_key "offices", "organizations"
   add_foreign_key "offices", "regions"
@@ -893,8 +938,6 @@ ActiveRecord::Schema.define(version: 2020_09_04_163226) do
   add_foreign_key "organizations_states", "regions"
   add_foreign_key "playbook_answers", "playbook_questions", column: "playbook_questions_id"
   add_foreign_key "playbook_descriptions", "playbooks"
-  add_foreign_key "plays_subplays", "plays", column: "child_play_id", name: "child_play_fk"
-  add_foreign_key "plays_subplays", "plays", column: "parent_play_id", name: "parent_play_fk"
   add_foreign_key "plays_tasks", "plays", name: "tasks_plays_play_fk"
   add_foreign_key "plays_tasks", "tasks", name: "tasks_plays_task_fk"
   add_foreign_key "principle_descriptions", "digital_principles"

@@ -455,6 +455,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_resource_owner
+    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
   private
 
   def user_not_authorized(exception)

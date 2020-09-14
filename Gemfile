@@ -124,7 +124,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Auth/login/etc
 gem 'devise'
-gem 'jwt'
+gem 'doorkeeper'
 
 # Use Mailgun API to send confirmation emails
 gem 'mailgun-ruby'
