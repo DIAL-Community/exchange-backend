@@ -30,7 +30,8 @@
     </div>
   </div>
 
-  <%= form.cktext_area :product_description, value: @product_description.description.html_safe, id: 'product_description' %>
+  <input type="hidden" id="product_desc" name="product[product_description]" />
+  <div id="prod_desc_editor"> </div>
   
   <fieldset class="custom-file mt-2">
     <input type="file" id="logo-file" name="logo" class="custom-file-input" aria-describedby="logo-file"/>
@@ -72,6 +73,7 @@
   </label>
 
   <div class="row">
+
     <div class="col-12 col-lg-6">
       <h6 class="bg-secondary text-white border rounded p-3 mb-0">
         <%= t('view.multi-select.assigned.title', model: t('model.organization').to_s.pluralize.humanize) %>
@@ -279,6 +281,30 @@
         </div>
       </div>
     </div>
+
+    <div class="col-12">
+      <h6 class="bg-secondary text-white border rounded p-3 mb-0">
+        <%= t('model.project').to_s.pluralize.humanize %> 
+      </h6>
+      <fieldset class="form-label-group mt-2">
+        <input type="text" id="project-search" class="form-control"
+               placeholder="<%= t('view.multi-select.assigned.label', model: t('model.product').to_s.pluralize) %>" />
+        <label for="project-search">
+          <%= t('view.multi-select.assigned.label', model: t('model.project').to_s.pluralize) %>
+        </label>
+      </fieldset>
+      <div class="row">
+        <div class="col-12">
+          <span id="base-selected-projects" class="selected-element badge badge-secondary px-1 mb-1">
+            <span class="text-label"></span>
+            <a onclick="remove(this);" style="cursor: pointer;">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+            <input type="hidden"/>
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="row">
@@ -327,7 +353,7 @@
   </div>
 
   <fieldset class="float-right mt-4">
-    <%= form.submit t('view.general.submit'), :class => "btn btn-primary" %>
+    <%= form.submit t('view.general.submit'), :class => "btn btn-primary", :id => "submit-btn" %>
     <%= link_to t('view.general.back'), "javascript:window.history.back()", :class => 'btn btn-outline-secondary' %>
   </fieldset>
 <% end %>
@@ -338,6 +364,9 @@
   <% end %>
   <% product.building_blocks.order("name").each do |block| %>
     addBuildingBlock('<%= block.id %>', '<%= block.name %>');
+  <% end %>
+  <% product.projects.order("name").each do |project| %>
+    addProject('<%= project.id %>', '<%= project.name %>');
   <% end %>
   <% product.sectors.order("name").each do |sector| %>
     addSector('<%= sector.id %>', '<%= sector.name %>');
@@ -357,5 +386,22 @@
   <% product.tags.each {|tag| %>
     tagProduct('', '<%= tag %>');
   <% } %>
+
+  $("#submit-btn").on('click', function(e) {
+    var descHtml = descEditor.html.get()
+    $("#product_desc").val(descHtml)
+  });
+
+  var descEditor;
+  $(document).ready(function() {
+    descEditor = new FroalaEditor('#prod_desc_editor', {
+      key: "<%= ENV['FROALA_KEY'] %>",
+      attribution: false,
+      imageUploadURL: '/froala_image/upload',
+      imageUploadMethod: 'POST'
+    }, function() {
+      descEditor.html.set("<%= @product_description.description.nil? ? "" : @product_description.description.squish.gsub("\"","\\\"").html_safe %>")
+    });
+  });
 
 </script>

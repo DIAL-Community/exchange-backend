@@ -69,6 +69,7 @@ en:
     office: office
     organization: organization
     playbook: playbook
+    playbook-page: playbook page
     play: play
     portal-view: portal view
     product: product
@@ -85,6 +86,7 @@ en:
     use-case: use case
     use-case-step: use case step
     user: user
+    user-event: user event
     workflow: workflow
     sdg: sdg
     sustainable-development-goal: sustainable development goal
@@ -92,6 +94,9 @@ en:
     operator_services: Operator Services
   view:
     about:
+      active_users: Active users in the past 24 hours
+      help: For information on how to use the catalog, reference our documentation site
+      help_link: here
       sdg_title: "SDG Digital Investment Framework"
       sdg_subtitle: "A Whole-of-Government Approach to Coordinating Investment in Digital Technologies to Achieve the SDGs"
       enter_catalog: "Explore the Catalog"
@@ -164,6 +169,8 @@ en:
           one: Mapping to Associated Workflow
           other: Mapping to Associated Workflows
         definition: Building blocks are enterprise-ready, reusable software components providing key functionality facilitating generic WorkFlows across multiple sectors.
+        export-json: Export (json)
+        export-csv: Export (csv)
         characteristics: |
           Reusable software components  
           Can be open-source, commercial off-the-shelf (COTS), or freely available with open access to data  
@@ -177,6 +184,7 @@ en:
         mature_only: Show only Mature Building Blocks
         is_beta: The specifications for this Building Block have not been validated
         is_mature: The specifications for this Building Block have been validated
+        view-audit: View audit log
     candidate-organization:
       form:
         created: Thank you for your submission. We will carefully review your submission. Approved submission will become available in the organization list.
@@ -267,6 +275,8 @@ en:
         when-endorsed: When endorsed
         description-placeholder: Description of the organization goes here.
       index:
+        export-json: Export (json)
+        export-csv: Export (csv)
         endorsers: Endorsers
         aggregators: Aggregators
         description: Description
@@ -328,8 +338,11 @@ en:
         bb-mapping: Indicate if mapping is Beta or Validated
         sdg-mapping: Indicate if mapping is Self-Reported or Validated
       index:
+        export-json: Export (json)
+        export-csv: Export (csv)
         toggle-favorite: Add to / remove from list of favorite products
         description: Description
+        dataset: Dataset
         filter: Filter
         has-maturity: Has maturity?
         product-graph: Product Graph
@@ -373,6 +386,7 @@ en:
         active-version: Current version
         license: License
         license-unknown: Unknown
+        repository-info: Repository Info
         statistics: Statistics
         star: Stars
         watcher: Watcher Count
@@ -404,6 +418,8 @@ en:
         org-owner-tooltip: As organization owner, you are only allowed to add / remove your organization from a project.
         product-owner-tooltip: As product owner, you are only allowed to add / remove your own products from a project.
       index:
+        export-json: Export (json)
+        export-csv: Export (csv)
         toggle-favorite: Add to / remove from list of favorite projects
         budget: Budget
         description: Description
@@ -436,6 +452,7 @@ en:
       ict4sdg-updates: "Sign up for updates on the Digital Investment Framework"
       powered-by-dial: Powered by DIAL
     header:
+      about: About
       active-portal: Active
       admin-data: Admin Data
       elevate-role: Request Elevated Role
@@ -568,7 +585,7 @@ en:
         phases: Phases
         name: Name
         description: Description
-        no-activity: We couldn't find any activities for this playbook.
+        no-page: We couldn't find any pages for this playbook.
         create-pdf: Create PDF
         creating-pdf: Creating PDF
       form:
@@ -578,56 +595,33 @@ en:
         phases: Phases
         name: Name
         description: Description
-    activity:
+    playbook-page:
       index:
-        description: Description
+        contents: Contents
+        edit-content: Edit Content
         phase: Phase
-        resources: Resources
-        assign: Assign
         order: Order
+        media: Media
         question: Question
-        media: Media
-        no-data: We couldn't find any tasks for this activity.
-      form:
-        description: Description
-        phase: Phase
         resources: Resources
-        plays: Plays
-        order: Order
-        assign-play: Assign Play
+        other-info: Other Information
+      form:
+        name: Name
+        contents: Contents
+        editor-type: Use Page Builder Editor
+        question: Question
         question-text: Question text
-        media-prompt: If you would like to add a video to this activity, enter the URL
-    play:
-      index:
-        no-data: We couldn't find any plays for this activity.
-        description: Description
-        prerequisites: Prerequisites
-        outcomes: Outcomes
-        author: Author
-        version: Version
-        resources: Resources
-      form:
-        short-description: Short Description
-        description: Full Description
-        prerequisites: Prerequisites
-        outcomes: Outcomes
-        resources: Resources
-        url: URL
-    task:
-      index:
-        no-data: We couldn't find any tasks for this play.
-        media: Media
-      form:
-        short-description: Short Description
-        full-description: Full Description
-        is-complete: Is Complete?
-        complete: This task is complete
-        not-complete: This task has not been completed
-        percent-complete: Percent Complete
-        due-date: Due Date
+        answer-text: Answer text
+        add-answer: Add Answer
+        phase: Phase
         order: Order
-        responsible: Responsible Party
+        media: Media
+        resources: Resources
         media-prompt: If you would like to add a video to this activity, enter the URL
+        description: Description
+        url: URL
+        parent: Parent Page
+        other-info: Other Information
     use-case:
       form:
         all-maturity: All Maturity Level
@@ -637,6 +631,8 @@ en:
         steps-header-description: Steps Header Description
         is-mature: Is Mature
       index:
+        export-json: Export (json)
+        export-csv: Export (csv)
         toggle-favorite: Add to / remove from list of favorite use cases
         no-data: We couldn't find any use case in the database.
         sdg-target-popover:
@@ -703,6 +699,8 @@ en:
         description: Description
         other-names: Other Names
       index:
+        export-json: Export (json)
+        export-csv: Export (csv)
         no-data: We couldn't find workflow matching to the search phrase.
         use-case-popover:
           one: Mapped Use Case
@@ -755,7 +753,6 @@ en:
       definitions: Click to see more terms and definitions
       map-legend: Click for information on how to read the product cards
       characteristics: Characteristics
-      description: Description
       show-use-case: What is a Use Case?
       show-sdg: What is a Sustainable Development Goal?
       show-workflow: What is a Workflow?

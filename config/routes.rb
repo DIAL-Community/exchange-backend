@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
   post "/graphql", to: "graphql#execute"
-  mount Ckeditor::Engine => '/ckeditor'
   resources :task_trackers
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
@@ -33,18 +32,22 @@ Rails.application.routes.draw do
 
   resources :tasks, only: [:index, :update, :create, :destroy]
   resources :activities, only: [:index, :update, :create, :destroy]
-  resources :plays do
-    get 'count', on: :collection
-    resources :tasks
-  end
+
+  resources :playbook_pages, only: [:index, :update, :create, :destroy]
   resources :playbooks do
     get 'count', on: :collection
-    member do 
-      get 'create_pdf'
-      get 'show_pdf'
-    end
-    resources :activities do
-      resources :tasks
+    post 'upload_design_images', on: :collection
+    resources :playbook_pages do
+      member do
+        get 'edit_content'
+        get 'view_design'
+        get 'show_design'
+        get 'load_design'
+        post 'save_design'
+        patch 'save_design'
+        get 'create_pdf'
+        get 'show_pdf'
+      end
     end
   end
 
@@ -53,6 +56,7 @@ Rails.application.routes.draw do
 
   resources :projects do
     get 'count', on: :collection
+    get 'export_data', on: :collection
     member do
       post 'favorite_project'
       post 'unfavorite_project'
@@ -61,10 +65,13 @@ Rails.application.routes.draw do
 
   get 'deploys/index'
   get 'about/cookies'
+  get 'about', to: 'about#index'
 
   devise_for :users, controllers: { registrations: 'registrations', sessions: 'sessions' }
   scope '/admin' do
-    resources :users
+    resources :users do
+      get 'statistics', on: :collection
+    end
   end
 
   devise_scope :user do
@@ -72,7 +79,7 @@ Rails.application.routes.draw do
     get '/users/password', to: 'devise/passwords#new'
   end
 
-  root to: 'about#index'
+  root to: redirect('/products')
 
   resources :covid, only: [:index]
 
@@ -91,6 +98,7 @@ Rails.application.routes.draw do
 
   resources :products do
     get 'count', on: :collection
+    get 'export_data', on: :collection
     member do
       post 'favorite_product'
       post 'unfavorite_product'
@@ -99,6 +107,7 @@ Rails.application.routes.draw do
 
   resources :building_blocks do
     get 'count', on: :collection
+    get 'export_data', on: :collection
   end
 
   resources :sustainable_development_goals, only: [:index, :show] do
@@ -110,6 +119,7 @@ Rails.application.routes.draw do
   resources :use_case_steps, only: [:new, :create, :edit, :update, :show]
   resources :use_cases do
     get 'count', on: :collection
+    get 'export_data', on: :collection
     resources :use_case_steps, only: [:new, :create, :edit, :update, :show]
     member do
       post 'favorite_use_case'
@@ -119,6 +129,7 @@ Rails.application.routes.draw do
 
   resources :workflows do
     get 'count', on: :collection
+    get 'export_data', on: :collection
   end
 
   resources :deploys do
@@ -128,6 +139,7 @@ Rails.application.routes.draw do
 
   resources :organizations do
     get 'count', on: :collection
+    get 'export_data', on: :collection
   end
 
   resources :operator_services
@@ -155,6 +167,7 @@ Rails.application.routes.draw do
 
   get '/object_counts', to: 'application#object_counts', as: :object_counts
   post '/add_filter', to: 'application#add_filter', as: :add_filter
+  post '/add_filters', to: 'application#add_filters', as: :add_filters
   post '/remove_filter', to: 'application#remove_filter', as: :remove_filter
   post '/remove_all_filters', to: 'application#remove_all_filters', as: :remove_all_filters
   get '/get_filters', to: 'application#get_filters', as: :get_filters
@@ -167,6 +180,7 @@ Rails.application.routes.draw do
   get '/healthcheck', to: 'about#healthcheck', as: :healthcheck
 
   post '/save_url', to: 'application#save_url', as: :save_url
+  post '/remove_url', to: 'application#remove_url', as: :remove_url
 
   get 'export', :to => 'organizations#export'
   get 'map_aggregators', :to => 'organizations#map_aggregators'
@@ -190,8 +204,8 @@ Rails.application.routes.draw do
   get 'tag_duplicates', to: 'tags#duplicates'
   get 'category_indicator_duplicates', to: 'category_indicators#duplicates'
   get 'playbook_duplicates', to: 'playbooks#duplicates'
-  get 'play_duplicates', to: 'plays#duplicates'
-  get 'task_duplicates', to: 'tasks#duplicates'
+
+  post '/froala_image/upload' => 'froala_images#upload'
 
   get 'covidresources', :to => 'covid#resources'
   get 'productlist', :to => 'products#productlist', as: :productlist

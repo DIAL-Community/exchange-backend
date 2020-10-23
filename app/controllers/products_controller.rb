@@ -23,7 +23,6 @@ class ProductsController < ApplicationController
     favoriting_user.saved_products.push(@product.id)
 
     respond_to do |format|
-      # Don't re-approve approved candidate.
       if favoriting_user.save!
         format.json { render :show, status: :ok }
       else
@@ -42,7 +41,6 @@ class ProductsController < ApplicationController
     favoriting_user.saved_products.delete(@product.id)
 
     respond_to do |format|
-      # Don't re-approve approved candidate.
       if favoriting_user.save!
         format.json { render :show, status: :ok }
       else
@@ -119,6 +117,19 @@ class ProductsController < ApplicationController
     render(json: product_count.count)
   end
 
+  def export_data
+    @products = Product.where(id: filter_products).eager_load(:organizations, :origins, :building_blocks, :sustainable_development_goals)
+    authorize(@products, :view_allowed?)
+    respond_to do |format|
+      format.csv do
+        render csv: @products, filename: 'exported-product'
+      end
+      format.json do
+        render json: @products.to_json(Product.serialization_options)
+      end
+    end
+  end
+
   # GET /products/1
   # GET /products/1.json
   def show
@@ -163,6 +174,13 @@ class ProductsController < ApplicationController
     @product.set_current_user(current_user)
     @product_description = ProductDescription.new
     @product_description.set_current_user(current_user)
+
+    if params[:selected_projects].present?
+      params[:selected_projects].keys.each do |project_id|
+        project = Project.find(project_id)
+        @product.projects.push(project) unless project.nil?
+      end
+    end
 
     if params[:selected_organizations].present?
       params[:selected_organizations].keys.each do |organization_id|
@@ -296,6 +314,15 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/1.json
   def update
     authorize(@product, :mod_allowed?)
+
+    projects = Set.new
+    if params[:selected_projects].present?
+      params[:selected_projects].keys.each do |project_id|
+        project = Project.find(project_id)
+        projects.add(project) unless project.nil?
+      end
+    end
+    @product.projects = projects.to_a
 
     if params[:selected_organizations].present?
       existing_orgs = OrganizationsProduct.where(product_id: @product.id)
@@ -540,6 +567,7 @@ class ProductsController < ApplicationController
       publicgoods_name = product.publicgoods_data['name']
       publicgoods_licenseURL = product.publicgoods_data['licenseURL']
       publicgoods_aliases = product.publicgoods_data['aliases']
+      publicgoods_stage = product.publicgoods_data['stage']
 
       description = ProductDescription.where(product_id: product, locale: I18n.locale).first
 
@@ -554,7 +582,7 @@ class ProductsController < ApplicationController
         repositoryURL = product.repository
       end
 
-      { :name => product.name, :publicgoods_name => publicgoods_name, :aliases => publicgoods_aliases.as_json, :description => product_desc, :website => 'https://'+product.website.to_s, :license => [{:spdx => product.license, :licenseURL => publicgoods_licenseURL}], :SDGs => sdg_list.as_json, :sectors => sector_list.as_json, :type => [ "software" ], :repositoryURL => repositoryURL, :organizations => org_list.as_json }
+      { :name => product.name, :publicgoods_name => publicgoods_name, :aliases => publicgoods_aliases.as_json, :stage => publicgoods_stage, :description => product_desc, :website => 'https://'+product.website.to_s, :license => [{:spdx => product.license, :licenseURL => publicgoods_licenseURL}], :SDGs => sdg_list.as_json, :sectors => sector_list.as_json, :type => [ "software" ], :repositoryURL => repositoryURL, :organizations => org_list.as_json }
     end
 
     curr_products.each do |prod|

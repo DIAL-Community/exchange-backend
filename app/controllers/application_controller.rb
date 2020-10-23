@@ -27,8 +27,18 @@ class ApplicationController < ActionController::Base
   end
 
   def set_default_identifier
+    logger.info("Default session identifier: #{session[:default_identifier]}.")
     if session[:default_identifier].nil?
       session[:default_identifier] = SecureRandom.uuid
+
+      user_event = UserEvent.new
+      user_event.identifier = session[:default_identifier]
+      user_event.event_type = UserEvent.event_types[:initial_load]
+      user_event.event_datetime = Time.now
+
+      if user_event.save!
+        logger.info("User event '#{UserEvent.event_types[:initial_load]}' for #{user_event.identifier} saved.")
+      end
     end
   end
 
@@ -133,11 +143,9 @@ class ApplicationController < ActionController::Base
     products = filter_products(all_filters, filter_set, project_product_ids, org_ids, org_products, products)
     orgs = filter_organizations(all_filters, filter_set, project_product_ids, org_ids, org_products, products)
     playbooks = filter_playbooks(all_filters, filter_set, project_product_ids, org_ids, org_products, products)
-    plays = filter_plays(all_filters, filter_set, project_product_ids, org_ids, org_products, products)
 
     render json: { "sdgCount": sdgs.count, "useCaseCount": use_cases.count, "workflowCount": workflows.count, "bbCount": bbs.count,
-           "projectCount": projects.count, "productCount": products.count, "orgCount": orgs.count,
-           "playbookCount": playbooks.count, "playCount": plays.count}
+           "projectCount": projects.count, "productCount": products.count, "orgCount": orgs.count, "playbookCount": playbooks.count}
     
   end
 
@@ -167,6 +175,36 @@ class ApplicationController < ActionController::Base
     # Mark when the filter was last updated
     session[:filtered_time] = DateTime.now.strftime('%Q')
     render json: true
+  end
+
+  def add_filters
+    return unless params.key?('filters')
+
+    retval = false
+
+    filters = params['filters'].values
+    filters.each do |filter|
+      filter_name = filter['filter_name']
+      filter_obj = {}
+      filter_obj['value'] = filter['filter_value']
+      filter_obj['label'] = filter['filter_label']
+      if filter['filter_label'].nil? || filter['filter_label'].empty?
+        session[filter_name.to_s] = filter_obj
+        retval = true
+      else
+        existing_value = session[filter_name.to_s]
+        existing_value.nil? && existing_value = []
+        unless existing_value.include?(filter_obj)
+          existing_value.push(filter_obj)
+          retval = true
+        end
+        session[filter_name.to_s] = existing_value
+      end
+      update_cookies(filter_name)
+    end
+
+    session[:filtered_time] = Time.now.strftime('%Q')
+    render(json: retval)
   end
 
   def add_filter
@@ -417,15 +455,35 @@ class ApplicationController < ActionController::Base
   end
 
   def save_url
+    if current_user.nil?
+      return respond_to { |format| format.json { render json: {}, status: :unauthorized } }
+    end
+
     favoriting_user = current_user
     favoriting_user.saved_urls.push(params[:url])
 
     respond_to do |format|
-      # Don't re-approve approved candidate.
       if favoriting_user.save!
-        format.json { render json: { saving: 'OK' }, status: :created }
+        format.json { render json: { saved_url: params[:url] }, status: :ok }
       else
-        format.json { head :no_content }
+        format.json { render json: { saved_url: params[:url] }, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def remove_url
+    if current_user.nil?
+      return respond_to { |format| format.json { render json: {}, status: :unauthorized } }
+    end
+
+    favoriting_user = current_user
+    deleted_url = favoriting_user.saved_urls.delete_at(params[:index].to_i)
+
+    respond_to do |format|
+      if favoriting_user.save!
+        format.json { render json: { deleted_url: deleted_url }, status: :ok }
+      else
+        format.json { render json: { deleted_url: deleted_url }, status: :unprocessable_entity }
       end
     end
   end
