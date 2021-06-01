@@ -1,13 +1,8 @@
 FROM certbot/certbot as certbot-prod
 
 # install nginx
-RUN apt-get update -y
-RUN apt-get install -y software-properties-common
-
-# install certbot
-RUN add-apt-repository ppa:certbot/certbot
-RUN apt-get update -y
-RUN apt-get install -y certbot python-certbot-nginx
+RUN apk add --no-cache --virtual .certbot-deps \
+  python-certbot-nginx
 
 # expose ports
 EXPOSE 80 443
