@@ -9,6 +9,17 @@ class User < ApplicationRecord
                     content_editor: 'content_editor' }
   after_initialize :set_default_role, if: :new_record?
 
+  has_many :access_grants,
+           class_name: 'Doorkeeper::AccessGrant',
+           foreign_key: :resource_owner_id,
+           dependent: :delete_all # or :destroy if you need callbacks
+
+  has_many :access_tokens,
+           class_name: 'Doorkeeper::AccessToken',
+           foreign_key: :resource_owner_id,
+           dependent: :delete_all # or :destroy if you need callbacks
+
+
   has_and_belongs_to_many :products, join_table: :users_products
 
   validates :password, confirmation: true, on: :create

@@ -139,3 +139,5 @@ gem 'graphiql-rails', group: :development
 gem "rack-attack"
 
 gem "google-cloud-translate", "~> 3.2"
+
+gem "doorkeeper", "~> 5.5"

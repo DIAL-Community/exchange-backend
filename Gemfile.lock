@@ -113,6 +113,8 @@ GEM
     diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    doorkeeper (5.5.4)
+      railties (>= 5)
     dotenv (2.7.6)
     erubi (1.10.0)
     execjs (2.7.0)
@@ -355,7 +357,7 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
-    rake (13.0.3)
+    rake (13.0.6)
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -561,6 +563,7 @@ DEPENDENCIES
   commontator
   cookies_eu
   devise
+  doorkeeper (~> 5.5)
   factory_bot
   factory_bot_rails
   faker

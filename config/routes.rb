@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   get 'errors/not_found'
   get 'errors/server_error'
   if Rails.env.development?
