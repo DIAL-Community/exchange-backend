@@ -113,6 +113,8 @@ GEM
     diff-lcs (1.4.4)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
+    doorkeeper (5.5.4)
+      railties (>= 5)
     dotenv (2.7.6)
     erubi (1.10.0)
     execjs (2.7.0)
@@ -561,6 +563,7 @@ DEPENDENCIES
   commontator
   cookies_eu
   devise
+  doorkeeper (~> 5.5)
   factory_bot
   factory_bot_rails
   faker
