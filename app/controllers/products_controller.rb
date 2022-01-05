@@ -5,6 +5,7 @@ class ProductsController < ApplicationController
 
   acts_as_token_authentication_handler_for User, only: [:owner_search, :index, :new, :create, :edit, :update, :destroy]
 
+  before_action :doorkeeper_authorize!, unless: :user_signed_in?, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
   before_action :load_maturity, only: [:show, :new, :edit, :create, :update]
   before_action :set_current_user, only: [:edit, :update, :destroy]

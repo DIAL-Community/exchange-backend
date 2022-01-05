@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
 #   Unknown type 'mobile_services' for column 'service'
 
   create_table "audits", force: :cascade do |t|
+    t.integer "audit_id"
     t.string "associated_id"
     t.string "associated_type"
     t.integer "user_id"
@@ -29,7 +30,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
     t.integer "version", default: 0
     t.string "comment"
     t.datetime "created_at"
-    t.index ["action", "id", "version"], name: "auditable_index"
+    t.index ["action", "audit_id", "version"], name: "auditable_index"
     t.index ["associated_type", "associated_id"], name: "associated_index"
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["user_id", "user_role"], name: "user_index"
@@ -311,6 +312,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
     t.bigint "maturity_rubric_id", null: false
     t.string "locale", null: false
     t.string "description", default: "", null: false
+    t.string "description_html"
     t.index ["maturity_rubric_id"], name: "index_maturity_rubric_descriptions_on_maturity_rubric_id"
   end
 
@@ -498,9 +500,9 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
   create_table "playbook_descriptions", force: :cascade do |t|
     t.bigint "playbook_id"
     t.string "locale", null: false
-    t.string "overview", null: false
-    t.string "audience", null: false
-    t.string "outcomes", null: false
+    t.string "overview", default: ""
+    t.string "audience", default: ""
+    t.string "outcomes", default: ""
     t.index ["playbook_id"], name: "index_playbook_descriptions_on_playbook_id"
   end
 
@@ -575,7 +577,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
   create_table "principle_descriptions", force: :cascade do |t|
     t.bigint "digital_principle_id"
     t.string "locale", null: false
-    t.string "description", default: "", null: false
+    t.string "description", default: ""
     t.index ["digital_principle_id"], name: "index_principle_descriptions_on_digital_principle_id"
   end
 
@@ -786,6 +788,7 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
     t.bigint "rubric_category_id", null: false
     t.string "locale", null: false
     t.string "description", default: "", null: false
+    t.string "description_html"
     t.index ["rubric_category_id"], name: "index_rubric_category_descriptions_on_rubric_category_id"
   end
 
@@ -833,8 +836,8 @@ ActiveRecord::Schema.define(version: 2022_01_05_191524) do
   create_table "stylesheets", force: :cascade do |t|
     t.string "portal"
     t.string "background_color"
-    t.string "about_page", default: "", null: false
-    t.string "footer_content", default: "", null: false
+    t.jsonb "about_page", default: {}, null: false
+    t.jsonb "footer_content", default: {}, null: false
     t.string "header_logo"
   end
 
