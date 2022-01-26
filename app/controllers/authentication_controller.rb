@@ -16,19 +16,20 @@ class AuthenticationController < Devise::SessionsController
 
   def sign_in_ux
     user = User.find_by(email: params['user']['email'])
-    unless user.valid_password?(params['user']['password'])
-      respond_to do |format|
-        format.json do
-          render(
-            json: unauthorized_response,
-            status: :unauthorized
-          )
-        end
-      end
-    end
+    #unless user.valid_password?(params['user']['password'])
+    #  respond_to do |format|
+    #    format.json do
+    #      render(
+    #        json: unauthorized_response,
+    #        status: :unauthorized
+    #      )
+    #    end
+    #  end
+    #end
 
-    resource = warden.authenticate!(scope: :user)
-    sign_in(resource, user, { session_store: true })
+    #resource = warden.authenticate!(scope: :user)
+    #sign_in(resource, user, { session_store: true })
+    sign_in user, store: true
     can_edit = user.roles.include?('admin') || user.roles.include?('content_editor')
     respond_to do |format|
       status = :unauthorized
