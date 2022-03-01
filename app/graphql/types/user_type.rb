@@ -12,7 +12,7 @@ module Types
     field :unconfirmed_email, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :roles, String, null: false
+    field :roles, GraphQL::Types::JSON, null: false
     field :receive_backup, Boolean, null: true
     field :expired, Boolean, null: true
     field :expired_at, GraphQL::Types::ISO8601DateTime, null: true
@@ -22,7 +22,9 @@ module Types
     field :saved_urls, String, null: true
     field :username, String, null: true
 
-    field :organization_name, String, null: true
+    field :organization, Types::OrganizationType, null: true
     field :products, [Types::ProductType], null: true
+
+    field :all_roles, GraphQL::Types::JSON, null: true
   end
 end

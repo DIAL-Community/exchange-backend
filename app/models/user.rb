@@ -25,12 +25,16 @@ class User < ApplicationRecord
   attr_accessor :is_approved
   acts_as_commontator
 
-  def organization_name
-    !self.organization_id.nil? && Organization.find(self.organization_id)[:name]
+  def organization
+    !self.organization_id.nil? ? Organization.find(self.organization_id) : nil
   end
 
   def set_default_role
     self.roles = [:user]
+  end
+
+  def all_roles
+    User.user_roles.values
   end
 
   def self.serialization_options
