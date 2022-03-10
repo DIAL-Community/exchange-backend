@@ -23,7 +23,10 @@ class User < ApplicationRecord
   scope :name_contains, -> (name) { where("LOWER(users.email) like LOWER(?)", "%#{name}%") }
 
   attr_accessor :is_approved
-  acts_as_commontator
+
+  def organization
+    !self.organization_id.nil? ? Organization.find(self.organization_id) : nil
+  end
 
   def organization
     !self.organization_id.nil? ? Organization.find(self.organization_id) : nil

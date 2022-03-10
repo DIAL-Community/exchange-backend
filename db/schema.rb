@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_14_212158) do
+ActiveRecord::Schema.define(version: 2022_03_09_190707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -629,30 +629,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_212158) do
 # Could not dump table "product_sectors" because of following StandardError
 #   Unknown type 'mapping_status_type' for column 'mapping_status'
 
-  create_table "product_suites", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "product_suites_product_versions", id: false, force: :cascade do |t|
-    t.bigint "product_suite_id", null: false
-    t.bigint "product_version_id", null: false
-    t.index ["product_suite_id", "product_version_id"], name: "product_suites_products_versions"
-    t.index ["product_version_id", "product_suite_id"], name: "products_versions_product_suites"
-  end
-
 # Could not dump table "product_sustainable_development_goals" because of following StandardError
 #   Unknown type 'mapping_status_type' for column 'mapping_status'
-
-  create_table "product_versions", force: :cascade do |t|
-    t.bigint "product_id", null: false
-    t.string "version", null: false
-    t.integer "version_order", null: false
-    t.index ["product_id"], name: "index_product_versions_on_product_id"
-  end
 
 # Could not dump table "products" because of following StandardError
 #   Unknown type 'product_type_save' for column 'product_type'
@@ -1066,11 +1044,8 @@ ActiveRecord::Schema.define(version: 2022_01_14_212158) do
   add_foreign_key "product_product_relationships", "products", column: "from_product_id", name: "from_product_fk"
   add_foreign_key "product_product_relationships", "products", column: "to_product_id", name: "to_product_fk"
   add_foreign_key "product_repositories", "products"
-  add_foreign_key "product_suites_product_versions", "product_suites", name: "pspv_product_suites_fk"
-  add_foreign_key "product_suites_product_versions", "product_versions", name: "pspv_product_versions_fk"
   add_foreign_key "product_sustainable_development_goals", "products", name: "products_sdgs_product_fk"
   add_foreign_key "product_sustainable_development_goals", "sustainable_development_goals", name: "products_sdgs_sdg_fk"
-  add_foreign_key "product_versions", "products"
   add_foreign_key "products_endorsers", "endorsers"
   add_foreign_key "products_endorsers", "products"
   add_foreign_key "products_origins", "origins", name: "products_origins_origin_fk"
