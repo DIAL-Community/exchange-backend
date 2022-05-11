@@ -17,12 +17,11 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   before_action :configure_registration_parameters, if: :devise_controller?
-  before_action :check_password_expiry
-  before_action :set_default_identifier
-  before_action :set_portal
-  before_action :set_org_session
+  #before_action :check_password_expiry
+  #before_action :set_default_identifier
+  #before_action :set_portal
+  #before_action :set_org_session
 
-  around_action :determine_database_connection
   around_action :prepare_locale
 
   after_action :store_action
@@ -574,19 +573,6 @@ class ApplicationController < ActionController::Base
       end
       format.json { render(json: {}, status: 401) }
     end
-  end
-
-  def determine_database_connection
-    puts "TENANT: " + request.domain.to_s
-    current_tenant = request.domain
-
-    shard = current_tenant === 'govstack.global' ? :primary_govstack : :primary
-    puts "SHARD: " + shard.to_s
-  
-    ActiveRecord::Base.connects_to database: { writing: :primary, reading: :primary } do
-      yield
-    end
-    
   end
 
   def store_action
