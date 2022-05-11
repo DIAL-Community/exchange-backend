@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   before_action :set_portal
   before_action :set_org_session
 
+  around_action :determine_database_connection
   around_action :prepare_locale
 
   after_action :store_action
@@ -572,6 +573,17 @@ class ApplicationController < ActionController::Base
                     flash: { error: t(exception.query.to_s), scope: 'pundit', default: :default })
       end
       format.json { render(json: {}, status: 401) }
+    end
+  end
+
+  def determine_database_connection
+    puts "TENANT: " + request.domain.to_s
+    current_tenant = request.domain
+
+    shard = current_tenant === 'govstack.global' ? 'primary_govstack' : 'primary'
+  
+    ActiveRecord::Base.connected_to(role: :reading, shard: shard) do
+      yield
     end
   end
 

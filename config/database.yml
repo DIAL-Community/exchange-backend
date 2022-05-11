@@ -24,14 +24,24 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *default
-  timeout: 5000
-  host: localhost
-  adapter: postgresql
-  encoding: unicode
-  database: <%= ENV["DATABASE_NAME"] %>
-  username: <%= ENV["DATABASE_USER"] %>
-  password: <%= ENV["DATABASE_PASSWORD"] %>
+  primary:
+    <<: *default
+    timeout: 5000
+    host: localhost
+    adapter: postgresql
+    encoding: unicode
+    database: <%= ENV["DATABASE_NAME"] %>
+    username: <%= ENV["DATABASE_USER"] %>
+    password: <%= ENV["DATABASE_PASSWORD"] %>
+  primary_govstack:
+    <<: *default
+    timeout: 5000
+    host: localhost
+    adapter: postgresql
+    encoding: unicode
+    database: registry_govstack
+    username: <%= ENV["DATABASE_USER"] %>
+    password: <%= ENV["DATABASE_PASSWORD"] %>
 
 test:
   <<: *default

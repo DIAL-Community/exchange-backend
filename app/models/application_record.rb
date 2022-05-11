@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 
 class ApplicationRecord < ActiveRecord::Base
+
   self.abstract_class = true
+
+  connects_to shards: {
+   primary: { writing: :primary, reading: :primary },
+   primary_govstack: { writing: :primary_govstack, reading: :primary_govstack },
+  }
+
   attr_accessor :association_source
 
   before_save :generate_slug, if: :auditable_association_object

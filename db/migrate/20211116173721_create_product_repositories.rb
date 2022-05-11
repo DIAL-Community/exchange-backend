@@ -31,7 +31,6 @@ class CreateProductRepositories < ActiveRecord::Migration[5.2]
       t.datetime(:deleted_at, null: true)
       t.bigint(:deleted_by, null: true)
 
-      t.timestamps
     end
   end
 end
