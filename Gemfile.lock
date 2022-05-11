@@ -8,73 +8,67 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actioncable (7.0.3)
-      actionpack (= 7.0.3)
-      activesupport (= 7.0.3)
+    actioncable (6.1.6)
+      actionpack (= 6.1.6)
+      activesupport (= 6.1.6)
       nio4r (~> 2.0)
       websocket-driver (>= 0.6.1)
-    actionmailbox (7.0.3)
-      actionpack (= 7.0.3)
-      activejob (= 7.0.3)
-      activerecord (= 7.0.3)
-      activestorage (= 7.0.3)
-      activesupport (= 7.0.3)
+    actionmailbox (6.1.6)
+      actionpack (= 6.1.6)
+      activejob (= 6.1.6)
+      activerecord (= 6.1.6)
+      activestorage (= 6.1.6)
+      activesupport (= 6.1.6)
       mail (>= 2.7.1)
-      net-imap
-      net-pop
-      net-smtp
-    actionmailer (7.0.3)
-      actionpack (= 7.0.3)
-      actionview (= 7.0.3)
-      activejob (= 7.0.3)
-      activesupport (= 7.0.3)
+    actionmailer (6.1.6)
+      actionpack (= 6.1.6)
+      actionview (= 6.1.6)
+      activejob (= 6.1.6)
+      activesupport (= 6.1.6)
       mail (~> 2.5, >= 2.5.4)
-      net-imap
-      net-pop
-      net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.3)
-      actionview (= 7.0.3)
-      activesupport (= 7.0.3)
-      rack (~> 2.0, >= 2.2.0)
+    actionpack (6.1.6)
+      actionview (= 6.1.6)
+      activesupport (= 6.1.6)
+      rack (~> 2.0, >= 2.0.9)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
     actionpack-page_caching (1.2.4)
       actionpack (>= 4.0.0)
-    actiontext (7.0.3)
-      actionpack (= 7.0.3)
-      activerecord (= 7.0.3)
-      activestorage (= 7.0.3)
-      activesupport (= 7.0.3)
-      globalid (>= 0.6.0)
+    actiontext (6.1.6)
+      actionpack (= 6.1.6)
+      activerecord (= 6.1.6)
+      activestorage (= 6.1.6)
+      activesupport (= 6.1.6)
       nokogiri (>= 1.8.5)
-    actionview (7.0.3)
-      activesupport (= 7.0.3)
+    actionview (6.1.6)
+      activesupport (= 6.1.6)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activejob (7.0.3)
-      activesupport (= 7.0.3)
+    activejob (6.1.6)
+      activesupport (= 6.1.6)
       globalid (>= 0.3.6)
-    activemodel (7.0.3)
-      activesupport (= 7.0.3)
-    activerecord (7.0.3)
-      activemodel (= 7.0.3)
-      activesupport (= 7.0.3)
-    activestorage (7.0.3)
-      actionpack (= 7.0.3)
-      activejob (= 7.0.3)
-      activerecord (= 7.0.3)
-      activesupport (= 7.0.3)
+    activemodel (6.1.6)
+      activesupport (= 6.1.6)
+    activerecord (6.1.6)
+      activemodel (= 6.1.6)
+      activesupport (= 6.1.6)
+    activestorage (6.1.6)
+      actionpack (= 6.1.6)
+      activejob (= 6.1.6)
+      activerecord (= 6.1.6)
+      activesupport (= 6.1.6)
       marcel (~> 1.0)
       mini_mime (>= 1.1.0)
-    activesupport (7.0.3)
+    activesupport (6.1.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
@@ -126,7 +120,6 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
-    digest (3.1.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
@@ -212,7 +205,7 @@ GEM
     google-cloud-translate-v3 (0.4.2)
       gapic-common (>= 0.7, < 2.a)
       google-cloud-errors (~> 1.0)
-    google-protobuf (3.20.1)
+    google-protobuf (3.20.1-x86_64-darwin)
     googleapis-common-protos (1.3.12)
       google-protobuf (~> 3.14)
       googleapis-common-protos-types (~> 1.2)
@@ -230,7 +223,7 @@ GEM
       railties
       sprockets-rails
     graphql (2.0.7)
-    grpc (1.45.0)
+    grpc (1.45.0-universal-darwin)
       google-protobuf (~> 3.19)
       googleapis-common-protos-types (~> 1.0)
     haml (5.2.2)
@@ -288,7 +281,6 @@ GEM
     mime-types-data (3.2022.0105)
     mini_magick (4.11.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
     minitest (5.15.0)
     minitest-reporters (1.5.0)
       ansi
@@ -298,24 +290,9 @@ GEM
     msgpack (1.5.1)
     multi_json (1.15.0)
     multipart-post (2.1.1)
-    net-imap (0.2.3)
-      digest
-      net-protocol
-      strscan
-    net-pop (0.1.1)
-      digest
-      net-protocol
-      timeout
-    net-protocol (0.1.3)
-      timeout
-    net-smtp (0.3.1)
-      digest
-      net-protocol
-      timeout
     netrc (0.11.0)
     nio4r (2.5.8)
-    nokogiri (1.13.6)
-      mini_portile2 (~> 2.8.0)
+    nokogiri (1.13.6-x86_64-darwin)
       racc (~> 1.4)
     octokit (4.22.0)
       faraday (>= 0.9)
@@ -347,20 +324,21 @@ GEM
       rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rails (7.0.3)
-      actioncable (= 7.0.3)
-      actionmailbox (= 7.0.3)
-      actionmailer (= 7.0.3)
-      actionpack (= 7.0.3)
-      actiontext (= 7.0.3)
-      actionview (= 7.0.3)
-      activejob (= 7.0.3)
-      activemodel (= 7.0.3)
-      activerecord (= 7.0.3)
-      activestorage (= 7.0.3)
-      activesupport (= 7.0.3)
+    rails (6.1.6)
+      actioncable (= 6.1.6)
+      actionmailbox (= 6.1.6)
+      actionmailer (= 6.1.6)
+      actionpack (= 6.1.6)
+      actiontext (= 6.1.6)
+      actionview (= 6.1.6)
+      activejob (= 6.1.6)
+      activemodel (= 6.1.6)
+      activerecord (= 6.1.6)
+      activestorage (= 6.1.6)
+      activesupport (= 6.1.6)
       bundler (>= 1.15.0)
-      railties (= 7.0.3)
+      railties (= 6.1.6)
+      sprockets-rails (>= 2.0.0)
     rails-controller-testing (1.0.5)
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
@@ -370,19 +348,18 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
-    railties (7.0.3)
-      actionpack (= 7.0.3)
-      activesupport (= 7.0.3)
+    railties (6.1.6)
+      actionpack (= 6.1.6)
+      activesupport (= 6.1.6)
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
-      zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
     rb-fsevent (0.11.1)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    recaptcha (5.10.0)
+    recaptcha (5.9.0)
       json
     redis (4.6.0)
     redis-actionpack (5.3.0)
@@ -505,7 +482,10 @@ GEM
       multi_json (~> 1.10)
     spreadsheet (1.3.0)
       ruby-ole
-    spring (3.1.1)
+    spring (2.1.1)
+    spring-watcher-listen (2.0.1)
+      listen (>= 2.7, < 4.0)
+      spring (>= 1.2, < 3.0)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -514,7 +494,6 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     ssrf_filter (1.0.7)
-    strscan (3.0.3)
     teaspoon (1.2.2)
       railties (>= 3.2.5)
     teaspoon-mocha (2.3.3)
@@ -522,7 +501,6 @@ GEM
     temple (0.8.2)
     thor (1.2.1)
     tilt (2.0.10)
-    timeout (0.2.0)
     trailblazer-option (0.1.2)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
@@ -553,7 +531,7 @@ GEM
     zeitwerk (2.5.4)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-20
 
 DEPENDENCIES
   Dhalang!
@@ -596,7 +574,7 @@ DEPENDENCIES
   pundit
   rack-attack
   rack-cors
-  rails (~> 7.0)
+  rails (~> 6.1)
   rails-controller-testing
   recaptcha
   redis-rails
@@ -613,7 +591,8 @@ DEPENDENCIES
   sassc-rails
   selenium-webdriver
   spreadsheet
-  spring (~> 3.0)
+  spring (~> 2.0, <= 2.1.1)
+  spring-watcher-listen
   teaspoon-mocha
   turbolinks (~> 5)
   tzinfo-data
@@ -622,4 +601,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   2.1.4
+   2.2.13

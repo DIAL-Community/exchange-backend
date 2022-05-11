@@ -580,11 +580,13 @@ class ApplicationController < ActionController::Base
     puts "TENANT: " + request.domain.to_s
     current_tenant = request.domain
 
-    shard = current_tenant === 'govstack.global' ? 'primary_govstack' : 'primary'
+    shard = current_tenant === 'govstack.global' ? :primary_govstack : :primary
+    puts "SHARD: " + shard.to_s
   
-    ActiveRecord::Base.connected_to(role: :reading, shard: shard) do
+    ActiveRecord::Base.connects_to database: { writing: :primary, reading: :primary } do
       yield
     end
+    
   end
 
   def store_action
