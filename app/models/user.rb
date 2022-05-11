@@ -4,7 +4,7 @@ require('csv')
 
 class User < ApplicationRecord
   acts_as_token_authenticatable
-  
+
   enum user_role: { admin: 'admin', ict4sdg: 'ict4sdg', principle: 'principle',
                     user: 'user', org_user: 'org_user', org_product_user: 'org_product_user',
                     product_user: 'product_user', mni: 'mni', content_writer: 'content_writer',

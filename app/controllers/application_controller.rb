@@ -17,10 +17,10 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   before_action :configure_registration_parameters, if: :devise_controller?
-  #before_action :check_password_expiry
-  #before_action :set_default_identifier
-  #before_action :set_portal
-  #before_action :set_org_session
+  # before_action :check_password_expiry
+  # before_action :set_default_identifier
+  # before_action :set_portal
+  # before_action :set_org_session
 
   around_action :prepare_locale
 

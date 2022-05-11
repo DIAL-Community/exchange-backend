@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class ApplicationRecord < ActiveRecord::Base
-
   self.abstract_class = true
 
-  #connects_to database: {
+  # connects_to database: {
   # primary: { writing: :primary, reading: :primary },
   # primary_govstack: { writing: :primary_govstack, reading: :primary_govstack },
-  #}
+  # }
 
   attr_accessor :association_source
 
