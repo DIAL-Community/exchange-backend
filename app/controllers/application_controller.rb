@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   # before_action :set_default_identifier
   # before_action :set_portal
   # before_action :set_org_session
-
+  around_action :connect_to_tenant
   around_action :prepare_locale
 
   after_action :store_action
@@ -572,6 +572,16 @@ class ApplicationController < ActionController::Base
                     flash: { error: t(exception.query.to_s), scope: 'pundit', default: :default })
       end
       format.json { render(json: {}, status: 401) }
+    end
+  end
+
+  def connect_to_tenant
+    #current_tenant = ENV["DB_TENANT"]
+    current_tenant = 'default'
+    shard = current_tenant === 'govstack' ? :govstack : :default
+
+    ActiveRecord::Base.connected_to(shard: shard, role: :writing) do
+      yield
     end
   end
 
