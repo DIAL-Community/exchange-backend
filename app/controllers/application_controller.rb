@@ -576,7 +576,7 @@ class ApplicationController < ActionController::Base
   end
 
   def connect_to_tenant
-    shard = request.host.include?('govstack') ? :govstack : :default
+    request.host.include?('govstack') ? shard = :govstack : shard = :default
 
     ActiveRecord::Base.connected_to(shard: shard, role: :writing) do
       yield
