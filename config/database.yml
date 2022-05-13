@@ -19,54 +19,53 @@ default: &default
   adapter: postgresql
   encoding: unicode
   port: 5432
+  timeout: 5000
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV["DATABASE_USER"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
 
 development:
   primary:
     <<: *default
-    timeout: 5000
     host: localhost
-    encoding: unicode
     database: <%= ENV["DATABASE_NAME"] %>
-    username: <%= ENV["DATABASE_USER"] %>
-    password: <%= ENV["DATABASE_PASSWORD"] %>
   primary_govstack:
     <<: *default
-    timeout: 5000
     host: localhost
-    encoding: unicode
     database: <%= ENV["GOVSTACK_DATABASE_NAME"] %>
-    username: <%= ENV["DATABASE_USER"] %>
-    password: <%= ENV["DATABASE_PASSWORD"] %>
 
 test:
-  <<: *default
-  timeout: 5000
-  host: localhost
-  encoding: unicode
-  database: <%= ENV["TEST_DATABASE_NAME"] %>
-  username: <%= ENV["TEST_DATABASE_USER"] %>
-  password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
-
+  primary:
+    <<: *default
+    host: localhost
+    database: <%= ENV["TEST_DATABASE_NAME"] %>
+    username: <%= ENV["TEST_DATABASE_USER"] %>
+    password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
+  primary_govstack:
+    <<: *default
+    host: localhost
+    database: <%= ENV["TEST_DATABASE_NAME"] %>
+    username: <%= ENV["TEST_DATABASE_USER"] %>
+    password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
 
 production:
-  <<: *default
-  timeout: 5000
-  host: <%= ENV["DATABASE_HOST"] %>
-  port: <%= ENV["DATABASE_PORT"] %>
-  encoding: unicode
-  database: <%= ENV["DATABASE_NAME"] %>
-  username: <%= ENV["DATABASE_USER"] %>
-  password: <%= ENV["DATABASE_PASSWORD"] %>
+  primary:
+    <<: *default
+    host: <%= ENV["DATABASE_HOST"] %>
+    port: <%= ENV["DATABASE_PORT"] %>
+    database: <%= ENV["DATABASE_NAME"] %>
+  primary_govstack:
+    <<: *default
+    host: <%= ENV["DATABASE_HOST"] %>
+    port: <%= ENV["DATABASE_PORT"] %>
+    database: <%= ENV["DATABASE_NAME"] %>
 
 sync-production:
   <<: *default
-  timeout: 5000
   host: <%= ENV["PROD_DATABASE_HOST"] %>
   port: <%= ENV["PROD_DATABASE_PORT"] %>
-  encoding: unicode
   database: <%= ENV["PROD_DATABASE_NAME"] %>
   username: <%= ENV["PROD_DATABASE_USER"] %>
   password: <%= ENV["PROD_DATABASE_PASSWORD"] %>

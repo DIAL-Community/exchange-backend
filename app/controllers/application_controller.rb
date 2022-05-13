@@ -18,8 +18,8 @@ class ApplicationController < ActionController::Base
 
   before_action :configure_registration_parameters, if: :devise_controller?
   # before_action :check_password_expiry
-  # before_action :set_default_identifier
-  # before_action :set_portal
+  before_action :set_default_identifier
+  before_action :set_portal
   # before_action :set_org_session
   around_action :connect_to_tenant
   around_action :prepare_locale
@@ -576,7 +576,10 @@ class ApplicationController < ActionController::Base
   end
 
   def connect_to_tenant
-    request.host.include?('govstack') ? shard = :govstack : shard = :default
+    shard = :default
+    if !request.headers.nil? && !request.headers['Origin'].nil? && request.headers['Origin'].include?('govstack')
+      shard = :govstack
+    end
 
     ActiveRecord::Base.connected_to(shard: shard, role: :writing) do
       yield
