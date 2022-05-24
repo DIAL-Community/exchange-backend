@@ -71,11 +71,12 @@ namespace :data_processors do
 
     # Process the origin of the product.
     origin = Origin.find_by(name: json_data['origin'])
-    origin = Origin.find_by(slug: 'manually_entered') if origin.nil?
+    origin = Origin.find_by(slug: 'dial_osc') if origin.nil?
 
     # Generate alias information for the product.
     valid_aliases = []
-    valid_aliases = json_data['aliases'].reject(&:empty?) if json_data['aliases'] && !json_data['aliases'].empty?
+    aliases = json_data['aliases'].split(",") if json_data['aliases']
+    valid_aliases = aliases.reject(&:empty?) if aliases && !aliases.empty?
 
     # Process the sector section of the json.
     sectors = []
