@@ -43,4 +43,5 @@ lintandtest:
     paths:
       - log/test.log
     expire_in: 1 week
+    when: on_failure
   timeout: 10m
