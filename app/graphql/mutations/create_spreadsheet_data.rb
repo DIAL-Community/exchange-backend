@@ -62,65 +62,83 @@ module Mutations
 
       changes_data = spreadsheet_data['changes']
 
-      case assoc.downcase
-      when 'products'
-        updated_data['name'] = spreadsheet_data['name']
-        column_index = changes_data[1].to_i
-        case column_index
-        when 1
-          updated_data['aliases'] = changes_data[3]
-        when 2
-          updated_data['website'] = changes_data[3]
-        when 3
-          updated_data['license'] = changes_data[3]
-        when 4
-          updated_data['type'] = changes_data[3]
-        when 5
-          updated_data['tags'] = changes_data[3]
-        when 6
-          updated_data['submitterName'] = changes_data[3]
-        when 7
-          updated_data['submitterEmail'] = changes_data[3]
+      changes_data.each_with_index do |change, column_index|
+        case assoc.downcase
+        when 'products'
+          updated_data['name'] = spreadsheet_data['name']
+          case column_index
+          when 1
+            updated_data['aliases'] = change
+          when 2
+            updated_data['website'] = change
+          when 3
+            updated_data['license'] = change
+          when 4
+            updated_data['type'] = change
+          when 5
+            updated_data['tags'] = change
+          when 6
+            updated_data['submitterName'] = change
+          when 7
+            updated_data['submitterEmail'] = change
+          end
+        when 'datasets'
+          updated_data['name'] = spreadsheet_data['name']
+          case column_index
+          when 1
+            updated_data['aliases'] = change
+          when 2
+            updated_data['website'] = change
+          when 3
+            updated_data['origins'] = change
+          when 4
+            updated_data['endorsers'] = change
+          when 5
+            updated_data['license'] = change
+          when 6
+            updated_data['type'] = change
+          when 7
+            updated_data['tags'] = change
+          when 8
+            updated_data['format'] = change
+          when 9
+            updated_data['comments'] = change
+          when 10
+            updated_data['geographicCoverage'] = change
+          when 11
+            updated_data['timeRange'] = change
+          when 12
+            updated_data['visualizationUrl'] = change
+          end
+        when 'descriptions'
+          product_description = updated_data['descriptions'].find { |d| d['locale'] == spreadsheet_data['locale'] }
+          if product_description.nil? && column_index == 2
+            product_description = { 'locale': spreadsheet_data['locale'] }
+            updated_data['descriptions'] << product_description
+          end
+          product_description['description'] = change if column_index == 2
+        when 'organizations'
+          new_org = { 'name': change }
+          updated_data['organizations'] << new_org if !updated_data['organizations'].any? do |h|
+                                                        h['name'] == change
+                                                      end && column_index == 1
+          # updated_data['organizations'].delete_if { |e| e['name'] == changes_data[2] }
+        when 'sdgs'
+          if column_index == 1
+            change.split(',').each do |sdg_num|
+              updated_data['sdgs'] << { 'number': sdg_num } unless updated_data['sdgs'].any? do |h|
+                                                                     h['number'] == sdg_num
+                                                                   end
+            end
+          end
+          # updated_data['sdgs'].delete_if { |e| e['name'] == changes_data[2] }
+        when 'sectors'
+          new_sector = { 'name': change }
+          updated_data['sectors'] << new_sector if !updated_data['sectors'].any? do |h|
+                                                     h['name'] == change
+                                                   end && column_index == 1
+          # updated_data['sectors'].delete_if { |e| e['name'] == changes_data[2] }
         end
-      when 'datasets'
-        updated_data['name'] = spreadsheet_data['name']
-        column_index = changes_data[1].to_i
-        case column_index
-        when 1
-          updated_data['aliases'] = changes_data[3]
-        when 2
-          updated_data['website'] = changes_data[3]
-        when 3
-          updated_data['origins'] = changes_data[3]
-        when 4
-          updated_data['endorsers'] = changes_data[3]
-        when 5
-          updated_data['license'] = changes_data[3]
-        when 6
-          updated_data['type'] = changes_data[3]
-        when 7
-          updated_data['tags'] = changes_data[3]
-        when 8
-          updated_data['format'] = changes_data[3]
-        when 9
-          updated_data['comments'] = changes_data[3]
-        end
-      when 'descriptions'
-        product_description = updated_data['descriptions'].find { |d| d['locale'] == spreadsheet_data['locale'] }
-        if product_description.nil?
-          product_description = { 'locale': spreadsheet_data['locale'] }
-          updated_data['descriptions'] << product_description
-        end
-        product_description['description'] = changes_data[3] if changes_data[1].to_i == 2
-      when 'organizations'
-        updated_data['organizations'] << { 'name': changes_data[3] }
-        updated_data['organizations'].delete_if { |e| e['name'] == changes_data[2] }
-      when 'sdgs'
-        updated_data['sdgs'] << { 'name': changes_data[3] }
-        updated_data['sdgs'].delete_if { |e| e['name'] == changes_data[2] }
-      when 'sectors'
-        updated_data['sectors'] << { 'name': changes_data[3] }
-        updated_data['sectors'].delete_if { |e| e['name'] == changes_data[2] }
       end
 
       updated_data
