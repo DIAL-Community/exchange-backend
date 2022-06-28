@@ -124,6 +124,10 @@ namespace :data_processors do
       product_type = 'dataset'
     when 'content'
       product_type = 'content'
+    when 'standard'
+      product_type = 'standard'
+    when 'ai_model'
+      product_type = 'ai_model'
     end
 
     product = Product.new(
@@ -136,7 +140,7 @@ namespace :data_processors do
       origins: [origin],
       sectors: sectors,
       organizations: organizations,
-      sdgs: sdgs,
+      sustainable_development_goals: sdgs,
       website: json_data['website'],
       product_type: product_type
     ) if obj_type == 'product'
@@ -148,11 +152,15 @@ namespace :data_processors do
       origins: [origin],
       sectors: sectors,
       organizations: organizations,
-      sdgs: sdgs,
+      sustainable_development_goals: sdgs,
       website: json_data['website'],
       visualization_url: json_data['visualizationUrl'],
       time_range: json_data['timeRange'],
       geographic_coverage: json_data['geographicCoverage'],
+      license: json_data['license'],
+      languages: json_data['languages'],
+      data_format: json_data['data_format'],
+      tags: json_data['tags'].split(/\s*,\s*/),
       dataset_type: product_type
     ) unless obj_type == 'product'
 
