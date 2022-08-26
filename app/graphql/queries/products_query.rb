@@ -80,7 +80,8 @@ module Queries
       name_products = products.name_contains(search)
       desc_products = products.joins(:product_descriptions)
                               .where('LOWER(description) like LOWER(?)', "%#{search}%")
-      products = products.where(id: (name_products + desc_products).uniq)
+      alias_products = products.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
+      products = products.where(id: (name_products + desc_products + alias_products).uniq)
     end
 
     filtered, filtered_building_blocks = filter_building_blocks(sdgs, use_cases, workflows, building_blocks)
@@ -202,7 +203,7 @@ module Queries
     unless sector_ids.empty?
       sector_products = ProductSector.where(sector_id: sector_ids).map(&:product_id)
       if sector_products.empty? && !curr_sector.parent_sector_id.nil?
-        sector_products = ProductsSector.where(sector_id: curr_sector.parent_sector_id).map(&:product_id)
+        sector_products = ProductSector.where(sector_id: curr_sector.parent_sector_id).map(&:product_id)
       end
     end
 

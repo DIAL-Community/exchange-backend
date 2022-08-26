@@ -39,8 +39,9 @@ module Types
     field :search_building_blocks, resolver: Queries::SearchBuildingBlocksQuery
 
     field :sectors, resolver: Queries::SectorsQuery
-    field :sectorsWithSubs, resolver: Queries::SectorsWithSubsQuery
+    field :sector, resolver: Queries::SectorQuery
     field :search_sectors, resolver: Queries::SearchSectorsQuery
+    field :sectors_with_subs, resolver: Queries::SectorsWithSubsQuery
 
     field :origins, resolver: Queries::OriginsQuery
     field :search_origins, resolver: Queries::SearchOriginsQuery
@@ -57,6 +58,7 @@ module Types
     field :search_users, resolver: Queries::SearchUsersQuery
 
     field :countries, resolver: Queries::CountriesQuery
+    field :country, resolver: Queries::CountryQuery
     field :search_countries, resolver: Queries::SearchCountriesQuery
 
     field :organizations, resolver: Queries::OrganizationsQuery
@@ -77,7 +79,11 @@ module Types
     field :sdg, resolver: Queries::SustainableDevelopmentGoalQuery
     field :search_sdgs, resolver: Queries::SearchSustainableDevelopmentGoalsQuery
 
+    field :sdg_targets, resolver: Queries::SustainableDevelopmentGoalTargetsQuery
+
     field :tags, resolver: Queries::TagsQuery
+    field :tag, resolver: Queries::TagQuery
+    field :search_tags, resolver: Queries::SearchTagsQuery
 
     field :wizard, resolver: Queries::WizardQuery
 

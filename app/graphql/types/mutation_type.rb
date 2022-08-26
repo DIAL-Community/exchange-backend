@@ -34,6 +34,7 @@ module Types
     field :update_organization_products, mutation: Mutations::UpdateOrganizationProducts
     field :update_organization_sectors, mutation: Mutations::UpdateOrganizationSectors
     field :update_organization_projects, mutation: Mutations::UpdateOrganizationProjects
+    field :update_organization_offices, mutation: Mutations::UpdateOrganizationOffices
 
     field :create_product, mutation: Mutations::CreateProduct
 
@@ -42,6 +43,7 @@ module Types
     field :update_product_organizations, mutation: Mutations::UpdateProductOrganizations
     field :update_product_projects, mutation: Mutations::UpdateProductProjects
     field :update_product_tags, mutation: Mutations::UpdateProductTags
+    field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :update_dataset_countries, mutation: Mutations::UpdateDatasetCountries
@@ -53,8 +55,39 @@ module Types
     field :create_project, mutation: Mutations::CreateProject
 
     field :update_project_organizations, mutation: Mutations::UpdateProjectOrganizations
+    field :update_project_products, mutation: Mutations::UpdateProjectProducts
     field :update_project_sectors, mutation: Mutations::UpdateProjectSectors
     field :update_project_countries, mutation: Mutations::UpdateProjectCountries
     field :update_project_tags, mutation: Mutations::UpdateProjectTags
+
+    field :create_use_case, mutation: Mutations::CreateUseCase
+
+    field :update_use_case_sdg_targets, mutation: Mutations::UpdateUseCaseSdgTargets
+    field :update_use_case_tags, mutation: Mutations::UpdateUseCaseTags
+
+    field :create_use_case_step, mutation: Mutations::CreateUseCaseStep
+
+    field :update_use_case_step_workflows, mutation: Mutations::UpdateUseCaseStepWorkflows
+    field :update_use_case_step_products, mutation: Mutations::UpdateUseCaseStepProducts
+    field :update_use_case_step_building_blocks, mutation: Mutations::UpdateUseCaseStepBuildingBlocks
+
+    field :create_building_block, mutation: Mutations::CreateBuildingBlock
+
+    field :update_building_block_workflows, mutation: Mutations::UpdateBuildingBlockWorkflows
+    field :update_building_block_products, mutation: Mutations::UpdateBuildingBlockProducts
+
+    field :create_sector, mutation: Mutations::CreateSector
+    field :delete_sector, mutation: Mutations::DeleteSector
+
+    field :create_workflow, mutation: Mutations::CreateWorkflow
+    field :update_workflow_building_blocks, mutation: Mutations::UpdateWorkflowBuildingBlocks
+
+    field :create_country, mutation: Mutations::CreateCountry
+    field :delete_country, mutation: Mutations::DeleteCountry
+
+    field :create_tag, mutation: Mutations::CreateTag
+    field :delete_tag, mutation: Mutations::DeleteTag
+
+    field :create_comment, mutation: Mutations::CreateComment
   end
 end
