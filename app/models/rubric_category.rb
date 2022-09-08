@@ -3,7 +3,6 @@
 class RubricCategory < ApplicationRecord
   attr_accessor :rc_desc
 
-  belongs_to :maturity_rubric
   has_many :category_indicators
 
   has_many :rubric_category_descriptions, dependent: :destroy
@@ -14,5 +13,15 @@ class RubricCategory < ApplicationRecord
   # overridden
   def to_param
     slug
+  end
+
+  def rubric_category_description_localized
+    description = rubric_category_descriptions
+                  .find_by(locale: I18n.locale)
+    if description.nil?
+      description = rubric_category_descriptions
+                    .find_by(locale: 'en')
+    end
+    description
   end
 end
