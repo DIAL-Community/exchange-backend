@@ -13606,6 +13606,20 @@
               "deprecationReason": null
             },
             {
+              "name": "languages",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "JSON",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "mainRepository",
               "description": null,
               "args": [
