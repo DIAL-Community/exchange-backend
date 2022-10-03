@@ -1181,6 +1181,7 @@ type Product {
   includes: [Product!]
   interoperatesWith: [Product!]
   isLaunchable: Boolean
+  languages: JSON
   mainRepository: ProductRepository
   manualUpdate: Boolean!
   maturityScore: Int
