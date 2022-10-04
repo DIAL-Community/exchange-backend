@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class CandidateRolesController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: %i[index create approve reject show]
+  acts_as_token_authentication_handler_for User, only: %i[approve reject]
   skip_before_action :verify_authenticity_token, if: :json_request
-
-  before_action :set_candidate_role, only: %i[show edit update destroy]
-  before_action :authenticate_user!, only: %i[new create edit update destroy duplicate approve reject]
+  before_action :authenticate_user!, only: %i[approve reject]
 
   def json_request
     request.format.json?
@@ -60,122 +58,10 @@ class CandidateRolesController < ApplicationController
     end
   end
 
-  # GET /candidate_roles
-  # GET /candidate_roles.json
-  def index
-    return redirect_to(root_path) unless policy(CandidateRole).view_allowed?
-
-    current_page = params[:page] || 1
-
-    if params[:search]
-      @candidate_roles = CandidateRole.email_contains(params[:search])
-                                      .order(:created_at)
-                                      .paginate(page: current_page, per_page: 10)
-    else
-      @candidate_roles = CandidateRole.order(:created_at)
-                                      .paginate(page: current_page, per_page: 10)
-    end
-    authorize(@candidate_roles, :view_allowed?)
-  end
-
-  # GET /candidate_roles/1
-  # GET /candidate_roles/1.json
-  def show
-    authorize(@candidate_role, :view_allowed?)
-    @product = Product.find(@candidate_role.product_id) unless @candidate_role.product_id.nil?
-    @organization = Organization.find(@candidate_role.organization_id) unless @candidate_role.organization_id.nil?
-  end
-
-  # GET /candidate_roles/new
-  def new
-    authorize(CandidateRole, :create_allowed?)
-    @candidate_role = CandidateRole.new
-    @candidate_role.email = current_user.email unless current_user.roles.include?(User.user_roles[:admin])
-  end
-
-  # GET /candidate_roles/1/edit
-  def edit
-    authorize(@candidate_role, :mod_allowed?)
-  end
-
-  # POST /candidate_roles
-  # POST /candidate_roles.json
-  def create
-    session[:return_to] ||= request.referer
-    @candidate_role = CandidateRole.new(candidate_role_params)
-
-    if params[:selected_roles].present?
-      params[:selected_roles].each do |selected_role|
-        (@candidate_role[:roles] ||= []) << selected_role
-      end
-    end
-
-    @candidate_role[:roles] << User.user_roles[:product_user] unless @candidate_role.product_id.nil?
-
-    @candidate_role[:roles] << User.user_roles[:org_user] unless @candidate_role.organization_id.nil?
-
-    respond_to do |format|
-      if @candidate_role.save
-        session.delete(:request_elevated_role)
-        AdminMailer
-          .with(user: candidate_role_params)
-          .notify_ux_ownership_request
-          .deliver_later
-        if policy(@candidate_role).view_allowed?
-          format.html { redirect_to(@candidate_role, notice: 'Candidate role was successfully created.') }
-        else
-          format.html { redirect_to(products_path, notice: 'Elevated role request submitted.') }
-        end
-        format.json { render(json: { message: 'Candidate role was successfully created.' }, status: :created) }
-      else
-        format.html { render(:new) }
-        format.json { render(json: { message: 'Unable to process request.' }, status: :unprocessable_entity) }
-      end
-    end
-  end
-
-  # PATCH/PUT /candidate_roles/1
-  # PATCH/PUT /candidate_roles/1.json
-  def update
-    authorize(@candidate_role, :mod_allowed?)
-
-    if params[:selected_roles].present?
-      params[:selected_roles].each do |selected_role|
-        (@candidate_role[:roles] ||= []) << selected_role
-      end
-    end
-
-    respond_to do |format|
-      if @candidate_role.update(candidate_role_params)
-        format.html { redirect_to(@candidate_role, notice: 'Candidate role was successfully updated.') }
-        format.json { render(:show, status: :ok, location: @candidate_role) }
-      else
-        format.html { render(:edit) }
-        format.json { render(json: @candidate_role.errors, status: :unprocessable_entity) }
-      end
-    end
-  end
-
-  # DELETE /candidate_roles/1
-  # DELETE /candidate_roles/1.json
-  def destroy
-    authorize(@candidate_role, :mod_allowed?)
-    @candidate_role.destroy
-    respond_to do |format|
-      format.html { redirect_to(candidate_roles_url, notice: 'Candidate role was successfully destroyed.') }
-      format.json { head(:no_content) }
-    end
-  end
-
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_candidate_role
     @candidate_role = CandidateRole.find(params[:id])
-  end
-
-  # Only allow a list of trusted parameters through.
-  def candidate_role_params
-    params.require(:candidate_role).permit(:email, :description, :product_id, :organization_id)
   end
 end
