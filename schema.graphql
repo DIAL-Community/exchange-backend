@@ -1334,6 +1334,7 @@ type Query {
   capabilities(aggregatorIds: [Int!] = [], capabilities: [String!] = [], countryIds: [Int!] = [], search: String = "", services: [String!] = []): [Capability!]!
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
+  categoryIndicators(search: String = ""): [CategoryIndicator!]
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
   countComments(commentObjectId: Int!, commentObjectType: String!): Int!
   countries(search: String = ""): [Country!]!
