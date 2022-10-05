@@ -299,5 +299,73 @@ module Modules
       '  }'\
       '}'\
     end
+
+    def sync_containerized_indicator(product)
+      product_repositories = ProductRepository.where(product_id: product.id)
+
+      indicator = CategoryIndicator.find_by(slug: 'containerized')
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      product_repositories.each do |repository|
+        file_list = read_repository_file_list(repository)
+        dockerfile = check_file(file_list, 'Dockerfile')
+
+        if dockerfile == true
+          product_indicator.indicator_value = 't'
+          break
+        end
+      end
+      product_indicator.save!
+    end
+
+    def check_file(file_list, file_name)
+      unless file_list.nil? || file_list["data"]["repository"].nil?
+        file_list = file_list["data"]["repository"]["object"]["entries"]
+
+        file_list.each do |file|
+          if file["name"] == file_name
+            return true
+          end
+        end
+      end
+    end
+
+    def read_repository_file_list(repository)
+      return nil if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse('https://api.github.com/graphql')
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(github_uri.path)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+      request.body = { 'query' => graph_ql_file_list(owner, repo) }.to_json
+
+      response = http.request(request)
+      JSON.parse(response.body)
+    end
+
+    def graph_ql_file_list(owner, repo)
+      '{'\
+      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
+      '    object(expression: "HEAD:") {'\
+      '      ... on Tree {'\
+      '        entries {'\
+      '          name'\
+      '        }'\
+      '      }'\
+      '    }'\
+      '  }'\
+      '}'\
+    end
   end
 end
