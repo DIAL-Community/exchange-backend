@@ -118,5 +118,17 @@
       high:
         - operator: lessThan
           value: 30
+    - name: Language
+      low:
+        - operator: greaterThan
+          value: 26
+      medium:
+        - operator: greaterThan
+          value: 11
+        - operator: lessThan
+          value: 25
+      high:
+        - operator: lessThan
+          value: 10
 
       
