@@ -221,4 +221,31 @@ namespace :maturity_sync do
   task :update_top_25_languages, [] => :environment do
     read_languages_file
   end
+
+  task :update_products_languages, [] => :environment do
+    Product.all.each do |product|
+      puts "Updating top languages for product: #{product.name}."
+      product_repositories = ProductRepository.where(product_id: product.id)
+      product_languages = []
+      product_repositories.each do |repository|
+        unless repository.language_data == {} || repository.language_data["data"]["repository"].nil?
+          repo_languages = repository.language_data["data"]["repository"]["languages"]["edges"]
+          product_languages << repo_languages
+        end
+      end
+
+      product_languages = sum_languages(product_languages.flatten)
+
+      unless product_languages[3..(product_languages.count - 1)].nil?
+        counter = 0
+        product_languages[3..(product_languages.count - 1)].each do |product_language|
+          counter += product_language["size"]
+        end
+        product_languages.push({ "node" => { "name" => "Other", "color" => "#fd807f" }, "size" => counter })
+      end
+      top_languages = (product_languages[0..2] << product_languages[-1]).flatten
+      product.languages = top_languages
+      product.save!
+    end
+  end
 end

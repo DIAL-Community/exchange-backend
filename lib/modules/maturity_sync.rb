@@ -429,5 +429,22 @@ module Modules
       '  }'\
       '}'\
     end
+
+    def sum_languages(product_languages)
+      languages = product_languages.dup.uniq! { |lang| lang["node"] }
+      languages = product_languages if languages.nil?
+      total_product_languages = []
+      languages&.each do |language|
+        certain_lang = product_languages.select { |lang| lang["node"]["name"] == language["node"]["name"] }
+        counter = 0
+        certain_lang.each do |lang|
+          counter += lang["size"]
+        end
+        total_product_languages.push({ "node" => { "name" => certain_lang[0]["node"]["name"],
+                                                   "color" => certain_lang[0]["node"]["color"] },
+                                       "size" => counter })
+      end
+      total_product_languages.flatten.sort_by { |k| -k["size"] }
+    end
   end
 end
