@@ -209,4 +209,12 @@ namespace :maturity_sync do
       sync_product_languages(product_repository)
     end
   end
+
+  task :update_code_review_indicators, [] => :environment do
+    puts 'Updating code review indicators data for products.'
+
+    Product.all.each do |product|
+      sync_containerized_indicator(product)
+    end
+  end
 end
