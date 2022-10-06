@@ -7,6 +7,7 @@ module Types
 
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
+    field :delete_playbook, mutation: Mutations::DeletePlaybook
 
     field :create_play, mutation: Mutations::CreatePlay
     field :auto_save_play, mutation: Mutations::CreatePlay
