@@ -367,5 +367,67 @@ module Modules
       '  }'\
       '}'\
     end
+
+    def read_languages_file
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      absolute_url = 'https://github.com/madnight/githut'
+      return unless (match = absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse('https://api.github.com/graphql')
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(github_uri.path)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+      request.body = { 'query' => graph_ql_file_contents(owner, repo) }.to_json
+
+      response = JSON.parse(http.request(request).body)
+      languages_list = JSON.parse(response["data"]["repository"]["object"]["entries"][0]["object"]["text"])
+
+      year = languages_list[-1]["year"]
+      quarter = languages_list[-1]["quarter"]
+
+      fresh_language_data = []
+
+      languages_list.each do |language|
+        language["count"] = language["count"].to_i
+        fresh_language_data << language if language["year"] == year && language["quarter"] == quarter
+      end
+
+      top_25_languages = fresh_language_data.sort_by { |k| -k["count"] }[0..24]
+
+      rank = 1
+      top_25_languages.each do |language|
+        ["year", "quarter", "count"].each { |k| language.delete(k) }
+        language["rank"] = rank
+        rank += 1
+      end
+
+      File.open("utils/top_25_languages.yml", "w") do |f|
+        f.write(top_25_languages.to_yaml)
+      end
+
+      puts "Repository language data for TOP 25 saved."
+    end
+
+    def graph_ql_file_contents(owner, repo)
+      '{'\
+      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
+      '    object(expression: "master:src/data/") {'\
+      '      ... on Tree {'\
+      '        entries {'\
+      '          object {'\
+      '          ... on Blob {'\
+      '            text'\
+      '           }'\
+      '          }'\
+      '        }'\
+      '      }'\
+      '    }'\
+      '  }'\
+      '}'\
+    end
   end
 end

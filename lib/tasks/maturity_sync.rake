@@ -217,4 +217,8 @@ namespace :maturity_sync do
       sync_containerized_indicator(product)
     end
   end
+
+  task :update_top_25_languages, [] => :environment do
+    read_languages_file
+  end
 end
