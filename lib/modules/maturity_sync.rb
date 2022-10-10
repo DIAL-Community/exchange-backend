@@ -446,5 +446,126 @@ module Modules
       end
       total_product_languages.flatten.sort_by { |k| -k["size"] }
     end
+
+    def read_indicator_config(indicator_config, category_name, indicator_name)
+      indicator_config.each do |category|
+        next if category['category'] != category_name
+
+        category['indicators'].each do |indicator|
+          next if indicator['name'] != indicator_name
+
+          low_calculations = []
+          indicator['low'].each do |calculation|
+            low_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          medium_calculations = []
+          indicator['medium'].each do |calculation|
+            medium_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          high_calculations = []
+          indicator['high'].each do |calculation|
+            high_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          return {
+            'name': indicator['name'],
+            'low': low_calculations,
+            'medium': medium_calculations,
+            'high': high_calculations
+          }
+        end
+      end
+
+      { 'error': 'Indicator not found' }
+    end
+
+    def calculate_product_indicators(product_id)
+      product_repositories = ProductRepository.where(product_id: product_id)
+      github_category_indicators = CategoryIndicator.where(data_source: 'GitHub')
+
+      config_file = YAML.load_file('config/indicator_config.yml')
+
+      github_category_indicators.each do |indicator|
+        product_indicator = ProductIndicator.find_by(product_id: product_id, category_indicator_id: indicator.id)
+        if product_indicator.nil?
+          product_indicator = ProductIndicator.new(product_id: product_id, category_indicator_id: indicator.id)
+        end
+
+        statistical_data = calculate_total_repo_statistical_data(indicator, product_repositories)
+
+        scale = [:low, :medium, :high]
+
+        statistical_data.each do |datum|
+          scale.each do |flag|
+            indicator_value = calculate_indicator_value(config_file, indicator, datum, flag)
+            unless indicator_value.nil?
+              product_indicator.indicator_value = indicator_value
+              product_indicator.save
+            end
+          end
+        end
+      end
+    end
+
+    def calculate_total_repo_statistical_data(indicator, product_repositories)
+      total_repo_statistical_data = Hash.new(0)
+      counter = 0
+      update_date = "1950-01-10T00:00:01Z"
+
+      product_repositories.each do |repo|
+        if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
+                                           "openPullRequestCount", "mergedPullRequestCount"])
+          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["downloadCount"])
+          download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
+          unless download_data.nil?
+            # rubocop:disable Layout/LineLength
+            download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]["node"]["releaseAssets"]["edges"][0]
+            unless download_data.nil?
+              counter += repo.statistical_data["data"]["repository"]["releases"]["edges"][0]["node"]["releaseAssets"]["edges"][0]["node"][indicator.source_indicator]
+              # rubocop:enable Layout/LineLength
+            end
+          end
+          total_repo_statistical_data[indicator.source_indicator] = counter
+        elsif indicator.source_indicator.in?(["commitsOnMasterBranch, commitsOnMainBranch"])
+          counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["updatedAt"])
+          if repo.statistical_data["data"]["repository"][indicator.source_indicator] > update_date
+            update_date = repo.statistical_data["data"]["repository"][indicator.source_indicator]
+          end
+          total_repo_statistical_data[indicator.name] = (Date.today - update_date.to_date).to_i
+        elsif indicator.source_indicator.in?(["forkCount"])
+          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]
+          total_repo_statistical_data[indicator.name] = counter
+        end
+      end
+      total_repo_statistical_data
+    end
+
+    def calculate_indicator_value(config_file, indicator, datum, flag)
+      indicator_config = read_indicator_config(config_file, "Repository Info", indicator.name)
+      flag_weight = 1
+      condition_counter = 0..(indicator_config[flag].count - 1)
+      condition_counter.each do |counter|
+        if indicator_config[flag][counter][:operator].to_s == "equalTo"
+          if datum[1] != indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        elsif indicator_config[flag][counter][:operator].to_s == "greaterThan"
+          if datum[1] < indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        elsif indicator_config[flag][counter][:operator].to_s == "lessThan"
+          if datum[1] > indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        end
+      end
+      flag.to_s if flag_weight == 1
+    end
   end
 end
