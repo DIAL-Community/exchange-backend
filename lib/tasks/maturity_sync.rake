@@ -245,6 +245,7 @@ namespace :maturity_sync do
       end
       top_languages = (product_languages[0..2] << product_languages[-1]).flatten
       product.languages = top_languages
+      product.languages = nil if top_languages == [nil]
       product.save!
     end
   end
