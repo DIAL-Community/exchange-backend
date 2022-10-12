@@ -17,6 +17,7 @@ rake sync:osc_digital_good_local
 rake maturity_sync:update_license_data
 rake maturity_sync:update_statistics_data
 rake maturity_sync:update_language_data
+rake maturity_sync:update_products_languages
 rake maturity_sync:sync_data['/product-evaluation-rubric']
 rake sync:fetch_website_data
 

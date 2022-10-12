@@ -2558,7 +2558,8 @@ CREATE TABLE public.products (
     pricing_details character varying,
     hosting_model character varying,
     pricing_date date,
-    pricing_url character varying
+    pricing_url character varying,
+    languages jsonb
 );
 
 
@@ -7309,6 +7310,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220909100954'),
 ('20220909101028'),
 ('20220916115012'),
-('20220923161216');
+('20220923161216'),
+('20220930090351');
 
 

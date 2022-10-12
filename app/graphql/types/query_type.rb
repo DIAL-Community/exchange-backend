@@ -126,6 +126,7 @@ module Types
     field :rubric_categories, resolver: Queries::RubricCategoriesQuery
     field :rubric_category, resolver: Queries::RubricCategoryQuery
 
+    field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
   end
 end

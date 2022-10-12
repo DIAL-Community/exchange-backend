@@ -5,7 +5,7 @@ class CategoryIndicator < ApplicationRecord
 
   attr_accessor :ci_desc
 
-  belongs_to :rubric_category
+  belongs_to :rubric_category, optional: true
   has_many :category_indicator_descriptions, dependent: :destroy
   has_many :product_indicators, dependent: :destroy
 

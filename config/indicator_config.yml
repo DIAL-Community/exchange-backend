@@ -9,103 +9,103 @@
           value: 1
       high:
         - operator: greaterThan
-          value: 1
-    - name: Contributors
+          value: 2
+    - name: Commits
       low:
         - operator: lessThan
-          value: 2
+          value: 10
       medium:
         - operator: greaterThan
-          value: 1
+          value: 11
         - operator: lessThan
-          value: 10
+          value: 99
       high:
         - operator: greaterThan
-          value: 9
+          value: 100
     - name: Downloads
       low:
         - operator: equalTo
           value: 0
       medium:
         - operator: greaterThan
-          value: 0
+          value: 1
         - operator: lessThan
-          value: 10
+          value: 9
       high:
         - operator: greaterThan
-          value: 9
+          value: 10
     - name: Stars
       low:
         - operator: lessThan
-          value: 6
+          value: 5
       medium:
         - operator: greaterThan
-          value: 5
+          value: 6
         - operator: lessThan
-          value: 50
+          value: 49
       high:
         - operator: greaterThan
-          value: 49
+          value: 50
     - name: Forks
       low:
         - operator: lessThan
-          value: 6
-      medium:
-        - operator: greaterThan
           value: 5
-        - operator: lessThan
-          value: 50
-      high:
+      medium:
         - operator: greaterThan
+          value: 6
+        - operator: lessThan
           value: 49
-    - name: Open PRs
-      low:
-        - operator: lessThan
-          value: 3
-      medium:
-        - operator: greaterThan
-          value: 2
-        - operator: lessThan
-          value: 20
       high:
         - operator: greaterThan
-          value: 19
-    - name: Closed PRs
+          value: 50
+    - name: Open Pull Requests
       low:
         - operator: lessThan
-          value: 50
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 3
+        - operator: lessThan
+          value: 19
+      high:
+        - operator: greaterThan
+          value: 20
+    - name: Merged Pull Requests
+      low:
+        - operator: lessThan
+          value: 49
       medium:
         - operator: greaterThan
           value: 50
         - operator: lessThan
-          value: 250
+          value: 249
       high:
         - operator: greaterThan
           value: 250
     - name: Open Issues
       low:
         - operator: lessThan
-          value: 3
+          value: 2
       medium:
         - operator: greaterThan
-          value: 2
+          value: 3
         - operator: lessThan
-          value: 20
+          value: 19
       high:
         - operator: greaterThan
-          value: 19
+          value: 20
     - name: Closed Issues
       low:
         - operator: lessThan
-          value: 3
+          value: 2
       medium:
         - operator: greaterThan
-          value: 2
+          value: 3
         - operator: lessThan
-          value: 20
+          value: 19
       high:
         - operator: greaterThan
-          value: 19
+          value: 20
     - name: Last Repository Activity
       low:
         - operator: greaterThan
@@ -114,9 +114,21 @@
         - operator: greaterThan
           value: 30
         - operator: lessThan
-          value: 365
+          value: 364
       high:
         - operator: lessThan
-          value: 30
+          value: 29
+    - name: Language
+      low:
+        - operator: greaterThan
+          value: 26
+      medium:
+        - operator: greaterThan
+          value: 11
+        - operator: lessThan
+          value: 25
+      high:
+        - operator: lessThan
+          value: 10
 
       

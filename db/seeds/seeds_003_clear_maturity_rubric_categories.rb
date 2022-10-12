@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-rubric_categories = RubricCategory.where("slug in (?)",
+rubric_categories = RubricCategory.where("slug in (" \
 "'financial_sustainability', 'licensing','product_design','compliance','utility_and_impact'," \
-"'product_quality','community_health','dependency_and_risk','knowledge_management','governance'")
+"'product_quality','community_health','dependency_and_risk','knowledge_management','governance')")
+puts "rubric categories: " + rubric_categories.inspect
 rubric_categories.each do |rubric_category|
   puts "Removing rubric category: #{rubric_category.name}."
 

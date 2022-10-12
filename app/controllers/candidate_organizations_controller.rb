@@ -1,125 +1,13 @@
 # frozen_string_literal: true
 
 class CandidateOrganizationsController < ApplicationController
-  acts_as_token_authentication_handler_for User,
-                                           only: %i[index show edit new create update destroy approve reject]
+  acts_as_token_authentication_handler_for User, only: %i[approve reject]
   skip_before_action :verify_authenticity_token, if: :json_request
 
-  before_action :set_candidate_organization, only: %i[show edit update destroy]
-  before_action :authenticate_user!, only: %i[new create edit update destroy duplicate approve reject]
+  before_action :authenticate_user!, only: %i[approve reject]
 
   def json_request
     request.format.json?
-  end
-
-  # GET /candidate_organizations
-  # GET /candidate_organizations.json
-  def index
-    @candidate_organizations = CandidateOrganization.all.paginate(page: params[:page], per_page: 20)
-    params[:search].present? && @candidate_organizations = @candidate_organizations.name_contains(params[:search])
-    authorize(@candidate_organizations, :view_allowed?)
-  end
-
-  # GET /candidate_organizations/1
-  # GET /candidate_organizations/1.json
-  def show
-    authorize(@candidate_organization, :view_allowed?)
-  end
-
-  # GET /candidate_organizations/new
-  def new
-    @candidate_organization = CandidateOrganization.new
-    authorize(@candidate_organization, :create_allowed?)
-  end
-
-  # GET /candidate_organizations/1/edit
-  def edit
-    authorize(@candidate_organization, :mod_allowed?)
-  end
-
-  # POST /candidate_organizations
-  # POST /candidate_organizations.json
-  def create
-    authorize(CandidateOrganization, :create_allowed?)
-    # Everyone including unregistered user can post and create candidate organization.
-    @candidate_organization = CandidateOrganization.new(candidate_organization_params)
-    @candidate_organization.auditable_current_user(current_user)
-
-    if params[:contact].present?
-      contact = Contact.new
-      contact.name = params[:contact][:name]
-      contact.email = params[:contact][:email]
-      contact.title = params[:contact][:title]
-
-      contact.slug = slug_em(params[:contact][:name])
-
-      dupe_count = Contact.where(slug: contact.slug).count
-      if dupe_count.positive?
-        first_duplicate = Contact.slug_starts_with(contact.slug).order(slug: :desc).first
-        contact.slug = contact.slug + generate_offset(first_duplicate).to_s
-      end
-
-      @candidate_organization.contacts << contact
-    end
-
-    respond_to do |format|
-      if @candidate_organization.save!
-        format.html { redirect_to(@candidate_organization, notice: t('view.candidate-organization.form.created')) }
-        format.json { render(:show, status: :created, location: @candidate_organization) }
-      else
-        format.html { render(:new) }
-        format.json { render(json: @candidate_organization.errors, status: :unprocessable_entity) }
-      end
-    end
-  end
-
-  # PATCH/PUT /candidate_organizations/1
-  # PATCH/PUT /candidate_organizations/1.json
-  def update
-    authorize(@candidate_organization, :mod_allowed?)
-
-    if params[:selected_contacts].present?
-      contacts = Set.new
-      params[:selected_contacts].keys.each do |contact_id|
-        contact = Contact.find(contact_id)
-        contacts.add(contact)
-      end
-      @candidate_organization.contacts = contacts.to_a
-    end
-
-    respond_to do |format|
-      if @candidate_organization.update(candidate_organization_params)
-        format.html { redirect_to(@candidate_organization, notice: 'Candidate organization was successfully updated.') }
-        format.json { render(:show, status: :ok, location: @candidate_organization) }
-      else
-        format.html { render(:edit) }
-        format.json { render(json: @candidate_organization.errors, status: :unprocessable_entity) }
-      end
-    end
-  end
-
-  # DELETE /candidate_organizations/1
-  # DELETE /candidate_organizations/1.json
-  def destroy
-    authorize(@candidate_organization, :mod_allowed?)
-    @candidate_organization.destroy
-    respond_to do |format|
-      format.html { redirect_to(candidate_organizations_url, notice: 'Candidate organization was.') }
-      format.json { head(:no_content) }
-    end
-  end
-
-  def duplicates
-    @candidate_organizations = []
-    if params[:current].present?
-      current_slug = slug_em(params[:current])
-      original_slug = slug_em(params[:original])
-      if current_slug != original_slug
-        @candidate_organizations = CandidateOrganization.where(slug: current_slug).select(:name, :slug).to_a
-      end
-    end
-    authorize(CandidateOrganization, :view_allowed?)
-    render(json: @candidate_organizations, only: [:name])
   end
 
   def approve
@@ -178,26 +66,5 @@ class CandidateOrganizationsController < ApplicationController
     if @candidate_organization.nil? && params[:id].scan(/\D/).empty?
       @candidate_organization = CandidateOrganization.find(params[:id])
     end
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def candidate_organization_params
-    params.require(:candidate_organization)
-          .permit(:name, :slug, :website)
-          .tap do |attr|
-            if attr[:website].present?
-              attr[:website] = attr[:website].strip
-                                             .sub(/^https?:\/\//i, '')
-                                             .sub(/^https?\/\/:/i, '')
-                                             .sub(/\/$/, '')
-            end
-            if params[:reslug].present?
-              attr[:slug] = slug_em(attr[:name])
-              if params[:duplicate].present?
-                first_duplicate = CandidateOrganization.slug_starts_with(attr[:slug]).order(slug: :desc).first
-                attr[:slug] = attr[:slug] + generate_offset(first_duplicate).to_s
-              end
-            end
-          end
   end
 end

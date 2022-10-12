@@ -299,5 +299,273 @@ module Modules
       '  }'\
       '}'\
     end
+
+    def sync_containerized_indicator(product)
+      product_repositories = ProductRepository.where(product_id: product.id)
+
+      indicator = CategoryIndicator.find_by(slug: 'containerized')
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      product_repositories.each do |repository|
+        file_list = read_repository_file_list(repository)
+        dockerfile = check_file(file_list, 'Dockerfile')
+
+        if dockerfile == true
+          product_indicator.indicator_value = 't'
+          break
+        end
+      end
+      product_indicator.save!
+    end
+
+    def check_file(file_list, file_name)
+      unless file_list.nil? || file_list["data"]["repository"].nil?
+        file_list = file_list["data"]["repository"]["object"]["entries"]
+
+        file_list.each do |file|
+          if file["name"] == file_name
+            return true
+          end
+        end
+      end
+    end
+
+    def read_repository_file_list(repository)
+      return nil if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse('https://api.github.com/graphql')
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(github_uri.path)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+      request.body = { 'query' => graph_ql_file_list(owner, repo) }.to_json
+
+      response = http.request(request)
+      JSON.parse(response.body)
+    end
+
+    def graph_ql_file_list(owner, repo)
+      '{'\
+      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
+      '    object(expression: "HEAD:") {'\
+      '      ... on Tree {'\
+      '        entries {'\
+      '          name'\
+      '        }'\
+      '      }'\
+      '    }'\
+      '  }'\
+      '}'\
+    end
+
+    def read_languages_file
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      absolute_url = 'https://github.com/madnight/githut'
+      return unless (match = absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse('https://api.github.com/graphql')
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Post.new(github_uri.path)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+      request.body = { 'query' => graph_ql_file_contents(owner, repo) }.to_json
+
+      response = JSON.parse(http.request(request).body)
+      languages_list = JSON.parse(response["data"]["repository"]["object"]["entries"][0]["object"]["text"])
+
+      year = languages_list[-1]["year"]
+      quarter = languages_list[-1]["quarter"]
+
+      fresh_language_data = []
+
+      languages_list.each do |language|
+        language["count"] = language["count"].to_i
+        fresh_language_data << language if language["year"] == year && language["quarter"] == quarter
+      end
+
+      top_25_languages = fresh_language_data.sort_by { |k| -k["count"] }[0..24]
+
+      rank = 1
+      top_25_languages.each do |language|
+        ["year", "quarter", "count"].each { |k| language.delete(k) }
+        language["rank"] = rank
+        rank += 1
+      end
+
+      File.open("utils/top_25_languages.yml", "w") do |f|
+        f.write(top_25_languages.to_yaml)
+      end
+
+      puts "Repository language data for TOP 25 saved."
+    end
+
+    def graph_ql_file_contents(owner, repo)
+      '{'\
+      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
+      '    object(expression: "master:src/data/") {'\
+      '      ... on Tree {'\
+      '        entries {'\
+      '          object {'\
+      '          ... on Blob {'\
+      '            text'\
+      '           }'\
+      '          }'\
+      '        }'\
+      '      }'\
+      '    }'\
+      '  }'\
+      '}'\
+    end
+
+    def sum_languages(product_languages)
+      languages = product_languages.dup.uniq! { |lang| lang["node"] }
+      languages = product_languages if languages.nil?
+      total_product_languages = []
+      languages&.each do |language|
+        certain_lang = product_languages.select { |lang| lang["node"]["name"] == language["node"]["name"] }
+        counter = 0
+        certain_lang.each do |lang|
+          counter += lang["size"]
+        end
+        total_product_languages.push({ "node" => { "name" => certain_lang[0]["node"]["name"],
+                                                   "color" => certain_lang[0]["node"]["color"] },
+                                       "size" => counter })
+      end
+      total_product_languages.flatten.sort_by { |k| -k["size"] }
+    end
+
+    def read_indicator_config(indicator_config, category_name, indicator_name)
+      indicator_config.each do |category|
+        next if category['category'] != category_name
+
+        category['indicators'].each do |indicator|
+          next if indicator['name'] != indicator_name
+
+          low_calculations = []
+          indicator['low'].each do |calculation|
+            low_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          medium_calculations = []
+          indicator['medium'].each do |calculation|
+            medium_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          high_calculations = []
+          indicator['high'].each do |calculation|
+            high_calculations << { 'operator': calculation['operator'], 'value': calculation['value'] }
+          end
+
+          return {
+            'name': indicator['name'],
+            'low': low_calculations,
+            'medium': medium_calculations,
+            'high': high_calculations
+          }
+        end
+      end
+
+      { 'error': 'Indicator not found' }
+    end
+
+    def calculate_product_indicators(product_id)
+      product_repositories = ProductRepository.where(product_id: product_id)
+      github_category_indicators = CategoryIndicator.where(data_source: 'GitHub')
+
+      config_file = YAML.load_file('config/indicator_config.yml')
+
+      github_category_indicators.each do |indicator|
+        product_indicator = ProductIndicator.find_by(product_id: product_id, category_indicator_id: indicator.id)
+        if product_indicator.nil?
+          product_indicator = ProductIndicator.new(product_id: product_id, category_indicator_id: indicator.id)
+        end
+
+        statistical_data = calculate_total_repo_statistical_data(indicator, product_repositories)
+
+        scale = [:low, :medium, :high]
+
+        statistical_data.each do |datum|
+          scale.each do |flag|
+            indicator_value = calculate_indicator_value(config_file, indicator, datum, flag)
+            unless indicator_value.nil?
+              product_indicator.indicator_value = indicator_value
+              product_indicator.save
+            end
+          end
+        end
+      end
+    end
+
+    def calculate_total_repo_statistical_data(indicator, product_repositories)
+      total_repo_statistical_data = Hash.new(0)
+      counter = 0
+      update_date = "1950-01-10T00:00:01Z"
+
+      product_repositories.each do |repo|
+        if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
+                                           "openPullRequestCount", "mergedPullRequestCount"])
+          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["downloadCount"])
+          download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
+          unless download_data.nil?
+            # rubocop:disable Layout/LineLength
+            download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]["node"]["releaseAssets"]["edges"][0]
+            unless download_data.nil?
+              counter += repo.statistical_data["data"]["repository"]["releases"]["edges"][0]["node"]["releaseAssets"]["edges"][0]["node"][indicator.source_indicator]
+              # rubocop:enable Layout/LineLength
+            end
+          end
+          total_repo_statistical_data[indicator.source_indicator] = counter
+        elsif indicator.source_indicator.in?(["commitsOnMasterBranch, commitsOnMainBranch"])
+          counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["updatedAt"])
+          if repo.statistical_data["data"]["repository"][indicator.source_indicator] > update_date
+            update_date = repo.statistical_data["data"]["repository"][indicator.source_indicator]
+          end
+          total_repo_statistical_data[indicator.name] = (Date.today - update_date.to_date).to_i
+        elsif indicator.source_indicator.in?(["forkCount"])
+          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]
+          total_repo_statistical_data[indicator.name] = counter
+        end
+      end
+      total_repo_statistical_data
+    end
+
+    def calculate_indicator_value(config_file, indicator, datum, flag)
+      indicator_config = read_indicator_config(config_file, "Repository Info", indicator.name)
+      flag_weight = 1
+      condition_counter = 0..(indicator_config[flag].count - 1)
+      condition_counter.each do |counter|
+        if indicator_config[flag][counter][:operator].to_s == "equalTo"
+          if datum[1] != indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        elsif indicator_config[flag][counter][:operator].to_s == "greaterThan"
+          if datum[1] < indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        elsif indicator_config[flag][counter][:operator].to_s == "lessThan"
+          if datum[1] > indicator_config[flag][counter][:value]
+            flag_weight *= 0
+          end
+        end
+      end
+      flag.to_s if flag_weight == 1
+    end
   end
 end

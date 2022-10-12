@@ -223,3 +223,122 @@ if commits_indicator.nil?
     indicator_desc.save
   end
 end
+
+review_category = RubricCategory.find_by(slug: slug_em('Code Review'))
+if review_category.nil?
+  review_category = RubricCategory.new(
+    name: 'Code Review',
+    slug: slug_em('Code Review'),
+    weight: 1
+  )
+  review_category.save
+end
+
+language_indicator = CategoryIndicator.find_by(slug: slug_em('Language'))
+if language_indicator.nil?
+  language_indicator = CategoryIndicator.new(
+    name: 'Language',
+    slug: slug_em('Language'),
+    indicator_type: 'scale',
+    weight: 0.2,
+    rubric_category_id: review_category.id,
+    data_source: 'GitHub',
+    source_indicator: 'language'
+  )
+  if language_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: language_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Language used in product is one of the Top 10 or Top 25 commonly used programming'\
+                                 ' languages.'
+    indicator_desc.category_indicator_id = language_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+documentation_indicator = CategoryIndicator.find_by(slug: slug_em('Documentation'))
+if documentation_indicator.nil?
+  documentation_indicator = CategoryIndicator.new(
+    name: 'Documentation',
+    slug: slug_em('Documentation'),
+    indicator_type: 'scale',
+    weight: 0.2,
+    rubric_category_id: review_category.id,
+    data_source: 'GitHub',
+    source_indicator: 'documentation'
+  )
+  if documentation_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: documentation_indicator.id,
+                                                          locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Code is documented with a README, CONTRIBUTING and/or link to documentation'\
+                                 ' in the code repository.'
+    indicator_desc.category_indicator_id = documentation_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+containerized_indicator = CategoryIndicator.find_by(slug: slug_em('Containerized'))
+if containerized_indicator.nil?
+  containerized_indicator = CategoryIndicator.new(
+    name: 'Containerized',
+    slug: slug_em('Containerized'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: review_category.id,
+    data_source: 'GitHub',
+    source_indicator: 'containerized'
+  )
+  if containerized_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: containerized_indicator.id,
+                                                          locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'The code contains a dockerfile, allowing the product to be deployed easily.'
+    indicator_desc.category_indicator_id = containerized_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+license_indicator = CategoryIndicator.find_by(slug: slug_em('License'))
+if license_indicator.nil?
+  license_indicator = CategoryIndicator.new(
+    name: 'License',
+    slug: slug_em('License'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: review_category.id,
+    data_source: 'GitHub',
+    source_indicator: 'license'
+  )
+  if license_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: license_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'The code contains a valid LICENSE file.'
+    indicator_desc.category_indicator_id = license_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+api_docs_indicator = CategoryIndicator.find_by(slug: slug_em('API Documentation'))
+if api_docs_indicator.nil?
+  api_docs_indicator = CategoryIndicator.new(
+    name: 'API Documentation',
+    slug: slug_em('API Documentation'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: review_category.id,
+    data_source: 'GitHub',
+    source_indicator: 'API Docs'
+  )
+  if api_docs_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: api_docs_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'The product has a documented API (Swagger/OpenAPI).'
+    indicator_desc.category_indicator_id = api_docs_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
