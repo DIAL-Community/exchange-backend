@@ -94,6 +94,7 @@ module Types
     field :delete_comment, mutation: Mutations::DeleteComment
 
     field :create_rubric_category, mutation: Mutations::CreateRubricCategory
+    field :update_rubric_category_indicators, mutation: Mutations::UpdateRubricCategoryIndicators
     field :delete_rubric_category, mutation: Mutations::DeleteRubricCategory
 
     field :delete_category_indicator, mutation: Mutations::DeleteCategoryIndicator
