@@ -214,7 +214,9 @@ namespace :maturity_sync do
     puts 'Updating code review indicators data for products.'
 
     Product.all.each do |product|
+      puts "Updating code review indicators data for product: #{product.name}"
       sync_containerized_indicator(product)
+      sync_license_indicator(product)
     end
   end
 

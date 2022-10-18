@@ -323,6 +323,29 @@ module Modules
       product_indicator.save!
     end
 
+    def sync_license_indicator(product)
+      product_repositories = ProductRepository.where(product_id: product.id)
+
+      indicator = CategoryIndicator.find_by(slug: 'license')
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      product_repositories.each do |repository|
+        file_list = read_repository_file_list(repository)
+        license_file = check_file(file_list, 'LICENSE')
+
+        if license_file == true
+          product_indicator.indicator_value = 't'
+          break
+        end
+      end
+      product_indicator.save!
+    end
+
     def check_file(file_list, file_name)
       unless file_list.nil? || file_list["data"]["repository"].nil?
         file_list = file_list["data"]["repository"]["object"]["entries"]
