@@ -567,5 +567,45 @@ module Modules
       end
       flag.to_s if flag_weight == 1
     end
+
+    def api_check(repository)
+      return nil if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      indicator = CategoryIndicator.find_by(slug: 'api_documentation')
+
+      product_indicator = ProductIndicator.find_by(product_id: repository.product_id,
+                                                  category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: repository.product_id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      _, owner, repo = match.captures
+
+      queries = ['q=openapi+in:file+repo', 'q=swagger+in:file+repo']
+
+      queries.each do |query|
+        result = search_repo_code(owner, repo, query)
+        unless result.nil?
+          product_indicator.indicator_value = 't'
+        end
+      end
+      product_indicator.save!
+    end
+
+    def search_repo_code(owner, repo, query)
+      github_uri = URI.parse("https://api.github.com/search/code?#{query}:#{owner}/#{repo}")
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Get.new(github_uri)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+
+      response = JSON.parse(http.request(request).body)
+      response["total_count"] if response["total_count"] && response["total_count"] != 0
+    end
   end
 end

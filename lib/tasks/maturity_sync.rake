@@ -249,4 +249,10 @@ namespace :maturity_sync do
       product.save!
     end
   end
+
+  task :update_api_docs_indicators, [] => :environment do
+    ProductRepository.all.each do |product_repository|
+      api_check(product_repository)
+    end
+  end
 end
