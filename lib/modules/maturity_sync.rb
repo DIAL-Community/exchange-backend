@@ -538,9 +538,13 @@ module Modules
       update_date = "1950-01-10T00:00:01Z"
 
       product_repositories.each do |repo|
+        next if repo.statistical_data == {} || repo.statistical_data.class == String ||
+                repo.statistical_data["data"]["repository"].nil?
         if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
                                            "openPullRequestCount", "mergedPullRequestCount"])
-          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil?
+            counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          end
           total_repo_statistical_data[indicator.name] = counter
         elsif indicator.source_indicator.in?(["downloadCount"])
           download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
@@ -554,7 +558,12 @@ module Modules
           end
           total_repo_statistical_data[indicator.source_indicator] = counter
         elsif indicator.source_indicator.in?(["commitsOnMasterBranch, commitsOnMainBranch"])
-          counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          unless repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"].nil?
+            counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          end
+          unless repo.statistical_data["data"]["repository"]["commitsOnMainBranch"].nil?
+            counter += repo.statistical_data["data"]["repository"]["commitsOnMainBranch"]["history"]["totalCount"]
+          end
           total_repo_statistical_data[indicator.name] = counter
         elsif indicator.source_indicator.in?(["updatedAt"])
           if repo.statistical_data["data"]["repository"][indicator.source_indicator] > update_date

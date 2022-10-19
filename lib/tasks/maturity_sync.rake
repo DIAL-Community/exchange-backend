@@ -182,6 +182,7 @@ namespace :maturity_sync do
       overall_score = maturity_score[:rubric_scores][0][:overall_score].to_i
       puts "OVERALL SCORE: #{overall_score}"
       product.maturity_score = overall_score
+      calculate_product_indicators(product.id)
       product.save!
     end
   end
