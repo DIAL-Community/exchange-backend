@@ -61,7 +61,12 @@ module Mutations
         end
 
         playbook = Playbook.find_by(slug: playbook_slug)
-        unless playbook.nil?
+        assigned_play = PlaybookPlay
+                        .joins(:playbook)
+                        .joins(:play)
+                        .find_by(playbook: { slug: playbook_slug }, play: { slug: play.slug })
+        # Only create assignment if the playbook is not yet assigned.
+        if !playbook.nil? && assigned_play.nil?
           max_order = PlaybookPlay.where(playbook: playbook).maximum('order')
           max_order = max_order.nil? ? 0 : (max_order + 1)
           assigned_play = PlaybookPlay.new
