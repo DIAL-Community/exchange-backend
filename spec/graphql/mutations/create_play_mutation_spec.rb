@@ -7,14 +7,16 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation CreatePlay (
-        $name: String!,
-        $slug: String!,
+        $name: String!
+        $slug: String!
         $description: String!
+        $playbookSlug: String
       ) {
         createPlay (
-          name: $name,
-          slug: $slug,
+          name: $name
+          slug: $slug
           description: $description
+          playbookSlug: $playbookSlug
         ) {
           play {
             name
@@ -40,6 +42,60 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       expect(result['data']['createPlay']['play'])
         .to(eq("name" => "Some name", "slug" => "some_name",
         "playDescription" => { "description" => "Some Description" }))
+    end
+  end
+
+  it 'should assign play to playbook and not creating duplicate' do
+    user = create(:user, email: 'user@gmail.com', roles: [:admin])
+
+    current_playbook = create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some_playbook')
+    expect(current_playbook.plays.length).to(eq(0))
+
+    result = execute_graphql_as_user(
+      user,
+      mutation,
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Description",
+        playbookSlug: 'some_playbook'
+      }
+    )
+
+    aggregate_failures do
+      expect(result['data']['createPlay']['play']).to(
+        eq(
+          "name" => "Some name",
+          "slug" => "some_name",
+          "playDescription" => { "description" => "Some Description" }
+        )
+      )
+      current_playbook.reload
+      expect(current_playbook.plays.length).to(eq(1))
+    end
+
+    result = execute_graphql_as_user(
+      user,
+      mutation,
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Updated Description",
+        playbookSlug: 'some_playbook'
+      }
+    )
+
+    # Not creating duplicate assignment of play when updating a play object.
+    aggregate_failures do
+      expect(result['data']['createPlay']['play']).to(
+        eq(
+          "name" => "Some name",
+          "slug" => "some_name",
+          "playDescription" => { "description" => "Some Updated Description" }
+        )
+      )
+      current_playbook.reload
+      expect(current_playbook.plays.length).to(eq(1))
     end
   end
 
