@@ -8,7 +8,7 @@ module Queries
 
     def resolve(search:, mature:)
       if mature
-        use_cases = UseCase.where(maturity: 'MATURE').order(:name)
+        use_cases = UseCase.where(maturity: 'PUBLISHED').order(:name)
       else
         use_cases = UseCase.order(:name)
       end
@@ -66,7 +66,7 @@ module Queries
                              .where(sdg_targets: { sdg_number: sdg_numbers })
       end
 
-      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:MATURE]) unless show_beta
+      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
 
       use_cases.distinct
     end
