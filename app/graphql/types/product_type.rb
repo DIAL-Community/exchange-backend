@@ -46,6 +46,9 @@ module Types
       argument :first, Integer, required: false
     end
 
+    field :product_indicators, [Types::ProductIndicatorType], null: true
+    field :not_assigned_category_indicators, [Types::CategoryIndicatorType], null: true
+
     field :projects, [Types::ProjectType], null: true
 
     field :building_blocks, [Types::BuildingBlockType], null: true
