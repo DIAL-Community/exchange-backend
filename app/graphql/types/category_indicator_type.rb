@@ -19,6 +19,8 @@ module Types
     field :source_indicator, String, null: true
     field :script_name, String, null: true
 
+    field :rubric_category, Types::RubricCategoryType, null: true
+
     field :category_indicator_descriptions, [Types::CategoryIndicatorDescriptionType], null: true
     field :category_indicator_description, Types::CategoryIndicatorDescriptionType, null: true,
                                                                method: :category_indicator_description_localized

@@ -210,6 +210,7 @@ type CategoryIndicator {
   id: ID!
   indicatorType: String
   name: String!
+  rubricCategory: RubricCategory
   rubricCategoryId: Int
   scriptName: String
   slug: String!
@@ -1197,6 +1198,7 @@ type Product {
   maturityScore: Int
   maturityScores: JSON
   name: String!
+  notAssignedCategoryIndicators: [CategoryIndicator!]
   organizations: [Organization!]
   origins: [Origin!]
   owner: String
@@ -1204,6 +1206,7 @@ type Product {
   pricingModel: String
   productDescription: ProductDescription
   productDescriptions: [ProductDescription!]
+  productIndicators: [ProductIndicator!]
   productType: String!
   projects: [Project!]
   sectors: [Sector!]
@@ -1255,6 +1258,14 @@ type ProductEdge {
   The item at the end of the edge.
   """
   node: Product
+}
+
+type ProductIndicator {
+  categoryIndicator: CategoryIndicator!
+  categoryIndicatorId: ID!
+  id: ID!
+  indicatorValue: String!
+  productId: ID!
 }
 
 type ProductRepository {

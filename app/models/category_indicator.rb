@@ -26,4 +26,8 @@ class CategoryIndicator < ApplicationRecord
     end
     description
   end
+
+  def rubric_category
+    RubricCategory.find_by(id: rubric_category_id)
+  end
 end
