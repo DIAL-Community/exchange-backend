@@ -142,7 +142,8 @@ CREATE TYPE public.entity_status_type AS ENUM (
     'MATURE',
     'SELF-REPORTED',
     'VALIDATED',
-    'PUBLISHED'
+    'PUBLISHED',
+    'DRAFT'
 );
 
 
@@ -3507,7 +3508,7 @@ CREATE TABLE public.use_cases (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
-    maturity public.entity_status_type DEFAULT 'BETA'::public.entity_status_type NOT NULL,
+    maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     tags character varying[] DEFAULT '{}'::character varying[]
 );
 
