@@ -1425,6 +1425,20 @@
               "deprecationReason": null
             },
             {
+              "name": "rubricCategory",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "RubricCategory",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "rubricCategoryId",
               "description": null,
               "args": [
@@ -13829,6 +13843,28 @@
               "deprecationReason": null
             },
             {
+              "name": "notAssignedCategoryIndicators",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "CategoryIndicator",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "organizations",
               "description": null,
               "args": [
@@ -13943,6 +13979,28 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "ProductDescription",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "productIndicators",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "ProductIndicator",
                     "ofType": null
                   }
                 }
@@ -14301,6 +14359,109 @@
                 "kind": "OBJECT",
                 "name": "Product",
                 "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "ProductIndicator",
+          "description": null,
+          "fields": [
+            {
+              "name": "categoryIndicator",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CategoryIndicator",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "categoryIndicatorId",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "indicatorValue",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "productId",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null

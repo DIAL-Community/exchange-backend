@@ -194,3 +194,56 @@ RSpec.describe(Queries::OwnedProductsQuery, type: :graphql) do
     end
   end
 end
+
+RSpec.describe(Queries::Product, type: :graphql) do
+  let(:query) do
+    <<~GQL
+      query Product($slug: String!) {
+        product(slug: $slug) {
+          productIndicators {
+            indicatorValue
+            categoryIndicator {
+              name
+              indicatorType
+            }
+          }
+          notAssignedCategoryIndicators {
+            name
+            indicatorType
+          }
+        }
+      }
+    GQL
+  end
+
+  it 'pulls owned products for logged used' do
+    create(:product, name: 'Some Product', slug: 'some_product', id: 1000)
+
+    create(:rubric_category, name: 'Some RC', slug: 'some_rc', id: 1)
+
+    category_indicator_1 = create(:category_indicator, name: 'Category Indicator 1',
+                                                       slug: 'category_indicator_1',
+                                                       indicator_type: 'scale',
+                                                       rubric_category_id: 1)
+    create(:category_indicator, name: 'Category Indicator 2',
+                                slug: 'category_indicator_2',
+                                indicator_type: 'boolean',
+                                rubric_category_id: 1)
+
+    create(:product_indicator, product_id: 1000,
+                               category_indicator_id: category_indicator_1.id,
+                               indicator_value: 'medium')
+
+    result = execute_graphql(
+      query,
+      variables: { slug: 'some_product' }
+    )
+
+    expect(result['data']['product']['notAssignedCategoryIndicators'])
+      .not_to(include({ "indicatorType" => "scale", "name" => "Category Indicator 1" }))
+
+    expect(result['data']['product']['productIndicators'])
+      .to(eq([{ "categoryIndicator" => { "indicatorType" => "scale", "name" => "Category Indicator 1" },
+                "indicatorValue" => "medium" }]))
+  end
+end

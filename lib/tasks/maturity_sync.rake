@@ -182,6 +182,7 @@ namespace :maturity_sync do
       overall_score = maturity_score[:rubric_scores][0][:overall_score].to_i
       puts "OVERALL SCORE: #{overall_score}"
       product.maturity_score = overall_score
+      calculate_product_indicators(product.id)
       product.save!
     end
   end
@@ -214,7 +215,9 @@ namespace :maturity_sync do
     puts 'Updating code review indicators data for products.'
 
     Product.all.each do |product|
+      puts "Updating code review indicators data for product: #{product.name}"
       sync_containerized_indicator(product)
+      sync_license_indicator(product)
     end
   end
 
@@ -247,6 +250,12 @@ namespace :maturity_sync do
       product.languages = top_languages
       product.languages = nil if top_languages == [nil]
       product.save!
+    end
+  end
+
+  task :update_api_docs_indicators, [] => :environment do
+    ProductRepository.all.each do |product_repository|
+      api_check(product_repository)
     end
   end
 end

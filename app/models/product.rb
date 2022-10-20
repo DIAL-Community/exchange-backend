@@ -221,4 +221,38 @@ class Product < ApplicationRecord
     end
     nil
   end
+
+  def product_indicators
+    product_indicators = ProductIndicator.where(product_id: id)
+
+    product_indicators_list = []
+    product_indicators.each do |indicator|
+      category = CategoryIndicator.find_by(id: indicator.category_indicator_id)
+      unless category.rubric_category_id.nil?
+        product_indicators_list << indicator
+      end
+    end
+    product_indicators_list
+  end
+
+  def not_assigned_category_indicators
+    product_indicators = ProductIndicator.where(product_id: id)
+
+    used_categories_ids = []
+    product_indicators.each do |indicator|
+      current_category = CategoryIndicator.find_by(id: indicator.category_indicator_id)
+      unless current_category.rubric_category_id.nil?
+        used_categories_ids << current_category.id
+      end
+    end
+
+    not_used_categories = []
+    CategoryIndicator.all.each do |category|
+      if !category.id.in?(used_categories_ids) && !category.rubric_category_id.nil?
+        not_used_categories << category
+      end
+    end
+
+    not_used_categories
+  end
 end

@@ -323,6 +323,29 @@ module Modules
       product_indicator.save!
     end
 
+    def sync_license_indicator(product)
+      product_repositories = ProductRepository.where(product_id: product.id)
+
+      indicator = CategoryIndicator.find_by(slug: 'license')
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      product_repositories.each do |repository|
+        file_list = read_repository_file_list(repository)
+        license_file = check_file(file_list, 'LICENSE')
+
+        if license_file == true
+          product_indicator.indicator_value = 't'
+          break
+        end
+      end
+      product_indicator.save!
+    end
+
     def check_file(file_list, file_name)
       unless file_list.nil? || file_list["data"]["repository"].nil?
         file_list = file_list["data"]["repository"]["object"]["entries"]
@@ -515,9 +538,13 @@ module Modules
       update_date = "1950-01-10T00:00:01Z"
 
       product_repositories.each do |repo|
+        next if repo.statistical_data == {} || repo.statistical_data.class == String ||
+                repo.statistical_data["data"]["repository"].nil?
         if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
                                            "openPullRequestCount", "mergedPullRequestCount"])
-          counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil?
+            counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+          end
           total_repo_statistical_data[indicator.name] = counter
         elsif indicator.source_indicator.in?(["downloadCount"])
           download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
@@ -531,7 +558,12 @@ module Modules
           end
           total_repo_statistical_data[indicator.source_indicator] = counter
         elsif indicator.source_indicator.in?(["commitsOnMasterBranch, commitsOnMainBranch"])
-          counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          unless repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"].nil?
+            counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
+          end
+          unless repo.statistical_data["data"]["repository"]["commitsOnMainBranch"].nil?
+            counter += repo.statistical_data["data"]["repository"]["commitsOnMainBranch"]["history"]["totalCount"]
+          end
           total_repo_statistical_data[indicator.name] = counter
         elsif indicator.source_indicator.in?(["updatedAt"])
           if repo.statistical_data["data"]["repository"][indicator.source_indicator] > update_date
@@ -566,6 +598,46 @@ module Modules
         end
       end
       flag.to_s if flag_weight == 1
+    end
+
+    def api_check(repository)
+      return nil if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      indicator = CategoryIndicator.find_by(slug: 'api_documentation')
+
+      product_indicator = ProductIndicator.find_by(product_id: repository.product_id,
+                                                  category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: repository.product_id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'f')
+      end
+
+      _, owner, repo = match.captures
+
+      queries = ['q=openapi+in:file+repo', 'q=swagger+in:file+repo']
+
+      queries.each do |query|
+        result = search_repo_code(owner, repo, query)
+        unless result.nil?
+          product_indicator.indicator_value = 't'
+        end
+      end
+      product_indicator.save!
+    end
+
+    def search_repo_code(owner, repo, query)
+      github_uri = URI.parse("https://api.github.com/search/code?#{query}:#{owner}/#{repo}")
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Get.new(github_uri)
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+
+      response = JSON.parse(http.request(request).body)
+      response["total_count"] if response["total_count"] && response["total_count"] != 0
     end
   end
 end
