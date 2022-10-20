@@ -3372,8 +3372,7 @@ CREATE TABLE public.use_case_steps (
     step_number integer NOT NULL,
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    markdown_url character varying
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3405,6 +3404,36 @@ CREATE SEQUENCE public.use_case_steps_building_blocks_id_seq
 --
 
 ALTER SEQUENCE public.use_case_steps_building_blocks_id_seq OWNED BY public.use_case_steps_building_blocks.id;
+
+
+--
+-- Name: use_case_steps_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.use_case_steps_datasets (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    dataset_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.use_case_steps_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.use_case_steps_datasets_id_seq OWNED BY public.use_case_steps_datasets.id;
 
 
 --
@@ -4309,6 +4338,13 @@ ALTER TABLE ONLY public.use_case_steps_building_blocks ALTER COLUMN id SET DEFAU
 
 
 --
+-- Name: use_case_steps_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets ALTER COLUMN id SET DEFAULT nextval('public.use_case_steps_datasets_id_seq'::regclass);
+
+
+--
 -- Name: use_case_steps_products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5071,6 +5107,14 @@ ALTER TABLE ONLY public.use_case_steps_building_blocks
 
 
 --
+-- Name: use_case_steps_datasets use_case_steps_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: use_case_steps use_case_steps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5194,6 +5238,13 @@ CREATE UNIQUE INDEX classifications_products_idx ON public.product_classificatio
 --
 
 CREATE INDEX dataset_sdg_index_on_sdg_id ON public.dataset_sustainable_development_goals USING btree (sustainable_development_goal_id);
+
+
+--
+-- Name: datasets_use_case_steps_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX datasets_use_case_steps_idx ON public.use_case_steps_datasets USING btree (dataset_id, use_case_step_id);
 
 
 --
@@ -6076,6 +6127,13 @@ CREATE UNIQUE INDEX sectors_projects_idx ON public.projects_sectors USING btree 
 --
 
 CREATE UNIQUE INDEX use_case_steps_building_blocks_idx ON public.use_case_steps_building_blocks USING btree (use_case_step_id, building_block_id);
+
+
+--
+-- Name: use_case_steps_datasets_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_datasets_idx ON public.use_case_steps_datasets USING btree (use_case_step_id, dataset_id);
 
 
 --
@@ -7031,6 +7089,22 @@ ALTER TABLE ONLY public.use_case_steps_building_blocks
 
 
 --
+-- Name: use_case_steps_datasets use_case_steps_datasets_dataset_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_dataset_fk FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_step_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_step_fk FOREIGN KEY (use_case_step_id) REFERENCES public.use_case_steps(id);
+
+
+--
 -- Name: use_case_steps_products use_case_steps_products_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7310,7 +7384,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220909100954'),
 ('20220909101028'),
 ('20220916115012'),
-('20220923161216'),
-('20220930090351');
+('20220930090351'),
+('20221018015421');
 
 
