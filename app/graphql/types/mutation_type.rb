@@ -70,6 +70,7 @@ module Types
     field :create_use_case_step, mutation: Mutations::CreateUseCaseStep
 
     field :update_use_case_step_workflows, mutation: Mutations::UpdateUseCaseStepWorkflows
+    field :update_use_case_step_datasets, mutation: Mutations::UpdateUseCaseStepDatasets
     field :update_use_case_step_products, mutation: Mutations::UpdateUseCaseStepProducts
     field :update_use_case_step_building_blocks, mutation: Mutations::UpdateUseCaseStepBuildingBlocks
 
