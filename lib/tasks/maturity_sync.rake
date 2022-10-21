@@ -214,10 +214,14 @@ namespace :maturity_sync do
   task :update_code_review_indicators, [] => :environment do
     puts 'Updating code review indicators data for products.'
 
+    lang_file = YAML.load_file('utils/top_25_languages.yml')
+    config_file = YAML.load_file('config/indicator_config.yml')
+
     Product.all.each do |product|
       puts "Updating code review indicators data for product: #{product.name}"
       sync_containerized_indicator(product)
       sync_license_indicator(product)
+      sync_language_indicator(config_file, lang_file, product)
     end
   end
 
