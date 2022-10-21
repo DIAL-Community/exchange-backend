@@ -522,7 +522,7 @@ module Modules
 
         statistical_data.each do |datum|
           scale.each do |flag|
-            indicator_value = calculate_indicator_value(config_file, indicator, datum, flag)
+            indicator_value = calculate_indicator_value(config_file, indicator, datum[1], flag)
             unless indicator_value.nil?
               product_indicator.indicator_value = indicator_value
               product_indicator.save
@@ -584,15 +584,15 @@ module Modules
       condition_counter = 0..(indicator_config[flag].count - 1)
       condition_counter.each do |counter|
         if indicator_config[flag][counter][:operator].to_s == "equalTo"
-          if datum[1] != indicator_config[flag][counter][:value]
+          if datum != indicator_config[flag][counter][:value]
             flag_weight *= 0
           end
         elsif indicator_config[flag][counter][:operator].to_s == "greaterThan"
-          if datum[1] < indicator_config[flag][counter][:value]
+          if datum < indicator_config[flag][counter][:value]
             flag_weight *= 0
           end
         elsif indicator_config[flag][counter][:operator].to_s == "lessThan"
-          if datum[1] > indicator_config[flag][counter][:value]
+          if datum > indicator_config[flag][counter][:value]
             flag_weight *= 0
           end
         end
@@ -638,6 +638,35 @@ module Modules
 
       response = JSON.parse(http.request(request).body)
       response["total_count"] if response["total_count"] && response["total_count"] != 0
+    end
+
+    def sync_language_indicator(config_file, lang_file, product)
+      indicator = CategoryIndicator.find_by(slug: 'language')
+
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id, category_indicator_id: indicator.id,
+                                                 indicator_value: 'low')
+      end
+
+      product_top_languages = product.languages
+      product_indicator.indicator_value = 'low'
+      calc = 'low'
+      scale = [:low, :medium, :high]
+      unless product_top_languages.nil?
+        lang_file.each do |lang|
+          next if product_top_languages[0]["node"]["name"] != lang["name"]
+          datum = lang["rank"]
+          scale.each do |flag|
+            calc = calculate_indicator_value(config_file, indicator, datum, flag)
+            unless calc.nil?
+              product_indicator.indicator_value = calc
+              break
+            end
+          end
+        end
+        product_indicator.save!
+      end
     end
   end
 end
