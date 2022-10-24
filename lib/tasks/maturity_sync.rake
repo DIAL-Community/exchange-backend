@@ -222,6 +222,7 @@ namespace :maturity_sync do
       sync_containerized_indicator(product)
       sync_license_indicator(product)
       sync_language_indicator(config_file, lang_file, product)
+      sync_documentation_indicator(product)
     end
   end
 
