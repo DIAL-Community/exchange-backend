@@ -259,6 +259,119 @@ module Modules
       end
     end
 
+    def sync_documentation_indicator(product)
+      product_repositories = ProductRepository.where(product_id: product.id)
+
+      indicator = CategoryIndicator.find_by(slug: 'documentation')
+      product_indicator = ProductIndicator.find_by(product_id: product.id, category_indicator_id: indicator.id)
+      if product_indicator.nil?
+        product_indicator = ProductIndicator.new(product_id: product.id,
+                                                 category_indicator_id: indicator.id,
+                                                 indicator_value: 'low')
+      end
+
+      product_repositories.each do |repository|
+        file_list = read_repository_file_list(repository)
+
+        # github allows multiple file extensions of the readme file, this regex may be incomplete
+        readme_regex =
+          /^readme\.(?:markdown|mdown|mkdn|md|textile|rdoc|org|creole|mediawiki|wiki|rst|asciidoc|adoc|asc|pod|txt)/i
+
+        readme_file_name = 'Readme.md'
+        unless file_list.nil? || file_list["data"]["repository"].nil?
+          file_list["data"]["repository"]["object"]["entries"].each do |current_file|
+            if current_file["name"].match(readme_regex)
+              readme_file_name = current_file["name"]
+            end
+          end
+        end
+
+        contributing_regex = %r/^contributing\.(?:markdown|mdown|mkdn|md|textile|rdoc|org|creole|mediawiki|wiki|rst
+                                |asciidoc|adoc|asc|pod|txt)/i
+
+        contributing_file_name = 'Contributing.md'
+        unless file_list.nil? || file_list["data"]["repository"].nil?
+          file_list["data"]["repository"]["object"]["entries"].each do |current_file|
+            if current_file["name"].match(contributing_regex)
+              contributing_file_name = current_file["name"]
+            end
+          end
+        end
+
+        # check for external documentation
+        homepage_link_present = false
+        readme_commit_count = 0
+        contribution_file_present = false
+
+        if get_homepage_url(repository)
+          homepage_link_present = true
+        end
+
+        if check_file(file_list, contributing_file_name)
+          contribution_file_present = true
+        end
+
+        if check_file(file_list, readme_file_name)
+          readme_commit_count = get_commits_number_file(repository, readme_file_name)
+        end
+
+        if (readme_commit_count > 1 && contribution_file_present == true) ||
+          (readme_commit_count > 1 && homepage_link_present == true)
+          product_indicator.indicator_value = 'high'
+        elsif readme_commit_count > 1 || homepage_link_present == true
+          product_indicator.indicator_value = 'medium'
+        else
+          product_indicator.indicator_value = 'low'
+        end
+        break
+      end
+      product_indicator.save!
+    end
+
+    def get_commits_number_file(repository, filepath)
+      return 0 if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse("https://api.github.com/repos/#{owner}/#{repo}/commits?path=#{filepath}")
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Get.new(github_uri)
+      if ENV['GITHUB_USERNAME'].nil? || ENV['GITHUB_PERSONAL_TOKEN'].nil?
+        raise NoGithubCredentialsException
+      end
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+
+      response = http.request(request)
+      json_response = JSON.parse(response.body)
+      json_response.size
+    end
+
+    def get_homepage_url(repository)
+      return 0 if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse("https://api.github.com/repos/#{owner}/#{repo}")
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Get.new(github_uri)
+      if ENV['GITHUB_USERNAME'].nil? || ENV['GITHUB_PERSONAL_TOKEN'].nil?
+        raise NoGithubCredentialsException
+      end
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+
+      response = http.request(request)
+      json_response = JSON.parse(response.body)
+      json_response["homepage"]
+    end
+
     def sync_product_languages(product_repository)
       return if product_repository.absolute_url.blank?
 
@@ -358,6 +471,13 @@ module Modules
       end
     end
 
+    class NoGithubCredentialsException < StandardError
+      def initialize(msg = "No github credentials provided.", exception_type = "custom")
+        @exception_type = exception_type
+        super(msg)
+      end
+    end
+
     def read_repository_file_list(repository)
       return nil if repository.absolute_url.blank?
       repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
@@ -370,6 +490,9 @@ module Modules
       http.use_ssl = true
 
       request = Net::HTTP::Post.new(github_uri.path)
+      if ENV['GITHUB_USERNAME'].nil? || ENV['GITHUB_PERSONAL_TOKEN'].nil?
+        raise NoGithubCredentialsException
+      end
       request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
       request.body = { 'query' => graph_ql_file_list(owner, repo) }.to_json
 
