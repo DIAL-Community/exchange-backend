@@ -353,7 +353,7 @@ dpga_origin.id, dpga_list)
   task :export_public_goods, [:path] => :environment do |_, _params|
     puts 'Exporting OSC and Digital Square global goods ...'
 
-    export_products('dial_osc')
+    export_products('dial')
     export_products('digital_square')
   end
 
@@ -407,7 +407,7 @@ dpga_origin.id, dpga_list)
   task :update_public_goods_repo, [:path] => :environment do |_, params|
     puts 'Updating changes to OSC and Digital Square goods to publicgoods repository'
 
-    export_products('dial_osc')
+    export_products('dial')
     export_products('digital_square')
 
     Dir.entries('./export').select { |item| item.include?('.json') }.each do |entry|
@@ -439,7 +439,7 @@ dpga_origin.id, dpga_list)
 
   task :sync_giz_projects, [] => :environment do
     # First, set all existing sector origins to DIAL
-    dial_origin = Origin.find_by(name: 'DIAL OSC')
+    dial_origin = Origin.find_by(name: 'DIAL')
     Sector.where('origin_id is null').update_all(origin_id: dial_origin.id)
 
     giz_origin = Origin.find_by(name: 'GIZ')

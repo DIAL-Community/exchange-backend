@@ -80,7 +80,7 @@ namespace :data_processors do
 
     # Process the origin of the product.
     origin = Origin.find_by(name: json_data['origin'])
-    origin = Origin.find_by(slug: 'dial_osc') if origin.nil?
+    origin = Origin.find_by(slug: 'dial') if origin.nil?
 
     # Generate alias information for the product.
     valid_aliases = []
