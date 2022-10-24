@@ -166,7 +166,7 @@ namespace :maturity_sync do
       category_count = osc_category['items'].count
       osc_category['items'].each do |indicator|
         puts "Category: #{osc_category['header']} INDICATOR: #{indicator['code']}"
-        create_indicator(indicator['code'], indicator['desc'], 'DIAL OSC', category_count, 'boolean',
+        create_indicator(indicator['code'], indicator['desc'], 'DIAL', category_count, 'boolean',
                          rubric_category.id)
       end
     end
