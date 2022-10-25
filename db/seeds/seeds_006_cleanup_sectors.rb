@@ -41,6 +41,7 @@ translated_sector_names = {
 }
 
 sector_origin = Origin.find_by(slug: 'dial_osc')
+sector_origin = Origin.find_by(slug: 'dial') if sector_origin.nil?
 translated_sector_names.each do |sector_slug, translated_names|
   translated_names.each do |locale, name|
     puts "Finding sector '#{name}' in '#{locale}' with slug: #{sector_slug}."
@@ -51,11 +52,30 @@ translated_sector_names.each do |sector_slug, translated_names|
       attribute.name = name
       attribute.slug = sector_slug
       attribute.locale = locale
+      attribute.is_displayable = true
       attribute.origin_id = sector_origin.id
     end
 
     if sector.save
       puts "Created sector '#{name}' in '#{locale}' with slug: #{sector_slug}."
     end
+  end
+end
+
+english_sectors = Sector.where(locale: 'en')
+english_sectors.each do |english_sector|
+  czech_sector = Sector.find_by(slug: english_sector.slug, locale: 'cs')
+  next unless czech_sector.nil?
+
+  sector = Sector.new do |attribute|
+    attribute.name = english_sector.name
+    attribute.slug = english_sector.slug
+    attribute.locale = 'cs'
+    attribute.is_displayable = true
+    attribute.origin_id = sector_origin.id
+  end
+
+  if sector.save
+    puts "Created sector '#{english_sector.name}' in 'cs' with slug: #{english_sector.slug}."
   end
 end

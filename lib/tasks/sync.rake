@@ -438,10 +438,6 @@ dpga_origin.id, dpga_list)
   end
 
   task :sync_giz_projects, [] => :environment do
-    # First, set all existing sector origins to DIAL
-    dial_origin = Origin.find_by(name: 'DIAL')
-    Sector.where('origin_id is null').update_all(origin_id: dial_origin.id)
-
     giz_origin = Origin.find_by(name: 'GIZ')
     if giz_origin.nil?
       giz_origin = Origin.new
