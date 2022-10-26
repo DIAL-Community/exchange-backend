@@ -2061,10 +2061,11 @@ type Query {
   useCaseStep(slug: String!): UseCaseStep!
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!
+  useCasesForSector(sectorSlug: String!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdg: String, sector: String, subsector: String): Wizard!
+  wizard(buildingBlocks: [String!], sdg: String, sector: String, useCase: String): Wizard!
   workflow(slug: String!): Workflow!
   workflows(search: String = ""): [Workflow!]!
 }
