@@ -203,7 +203,8 @@ module Queries
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def wizard_products(sectors, sub_sectors, countries, tags, building_blocks, sort_hint, offset_params = {})
+  def wizard_products(sectors, sub_sectors, countries, tags, building_blocks, commercial_product, sort_hint,
+    offset_params = {})
     sector_ids, curr_sector = get_sector_list(sectors, sub_sectors)
     unless sector_ids.empty?
       sector_products = ProductSector.where(sector_id: sector_ids).map(&:product_id)
@@ -224,7 +225,8 @@ module Queries
       end
     end
 
-    filter_matching_products(product_bb, product_project, sector_products, tag_products, sort_hint, offset_params).uniq
+    filter_matching_products(product_bb, product_project, sector_products, tag_products, commercial_product, sort_hint,
+                             offset_params).uniq
   end
 
   class SearchProductsQuery < Queries::BaseQuery
@@ -275,12 +277,15 @@ module Queries
     argument :tags, [String], required: false, default_value: []
     argument :building_blocks, [String], required: false, default_value: []
     argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :commercial_product, Boolean, required: false
 
     argument :product_sort_hint, String, required: false, default_value: 'name'
     type Types::ProductType.connection_type, null: false
 
-    def resolve(sectors:, sub_sectors:, countries:, tags:, building_blocks:, product_sort_hint:, offset_attributes:)
-      wizard_products(sectors, sub_sectors, countries, tags, building_blocks, product_sort_hint, offset_attributes)
+    def resolve(sectors:, sub_sectors:, countries:, tags:, building_blocks:, commercial_product:, product_sort_hint:,
+      offset_attributes:)
+      wizard_products(sectors, sub_sectors, countries, tags, building_blocks, commercial_product, product_sort_hint,
+                      offset_attributes)
     end
   end
 
