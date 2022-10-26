@@ -856,7 +856,7 @@ type Mutation {
   updateOrganizationProducts(productsSlugs: [String!]!, slug: String!): UpdateOrganizationProductsPayload
   updateOrganizationProjects(projectsSlugs: [String!]!, slug: String!): UpdateOrganizationProjectsPayload
   updateOrganizationSectors(sectorsSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
-  updatePlayOrder(distance: Int, operation: String!, playSlug: String!, playbookSlug: String!): UpdatePlayOrderPayload
+  updatePlayOrder(distance: Int, operation: String!, playOrder: Int, playSlug: String!, playbookSlug: String!): UpdatePlayOrderPayload
   updateProductBuildingBlocks(buildingBlocksSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
   updateProductProjects(projectsSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
