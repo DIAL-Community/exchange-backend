@@ -1444,6 +1444,7 @@ type Query {
     """
     before: String
     buildingBlocks: [String!] = []
+    commercialProduct: Boolean
     countries: [String!] = []
 
     """

@@ -78,7 +78,8 @@ module Modules
       project_list.where(id: sector_tag_projects)
     end
 
-    def filter_matching_products(product_bb, product_project, product_sector, product_tag, sort_hint, offset_params)
+    def filter_matching_products(product_bb, product_project, product_sector, product_tag, commercial_product,
+      sort_hint, offset_params)
       # First, identify products that are aligned with selected sector and tags
       # Next, identify products that are aligned with needed building blocks
       # Finally, add products that are connected to relevant projects
@@ -121,6 +122,10 @@ module Modules
       end
 
       product_list = product_list.offset(offset_params[:offset]) unless offset_params.empty?
+
+      unless commercial_product.nil?
+        product_list = product_list.where(commercial_product: commercial_product)
+      end
 
       product_list.where(id: sector_tag_products).limit(20)
     end
