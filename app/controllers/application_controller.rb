@@ -107,31 +107,33 @@ class ApplicationController < ActionController::Base
     request['Accept'] = 'application/json'
     request['Authorization'] = "Basic " + Base64.strict_encode64(auth_email + ":" + auth_token)
     request.body = {
-                    'fields': {
-                      'project': {
-                        'key': params[:project_key]
-                      },
-                      'issuetype': {
-                        'id': 10002
-                      },
-                      'summary': 'Feedback on specifications, submitted by ' + params[:name] + ' (' + params[:encoded_email] + ')',
-                      'description': {
-                        'type': 'doc',
-                        'version': 1,
-                        'content': [
-                          {
-                            'type': 'paragraph',
-                            'content': [
-                              {
-                                'text': params[:name] + ' submitted the following feedback for page: ' + params[:issue_page] + '. ' + params[:issue],
-                                'type': 'text'
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    }
-                  }
+      'fields': {
+        'project': {
+          'key': params[:project_key]
+        },
+        'issuetype': {
+          'id': 10002
+        },
+        'summary': 'Feedback on specifications, submitted by ' + params[:name] \
+            + ' (' + params[:encoded_email] + ')',
+        'description': {
+          'type': 'doc',
+          'version': 1,
+          'content': [
+            {
+              'type': 'paragraph',
+              'content': [
+                {
+                  'text': params[:name] + ' submitted the following feedback for page: ' \
+                      + params[:issue_page] + '. ' + params[:issue],
+                  'type': 'text'
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
                    .to_json
 
     response = http.request(request)
