@@ -144,11 +144,12 @@ module Mutations
     argument :play_slug, String, required: true
     argument :operation, String, required: true
     argument :distance, Integer, required: false
+    argument :play_order, Integer, required: false
 
     field :play, Types::PlayType, null: false
     field :errors, [String], null: false
 
-    def resolve(playbook_slug:, play_slug:, operation:, distance:)
+    def resolve(playbook_slug:, play_slug:, operation:, distance: 0, play_order: 0)
       unless an_admin
         return {
           play: nil,
@@ -178,8 +179,9 @@ module Mutations
       case operation
       when 'UNASSIGN'
         # We're deleting the play because the order -1
-        deleted = playbook.plays.delete(play)
-        successful_operation = true unless deleted.nil?
+        playbook_play = playbook.playbook_plays[play_order]
+        deleted = PlaybookPlay.delete_by(playbook: playbook, play: play, order: playbook_play.order)
+        successful_operation = true if deleted == 1
       when 'ASSIGN'
         # We're adding a play, the order is length of the current plays (appending as the last play).
         max_order = PlaybookPlay.where(playbook: playbook).maximum('order')
@@ -201,7 +203,12 @@ module Mutations
         playbook_play.order = swapped_playbook_play.order
         swapped_playbook_play.order = temp_order
         # Save both playbook_play
-        successful_operation = true if playbook_play.save && swapped_playbook_play.save
+
+        ActiveRecord::Base.transaction do
+          playbook_play.save
+          swapped_playbook_play.save
+          successful_operation = true
+        end
       end
 
       if successful_operation
@@ -212,7 +219,7 @@ module Mutations
       else
         {
           play: nil,
-          errors: "Unable to add play record. Message: #{playbook.errors.full_messages}."
+          errors: playbook.errors.full_messages
         }
       end
     end
