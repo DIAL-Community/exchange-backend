@@ -101,4 +101,14 @@ module Queries
       UseCaseStep.find_by(slug: slug)
     end
   end
+
+  class UseCasesForSectorQuery < Queries::BaseQuery
+    argument :sector_slug, String, required: true
+    type [Types::UseCaseType], null: false
+
+    def resolve(sector_slug:)
+      use_cases = UseCase.joins(:sector).where(sectors: { slug: sector_slug, locale: I18n.locale })
+      use_cases
+    end
+  end
 end

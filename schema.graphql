@@ -856,7 +856,7 @@ type Mutation {
   updateOrganizationProducts(productsSlugs: [String!]!, slug: String!): UpdateOrganizationProductsPayload
   updateOrganizationProjects(projectsSlugs: [String!]!, slug: String!): UpdateOrganizationProjectsPayload
   updateOrganizationSectors(sectorsSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
-  updatePlayOrder(distance: Int, operation: String!, playSlug: String!, playbookSlug: String!): UpdatePlayOrderPayload
+  updatePlayOrder(distance: Int, operation: String!, playOrder: Int, playSlug: String!, playbookSlug: String!): UpdatePlayOrderPayload
   updateProductBuildingBlocks(buildingBlocksSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
   updateProductOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
@@ -1444,6 +1444,7 @@ type Query {
     """
     before: String
     buildingBlocks: [String!] = []
+    commercialProduct: Boolean
     countries: [String!] = []
 
     """
@@ -2061,10 +2062,11 @@ type Query {
   useCaseStep(slug: String!): UseCaseStep!
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!
+  useCasesForSector(sectorSlug: String!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdg: String, sector: String, subsector: String): Wizard!
+  wizard(buildingBlocks: [String!], sdg: String, sector: String, useCase: String): Wizard!
   workflow(slug: String!): Workflow!
   workflows(search: String = ""): [Workflow!]!
 }

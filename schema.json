@@ -9979,6 +9979,18 @@
                   "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
+                },
+                {
+                  "name": "playOrder",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -17136,6 +17148,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "commercialProduct",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "productSortHint",
                   "description": null,
                   "type": {
@@ -21197,6 +21221,47 @@
               "deprecationReason": null
             },
             {
+              "name": "useCasesForSector",
+              "description": null,
+              "args": [
+                {
+                  "name": "sectorSlug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "UseCase",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "useCasesSteps",
               "description": null,
               "args": [
@@ -21320,7 +21385,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "subsector",
+                  "name": "useCase",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",

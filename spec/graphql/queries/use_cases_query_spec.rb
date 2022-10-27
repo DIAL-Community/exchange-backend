@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+require 'graph_helpers'
+require 'rails_helper'
+
+RSpec.describe(Queries::UseCasesQuery, type: :graphql) do
+  let(:query) do
+    <<~GQL
+      query UseCasesForSector ($sectorSlug: String!) {
+        useCasesForSector (sectorSlug: $sectorSlug) {
+          name
+        }
+      }
+    GQL
+  end
+
+  it 'pulls use cases assigned to sector' do
+    create(:sector, name: 'Some Sector', slug: 'some_sector', id: 1001)
+    create(:use_case, name: 'Use Case 1', sector_id: 1001)
+    create(:use_case, name: 'Use Case 2', sector_id: 1001)
+
+    result = execute_graphql(
+      query,
+      variables: { sectorSlug: "some_sector" }
+    )
+
+    aggregate_failures do
+      expect(result['data']['useCasesForSector'])
+        .to(eq([{ "name" => "Use Case 1" }, { "name" => "Use Case 2" }]))
+    end
+  end
+end
