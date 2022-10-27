@@ -94,6 +94,54 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def create_issue
+    auth_email = ENV['JIRA_EMAIL']
+    auth_token = ENV['JIRA_TOKEN']
+
+    jira_uri = URI.parse("https://govstack-global.atlassian.net/rest/api/3/issue")
+    http = Net::HTTP.new(jira_uri.host, jira_uri.port)
+    http.use_ssl = true
+
+    request = Net::HTTP::Post.new(jira_uri.path)
+    request['Content-Type'] = 'application/json'
+    request['Accept'] = 'application/json'
+    request['Authorization'] = "Basic " + Base64.strict_encode64(auth_email + ":" + auth_token)
+    request.body = {
+                    'fields': {
+                      'project': {
+                        'key': params[:project_key]
+                      },
+                      'issuetype': {
+                        'id': 10002
+                      },
+                      'summary': 'Feedback on specifications, submitted by ' + params[:name] + ' (' + params[:encoded_email] + ')',
+                      'description': {
+                        'type': 'doc',
+                        'version': 1,
+                        'content': [
+                          {
+                            'type': 'paragraph',
+                            'content': [
+                              {
+                                'text': params[:name] + ' submitted the following feedback for page: ' + params[:issue_page] + '. ' + params[:issue],
+                                'type': 'text'
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                   .to_json
+
+    response = http.request(request)
+    response_json = JSON.parse(response.body)
+
+    respond_to do |format|
+      format.json { render(json: { data: response_json }, status: :ok) }
+    end
+  end
+
   private
 
   def user_not_authorized(exception)
