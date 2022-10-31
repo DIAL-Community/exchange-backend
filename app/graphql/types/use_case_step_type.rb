@@ -20,6 +20,7 @@ module Types
 
     field :use_case, Types::UseCaseType, null: false
     field :workflows, [Types::WorkflowType], null: false
+    field :datasets, [Types::DatasetType], null: true
     field :products, [Types::ProductType], null: true
     field :building_blocks, [Types::BuildingBlockType], null: true
   end

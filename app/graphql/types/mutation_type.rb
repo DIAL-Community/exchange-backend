@@ -46,6 +46,7 @@ module Types
     field :update_product_projects, mutation: Mutations::UpdateProductProjects
     field :update_product_tags, mutation: Mutations::UpdateProductTags
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
+    field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :update_dataset_countries, mutation: Mutations::UpdateDatasetCountries
@@ -70,6 +71,7 @@ module Types
     field :create_use_case_step, mutation: Mutations::CreateUseCaseStep
 
     field :update_use_case_step_workflows, mutation: Mutations::UpdateUseCaseStepWorkflows
+    field :update_use_case_step_datasets, mutation: Mutations::UpdateUseCaseStepDatasets
     field :update_use_case_step_products, mutation: Mutations::UpdateUseCaseStepProducts
     field :update_use_case_step_building_blocks, mutation: Mutations::UpdateUseCaseStepBuildingBlocks
 

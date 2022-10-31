@@ -352,7 +352,7 @@ module Modules
         end
       end
 
-      osc_origin = Origin.find_by(slug: 'dial_osc')
+      osc_origin = Origin.find_by(slug: 'dial')
       sync_product.origins.push(osc_origin) unless sync_product.origins.exists?(id: osc_origin.id)
 
       sync_product.save

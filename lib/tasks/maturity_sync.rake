@@ -166,7 +166,7 @@ namespace :maturity_sync do
       category_count = osc_category['items'].count
       osc_category['items'].each do |indicator|
         puts "Category: #{osc_category['header']} INDICATOR: #{indicator['code']}"
-        create_indicator(indicator['code'], indicator['desc'], 'DIAL OSC', category_count, 'boolean',
+        create_indicator(indicator['code'], indicator['desc'], 'DIAL', category_count, 'boolean',
                          rubric_category.id)
       end
     end
@@ -214,10 +214,15 @@ namespace :maturity_sync do
   task :update_code_review_indicators, [] => :environment do
     puts 'Updating code review indicators data for products.'
 
+    lang_file = YAML.load_file('utils/top_25_languages.yml')
+    config_file = YAML.load_file('config/indicator_config.yml')
+
     Product.all.each do |product|
       puts "Updating code review indicators data for product: #{product.name}"
       sync_containerized_indicator(product)
       sync_license_indicator(product)
+      sync_language_indicator(config_file, lang_file, product)
+      sync_documentation_indicator(product)
     end
   end
 

@@ -269,7 +269,7 @@ namespace :data do
     # Set all current sectors to is_displayable = false
     Sector.all.update_all(is_displayable: false)
 
-    dial_origin = Origin.where(slug: 'dial_osc').first
+    dial_origin = Origin.where(slug: 'dial').first
     sector_list = CSV.parse(File.read('./utils/sectors.csv'), headers: true)
     sector_list.each do |sector|
       if sector['Sub Sector'].nil?
@@ -415,7 +415,7 @@ namespace :data do
   end
 
   task i18n_sectors: :environment do
-    dial_origin = Origin.where(slug: 'dial_osc').first
+    dial_origin = Origin.where(slug: 'dial').first
 
     sectors = YAML.load_file('utils/sectors.yml')
     %w[es pt sw].each do |locale|
