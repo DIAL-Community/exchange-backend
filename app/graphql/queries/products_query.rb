@@ -203,17 +203,11 @@ module Queries
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def wizard_products(sectors, sub_sectors, countries, tags, building_blocks, commercial_product, sort_hint,
-    offset_params = {})
-    sector_ids, curr_sector = get_sector_list(sectors, sub_sectors)
-    unless sector_ids.empty?
-      sector_products = ProductSector.where(sector_id: sector_ids).map(&:product_id)
-      if sector_products.empty? && !curr_sector.parent_sector_id.nil?
-        sector_products = ProductSector.where(sector_id: curr_sector.parent_sector_id).map(&:product_id)
-      end
-    end
+  def wizard_products(sectors, countries, tags, building_blocks, use_cases, commercial_product,
+    sort_hint, offset_params = {})
+    sector_products = Product.joins(:sectors).where(sectors: { name: sectors, locale: I18n.locale }).map(&:id)
 
-    project_list = get_project_list(sector_ids, curr_sector, countries, tags, sort_hint).map(&:id).uniq
+    project_list = get_project_list(sector_products, countries, tags, sort_hint).map(&:id).uniq
 
     bbs = BuildingBlock.where(name: building_blocks)
     product_bb = ProductBuildingBlock.where(building_block_id: bbs).map(&:product_id)
@@ -225,8 +219,11 @@ module Queries
       end
     end
 
-    filter_matching_products(product_bb, product_project, sector_products, tag_products, commercial_product, sort_hint,
-                             offset_params).uniq
+    use_case_steps = UseCaseStep.joins(:use_case).where(use_case: { name: use_cases }).map(&:id)
+    product_use_case_steps = UseCaseStepsProducts.where(use_case_step_id: use_case_steps).map(&:product_id)
+
+    filter_matching_products(product_bb, product_project, sector_products, tag_products, product_use_case_steps,
+                             commercial_product, sort_hint, offset_params).uniq
   end
 
   class SearchProductsQuery < Queries::BaseQuery
@@ -272,20 +269,20 @@ module Queries
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
-    argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
     argument :building_blocks, [String], required: false, default_value: []
+    argument :use_cases, [String], required: false, default_value: []
     argument :offset_attributes, Types::OffsetAttributeInput, required: true
     argument :commercial_product, Boolean, required: false
-
     argument :product_sort_hint, String, required: false, default_value: 'name'
+
     type Types::ProductType.connection_type, null: false
 
-    def resolve(sectors:, sub_sectors:, countries:, tags:, building_blocks:, commercial_product:, product_sort_hint:,
-      offset_attributes:)
-      wizard_products(sectors, sub_sectors, countries, tags, building_blocks, commercial_product, product_sort_hint,
-                      offset_attributes)
+    def resolve(sectors:, countries:, tags:, building_blocks:, use_cases:, commercial_product:,
+      product_sort_hint:, offset_attributes:)
+      wizard_products(sectors, countries, tags, building_blocks, use_cases, commercial_product,
+                      product_sort_hint, offset_attributes)
     end
   end
 

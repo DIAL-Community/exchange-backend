@@ -101,5 +101,7 @@ module Types
 
     field :delete_category_indicator, mutation: Mutations::DeleteCategoryIndicator
     field :create_category_indicator, mutation: Mutations::CreateCategoryIndicator
+
+    field :create_wizard_guidance_mail, mutation: Mutations::CreateWizardGuidanceMail
   end
 end
