@@ -16,8 +16,8 @@ RSpec.describe(Queries::UseCasesQuery, type: :graphql) do
 
   it 'pulls use cases assigned to sector' do
     create(:sector, name: 'Some Sector', slug: 'some_sector', id: 1001)
-    create(:use_case, name: 'Use Case 1', sector_id: 1001)
-    create(:use_case, name: 'Use Case 2', sector_id: 1001)
+    create(:use_case, name: 'Use Case 1', sector_id: 1001, maturity: 'PUBLISHED')
+    create(:use_case, name: 'Use Case 2', sector_id: 1001, maturity: 'BETA')
 
     result = execute_graphql(
       query,
@@ -26,7 +26,7 @@ RSpec.describe(Queries::UseCasesQuery, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['useCasesForSector'])
-        .to(eq([{ "name" => "Use Case 1" }, { "name" => "Use Case 2" }]))
+        .to(eq([{ "name" => "Use Case 1" }]))
     end
   end
 end

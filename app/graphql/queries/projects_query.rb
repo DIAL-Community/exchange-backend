@@ -133,9 +133,9 @@ module Queries
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def wizard_projects(sectors, sub_sectors, countries, tags, sort_hint, offset_params = {})
-    sector_ids, curr_sector = get_sector_list(sectors, sub_sectors)
-    get_project_list(sector_ids, curr_sector, countries, tags, sort_hint, offset_params).uniq
+  def wizard_projects(sector, countries, tags, sort_hint, offset_params = {})
+    sector_id = Sector.find_by(name: sector).id
+    get_project_list(sector_id, countries, tags, sort_hint, offset_params).uniq
   end
 
   class SearchProjectsQuery < Queries::BaseQuery
@@ -145,7 +145,6 @@ module Queries
     argument :search, String, required: false, default_value: ''
     argument :origins, [String], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
-    argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :organizations, [String], required: false, default_value: []
     argument :products, [String], required: false, default_value: []
@@ -157,11 +156,11 @@ module Queries
     type Types::ProjectType.connection_type, null: false
 
     def resolve(
-      search:, origins:, sectors:, sub_sectors:, countries:, organizations:, products:, sdgs:,
+      search:, origins:, sectors:, countries:, organizations:, products:, sdgs:,
       tags:, project_sort_hint:, map_view:
     )
       projects = filter_projects(
-        search, origins, sectors, sub_sectors, countries, organizations, products, sdgs, tags,
+        search, origins, sectors, countries, organizations, products, sdgs, tags,
         project_sort_hint
       )
       if map_view
@@ -177,7 +176,6 @@ module Queries
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
-    argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
     argument :offset_attributes, Types::OffsetAttributeInput, required: true
@@ -185,8 +183,8 @@ module Queries
     argument :project_sort_hint, String, required: false, default_value: 'name'
     type Types::ProjectType.connection_type, null: false
 
-    def resolve(sectors:, sub_sectors:, countries:, tags:, project_sort_hint:, offset_attributes:)
-      wizard_projects(sectors, sub_sectors, countries, tags, project_sort_hint, offset_attributes)
+    def resolve(sectors:, countries:, tags:, project_sort_hint:, offset_attributes:)
+      wizard_projects(sectors, countries, tags, project_sort_hint, offset_attributes)
     end
   end
 end

@@ -129,13 +129,10 @@ module Queries
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def wizard_datasets(sectors, sub_sectors, tags, sort_hint, offset_params = {})
-    sector_ids, curr_sector = get_sector_list(sectors, sub_sectors)
-    unless sector_ids.empty?
-      sector_datasets = DatasetSector.where(sector_id: sector_ids).map(&:dataset_id)
-      if sector_datasets.empty? && !curr_sector.parent_sector_id.nil?
-        sector_datasets = DatasetsSector.where(sector_id: curr_sector.parent_sector_id).map(&:dataset_id)
-      end
+  def wizard_datasets(sector, tags, sort_hint, offset_params = {})
+    sector_id = Sector.find_by(name: sector)
+    unless sector_id.nil?
+      sector_datasets = DatasetSector.where(sector_id: sector_id).map(&:dataset_id)
     end
 
     unless tags.nil?
@@ -182,7 +179,6 @@ module Queries
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
-    argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
     argument :offset_attributes, Types::OffsetAttributeInput, required: true
@@ -190,8 +186,8 @@ module Queries
     argument :dataset_sort_hint, String, required: false, default_value: 'name'
     type Types::DatasetType.connection_type, null: false
 
-    def resolve(sectors:, sub_sectors:, countries:, tags:, dataset_sort_hint:, offset_attributes:)
-      wizard_datasets(sectors, sub_sectors, countries, tags, dataset_sort_hint, offset_attributes)
+    def resolve(sectors:, countries:, tags:, dataset_sort_hint:, offset_attributes:)
+      wizard_datasets(sectors, countries, tags, dataset_sort_hint, offset_attributes)
     end
   end
 end
