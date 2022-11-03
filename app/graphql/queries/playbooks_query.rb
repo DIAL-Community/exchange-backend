@@ -86,4 +86,33 @@ module Queries
       tags
     end
   end
+
+  class PaginatedPlaybooksQuery < Queries::BaseQuery
+    include ActionView::Helpers::TextHelper
+    include Queries
+
+    argument :sector, String, required: false, default_value: ''
+    argument :tags, [String], required: false, default_value: []
+    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :playbook_sort_hint, String, required: false, default_value: 'name'
+
+    type Types::PlaybookType.connection_type, null: false
+
+    def resolve(sector:, tags:, playbook_sort_hint:, offset_attributes:)
+      wizard_playbooks(sector, tags, playbook_sort_hint, offset_attributes)
+    end
+  end
+
+  def wizard_playbooks(sector, tags, sort_hint, offset_params = {})
+    sector_playbooks = Playbook.joins(:sectors).where(sectors: { name: sector, locale: I18n.locale }).map(&:id)
+
+    unless tags.nil?
+      tag_playbooks = []
+      tags.each do |tag|
+        tag_playbooks += Playbook.where('LOWER(:tag) = ANY(LOWER(tags::text)::text[])', tag: tag).map(&:id)
+      end
+    end
+
+    filter_matching_playbooks(sector_playbooks, tag_playbooks, sort_hint, offset_params).uniq
+  end
 end

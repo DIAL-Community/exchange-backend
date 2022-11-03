@@ -16879,26 +16879,6 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "subSectors",
-                  "description": null,
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "String",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
                   "name": "countries",
                   "description": null,
                   "type": {
@@ -17028,11 +17008,23 @@
               "deprecationReason": null
             },
             {
-              "name": "paginatedProducts",
+              "name": "paginatedPlaybooks",
               "description": null,
               "args": [
                 {
-                  "name": "sectors",
+                  "name": "sector",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "\"\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "tags",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -17052,7 +17044,100 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "subSectors",
+                  "name": "offsetAttributes",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "OffsetAttributeInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "playbookSortHint",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "\"name\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "after",
+                  "description": "Returns the elements in the list that come after the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "before",
+                  "description": "Returns the elements in the list that come before the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "first",
+                  "description": "Returns the first _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "last",
+                  "description": "Returns the last _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "PlaybookConnection",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "paginatedProducts",
+              "description": null,
+              "args": [
+                {
+                  "name": "sectors",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -17113,6 +17198,26 @@
                 },
                 {
                   "name": "buildingBlocks",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "useCases",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -17238,26 +17343,6 @@
               "args": [
                 {
                   "name": "sectors",
-                  "description": null,
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "String",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "subSectors",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -20010,26 +20095,6 @@
                 },
                 {
                   "name": "sectors",
-                  "description": null,
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "NON_NULL",
-                      "name": null,
-                      "ofType": {
-                        "kind": "SCALAR",
-                        "name": "String",
-                        "ofType": null
-                      }
-                    }
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "subSectors",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -26225,6 +26290,28 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "Organization",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "playbooks",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Playbook",
                     "ofType": null
                   }
                 }

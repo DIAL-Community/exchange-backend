@@ -24,5 +24,6 @@ module Types
     field :use_cases, [Types::UseCaseType], null: true
     field :building_blocks, [Types::BuildingBlockType], null: true
     field :resources, [Types::ResourcesType], null: true
+    field :playbooks, [Types::PlaybookType], null: true
   end
 end

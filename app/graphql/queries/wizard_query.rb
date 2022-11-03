@@ -16,7 +16,7 @@ module Queries
       curr_sector = Sector.find_by(name: sector, locale: I18n.locale)
       curr_sdg = SustainableDevelopmentGoal.find_by(name: sdg)
 
-      if use_case.nil?
+      if use_case == ''
         sector_use_cases = []
         sdg_use_cases = []
 

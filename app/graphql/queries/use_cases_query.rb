@@ -107,7 +107,8 @@ module Queries
     type [Types::UseCaseType], null: false
 
     def resolve(sector_slug:)
-      use_cases = UseCase.joins(:sector).where(sectors: { slug: sector_slug, locale: I18n.locale })
+      use_cases = UseCase.joins(:sector).where(sectors: { slug: sector_slug, locale: I18n.locale },
+                                               maturity: 'PUBLISHED')
       use_cases
     end
   end
