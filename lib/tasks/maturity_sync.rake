@@ -177,13 +177,9 @@ namespace :maturity_sync do
       product_indicators = ProductIndicator.where(product_id: product.id)
       next unless product_indicators.any?
 
-      puts "UPDATING SCORE FOR: #{product.name}"
-      maturity_score = calculate_maturity_scores(product.id)
-      overall_score = maturity_score[:rubric_scores][0][:overall_score].to_i
-      puts "OVERALL SCORE: #{overall_score}"
-      product.maturity_score = overall_score
+      puts "UPDATING SCORES FOR: #{product.name}"
+      calculate_maturity_scores(product.id)
       calculate_product_indicators(product.id)
-      product.save!
     end
   end
 
