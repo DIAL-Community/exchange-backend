@@ -14010,14 +14010,14 @@
               ],
               "type": {
                 "kind": "SCALAR",
-                "name": "Int",
+                "name": "JSON",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "maturityScores",
+              "name": "maturityScoreDetails",
               "description": null,
               "args": [
 

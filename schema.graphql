@@ -1205,8 +1205,8 @@ type Product {
   languages: JSON
   mainRepository: ProductRepository
   manualUpdate: Boolean!
-  maturityScore: Int
-  maturityScores: JSON
+  maturityScore: JSON
+  maturityScoreDetails: JSON
   name: String!
   notAssignedCategoryIndicators: [CategoryIndicator!]
   organizations: [Organization!]
