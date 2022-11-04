@@ -5,28 +5,6 @@
         - operator: equalTo
           value: 0
       medium:
-        - operator: equalTo
-          value: 1
-      high:
-        - operator: greaterThan
-          value: 2
-    - name: Commits
-      low:
-        - operator: lessThan
-          value: 10
-      medium:
-        - operator: greaterThan
-          value: 11
-        - operator: lessThan
-          value: 99
-      high:
-        - operator: greaterThan
-          value: 100
-    - name: Downloads
-      low:
-        - operator: equalTo
-          value: 0
-      medium:
         - operator: greaterThan
           value: 1
         - operator: lessThan
@@ -34,30 +12,54 @@
       high:
         - operator: greaterThan
           value: 10
+    - name: Commits
+      low:
+        - operator: lessThan
+          value: 49
+      medium:
+        - operator: greaterThan
+          value: 50
+        - operator: lessThan
+          value: 999
+      high:
+        - operator: greaterThan
+          value: 1000
+    - name: Downloads
+      low:
+        - operator: lessThan
+          value: 9
+      medium:
+        - operator: greaterThan
+          value: 10
+        - operator: lessThan
+          value: 99
+      high:
+        - operator: greaterThan
+          value: 100
     - name: Stars
       low:
         - operator: lessThan
-          value: 5
+          value: 99
       medium:
         - operator: greaterThan
-          value: 6
+          value: 100
         - operator: lessThan
-          value: 49
+          value: 999
       high:
         - operator: greaterThan
-          value: 50
+          value: 1000
     - name: Forks
       low:
         - operator: lessThan
-          value: 5
+          value: 49
       medium:
         - operator: greaterThan
-          value: 6
+          value: 50
         - operator: lessThan
-          value: 49
+          value: 99
       high:
         - operator: greaterThan
-          value: 50
+          value: 100
     - name: Open Pull Requests
       low:
         - operator: lessThan
@@ -78,34 +80,34 @@
         - operator: greaterThan
           value: 50
         - operator: lessThan
-          value: 249
+          value: 499
       high:
         - operator: greaterThan
-          value: 250
+          value: 500
     - name: Open Issues
       low:
         - operator: lessThan
-          value: 2
+          value: 9
       medium:
         - operator: greaterThan
-          value: 3
+          value: 10
         - operator: lessThan
-          value: 19
+          value: 49
       high:
         - operator: greaterThan
-          value: 20
+          value: 50
     - name: Closed Issues
       low:
         - operator: lessThan
-          value: 2
+          value: 49
       medium:
         - operator: greaterThan
-          value: 3
+          value: 50
         - operator: lessThan
-          value: 19
+          value: 99
       high:
         - operator: greaterThan
-          value: 20
+          value: 100
     - name: Last Repository Activity
       low:
         - operator: greaterThan
