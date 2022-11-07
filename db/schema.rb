@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_16_115012) do
+ActiveRecord::Schema.define(version: 2022_09_23_161216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -824,6 +824,7 @@ ActiveRecord::Schema.define(version: 2022_09_16_115012) do
     t.bigint "use_case_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "markdown_url"
     t.index ["use_case_id"], name: "index_use_case_steps_on_use_case_id"
   end
 
