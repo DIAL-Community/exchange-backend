@@ -3380,7 +3380,8 @@ CREATE TABLE public.use_case_steps (
     step_number integer NOT NULL,
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    markdown_url character varying
 );
 
 
@@ -7392,6 +7393,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220909100954'),
 ('20220909101028'),
 ('20220916115012'),
+('20220923161216'),
 ('20220930090351'),
 ('20221018015421'),
 ('20221018202451'),
