@@ -179,15 +179,14 @@ module Queries
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
-    argument :countries, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
     argument :offset_attributes, Types::OffsetAttributeInput, required: true
-
     argument :dataset_sort_hint, String, required: false, default_value: 'name'
+
     type Types::DatasetType.connection_type, null: false
 
-    def resolve(sectors:, countries:, tags:, dataset_sort_hint:, offset_attributes:)
-      wizard_datasets(sectors, countries, tags, dataset_sort_hint, offset_attributes)
+    def resolve(sectors:, tags:, dataset_sort_hint:, offset_attributes:)
+      wizard_datasets(sectors, tags, dataset_sort_hint, offset_attributes)
     end
   end
 end
