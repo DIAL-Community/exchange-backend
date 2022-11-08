@@ -49,7 +49,11 @@ module Mutations
       organization.aliases = aliases
       organization.website = website
       organization.is_endorser = is_endorser
-      organization.when_endorsed = when_endorsed
+
+      date = when_endorsed.to_s
+      timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "UTC")
+      organization.when_endorsed = timestamp
+
       organization.endorser_level = endorser_level
       organization.is_mni = is_mni
 
