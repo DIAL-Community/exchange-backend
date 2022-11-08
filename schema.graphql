@@ -1424,7 +1424,6 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-    countries: [String!] = []
     datasetSortHint: String = "name"
 
     """
@@ -2759,6 +2758,7 @@ type UserEdge {
 
 type Wizard {
   buildingBlocks: [BuildingBlock!]
+  datasets: [Dataset!]
   digitalPrinciples: [DigitalPrinciple!]
   organizations: [Organization!]
   playbooks: [Playbook!]

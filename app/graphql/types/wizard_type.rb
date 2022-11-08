@@ -25,5 +25,6 @@ module Types
     field :building_blocks, [Types::BuildingBlockType], null: true
     field :resources, [Types::ResourcesType], null: true
     field :playbooks, [Types::PlaybookType], null: true
+    field :datasets, [Types::DatasetType], null: true
   end
 end
