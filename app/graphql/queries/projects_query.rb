@@ -25,9 +25,8 @@ module Queries
     end
   end
 
-  # rubocop:disable Metrics/ParameterLists
   def filter_projects(
-    search, origins, sectors, sub_sectors, countries, organizations, products, sdgs,
+    search, origins, sectors, countries, organizations, products, sdgs,
     tags, sort_hint, _offset_params = {}
   )
     projects = Project.all
@@ -131,7 +130,6 @@ module Queries
       projects.order(:name)
     end
   end
-  # rubocop:enable Metrics/ParameterLists
 
   def wizard_projects(sector, countries, tags, sort_hint, offset_params = {})
     sector_id = Sector.find_by(name: sector).id
