@@ -20009,7 +20009,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "withMaturity",
+                  "name": "isEndorsed",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",

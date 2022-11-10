@@ -72,7 +72,7 @@ module Queries
   # rubocop:disable Metrics/ParameterLists
   def filter_products(
     search, origins, sectors, sub_sectors, countries, organizations, sdgs, tags, endorsers,
-    use_cases, workflows, building_blocks, with_maturity, product_deployable, product_types,
+    use_cases, workflows, building_blocks, is_endorsed, product_deployable, product_types,
     sort_hint, license_types, _offset_params = {}
   )
     products = Product.all
@@ -176,7 +176,7 @@ module Queries
     end
 
     products = products.where(is_launchable: product_deployable) if product_deployable
-    products = products.where('maturity_score is not null') if with_maturity
+    products = products.joins(:endorsers) if is_endorsed
 
     if !product_types.include?('product_and_dataset') && !product_types.empty? &&
       !(product_types.include?('product') && product_types.include?('dataset'))
@@ -243,7 +243,7 @@ module Queries
     argument :building_blocks, [String], required: false, default_value: []
     argument :product_types, [String], required: false, default_value: []
     argument :endorsers, [String], required: false, default_value: []
-    argument :with_maturity, Boolean, required: false, default_value: false
+    argument :is_endorsed, Boolean, required: false, default_value: false
     argument :product_deployable, Boolean, required: false, default_value: false
     argument :license_types, [String], required: false, default_value: []
 
@@ -252,12 +252,12 @@ module Queries
 
     def resolve(
       search:, origins:, sectors:, sub_sectors:, countries:, organizations:, sdgs:, tags:, endorsers:,
-      use_cases:, workflows:, building_blocks:, with_maturity:, product_deployable:, product_types:,
+      use_cases:, workflows:, building_blocks:, is_endorsed:, product_deployable:, product_types:,
       product_sort_hint:, license_types:
     )
       products = filter_products(
         search, origins, sectors, sub_sectors, countries, organizations, sdgs, tags, endorsers,
-        use_cases, workflows, building_blocks, with_maturity, product_deployable, product_types,
+        use_cases, workflows, building_blocks, is_endorsed, product_deployable, product_types,
         product_sort_hint, license_types
       )
       products.uniq
