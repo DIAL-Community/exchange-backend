@@ -3368,19 +3368,15 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
+                "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "name": null,
                   "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
                   }
                 }
               },
@@ -3394,13 +3390,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -8742,6 +8734,103 @@
               "deprecationReason": null
             },
             {
+              "name": "createUser",
+              "description": null,
+              "args": [
+                {
+                  "name": "email",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "roles",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "JSON",
+                    "ofType": null
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "username",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "organizations",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "JSON",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "products",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "JSON",
+                    "ofType": null
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "confirmed",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CreateUserPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "createWizardGuidanceMail",
               "description": null,
               "args": [
@@ -11212,103 +11301,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateUseCaseTagsPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updateUser",
-              "description": null,
-              "args": [
-                {
-                  "name": "email",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "roles",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "JSON",
-                    "ofType": null
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "username",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "organizations",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "JSON",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "products",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "JSON",
-                    "ofType": null
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "confirmed",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "CreateUserPayload",
                 "ofType": null
               },
               "isDeprecated": false,
