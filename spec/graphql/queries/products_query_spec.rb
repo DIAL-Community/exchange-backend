@@ -21,7 +21,7 @@ RSpec.describe(Queries::ProductsQuery, type: :graphql) do
         $productTypes: [String!],
         $endorsers: [String!],
         $productDeployable: Boolean,
-        $withMaturity: Boolean,
+        $isEndorsed: Boolean,
         $licenseTypes: [String!],
         $search: String!
       ) {
@@ -40,7 +40,7 @@ RSpec.describe(Queries::ProductsQuery, type: :graphql) do
           productTypes: $productTypes,
           endorsers: $endorsers,
           productDeployable: $productDeployable,
-          withMaturity: $withMaturity,
+          isEndorsed: $isEndorsed,
           licenseTypes: $licenseTypes,
           search: $search
         ) {

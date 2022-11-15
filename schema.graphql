@@ -1889,6 +1889,7 @@ type Query {
     Returns the first _n_ elements from the list.
     """
     first: Int
+    isEndorsed: Boolean = false
 
     """
     Returns the last _n_ elements from the list.
@@ -1906,7 +1907,6 @@ type Query {
     subSectors: [String!] = []
     tags: [String!] = []
     useCases: [String!] = []
-    withMaturity: Boolean = false
     workflows: [String!] = []
   ): ProductConnection!
   searchProjects(
