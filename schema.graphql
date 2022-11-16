@@ -2094,6 +2094,7 @@ type Query {
   useCasesForSector(sectorSlug: String!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
+  userAuthenticationToken(userId: Int!): String
   users(search: String = ""): [User!]!
   wizard(buildingBlocks: [String!], sdg: String, sector: String, useCase: String): Wizard!
   workflow(slug: String!): Workflow!
@@ -2695,6 +2696,7 @@ type UseCaseStepDescription {
 
 type User {
   allRoles: JSON
+  authenticationToken: String!
   confirmationSentAt: ISO8601DateTime
   confirmationToken: String
   confirmed: Boolean

@@ -24,6 +24,17 @@ module Queries
     end
   end
 
+  class UserAuthenticationTokenQuery < Queries::BaseQuery
+    argument :user_id, Integer, required: true
+    type String, null: true
+
+    def resolve(user_id:)
+      return nil if context[:current_user].nil? || context[:current_user].id != user_id
+
+      User.find_by(id: user_id).authentication_token
+    end
+  end
+
   class SearchUsersQuery < Queries::BaseQuery
     include ActionView::Helpers::TextHelper
 
