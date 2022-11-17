@@ -50,4 +50,28 @@ module Queries
       users.distinct
     end
   end
+
+  class UserRolesQuery < Queries::BaseQuery
+    type GraphQL::Types::JSON, null: true
+
+    def resolve
+      return nil unless an_admin
+
+      User.user_roles.values
+    end
+  end
+
+  class UserEmailCheckQuery < Queries::BaseQuery
+    argument :email, String, required: true
+    type Boolean, null: true
+
+    def resolve(email:)
+      email_exists = false
+
+      unless User.find_by(email: email).nil?
+        email_exists = true
+      end
+      email_exists
+    end
+  end
 end

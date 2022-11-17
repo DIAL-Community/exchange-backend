@@ -2095,6 +2095,8 @@ type Query {
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
   userAuthenticationToken(userId: Int!): String
+  userEmailCheck(email: String!): Boolean
+  userRoles: JSON
   users(search: String = ""): [User!]!
   wizard(buildingBlocks: [String!], sdg: String, sector: String, useCase: String): Wizard!
   workflow(slug: String!): Workflow!
