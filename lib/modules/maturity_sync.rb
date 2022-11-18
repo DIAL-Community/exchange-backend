@@ -352,7 +352,6 @@ module Modules
         else
           product_indicator.indicator_value = 'low'
         end
-        break
       end
       product_indicator.save!
     end
@@ -513,6 +512,10 @@ module Modules
       return unless (match = repository.absolute_url.match(repo_regex))
 
       _, owner, repo = match.captures
+
+      if repo[-1] == '/'
+        repo.slice!('/')
+      end
 
       github_uri = URI.parse('https://api.github.com/graphql')
       http = Net::HTTP.new(github_uri.host, github_uri.port)
