@@ -24,14 +24,16 @@ module Queries
     end
   end
 
-  class UserAuthenticationTokenQuery < Queries::BaseQuery
+  class UserAuthenticationTokenCheckQuery < Queries::BaseQuery
     argument :user_id, Integer, required: true
-    type String, null: true
+    argument :user_authentication_token, String, required: true
+    type Boolean, null: true
 
-    def resolve(user_id:)
+    def resolve(user_id:, user_authentication_token:)
       return nil if context[:current_user].nil? || context[:current_user].id != user_id
 
-      User.find_by(id: user_id).authentication_token
+      token = User.find_by(id: user_id).authentication_token
+      token == user_authentication_token
     end
   end
 
