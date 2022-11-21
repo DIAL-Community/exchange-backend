@@ -7,15 +7,16 @@ module Mutations
     include Modules::Slugger
 
     argument :name, String, required: true
-    argument :slug, String, required: true
-    argument :description, String, required: true
+    argument :slug, String, required: false, default_value: nil
+    argument :description, String, required: false, default_value: nil
     argument :step_number, Integer, required: true
     argument :use_case_id, Integer, required: true
+    argument :markdown_url, String, required: false, default_value: nil
 
     field :use_case_step, Types::UseCaseStepType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, step_number:, use_case_id:)
+    def resolve(name:, slug:, description:, step_number:, use_case_id:, markdown_url:)
       unless an_admin || a_content_editor
         return {
           use_case_step: nil,
@@ -42,15 +43,17 @@ module Mutations
       use_case_step.name = name
       use_case_step.use_case_id = use_case_id
       use_case_step.step_number = step_number
+      use_case_step.markdown_url = markdown_url
 
       if use_case_step.save
-
-        use_case_step_desc = UseCaseStepDescription.find_by(id: use_case_step.id, locale: I18n.locale)
-        use_case_step_desc = UseCaseStepDescription.new if use_case_step_desc.nil?
-        use_case_step_desc.description = description
-        use_case_step_desc.use_case_step_id = use_case_step.id
-        use_case_step_desc.locale = I18n.locale
-        use_case_step_desc.save
+        if !description.blank? && markdown_url.blank?
+          use_case_step_desc = UseCaseStepDescription.find_by(id: use_case_step.id, locale: I18n.locale)
+          use_case_step_desc = UseCaseStepDescription.new if use_case_step_desc.nil?
+          use_case_step_desc.description = description
+          use_case_step_desc.use_case_step_id = use_case_step.id
+          use_case_step_desc.locale = I18n.locale
+          use_case_step_desc.save
+        end
 
         # Successful creation, return the created object with no errors
         {

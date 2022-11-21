@@ -836,7 +836,7 @@ type Mutation {
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
   createTag(description: String, name: String!, slug: String!): CreateTagPayload
   createUseCase(description: String!, imageFile: Upload, maturity: String!, name: String!, sectorSlug: String!, slug: String!): CreateUseCasePayload
-  createUseCaseStep(description: String!, name: String!, slug: String!, stepNumber: Int!, useCaseId: Int!): CreateUseCaseStepPayload
+  createUseCaseStep(description: String = null, markdownUrl: String = null, name: String!, slug: String = null, stepNumber: Int!, useCaseId: Int!): CreateUseCaseStepPayload
   createUser(confirmed: Boolean, email: String!, organizations: JSON! = [], products: JSON = [], roles: JSON = [], username: String!): CreateUserPayload
   createWizardGuidanceMail(emailAddress: String!, message: String!, name: String!): CreateWizardGuidanceMailPayload
   createWorkflow(description: String!, imageFile: Upload, name: String!, slug: String!): CreateWorkflowPayload

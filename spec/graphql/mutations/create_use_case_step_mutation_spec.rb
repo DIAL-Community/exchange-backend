@@ -9,9 +9,10 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       mutation CreateUseCaseStep (
         $name: String!
         $slug: String!
-        $description: String!
+        $description: String
         $stepNumber: Int!
         $useCaseId: Int!
+        $markdownUrl: String
         ) {
         createUseCaseStep(
           name: $name
@@ -19,6 +20,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
           description: $description
           stepNumber: $stepNumber
           useCaseId: $useCaseId
+          markdownUrl: $markdownUrl
         ) {
             useCaseStep
             {
@@ -27,6 +29,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
               useCaseStepDescription {
                 description
               }
+              markdownUrl
               stepNumber
               useCase {
                 id
@@ -44,14 +47,25 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        stepNumber: 5,
+        useCaseId: 3
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
-                 "useCaseStepDescription" => { "description" => "some description" },
-                 "stepNumber" => 5, "useCase" => { "id" => "3" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "markdownUrl" => nil,
+          "useCaseStepDescription" => { "description" => "some description" },
+          "stepNumber" => 5,
+          "useCase" => { "id" => "3" }
+        }))
       expect(result['data']['createUseCaseStep']['errors'])
         .to(eq([]))
     end
@@ -63,14 +77,49 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        stepNumber: 5,
+        useCaseId: 3
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
-                 "useCaseStepDescription" => { "description" => "some description" },
-                 "stepNumber" => 5, "useCase" => { "id" => "3" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "markdownUrl" => nil,
+          "useCaseStepDescription" => { "description" => "some description" },
+          "stepNumber" => 5,
+          "useCase" => { "id" => "3" }
+        }))
+      expect(result['data']['createUseCaseStep']['errors'])
+        .to(eq([]))
+    end
+  end
+
+  it 'creates use case - user is logged in as content editor' do
+    create(:use_case, id: 3)
+    expect_any_instance_of(Mutations::CreateUseCaseStep).to(receive(:a_content_editor).and_return(true))
+
+    result = execute_graphql(
+      mutation,
+      variables: { name: "Some name", slug: "", markdownUrl: 'UC-E-USCT-001.md', stepNumber: 5, useCaseId: 3 },
+    )
+
+    aggregate_failures do
+      expect(result['data']['createUseCaseStep']['useCaseStep'])
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "markdownUrl" => "UC-E-USCT-001.md",
+          "stepNumber" => 5,
+          "useCase" => { "id" => "3" },
+          "useCaseStepDescription" => nil
+        }))
       expect(result['data']['createUseCaseStep']['errors'])
         .to(eq([]))
     end
@@ -83,15 +132,25 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", description: "some description", stepNumber: 5,
-                   useCaseId: 3 },
+      variables: {
+        name: "Some new name",
+        slug: "some_name",
+        description: "some description",
+        stepNumber: 5,
+        useCaseId: 3
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name",
-                 "useCaseStepDescription" => { "description" => "some description" },
-                 "stepNumber" => 5, "useCase" => { "id" => "3" } }))
+        .to(eq({
+          "name" => "Some new name",
+          "slug" => "some_name",
+          "markdownUrl" => nil,
+          "useCaseStepDescription" => { "description" => "some description" },
+          "stepNumber" => 5,
+          "useCase" => { "id" => "3" }
+        }))
       expect(result['data']['createUseCaseStep']['errors'])
         .to(eq([]))
     end
@@ -104,15 +163,25 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5,
-                   useCaseId: 5 },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        stepNumber: 5,
+        useCaseId: 3
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name_dup0",
-                 "useCaseStepDescription" => { "description" => "some description" },
-                 "stepNumber" => 5, "useCase" => { "id" => "5" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name_dup0",
+          "markdownUrl" => nil,
+          "useCaseStepDescription" => { "description" => "some description" },
+          "stepNumber" => 5,
+          "useCase" => { "id" => "3" }
+        }))
       expect(result['data']['createUseCaseStep']['errors'])
         .to(eq([]))
     end
@@ -124,7 +193,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 },
+      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 }
     )
 
     aggregate_failures do
@@ -138,7 +207,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 },
+      variables: { name: "Some name", slug: "", description: "some description", stepNumber: 5, useCaseId: 3 }
     )
 
     aggregate_failures do
