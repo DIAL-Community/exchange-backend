@@ -2094,7 +2094,7 @@ type Query {
   useCasesForSector(sectorSlug: String!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
-  userAuthenticationToken(userId: Int!): String
+  userAuthenticationTokenCheck(userAuthenticationToken: String!, userId: Int!): Boolean
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
