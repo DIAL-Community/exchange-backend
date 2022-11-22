@@ -30,7 +30,7 @@ module Queries
     type Boolean, null: true
 
     def resolve(user_id:, user_authentication_token:)
-      return nil if context[:current_user].nil? || context[:current_user].id != user_id
+      return false if context[:current_user].nil? || context[:current_user].id != user_id
 
       token = User.find_by(id: user_id).authentication_token
       token == user_authentication_token
