@@ -67,5 +67,7 @@ module Types
     field :pricing_model, String, null: true
     field :pricing_details, String, null: true
     field :hosting_model, String, null: true
+
+    field :playbooks, [Types::PlaybookType], null: true
   end
 end
