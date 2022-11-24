@@ -164,7 +164,7 @@ class AuthenticationController < Devise::SessionsController
 
   def user_params
     params.require(:user)
-          .permit(:email, :username, :password, :password_confirmation, :organization_id, user_products: [])
+          .permit(:email, :username, :password, :password_confirmation)
   end
 
   def reset_password_params
