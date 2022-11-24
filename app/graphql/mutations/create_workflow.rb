@@ -23,7 +23,6 @@ module Mutations
       end
 
       workflow = Workflow.find_by(slug: slug)
-
       if workflow.nil?
         workflow = Workflow.new(name: name)
         slug = slug_em(name)
@@ -40,7 +39,11 @@ module Mutations
       # allow user to rename use case but don't re-slug it
       workflow.name = name
 
-      if workflow.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(workflow)
+        workflow.save
+
         unless image_file.nil?
           uploader = LogoUploader.new(workflow, image_file.original_filename, context[:current_user])
           begin
@@ -56,8 +59,14 @@ module Mutations
         workflow_desc.description = description
         workflow_desc.workflow_id = workflow.id
         workflow_desc.locale = I18n.locale
+
+        assign_auditable_user(workflow_desc)
         workflow_desc.save
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           workflow: workflow,

@@ -30,6 +30,7 @@ module Mutations
 
         send_email_with_password(username, email, password)
       end
+      assign_auditable_user(user)
 
       if user.confirmed_at.nil? && confirmed
         user.confirmed_at = Time.now

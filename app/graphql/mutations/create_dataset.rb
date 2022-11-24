@@ -25,7 +25,6 @@ module Mutations
     def resolve(name:, slug:, aliases:, website:, visualization_url:, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:)
       dataset = Dataset.find_by(slug: slug)
-
       if dataset.nil?
         dataset = Dataset.new(name: name)
         dataset.slug = slug_em(name)
@@ -55,16 +54,24 @@ module Mutations
       dataset.languages = languages
       dataset.data_format = data_format
 
-      if dataset.save!
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(dataset)
+        dataset.save!
+
         dataset_desc = DatasetDescription.find_by(dataset_id: dataset.id, locale: I18n.locale)
         dataset_desc = DatasetDescription.new if dataset_desc.nil?
         dataset_desc.description = description
         dataset_desc.dataset_id = dataset.id
         dataset_desc.locale = I18n.locale
-        if dataset_desc.save!
-          puts "Dataset description for: #{dataset.name} with locale: #{I18n.locale} saved."
-        end
 
+        assign_auditable_user(dataset_desc)
+        dataset_desc.save!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           dataset: dataset,

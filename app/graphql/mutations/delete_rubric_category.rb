@@ -16,6 +16,7 @@ module Mutations
       end
 
       rubric_category = RubricCategory.find_by(id: id)
+      assign_auditable_user(rubric_category)
 
       if rubric_category.destroy
         # Successful deletetion, return the nil rubric category with no errors

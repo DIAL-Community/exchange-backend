@@ -25,7 +25,6 @@ module Mutations
       end
 
       building_block = BuildingBlock.find_by(slug: slug)
-
       if building_block.nil?
         building_block = BuildingBlock.new(name: name)
         slug = slug_em(name)
@@ -44,7 +43,11 @@ module Mutations
       building_block.maturity = maturity
       building_block.spec_url = spec_url
 
-      if building_block.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(building_block)
+        building_block.save!
+
         unless image_file.nil?
           uploader = LogoUploader.new(building_block, image_file.original_filename, context[:current_user])
           begin
@@ -55,13 +58,22 @@ module Mutations
           building_block.auditable_image_changed(image_file.original_filename)
         end
 
-        building_block_desc = BuildingBlockDescription.find_by(id: building_block.id, locale: I18n.locale)
+        building_block_desc = BuildingBlockDescription.find_by(
+          building_block_id: building_block.id,
+          locale: I18n.locale
+        )
         building_block_desc = BuildingBlockDescription.new if building_block_desc.nil?
         building_block_desc.description = description
         building_block_desc.building_block_id = building_block.id
         building_block_desc.locale = I18n.locale
-        building_block_desc.save
 
+        assign_auditable_user(building_block_desc)
+        building_block_desc.save!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           building_block: building_block,
