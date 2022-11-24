@@ -3,6 +3,8 @@
 require('csv')
 
 class User < ApplicationRecord
+  include Auditable
+
   acts_as_token_authenticatable
 
   enum user_role: { admin: 'admin', ict4sdg: 'ict4sdg', principle: 'principle',

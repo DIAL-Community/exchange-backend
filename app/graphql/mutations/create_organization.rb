@@ -23,7 +23,6 @@ module Mutations
     def resolve(name:, slug:, aliases:, website:, is_endorser:, when_endorsed:, endorser_level:,
       is_mni:, description:, image_file: nil)
       organization = Organization.find_by(slug: slug)
-
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
         return {
           organization: nil,
@@ -57,7 +56,11 @@ module Mutations
       organization.endorser_level = endorser_level
       organization.is_mni = is_mni
 
-      if organization.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(organization)
+        organization.save
+
         unless image_file.nil?
           uploader = LogoUploader.new(organization, image_file.original_filename, context[:current_user])
           begin
@@ -73,8 +76,14 @@ module Mutations
         organization_desc.description = description
         organization_desc.organization_id = organization.id
         organization_desc.locale = I18n.locale
+
+        assign_auditable_user(organization_desc)
         organization_desc.save
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           organization: organization,

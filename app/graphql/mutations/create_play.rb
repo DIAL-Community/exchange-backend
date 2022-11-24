@@ -49,12 +49,18 @@ module Mutations
 
       play.tags = tags
 
-      if play.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(play)
+        play.save
+
         play_desc = PlayDescription.find_by(play: play, locale: I18n.locale)
         play_desc = PlayDescription.new if play_desc.nil?
         play_desc.play = play
         play_desc.locale = I18n.locale
         play_desc.description = description
+
+        assign_auditable_user(play_desc)
         if play_desc.save
           # Need to figure out how to add logger here!
           puts("Description for '#{play.name}' saved.")
@@ -73,12 +79,18 @@ module Mutations
           assigned_play.play = play
           assigned_play.playbook = playbook
           assigned_play.order = max_order
+
+          assign_auditable_user(assigned_play)
           if assigned_play.save
             # Need to figure out how to add logger here!
             puts("Play '#{play.name}' assigned to '#{playbook.name}'.")
           end
         end
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           play: play,
@@ -120,6 +132,7 @@ module Mutations
 
       # Create a duplicate of the base play object.
       duplicate_play = base_play.dup
+      assign_auditable_user(duplicate_play)
 
       # Update the slug to the new slug value ($slug + '_dupX').
       first_duplicate = Play.slug_simple_starts_with(base_play.slug).order(slug: :desc).first

@@ -58,7 +58,12 @@ module Mutations
       play_move.play = play
       play_move.order = play.play_moves.count
       play_move.resources = resources.reject { |resource| resource['name'].blank? || resource['url'].blank? }
-      if play_move.save
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(play_move)
+        play_move.save!
+
         move_desc = MoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
         if move_desc.nil?
           move_desc = MoveDescription.new
@@ -66,8 +71,14 @@ module Mutations
           move_desc.locale = I18n.locale
         end
         move_desc.description = description
-        move_desc.save
 
+        assign_auditable_user(move_desc)
+        move_desc.save!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           move: play_move,
@@ -127,6 +138,7 @@ module Mutations
         end
       end
 
+      assign_auditable_user(play_move)
       if play_move.save
         # Successful creation, return the created object with no errors
         { move: play_move, errors: [] }

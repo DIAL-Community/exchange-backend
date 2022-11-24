@@ -22,6 +22,7 @@ module Mutations
           errors: ['Unable to uniquely identify tag to delete.']
         }
       end
+      assign_auditable_user(tag)
 
       ActiveRecord::Base.transaction do
         delete_query = <<~SQL

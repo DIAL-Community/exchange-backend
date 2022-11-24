@@ -34,6 +34,7 @@ module Mutations
       # Not a new record and current name is different with the existing name.
       updating_name = !tag.new_record? && tag.name != name
 
+      successful_operation = false
       ActiveRecord::Base.transaction do
         if updating_name
           update_query = <<~SQL
@@ -56,28 +57,36 @@ module Mutations
         end
 
         tag.name = name
-        if tag.save
-          tag_description = TagDescription.find_by(tag_id: tag.id, locale: I18n.locale)
-          tag_description = TagDescription.new if tag_description.nil?
 
-          tag_description.description = description
-          tag_description.tag_id = tag.id
-          tag_description.locale = I18n.locale
-          tag_description.save
+        assign_auditable_user(tag)
+        tag.save
 
-          # Successful creation, return the created object with no errors
-          return {
-            tag: tag,
-            errors: []
-          }
-        end
+        tag_description = TagDescription.find_by(tag_id: tag.id, locale: I18n.locale)
+        tag_description = TagDescription.new if tag_description.nil?
+        tag_description.description = description
+        tag_description.tag_id = tag.id
+        tag_description.locale = I18n.locale
+
+        assign_auditable_user(tag_description)
+        tag_description.save
+
+        successful_operation = true
       end
-      # Failed save, return the errors to the client.
-      # We will only reach this block if the transaction is failed.
-      {
-        tag: nil,
-        errors: tag.errors.full_messages
-      }
+
+      if successful_operation
+        # Successful creation, return the created object with no errors
+        {
+          tag: tag,
+          errors: []
+        }
+      else
+        # Failed save, return the errors to the client.
+        # We will only reach this block if the transaction is failed.
+        {
+          tag: nil,
+          errors: tag.errors.full_messages
+        }
+      end
     end
   end
 end

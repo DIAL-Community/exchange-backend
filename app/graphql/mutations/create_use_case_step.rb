@@ -25,7 +25,6 @@ module Mutations
       end
 
       use_case_step = UseCaseStep.find_by(slug: slug)
-
       if use_case_step.nil?
         use_case_step = UseCaseStep.new(name: name)
         slug = slug_em(name)
@@ -45,16 +44,26 @@ module Mutations
       use_case_step.step_number = step_number
       use_case_step.markdown_url = markdown_url
 
-      if use_case_step.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(use_case_step)
+        use_case_step.save
+
         if !description.blank? && markdown_url.blank?
           use_case_step_desc = UseCaseStepDescription.find_by(id: use_case_step.id, locale: I18n.locale)
           use_case_step_desc = UseCaseStepDescription.new if use_case_step_desc.nil?
           use_case_step_desc.description = description
           use_case_step_desc.use_case_step_id = use_case_step.id
           use_case_step_desc.locale = I18n.locale
+
+          assign_auditable_user(use_case_step_desc)
           use_case_step_desc.save
         end
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           use_case_step: use_case_step,
