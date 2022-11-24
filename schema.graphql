@@ -1212,6 +1212,7 @@ type Product {
   organizations: [Organization!]
   origins: [Origin!]
   owner: String
+  playbooks: [Playbook!]
   pricingDetails: String
   pricingModel: String
   productDescription: ProductDescription

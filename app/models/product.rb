@@ -255,4 +255,9 @@ class Product < ApplicationRecord
 
     not_used_categories
   end
+
+  def playbooks
+    plays = Play.joins(:products).where(products: { id: id })
+    Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
+  end
 end
