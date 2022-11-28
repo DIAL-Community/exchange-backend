@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: agg_capabilities; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -2558,7 +2551,7 @@ CREATE TABLE public.products (
     default_url character varying DEFAULT 'http://<host_ip>'::character varying NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
-    maturity_score integer,
+    maturity_score jsonb,
     product_type public.product_type_save DEFAULT 'product'::public.product_type_save,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
@@ -3380,7 +3373,8 @@ CREATE TABLE public.use_case_steps (
     step_number integer NOT NULL,
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    markdown_url character varying
 );
 
 
@@ -7392,9 +7386,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220909100954'),
 ('20220909101028'),
 ('20220916115012'),
+('20220923161216'),
 ('20220930090351'),
 ('20221018015421'),
 ('20221018202451'),
-('20221018203042');
+('20221018203042'),
+('20221102104046');
 
 

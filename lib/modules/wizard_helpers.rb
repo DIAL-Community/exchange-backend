@@ -117,8 +117,9 @@ module Modules
     end
 
     def filter_matching_playbooks(playbook_sector, playbook_tag, sort_hint, offset_params)
-      combined_playbooks = playbook_sector & playbook_tag
-      sector_tag_playbooks = combined_playbooks unless combined_playbooks.nil?
+      combined_playbooks = playbook_tag
+      combined_playbooks = playbook_sector + playbook_tag unless playbook_sector.nil?
+      sector_tag_playbooks = combined_playbooks.uniq unless combined_playbooks.nil?
 
       playbook_list = Playbook.all
       case sort_hint.to_s.downcase
@@ -133,6 +134,26 @@ module Modules
       playbook_list = playbook_list.offset(offset_params[:offset]) unless offset_params.empty?
 
       playbook_list.where(id: sector_tag_playbooks).limit(20)
+    end
+
+    def filter_matching_datasets(dataset_sector, dataset_tag, sort_hint, offset_params)
+      combined_datasets = dataset_tag
+      combined_datasets = dataset_sector + dataset_tag unless dataset_sector.nil?
+      sector_tag_datasets = combined_datasets.uniq unless combined_datasets.nil?
+
+      dataset_list = Dataset.all
+      case sort_hint.to_s.downcase
+      when 'sector'
+        dataset_list = dataset_list.joins(:sectors).order('sectors.name')
+      when 'tag'
+        dataset_list = dataset_list.order('tags')
+      else
+        dataset_list = dataset_list.order('name')
+      end
+
+      dataset_list = dataset_list.offset(offset_params[:offset]) unless offset_params.empty?
+
+      dataset_list.where(id: sector_tag_datasets).limit(20)
     end
   end
 end

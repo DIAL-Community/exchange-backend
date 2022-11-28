@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PlayMove < ApplicationRecord
+  include Auditable
+
   belongs_to :play
   has_many :move_descriptions, dependent: :destroy
 

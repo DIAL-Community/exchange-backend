@@ -11,23 +11,30 @@ module Auditable
   def create_audit(action)
     audit_log = Audit.new
     audit_log.associated_type = self.class.name
-    if has_attribute?(:slug)
+
+    if has_attribute?(:id)
+      audit_log.associated_id = id
+    elsif has_attribute?(:slug)
       audit_log.associated_id = slug
     else
       audit_log.associated_id = get_parent_slug(self)
     end
+
     audit_log.action = action
-    audit_log.action = 'CREATED' if action == 'UPDATED' && saved_change_to_id?
+    audit_log.action = 'CREATED' if action == 'UPDATED' && saved_change_to_attribute(:id)
+
     current_user = fetch_current_user
     if current_user
       audit_log.user_id = current_user.id
       audit_log.user_role = current_user.roles
       audit_log.username = current_user.email
     end
+
     audit_changes = []
     audit_changes.push(saved_changes) unless saved_changes.empty?
     audit_changes.push(association_changes) unless association_changes.nil?
     audit_changes.push({ "image": fetch_image_changed.to_s }) unless fetch_image_changed.nil?
+
     if !audit_changes.empty? || audit_log.action == 'DELETED'
       audit_log.audit_changes = audit_changes
       audit_log.save

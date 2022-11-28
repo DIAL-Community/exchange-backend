@@ -58,6 +58,9 @@ module Types
     field :users, resolver: Queries::UsersQuery
     field :user, resolver: Queries::UserQuery
     field :search_users, resolver: Queries::SearchUsersQuery
+    field :user_authentication_token_check, resolver: Queries::UserAuthenticationTokenCheckQuery
+    field :user_roles, resolver: Queries::UserRolesQuery
+    field :user_email_check, resolver: Queries::UserEmailCheckQuery
 
     field :countries, resolver: Queries::CountriesQuery
     field :country, resolver: Queries::CountryQuery

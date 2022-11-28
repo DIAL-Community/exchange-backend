@@ -24,6 +24,19 @@ module Queries
     end
   end
 
+  class UserAuthenticationTokenCheckQuery < Queries::BaseQuery
+    argument :user_id, Integer, required: true
+    argument :user_authentication_token, String, required: true
+    type Boolean, null: true
+
+    def resolve(user_id:, user_authentication_token:)
+      return false if context[:current_user].nil? || context[:current_user].id != user_id
+
+      token = User.find_by(id: user_id).authentication_token
+      token == user_authentication_token
+    end
+  end
+
   class SearchUsersQuery < Queries::BaseQuery
     include ActionView::Helpers::TextHelper
 
@@ -37,6 +50,30 @@ module Queries
       users = users.name_contains(search) unless search.blank?
 
       users.distinct
+    end
+  end
+
+  class UserRolesQuery < Queries::BaseQuery
+    type GraphQL::Types::JSON, null: true
+
+    def resolve
+      return nil unless an_admin
+
+      User.user_roles.values
+    end
+  end
+
+  class UserEmailCheckQuery < Queries::BaseQuery
+    argument :email, String, required: true
+    type Boolean, null: true
+
+    def resolve(email:)
+      email_exists = false
+
+      unless User.find_by(email: email).nil?
+        email_exists = true
+      end
+      email_exists
     end
   end
 end

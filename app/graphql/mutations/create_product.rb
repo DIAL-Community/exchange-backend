@@ -18,7 +18,6 @@ module Mutations
 
     def resolve(name:, slug:, aliases: nil, website: nil, description:, image_file: nil)
       product = Product.find_by(slug: slug)
-
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
         return {
           product: nil,
@@ -43,7 +42,11 @@ module Mutations
       product.aliases = aliases
       product.website = website
 
-      if product.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(product)
+        product.save
+
         unless image_file.nil?
           uploader = LogoUploader.new(product, image_file.original_filename, context[:current_user])
           begin
@@ -59,8 +62,14 @@ module Mutations
         product_desc.description = description
         product_desc.product_id = product.id
         product_desc.locale = I18n.locale
+
+        assign_auditable_user(product_desc)
         product_desc.save
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           product: product,

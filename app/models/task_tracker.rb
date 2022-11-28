@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TaskTracker < ApplicationRecord
+  include Auditable
+
   has_many :task_tracker_descriptions, dependent: :destroy
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }

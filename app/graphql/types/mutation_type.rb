@@ -19,7 +19,7 @@ module Types
     field :update_move_order, mutation: Mutations::UpdateMoveOrder
     field :create_resource, mutation: Mutations::CreateResource
 
-    field :update_user, mutation: Mutations::UpdateUser
+    field :create_user, mutation: Mutations::CreateUser
 
     field :create_spreadsheet_data, mutation: Mutations::CreateSpreadsheetData
     field :delete_spreadsheet_data, mutation: Mutations::DeleteSpreadsheetData

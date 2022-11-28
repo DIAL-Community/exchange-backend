@@ -15,6 +15,7 @@ module Mutations
         }
       end
       organization = Organization.find_by(id: id)
+      assign_auditable_user(organization)
 
       if organization.destroy
         # Successful deletetion, return the nil organization with no errors

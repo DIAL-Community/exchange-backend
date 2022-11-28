@@ -125,7 +125,7 @@ class Product < ApplicationRecord
     projects.limit(num_projects[:first])
   end
 
-  def maturity_scores
+  def maturity_score_details
     maturity_scores = calculate_maturity_scores(id)[:rubric_scores].first
     maturity_scores = maturity_scores[:category_scores] unless maturity_scores.nil?
     maturity_scores
@@ -254,5 +254,10 @@ class Product < ApplicationRecord
     end
 
     not_used_categories
+  end
+
+  def playbooks
+    plays = Play.joins(:products).where(products: { id: id })
+    Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
   end
 end

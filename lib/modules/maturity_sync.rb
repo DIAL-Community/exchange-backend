@@ -48,6 +48,8 @@ module Modules
       logger = Logger.new($stdout)
       logger.level = Logger::INFO
 
+      maturity_score = {}
+
       product_indicators = ProductIndicator
                            .where('product_id = ?', product_id)
                            .map { |indicator| { indicator.category_indicator_id.to_s => indicator.indicator_value } }
@@ -65,7 +67,9 @@ module Modules
         overall_score: 0
       }
 
-      rubric_categories = RubricCategory.all.includes(:rubric_category_descriptions)
+      rubric_categories = RubricCategory.includes(:rubric_category_descriptions)
+      rubric_category_scores = []
+
       rubric_categories.each do |rubric_category|
         category_description = rubric_category.rubric_category_descriptions.first
         category_score = {
@@ -80,9 +84,17 @@ module Modules
           # Overall score at the category level
           overall_score: 0
         }
+
         category_indicators = CategoryIndicator.where(rubric_category: rubric_category)
                                                .includes(:category_indicator_descriptions)
+
+        category_indicator_scores = []
+
         category_indicators.each do |category_indicator|
+          product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
+                                                       product_id: product_id)
+
+          next if product_indicator.nil?
           indicator_value = product_indicators[category_indicator.id.to_s]
           indicator_type = category_indicator.indicator_type
           indicator_description = category_indicator.category_indicator_descriptions.first
@@ -101,6 +113,10 @@ module Modules
             category_score[:overall_score] += indicator_score[:score]
           end
           category_score[:indicator_scores] << indicator_score
+
+          unless indicator_score[:score].nil?
+            category_indicator_scores << { 'id' => indicator_score[:id], 'score' => indicator_score[:score] }
+          end
         end
 
         # Occasionally, rounding errors can lead to a score > 10
@@ -109,8 +125,15 @@ module Modules
         rubric_score[:missing_score] += category_score[:missing_score]
         rubric_score[:overall_score] += category_score[:overall_score]
         rubric_score[:category_scores] << category_score
-      end
 
+        unless category_score[:indicator_scores].empty?
+          rubric_category_scores << { 'id' => category_score[:id],
+                                      'score' => category_score[:overall_score],
+                                      'categoryIndicators' => category_indicator_scores }
+        end
+
+        maturity_score['rubricCategory'] = rubric_category_scores
+      end
       # Now do final score calculation
       total_categories = 0
       rubric_score[:category_scores].each do |category|
@@ -121,6 +144,12 @@ module Modules
           rubric_score[:overall_score] * 10 / total_categories
       end
       product_score[:rubric_scores] << rubric_score
+
+      maturity_score['overallScore'] = product_score[:rubric_scores][0][:overall_score].to_i
+
+      product = Product.find_by(id: product_id)
+      product.maturity_score = JSON.parse(maturity_score.to_json)
+      product.save!
 
       logger.debug("Rubric score for product: #{product_id} is: #{product_score.to_json}")
       product_score
@@ -323,7 +352,6 @@ module Modules
         else
           product_indicator.indicator_value = 'low'
         end
-        break
       end
       product_indicator.save!
     end
@@ -484,6 +512,10 @@ module Modules
       return unless (match = repository.absolute_url.match(repo_regex))
 
       _, owner, repo = match.captures
+
+      if repo[-1] == '/'
+        repo.slice!('/')
+      end
 
       github_uri = URI.parse('https://api.github.com/graphql')
       http = Net::HTTP.new(github_uri.host, github_uri.port)

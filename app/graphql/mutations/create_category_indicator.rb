@@ -53,15 +53,25 @@ module Mutations
       category_indicator.script_name = script_name
       category_indicator.indicator_type = indicator_type
 
-      if category_indicator.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(category_indicator)
+        category_indicator.save!
+
         category_indicator_description = CategoryIndicatorDescription
                                          .find_by(category_indicator_id: category_indicator.id, locale: I18n.locale)
         category_indicator_description = CategoryIndicatorDescription.new if category_indicator_description.nil?
         category_indicator_description.description = description
         category_indicator_description.category_indicator_id = category_indicator.id
         category_indicator_description.locale = I18n.locale
-        category_indicator_description.save
 
+        assign_auditable_user(category_indicator_description)
+        category_indicator_description.save!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           category_indicator: category_indicator,

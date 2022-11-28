@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateUser < Mutations::BaseMutation
-    graphql_name 'CreateUser'
-
+  class CreateUser < Mutations::BaseMutation
     argument :email, String, required: true
     argument :roles, GraphQL::Types::JSON, required: false, default_value: []
     argument :username, String, required: true
@@ -11,8 +9,8 @@ module Mutations
     argument :products, GraphQL::Types::JSON, required: false, default_value: []
     argument :confirmed, Boolean, required: false
 
-    field :user, Types::UserType, null: false
-    field :errors, [String], null: false
+    field :user, Types::UserType, null: true
+    field :errors, [String], null: true
 
     def resolve(email:, roles:, username:, organizations:, products:, confirmed:)
       unless an_admin
@@ -24,11 +22,15 @@ module Mutations
 
       user = User.find_by(email: email)
       if user.nil?
-        {
-          user: nil,
-          errors: 'User not found'
-        }
+        password = random_password
+        user = User.new(email: email,
+                        created_at: Time.now,
+                        password: password,
+                        password_confirmation: password)
+
+        send_email_with_password(username, email, password)
       end
+      assign_auditable_user(user)
 
       if user.confirmed_at.nil? && confirmed
         user.confirmed_at = Time.now
@@ -53,15 +55,35 @@ module Mutations
       end
 
       if user.save
-        { user: user,
-          success: user.persisted?,
-          errors: user.errors }
+        {
+          user: user,
+          errors: nil
+        }
+      else
+        {
+          user: nil,
+          errors: user.errors.full_messages
+        }
       end
     rescue ActiveRecord::RecordInvalid => e
       GraphQL::ExecutionError.new(
         "Invalid Attributes for #{e.record.class.name}: " \
         "#{e.record.errors.full_messages.join(', ')}"
       )
+    end
+
+    def random_password
+      chars = ('0'..'9').to_a + ('A'..'Z').to_a + ('a'..'z').to_a
+      chars.sort_by { rand }.join[0...10]
+    end
+
+    def send_email_with_password(username, email, password)
+      email_subject = 'Password for your account'
+
+      email_body = "Hi #{username}! <br />Your account have been created.<br />Password: #{password}"
+
+      AdminMailer.send_mail_from_client('notifier@solutions.dial.community',
+        email, email_subject, email_body, "text/html").deliver_now
     end
   end
 end
