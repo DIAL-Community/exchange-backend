@@ -10,12 +10,14 @@ module Mutations
     argument :slug, String, required: true
     argument :tags, GraphQL::Types::JSON, required: false, default_value: []
     argument :description, String, required: true
+    argument :products_slugs, [String], required: false
+    argument :building_blocks_slugs, [String], required: false
     argument :playbook_slug, String, required: false
 
-    field :play, Types::PlayType, null: false
+    field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
-    def resolve(name:, slug:, description:, tags:, playbook_slug: nil)
+    def resolve(name:, slug:, description:, tags:, products_slugs:, building_blocks_slugs:, playbook_slug: nil)
       unless an_admin || a_content_editor
         return {
           play: nil,
@@ -48,6 +50,18 @@ module Mutations
       end
 
       play.tags = tags
+
+      play.building_blocks = []
+      building_blocks_slugs&.each do |building_block_slug|
+        current_building_block = BuildingBlock.find_by(slug: building_block_slug)
+        play.building_blocks << current_building_block unless current_building_block.nil?
+      end
+
+      play.products = []
+      products_slugs&.each do |product_slug|
+        current_product = Product.find_by(slug: product_slug)
+        play.products << current_product unless current_product.nil?
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do
