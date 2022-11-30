@@ -11,7 +11,6 @@ module Types
 
     field :create_play, mutation: Mutations::CreatePlay
     field :auto_save_play, mutation: Mutations::CreatePlay
-    field :update_play_order, mutation: Mutations::UpdatePlayOrder
     field :duplicate_play, mutation: Mutations::DuplicatePlay
 
     field :create_move, mutation: Mutations::CreateMove
