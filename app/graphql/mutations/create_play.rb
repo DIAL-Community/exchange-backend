@@ -10,12 +10,14 @@ module Mutations
     argument :slug, String, required: true
     argument :tags, GraphQL::Types::JSON, required: false, default_value: []
     argument :description, String, required: true
+    argument :products_slugs, [String], required: false
+    argument :building_blocks_slugs, [String], required: false
     argument :playbook_slug, String, required: false
 
-    field :play, Types::PlayType, null: false
+    field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
-    def resolve(name:, slug:, description:, tags:, playbook_slug: nil)
+    def resolve(name:, slug:, description:, tags:, products_slugs:, building_blocks_slugs:, playbook_slug: nil)
       unless an_admin || a_content_editor
         return {
           play: nil,
@@ -48,6 +50,18 @@ module Mutations
       end
 
       play.tags = tags
+
+      play.building_blocks = []
+      building_blocks_slugs&.each do |building_block_slug|
+        current_building_block = BuildingBlock.find_by(slug: building_block_slug)
+        play.building_blocks << current_building_block unless current_building_block.nil?
+      end
+
+      play.products = []
+      products_slugs&.each do |product_slug|
+        current_product = Product.find_by(slug: product_slug)
+        play.products << current_product unless current_product.nil?
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do
@@ -147,92 +161,6 @@ module Mutations
         {
           play: nil,
           errors: "Unable to create duplicate play record. Message: #{duplicate_play.errors.full_messages}."
-        }
-      end
-    end
-  end
-
-  class UpdatePlayOrder < Mutations::BaseMutation
-    argument :playbook_slug, String, required: true
-    argument :play_slug, String, required: true
-    argument :operation, String, required: true
-    argument :distance, Integer, required: false
-    argument :play_order, Integer, required: false
-
-    field :play, Types::PlayType, null: false
-    field :errors, [String], null: false
-
-    def resolve(playbook_slug:, play_slug:, operation:, distance: 0, play_order: 0)
-      unless an_admin
-        return {
-          play: nil,
-          errors: ['Not allowed to update playbook.']
-        }
-      end
-
-      playbook = Playbook.find_by(slug: playbook_slug)
-
-      if playbook.nil?
-        return {
-          play: nil,
-          errors: 'Unable to find playbook record.'
-        }
-      end
-
-      play = Play.find_by(slug: play_slug)
-
-      if play.nil?
-        return {
-          play: nil,
-          errors: 'Unable to find play record.'
-        }
-      end
-
-      successful_operation = false
-      case operation
-      when 'UNASSIGN'
-        # We're deleting the play because the order -1
-        playbook_play = playbook.playbook_plays[play_order]
-        deleted = PlaybookPlay.delete_by(playbook: playbook, play: play, order: playbook_play.order)
-        successful_operation = true if deleted == 1
-      when 'ASSIGN'
-        # We're adding a play, the order is length of the current plays (appending as the last play).
-        max_order = PlaybookPlay.where(playbook: playbook).maximum('order')
-        max_order = max_order.nil? ? 0 : (max_order + 1)
-
-        assigned_play = PlaybookPlay.new
-        assigned_play.play = play
-        assigned_play.playbook = playbook
-        assigned_play.order = max_order
-        successful_operation = true if assigned_play.save
-      else
-        # Reordering actually trigger swap order with adjacent play.
-        playbook_play = PlaybookPlay.find_by(playbook: playbook, play: play)
-        playbook_play_index = playbook.playbook_plays.index(playbook_play)
-        # Find adjacent play
-        swapped_playbook_play = playbook.playbook_plays[playbook_play_index + distance]
-        # Swap the order
-        temp_order = playbook_play.order
-        playbook_play.order = swapped_playbook_play.order
-        swapped_playbook_play.order = temp_order
-        # Save both playbook_play
-
-        ActiveRecord::Base.transaction do
-          playbook_play.save
-          swapped_playbook_play.save
-          successful_operation = true
-        end
-      end
-
-      if successful_operation
-        {
-          play: play,
-          errors: []
-        }
-      else
-        {
-          play: nil,
-          errors: playbook.errors.full_messages
         }
       end
     end

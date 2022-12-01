@@ -11,18 +11,30 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         $slug: String!
         $description: String!
         $playbookSlug: String
+        $productsSlugs: [String!]
+        $buildingBlocksSlugs: [String!]
       ) {
         createPlay (
           name: $name
           slug: $slug
           description: $description
           playbookSlug: $playbookSlug
+          productsSlugs:$productsSlugs
+          buildingBlocksSlugs: $buildingBlocksSlugs
         ) {
           play {
             name
             slug
             playDescription{
               description
+            }
+            products {
+              name
+              slug
+            }
+            buildingBlocks {
+              name
+              slug
             }
           }
         }
@@ -33,20 +45,37 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
   it 'is successful - user is logged in as admin' do
     expect_any_instance_of(Mutations::CreatePlay).to(receive(:an_admin).and_return(true))
 
+    create(:product, name: "Some Product", slug: "some_product")
+    create(:building_block, name: "Some BB", slug: "some_bb")
+
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "Some Description" },
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Description",
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createPlay']['play'])
-        .to(eq("name" => "Some name", "slug" => "some_name",
-        "playDescription" => { "description" => "Some Description" }))
+        .to(eq(
+          "name" => "Some name",
+          "slug" => "some_name",
+          "playDescription" => { "description" => "Some Description" },
+          "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
+          "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
+        ))
     end
   end
 
   it 'should assign play to playbook and not creating duplicate' do
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
+
+    create(:product, name: "Some Product", slug: "some_product")
+    create(:building_block, name: "Some BB", slug: "some_bb")
 
     current_playbook = create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some_playbook')
     expect(current_playbook.plays.length).to(eq(0))
@@ -58,7 +87,9 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Description",
-        playbookSlug: 'some_playbook'
+        playbookSlug: 'some_playbook',
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
       }
     )
 
@@ -67,7 +98,9 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         eq(
           "name" => "Some name",
           "slug" => "some_name",
-          "playDescription" => { "description" => "Some Description" }
+          "playDescription" => { "description" => "Some Description" },
+          "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
+          "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
         )
       )
       current_playbook.reload
@@ -81,7 +114,9 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Updated Description",
-        playbookSlug: 'some_playbook'
+        playbookSlug: 'some_playbook',
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
       }
     )
 
@@ -91,7 +126,9 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         eq(
           "name" => "Some name",
           "slug" => "some_name",
-          "playDescription" => { "description" => "Some Updated Description" }
+          "playDescription" => { "description" => "Some Updated Description" },
+          "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
+          "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
         )
       )
       current_playbook.reload
@@ -102,26 +139,49 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
   it 'is successful - user is logged in as content editor' do
     expect_any_instance_of(Mutations::CreatePlay).to(receive(:a_content_editor).and_return(true))
 
+    create(:product, name: "Some Product", slug: "some_product")
+    create(:building_block, name: "Some BB", slug: "some_bb")
+
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "Some Description" },
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Description",
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
+      },
     )
 
     aggregate_failures do
       expect(result['data']['createPlay']['play'])
-        .to(eq("name" => "Some name", "slug" => "some_name",
-        "playDescription" => { "description" => "Some Description" }))
+        .to(eq(
+          "name" => "Some name",
+          "slug" => "some_name",
+          "playDescription" => { "description" => "Some Description" },
+          "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
+          "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
+        ))
     end
   end
 
   it 'fails - user is not logged in' do
+    create(:product, name: "Some Product", slug: "some_product")
+    create(:building_block, name: "Some BB", slug: "some_bb")
+
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "Some Description" },
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Description",
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
+      },
     )
 
     aggregate_failures do
-      expect(result['data']['createPlay'])
+      expect(result['data']['createPlay']['play'])
         .to(eq(nil))
     end
   end
@@ -130,13 +190,22 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
     expect_any_instance_of(Mutations::CreatePlay).to(receive(:an_admin).and_return(false))
     expect_any_instance_of(Mutations::CreatePlay).to(receive(:a_content_editor).and_return(false))
 
+    create(:product, name: "Some Product", slug: "some_product")
+    create(:building_block, name: "Some BB", slug: "some_bb")
+
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "Some Description" },
+      variables: {
+        name: "Some name",
+        slug: "some_name",
+        description: "Some Description",
+        productsSlugs: ["some_product"],
+        buildingBlocksSlugs: ["some_bb"]
+      },
     )
 
     aggregate_failures do
-      expect(result['data']['createPlay'])
+      expect(result['data']['createPlay']['play'])
         .to(eq(nil))
     end
   end
