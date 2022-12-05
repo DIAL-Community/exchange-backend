@@ -58,9 +58,6 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        assign_auditable_user(playbook)
-        playbook.save
-
         unless cover.nil?
           uploader = LogoUploader.new(playbook, cover.original_filename, context[:current_user])
           begin
@@ -77,15 +74,17 @@ module Mutations
           curr_play = Play.find(play['id'])
           next if curr_play.nil?
 
-          playbook_play = PlaybookPlay.new
-          playbook_play.playbook = playbook
-          playbook_play.play = curr_play
+          playbook.plays << curr_play
+          playbook_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: curr_play.id)
           playbook_play.order = index
 
           assign_auditable_user(playbook_play)
           playbook_play.save
           index += 1
         end
+
+        assign_auditable_user(playbook)
+        playbook.save
 
         playbook_desc = PlaybookDescription.find_by(playbook: playbook, locale: I18n.locale)
         playbook_desc = PlaybookDescription.new if playbook_desc.nil?
