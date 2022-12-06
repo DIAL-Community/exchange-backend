@@ -18,12 +18,13 @@ module Mutations
     argument :data_format, String, required: false
     argument :dataset_type, String, required: true
     argument :description, String, required: true
+    argument :image_file, ApolloUploadServer::Upload, required: false
 
     field :dataset, Types::DatasetType, null: true
     field :errors, [String], null: true
 
     def resolve(name:, slug:, aliases:, website:, visualization_url:, geographic_coverage:,
-      time_range:, dataset_type:, license:, languages:, data_format:, description:)
+      time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
       dataset = Dataset.find_by(slug: slug)
       if dataset.nil?
         dataset = Dataset.new(name: name)
@@ -58,6 +59,16 @@ module Mutations
       ActiveRecord::Base.transaction do
         assign_auditable_user(dataset)
         dataset.save!
+
+        unless image_file.nil?
+          uploader = LogoUploader.new(dataset, image_file.original_filename, context[:current_user])
+          begin
+            uploader.store!(image_file)
+          rescue StandardError => e
+            puts "Unable to save image for: #{dataset.name}. Standard error: #{e}."
+          end
+          dataset.auditable_image_changed(image_file.original_filename)
+        end
 
         dataset_desc = DatasetDescription.find_by(dataset_id: dataset.id, locale: I18n.locale)
         dataset_desc = DatasetDescription.new if dataset_desc.nil?
