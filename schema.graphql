@@ -1520,7 +1520,7 @@ type Query {
     tags: [String!] = []
   ): ProjectConnection!
   play(slug: String!): Play!
-  playbook(slug: String!): Playbook!
+  playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
   plays(search: String = ""): [Play!]!
   product(slug: String!): Product!
