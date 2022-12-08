@@ -14,10 +14,14 @@ module Queries
 
   class PlaybookQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::PlaybookType, null: false
+    type Types::PlaybookType, null: true
 
     def resolve(slug:)
-      Playbook.find_by(slug: slug)
+      playbook = Playbook.find_by(slug: slug)
+
+      return nil if playbook.draft == true && !(an_admin || a_content_editor)
+
+      playbook
     end
   end
 

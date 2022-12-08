@@ -822,7 +822,7 @@ type Mutation {
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload
   createComment(commentId: String, commentObjectId: Int!, commentObjectType: String!, parentCommentId: String, text: String!, userId: Int!): CreateCommentPayload
   createCountry(name: String!, slug: String): CreateCountryPayload
-  createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
+  createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean = false, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlocksSlugs: [String!], description: String!, name: String!, playbookSlug: String, productsSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
@@ -1520,7 +1520,7 @@ type Query {
     tags: [String!] = []
   ): ProjectConnection!
   play(slug: String!): Play!
-  playbook(slug: String!): Playbook!
+  playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
   plays(search: String = ""): [Play!]!
   product(slug: String!): Product!
