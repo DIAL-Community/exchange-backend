@@ -132,7 +132,8 @@ module Queries
   end
 
   def wizard_projects(sector, countries, tags, sort_hint, offset_params = {})
-    sector_id = Sector.find_by(name: sector).id
+    sectors = Sector.find_by(name: sector)
+    sector_id = sectors.id unless sectors.nil?
     get_project_list(sector_id, countries, tags, sort_hint, offset_params).uniq
   end
 
