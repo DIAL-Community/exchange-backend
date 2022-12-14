@@ -18,18 +18,30 @@ module Mutations
           candidate_role: nil,
           errors: ['Must be logged in to apply as owner']
         }
+      elsif entity == 'PRODUCT' && a_product_owner(entity_id)
+        return {
+          candidate_role: nil,
+          errors: ['You are owner of this product']
+        }
+      elsif entity == 'ORGANIZATION' && an_org_owner(entity_id)
+        return {
+          candidate_role: nil,
+          errors: ['You are owner of this organization']
+        }
       end
 
       if entity == 'PRODUCT'
         role = 'product_user'
         candidate_role = CandidateRole.find_by(email: context[:current_user].email,
                                                roles: [role],
-                                               product_id: entity_id)
+                                               product_id: entity_id,
+                                               rejected: nil)
       elsif entity == 'ORGANIZATION'
         role = 'org_user'
         candidate_role = CandidateRole.find_by(email: context[:current_user].email,
                                                roles: [role],
-                                               organization_id: entity_id)
+                                               organization_id: entity_id,
+                                               rejected: nil)
       else
         return {
           candidate_role: nil,

@@ -24,7 +24,7 @@ module Queries
     type Types::CandidateRoleType, null: true
 
     def resolve(product_id:, organization_id:, email:)
-      return nil if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return nil if context[:current_user].nil?
 
       candidate_roles = CandidateRole
       candidate_roles = candidate_roles.where(product_id: product_id.to_i) if !product_id.nil? && !product_id.blank?
@@ -33,7 +33,7 @@ module Queries
         candidate_roles = candidate_roles.where(organization_id: organization_id.to_i)
       end
 
-      candidate_roles = candidate_roles.where(email: email) unless email.nil?
+      candidate_roles = candidate_roles.where(email: email).order(updated_at: :desc) unless email.nil?
       candidate_roles.first
     end
   end
