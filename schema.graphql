@@ -62,6 +62,16 @@ type BuildingBlockEdge {
   node: BuildingBlock
 }
 
+type CandidateDataset {
+  dataUrl: String!
+  dataVisualizationUrl: String
+  description: String!
+  id: ID!
+  name: String!
+  rejected: Boolean
+  slug: String!
+}
+
 type CandidateOrganization {
   description: String
   id: ID!
@@ -1365,6 +1375,7 @@ type Query {
   aggregators(search: String = ""): [Organization!]!
   buildingBlock(slug: String!): BuildingBlock!
   buildingBlocks(search: String = ""): [BuildingBlock!]!
+  candidateDatasets(search: String = ""): [CandidateDataset!]
   candidateOrganization(slug: String!): CandidateOrganization!
   candidateOrganizations(search: String = ""): [CandidateOrganization!]!
   candidateProduct(slug: String!): CandidateProduct!
