@@ -65,5 +65,13 @@ module Mutations
       end
       "_dup#{size}"
     end
+
+    def captcha_verification(captcha)
+      Recaptcha.verify_via_api_call(captcha,
+                                    {
+                                      secret_key: Rails.application.secrets.captcha_secret_key,
+                                      skip_remote_ip: true
+                                    })
+    end
   end
 end
