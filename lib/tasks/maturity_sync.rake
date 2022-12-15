@@ -240,14 +240,17 @@ namespace :maturity_sync do
 
       product_languages = sum_languages(product_languages.flatten)
 
-      unless product_languages[3..(product_languages.count - 1)].nil?
+      unless product_languages[4..(product_languages.count - 1)].nil?
         counter = 0
-        product_languages[3..(product_languages.count - 1)].each do |product_language|
+        product_languages[4..(product_languages.count - 1)].each do |product_language|
           counter += product_language["size"]
         end
-        product_languages.push({ "node" => { "name" => "Other", "color" => "#fd807f" }, "size" => counter })
+        if counter > 0
+          product_languages.push({ "node" => { "name" => "Other", "color" => "#fd807f" }, "size" => counter })
+        end
       end
-      top_languages = (product_languages[0..2] << product_languages[-1]).flatten
+
+      top_languages = (product_languages[0..2] << product_languages[-1]).flatten.uniq
       product.languages = top_languages
       product.languages = nil if top_languages == [nil]
       product.save!
