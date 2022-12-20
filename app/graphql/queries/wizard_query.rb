@@ -2,26 +2,27 @@
 
 module Queries
   class WizardQuery < Queries::BaseQuery
-    argument :sector, String, required: false
+    argument :sectors, [String], required: false, default_value: []
     argument :use_case, String, required: false
     argument :sdg, String, required: false
     argument :building_blocks, [String], required: false
 
     type Types::WizardType, null: false
 
-    def resolve(sector:, use_case:, sdg:, building_blocks:)
+    def resolve(sectors:, use_case:, sdg:, building_blocks:)
       wizard = {}
       wizard['digital_principles'] = DigitalPrinciple.all
 
-      curr_sector = Sector.find_by(name: sector, locale: I18n.locale)
+      curr_sectors = Sector.where(name: sectors, locale: I18n.locale)
+
       curr_sdg = SustainableDevelopmentGoal.find_by(name: sdg)
 
       if use_case == ''
         sector_use_cases = []
         sdg_use_cases = []
 
-        unless curr_sector.nil?
-          sector_use_cases = UseCase.where(sector_id: curr_sector.id, maturity: 'PUBLISHED')
+        unless curr_sectors.nil?
+          sector_use_cases = UseCase.where(sector_id: curr_sectors, maturity: 'PUBLISHED')
         end
 
         unless curr_sdg.nil?

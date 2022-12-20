@@ -1490,7 +1490,7 @@ type Query {
     last: Int
     offsetAttributes: OffsetAttributeInput!
     playbookSortHint: String = "name"
-    sector: String = ""
+    sectors: [String!] = []
     tags: [String!] = []
   ): PlaybookConnection!
   paginatedProducts(
@@ -2120,14 +2120,14 @@ type Query {
   useCaseStep(slug: String!): UseCaseStep!
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!
-  useCasesForSector(sectorSlug: String!): [UseCase!]!
+  useCasesForSector(sectorsSlugs: [String!]!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User!
   userAuthenticationTokenCheck(userAuthenticationToken: String!, userId: Int!): Boolean
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdg: String, sector: String, useCase: String): Wizard!
+  wizard(buildingBlocks: [String!], sdg: String, sectors: [String!] = [], useCase: String): Wizard!
   workflow(slug: String!): Workflow!
   workflows(search: String = ""): [Workflow!]!
 }
