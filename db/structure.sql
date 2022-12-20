@@ -458,6 +458,48 @@ ALTER SEQUENCE public.building_blocks_id_seq OWNED BY public.building_blocks.id;
 
 
 --
+-- Name: candidate_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.candidate_datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    data_url character varying NOT NULL,
+    data_visualization_url character varying,
+    data_type character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.candidate_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.candidate_datasets_id_seq OWNED BY public.candidate_datasets.id;
+
+
+--
 -- Name: candidate_organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3745,6 +3787,13 @@ ALTER TABLE ONLY public.building_blocks ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: candidate_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets ALTER COLUMN id SET DEFAULT nextval('public.candidate_datasets_id_seq'::regclass);
+
+
+--
 -- Name: candidate_organizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4426,6 +4475,14 @@ ALTER TABLE ONLY public.building_block_descriptions
 
 ALTER TABLE ONLY public.building_blocks
     ADD CONSTRAINT building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_datasets candidate_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT candidate_datasets_pkey PRIMARY KEY (id);
 
 
 --
@@ -5303,6 +5360,20 @@ CREATE INDEX index_candidate_contacts_on_candidate_id_and_contact_id ON public.c
 --
 
 CREATE INDEX index_candidate_contacts_on_contact_id_and_candidate_id ON public.candidate_organizations_contacts USING btree (contact_id, candidate_organization_id);
+
+
+--
+-- Name: index_candidate_datasets_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_approved_by_id ON public.candidate_datasets USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_datasets_on_rejected_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_rejected_by_id ON public.candidate_datasets USING btree (rejected_by_id);
 
 
 --
@@ -6395,6 +6466,14 @@ ALTER TABLE ONLY public.organizations_datasets
 
 
 --
+-- Name: candidate_datasets fk_rails_393a906ad8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT fk_rails_393a906ad8 FOREIGN KEY (rejected_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: organization_descriptions fk_rails_3a6b8edce9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6832,6 +6911,14 @@ ALTER TABLE ONLY public.principle_descriptions
 
 ALTER TABLE ONLY public.regions
     ADD CONSTRAINT fk_rails_f2ba72ccee FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_f460267737; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT fk_rails_f460267737 FOREIGN KEY (approved_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7391,6 +7478,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221018015421'),
 ('20221018202451'),
 ('20221018203042'),
-('20221102104046');
+('20221102104046'),
+('20221208074203');
 
 

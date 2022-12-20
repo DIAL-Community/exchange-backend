@@ -4,6 +4,7 @@ module Types
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
     field :create_candidate_organization, mutation: Mutations::CreateCandidateOrganization
+    field :create_candidate_dataset, mutation: Mutations::CreateCandidateDataset
 
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
@@ -102,5 +103,7 @@ module Types
     field :create_category_indicator, mutation: Mutations::CreateCategoryIndicator
 
     field :create_wizard_guidance_mail, mutation: Mutations::CreateWizardGuidanceMail
+
+    field :apply_as_owner, mutation: Mutations::ApplyAsOwner
   end
 end
