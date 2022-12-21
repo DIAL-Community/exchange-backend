@@ -433,7 +433,7 @@ CREATE TABLE public.building_blocks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
-    maturity public.entity_status_type DEFAULT 'BETA'::public.entity_status_type NOT NULL,
+    maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     spec_url character varying
 );
 
@@ -7479,6 +7479,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221018202451'),
 ('20221018203042'),
 ('20221102104046'),
-('20221208074203');
+('20221208074203'),
+('20221216075319');
 
 
