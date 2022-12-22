@@ -6,6 +6,7 @@ FactoryBot.define do
     sequence(:name)
     sequence(:slug)
     sequence(:data_url)
+    sequence(:data_visualization_url)
     sequence(:data_type)
     sequence(:submitter_email)
     sequence(:description)
