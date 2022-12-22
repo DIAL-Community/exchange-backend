@@ -9,5 +9,7 @@ module Types
     field :data_visualization_url, String, null: true
     field :description, String, null: false
     field :rejected, Boolean, null: true
+    field :data_type, String, null: false
+    field :submitter_email, String, null: false
   end
 end

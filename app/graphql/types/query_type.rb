@@ -109,6 +109,7 @@ module Types
     field :search_candidate_roles, resolver: Queries::SearchCandidateRolesQuery
 
     field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
+    field :search_candidate_datasets, resolver: Queries::SearchCandidateDatasetsQuery
 
     field :playbooks, resolver: Queries::PlaybooksQuery
     field :playbook, resolver: Queries::PlaybookQuery
