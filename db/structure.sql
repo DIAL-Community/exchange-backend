@@ -299,7 +299,8 @@ CREATE TYPE public.user_role AS ENUM (
     'product_user',
     'mni',
     'content_writer',
-    'content_editor'
+    'content_editor',
+    'dataset_user'
 );
 
 
@@ -608,7 +609,8 @@ CREATE TABLE public.candidate_roles (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     product_id integer,
-    organization_id integer
+    organization_id integer,
+    dataset_id bigint
 );
 
 
@@ -5413,6 +5415,13 @@ CREATE INDEX index_candidate_roles_on_approved_by_id ON public.candidate_roles U
 
 
 --
+-- Name: index_candidate_roles_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_dataset_id ON public.candidate_roles USING btree (dataset_id);
+
+
+--
 -- Name: index_candidate_roles_on_rejected_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6475,6 +6484,14 @@ ALTER TABLE ONLY public.candidate_datasets
 
 
 --
+-- Name: candidate_roles fk_rails_3a1d782b99; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_roles
+    ADD CONSTRAINT fk_rails_3a1d782b99 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
 -- Name: organization_descriptions fk_rails_3a6b8edce9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7482,6 +7499,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221102104046'),
 ('20221208074203'),
 ('20221216075319'),
-('20221220085731');
+('20221220085731'),
+('20221227105319'),
+('20221227105322');
 
 

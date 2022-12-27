@@ -28,6 +28,11 @@ module Mutations
           candidate_role: nil,
           errors: ['You are owner of this organization']
         }
+      elsif entity == 'DATASET' && a_dataset_owner(entity_id)
+        return {
+          candidate_role: nil,
+          errors: ['You are owner of this dataset']
+        }
       end
 
       if entity == 'PRODUCT'
@@ -41,6 +46,12 @@ module Mutations
         candidate_role = CandidateRole.find_by(email: context[:current_user].email,
                                                roles: [role],
                                                organization_id: entity_id,
+                                               rejected: nil)
+      elsif entity == 'DATASET'
+        role = 'dataset_user'
+        candidate_role = CandidateRole.find_by(email: context[:current_user].email,
+                                               roles: [role],
+                                               dataset_id: entity_id,
                                                rejected: nil)
       else
         return {
@@ -64,6 +75,8 @@ module Mutations
         candidate_role.product_id = entity_id
       elsif entity == 'ORGANIZATION'
         candidate_role.organization_id = entity_id
+      elsif entity == 'DATASET'
+        candidate_role.dataset_id = entity_id
       end
 
       if candidate_role.save!

@@ -31,6 +31,10 @@ module Mutations
       !context[:current_user].nil? && context[:current_user].organization_id.equal?(organization_id)
     end
 
+    def a_dataset_owner(dataset_id)
+      !context[:current_user].nil? && context[:current_user].dataset_id.equal?(dataset_id)
+    end
+
     def a_content_editor
       !context[:current_user].nil? && context[:current_user].roles.include?('content_editor')
     end
