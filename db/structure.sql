@@ -3651,7 +3651,8 @@ CREATE TABLE public.users (
     authentication_token_created_at timestamp without time zone,
     user_products bigint[] DEFAULT '{}'::bigint[],
     receive_admin_emails boolean DEFAULT false,
-    username character varying
+    username character varying,
+    user_datasets bigint[] DEFAULT '{}'::bigint[]
 );
 
 
@@ -7480,6 +7481,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221018203042'),
 ('20221102104046'),
 ('20221208074203'),
-('20221216075319');
+('20221216075319'),
+('20221220085731');
 
 
