@@ -17805,14 +17805,22 @@
               "description": null,
               "args": [
                 {
-                  "name": "sector",
+                  "name": "sectors",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -22156,15 +22164,23 @@
               "description": null,
               "args": [
                 {
-                  "name": "sectorSlug",
+                  "name": "sectorsSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "NON_NULL",
+                        "name": null,
+                        "ofType": {
+                          "kind": "SCALAR",
+                          "name": "String",
+                          "ofType": null
+                        }
+                      }
                     }
                   },
                   "defaultValue": null,
@@ -22392,14 +22408,22 @@
               "description": null,
               "args": [
                 {
-                  "name": "sector",
+                  "name": "sectors",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": null,
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
