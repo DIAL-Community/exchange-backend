@@ -2196,7 +2196,7 @@ type Query {
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdg: String, sectors: [String!] = [], useCase: String): Wizard!
+  wizard(buildingBlocks: [String!], sdgs: [String!], sectors: [String!] = [], useCase: String): Wizard!
   workflow(slug: String!): Workflow!
   workflows(search: String = ""): [Workflow!]!
 }
