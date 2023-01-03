@@ -131,10 +131,10 @@ module Queries
     end
   end
 
-  def wizard_projects(sector, countries, tags, sort_hint, offset_params = {})
-    sectors = Sector.find_by(name: sector)
-    sector_id = sectors.id unless sectors.nil?
-    get_project_list(sector_id, countries, tags, sort_hint, offset_params).uniq
+  def wizard_projects(sectors, countries, tags, sort_hint, offset_params = {})
+    sectors_list = Sector.where(name: sectors)
+    sectors_ids = sectors_list.map(&:id) unless sectors_list.nil?
+    get_project_list(sectors_ids, countries, tags, sort_hint, offset_params).uniq
   end
 
   class SearchProjectsQuery < Queries::BaseQuery
