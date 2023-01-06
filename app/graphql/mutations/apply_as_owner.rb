@@ -63,7 +63,7 @@ module Mutations
       if candidate_role.nil?
         candidate_role = CandidateRole.new(email: context[:current_user].email,
                                            roles: [role],
-                                           description: "#{entity.downcase} ownership requested from the new UX.")
+                                           description: "#{entity.titlecase} ownership requested from the new UX.")
       else
         return {
           candidate_role: nil,

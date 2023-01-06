@@ -73,7 +73,8 @@ datasets.each do |dataset|
     # Moving descriptions from product to dataset's description table.
     dataset_descriptions = ProductDescription.where(product_id: dataset.id)
     dataset_descriptions.each do |dataset_description|
-      existing_dataset_description = DatasetDescription.new
+      existing_dataset_description = DatasetDescription.find_by(dataset_id: existing_dataset.id, locale: I18n.locale)
+      existing_dataset_description = DatasetDescription.new if existing_dataset_description.nil?
       existing_dataset_description.description = dataset_description.description
       existing_dataset_description.locale = dataset_description.locale
       existing_dataset_description.dataset = existing_dataset

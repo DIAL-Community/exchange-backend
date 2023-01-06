@@ -10,4 +10,8 @@ class CandidateRole < ApplicationRecord
   def candidate_role_organization
     Organization.find(organization_id) unless organization_id.nil?
   end
+
+  def candidate_role_dataset
+    Dataset.find(dataset_id) unless dataset_id.nil?
+  end
 end

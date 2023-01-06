@@ -8,9 +8,11 @@ module Types
     field :description, String, null: true
     field :product_id, String, null: true
     field :organization_id, String, null: true
+    field :dataset_id, String, null: true
 
     field :product, Types::ProductType, null: true, method: :candidate_role_product
     field :organization, Types::OrganizationType, null: true, method: :candidate_role_organization
+    field :dataset, Types::DatasetType, null: true, method: :candidate_role_dataset
 
     field :rejected, Boolean, null: true
   end
