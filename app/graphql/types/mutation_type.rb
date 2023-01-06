@@ -106,5 +106,7 @@ module Types
     field :create_wizard_guidance_mail, mutation: Mutations::CreateWizardGuidanceMail
 
     field :apply_as_owner, mutation: Mutations::ApplyAsOwner
+
+    field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
   end
 end

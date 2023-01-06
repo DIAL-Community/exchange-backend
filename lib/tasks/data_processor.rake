@@ -52,8 +52,12 @@ namespace :data_processors do
           ) unless obj_type == 'product'
 
           if product_description.nil?
-            product_description = ProductDescription.new if obj_type == 'product'
-            product_description = DatasetDescription.new unless obj_type == 'product'
+            product_description = ProductDescription.find_by(product_id: generated_product.id, locale: I18n.locale) \
+              if obj_type == 'product'
+            product_description = DatasetDescription.find_by(dataset_id: generated_product.id, locale: I18n.locale) \
+              if obj_type != 'product'
+            product_description = ProductDescription.new if obj_type == 'product' && product_description.nil?
+            product_description = DatasetDescription.new if obj_type != 'product' && product_description.nil?
             product_description.product_id = generated_product.id if obj_type == 'product'
             product_description.dataset_id = generated_product.id unless obj_type == 'product'
             product_description.locale = description['locale']
