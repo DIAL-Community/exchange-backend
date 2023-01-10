@@ -13,7 +13,8 @@ module Mutations
     argument :email, String, required: true
     argument :captcha, String, required: true
 
-    field :slug, String, null: true
+    field :candidate_product, Types::CandidateProductType, null: true
+    field :errors, [String], null: true
 
     def resolve(name:, website:, repository:, description:, email:, captcha:)
       candidate_product_params = {
@@ -34,15 +35,19 @@ module Mutations
 
       candidate_product = CandidateProduct.new(candidate_product_params)
 
-      response = {}
-      response[:slug] = if Recaptcha.verify_via_api_call(captcha,
-                                                         {
-                                                           secret_key: Rails.application.secrets.captcha_secret_key,
-                                                           skip_remote_ip: true
-                                                         }) && candidate_product.save!
-        candidate_product.slug
+      if candidate_product.save! && captcha_verification(captcha)
+        # Successful creation, return the created object with no errors
+        {
+          candidate_product: candidate_product,
+          errors: []
+        }
+      else
+        # Failed save, return the errors to the client
+        {
+          candidate_product: nil,
+          errors: candidate_product.errors.full_messages
+        }
       end
-      response
     end
   end
 end

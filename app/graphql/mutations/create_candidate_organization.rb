@@ -14,7 +14,8 @@ module Mutations
     argument :title, String, required: true
     argument :captcha, String, required: true
 
-    field :slug, String, null: true
+    field :candidate_organization, Types::CandidateOrganizationType, null: true
+    field :errors, [String], null: true
 
     def resolve(organization_name:, website:, description:, name:, email:, title:, captcha:)
       candidate_params = { name: organization_name, website: website, description: description }
@@ -36,20 +37,24 @@ module Mutations
         contacts = Contact.where(slug: contact_params[:slug])
         unless contacts.empty?
           first_duplicate = Contact.slug_simple_starts_with(contact_params[:slug]).order(slug: :desc).first
-          contact[:slug] = contact[:slug] + generate_offset(first_duplicate).to_s
+          contact_params[:slug] = contact_params[:slug] + generate_offset(first_duplicate).to_s
         end
         candidate_organization.contacts << Contact.new(contact_params)
       end
 
-      response = {}
-      response[:slug] = if Recaptcha.verify_via_api_call(captcha,
-                                                         {
-                                                           secret_key: Rails.application.secrets.captcha_secret_key,
-                                                           skip_remote_ip: true
-                                                         }) && candidate_organization.save!
-        candidate_organization.slug
+      if candidate_organization.save && captcha_verification(captcha)
+        # Successful creation, return the created object with no errors
+        {
+          candidate_organization: candidate_organization,
+          errors: []
+        }
+      else
+        # Failed save, return the errors to the client
+        {
+          candidate_organization: nil,
+          errors: candidate_organization.errors.full_messages
+        }
       end
-      response
     end
   end
 end
