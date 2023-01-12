@@ -40,6 +40,7 @@ module Types
     field :update_organization_offices, mutation: Mutations::UpdateOrganizationOffices
 
     field :create_product, mutation: Mutations::CreateProduct
+    field :delete_product, mutation: Mutations::DeleteProduct
 
     field :update_product_sectors, mutation: Mutations::UpdateProductSectors
     field :update_product_building_blocks, mutation: Mutations::UpdateProductBuildingBlocks
@@ -50,6 +51,8 @@ module Types
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
 
     field :create_dataset, mutation: Mutations::CreateDataset
+    field :delete_dataset, mutation: Mutations::DeleteDataset
+
     field :update_dataset_countries, mutation: Mutations::UpdateDatasetCountries
     field :update_dataset_organizations, mutation: Mutations::UpdateDatasetOrganizations
     field :update_dataset_sdgs, mutation: Mutations::UpdateDatasetSdgs
@@ -65,6 +68,7 @@ module Types
     field :update_project_tags, mutation: Mutations::UpdateProjectTags
 
     field :create_use_case, mutation: Mutations::CreateUseCase
+    field :delete_use_case, mutation: Mutations::DeleteUseCase
 
     field :update_use_case_sdg_targets, mutation: Mutations::UpdateUseCaseSdgTargets
     field :update_use_case_tags, mutation: Mutations::UpdateUseCaseTags
@@ -77,6 +81,7 @@ module Types
     field :update_use_case_step_building_blocks, mutation: Mutations::UpdateUseCaseStepBuildingBlocks
 
     field :create_building_block, mutation: Mutations::CreateBuildingBlock
+    field :delete_building_block, mutation: Mutations::DeleteBuildingBlock
 
     field :update_building_block_workflows, mutation: Mutations::UpdateBuildingBlockWorkflows
     field :update_building_block_products, mutation: Mutations::UpdateBuildingBlockProducts
@@ -85,6 +90,7 @@ module Types
     field :delete_sector, mutation: Mutations::DeleteSector
 
     field :create_workflow, mutation: Mutations::CreateWorkflow
+    field :delete_workflow, mutation: Mutations::DeleteWorkflow
     field :update_workflow_building_blocks, mutation: Mutations::UpdateWorkflowBuildingBlocks
 
     field :create_country, mutation: Mutations::CreateCountry

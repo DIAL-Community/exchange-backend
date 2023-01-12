@@ -34,13 +34,20 @@ class Product < ApplicationRecord
   has_many :sectors, through: :product_sectors,
                      after_add: :association_add, before_remove: :association_remove
 
-  has_many :product_building_blocks, dependent: :delete_all,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
-  has_many :building_blocks, through: :product_building_blocks,
-                             dependent: :delete_all,
-                             after_add: :association_add,
-                             before_remove: :association_remove
+  has_many(
+    :product_building_blocks,
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_many(
+    :building_blocks,
+    through: :product_building_blocks,
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
 
   has_and_belongs_to_many :origins, join_table: :products_origins,
                                     dependent: :delete_all,
