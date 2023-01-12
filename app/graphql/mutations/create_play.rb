@@ -75,10 +75,7 @@ module Mutations
         play_desc.description = description
 
         assign_auditable_user(play_desc)
-        if play_desc.save
-          # Need to figure out how to add logger here!
-          puts("Description for '#{play.name}' saved.")
-        end
+        play_desc.save
 
         playbook = Playbook.find_by(slug: playbook_slug)
         assigned_play = PlaybookPlay
@@ -95,10 +92,7 @@ module Mutations
           assigned_play.order = max_order
 
           assign_auditable_user(assigned_play)
-          if assigned_play.save
-            # Need to figure out how to add logger here!
-            puts("Play '#{play.name}' assigned to '#{playbook.name}'.")
-          end
+          assigned_play.save
         end
 
         successful_operation = true
