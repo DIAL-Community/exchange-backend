@@ -39,7 +39,7 @@ RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['candidateDatasets']).to(be(nil))
+      expect(result['data']['candidateDatasets']).to(eq([]))
     end
   end
 
@@ -55,7 +55,7 @@ RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['candidateDatasets']).to(be(nil))
+      expect(result['data']['candidateDatasets']).to(eq([]))
     end
   end
 end
@@ -98,7 +98,7 @@ RSpec.describe(Queries::SearchCandidateDatasetsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['searchCandidateDatasets']).to(be(nil))
+      expect(result['data']).to(be(nil))
     end
   end
 
@@ -114,7 +114,7 @@ RSpec.describe(Queries::SearchCandidateDatasetsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['searchCandidateDatasets']).to(be(nil))
+      expect(result['data']).to(be(nil))
     end
   end
 end

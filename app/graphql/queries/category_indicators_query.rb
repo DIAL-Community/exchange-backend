@@ -6,6 +6,7 @@ module Queries
     type [Types::CategoryIndicatorType], null: true
 
     def resolve(search:)
+      category_indicators = []
       if an_admin
         category_indicators = CategoryIndicator.where(rubric_category_id: nil)
         category_indicators = category_indicators.name_contains(search) unless search.blank?

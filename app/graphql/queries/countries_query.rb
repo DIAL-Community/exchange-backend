@@ -14,7 +14,7 @@ module Queries
 
   class CountryQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::CountryType, null: false
+    type Types::CountryType, null: true
 
     def resolve(slug:)
       Country.find_by(slug: slug)

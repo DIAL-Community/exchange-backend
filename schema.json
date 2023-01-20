@@ -5599,13 +5599,9 @@
 
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Play",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Play",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -16600,13 +16596,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Organization",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Organization",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -16670,13 +16662,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "BuildingBlock",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "BuildingBlock",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -16736,15 +16724,19 @@
                 }
               ],
               "type": {
-                "kind": "LIST",
+                "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "NON_NULL",
+                  "kind": "LIST",
                   "name": null,
                   "ofType": {
-                    "kind": "OBJECT",
-                    "name": "CandidateDataset",
-                    "ofType": null
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "CandidateDataset",
+                      "ofType": null
+                    }
                   }
                 }
               },
@@ -16773,13 +16765,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CandidateOrganization",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "CandidateOrganization",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -16843,13 +16831,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "CandidateProduct",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "CandidateProduct",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -17406,13 +17390,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Country",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Country",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -17457,13 +17437,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Dataset",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Dataset",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -17710,13 +17686,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Move",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Move",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -17894,13 +17866,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Organization",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Organization",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -18911,13 +18879,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Play",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Play",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -19047,13 +19011,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Product",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Product",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -19121,13 +19081,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "ProductRepository",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "ProductRepository",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -19191,13 +19147,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Project",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Project",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -19367,13 +19319,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "SustainableDevelopmentGoal",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "SustainableDevelopmentGoal",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -19766,15 +19714,11 @@
                   "name": "search",
                   "description": null,
                   "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "\"\"",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -19828,9 +19772,13 @@
                 }
               ],
               "type": {
-                "kind": "OBJECT",
-                "name": "CandidateDatasetConnection",
-                "ofType": null
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "CandidateDatasetConnection",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -22382,13 +22330,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Sector",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Sector",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -22553,13 +22497,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Tag",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Tag",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -22623,13 +22563,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "UseCase",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "UseCase",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -22656,13 +22592,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "UseCaseStep",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "UseCaseStep",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -22865,13 +22797,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "User",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "User",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -23112,13 +23040,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Workflow",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "Workflow",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null

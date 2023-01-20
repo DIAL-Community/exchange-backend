@@ -18,7 +18,7 @@ module Queries
 
   class DatasetQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::DatasetType, null: false
+    type Types::DatasetType, null: true
 
     def resolve(slug:)
       Dataset.find_by(slug: slug)
