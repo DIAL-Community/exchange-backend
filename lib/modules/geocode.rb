@@ -41,7 +41,7 @@ module Modules
         end
 
         region.aliases << region_name
-        puts("Region saved: #{region.name}.") if region.save!
+        puts("Region saved: #{region.name}.") if !region.name.nil? && region.save
       end
       region
     end
@@ -64,7 +64,6 @@ module Modules
 
         address = city_name
         address = "#{address}, #{region_name}" unless region_name.blank?
-
         address = "#{address}, #{country_code}" unless country_code.blank?
 
         city_data = JSON.parse(geocode_with_google(address, country_code, google_auth_key))
@@ -84,7 +83,7 @@ module Modules
         end
 
         city.aliases << city_name
-        puts("City saved: #{city.name}.") if city.save!
+        puts("City saved: #{city.name}.") if !city.name.nil? && city.save
       end
       city
     end

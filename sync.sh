@@ -22,6 +22,8 @@ rake maturity_sync:update_api_docs_indicators
 rake maturity_sync:sync_data['/product-evaluation-rubric']
 rake sync:fetch_website_data
 
+rake endorsers:sync_form_response
+
 rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet
 rake data_processors:process_exported_json_files

@@ -350,7 +350,7 @@ namespace :geocode do
       end
 
       region.aliases << region_name
-      puts("Region saved: #{region.name}.") if region.save!
+      puts("Region saved: #{region.name}.") if !region.name.nil? && region.save!
     end
     region
   end
@@ -393,7 +393,7 @@ namespace :geocode do
       end
 
       city.aliases << city_name
-      puts("City saved: #{city.name}.") if city.save!
+      puts("City saved: #{city.name}.") if !city.name.nil? && city.save
     end
     city
   end
