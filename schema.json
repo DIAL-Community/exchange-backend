@@ -9088,6 +9088,66 @@
                   "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
+                },
+                {
+                  "name": "commercialProduct",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "pricingUrl",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "pricingModel",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "pricingDetails",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "hostingModel",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {

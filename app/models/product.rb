@@ -125,7 +125,11 @@ class Product < ApplicationRecord
   end
 
   def main_repository
-    product_repositories.find_by(main_repository: true)
+    main_repository = product_repositories.find_by(main_repository: true)
+    if main_repository.nil?
+      main_repository = product_repositories.first
+    end
+    main_repository
   end
 
   def current_projects(num_projects)

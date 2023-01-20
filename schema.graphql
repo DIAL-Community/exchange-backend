@@ -955,7 +955,7 @@ type Mutation {
   createOrganization(aliases: JSON, description: String, endorserLevel: String, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean = false, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlocksSlugs: [String!], description: String!, name: String!, playbookSlug: String, productsSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, plays: JSON = [], slug: String!, tags: JSON = []): CreatePlaybookPayload
-  createProduct(aliases: JSON, description: String!, imageFile: Upload, name: String!, slug: String!, website: String): CreateProductPayload
+  createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateResourcePayload

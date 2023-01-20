@@ -13,10 +13,19 @@ module Mutations
     argument :description, String, required: true
     argument :image_file, ApolloUploadServer::Upload, required: false
 
+    argument :commercial_product, Boolean, required: false, default_value: false
+    argument :pricing_url, String, required: false, default_value: nil
+    argument :pricing_model, String, required: false, default_value: nil
+    argument :pricing_details, String, required: false, default_value: nil
+    argument :hosting_model, String, required: false, default_value: nil
+
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, aliases: nil, website: nil, description:, image_file: nil)
+    def resolve(
+      name:, slug:, aliases: nil, website: nil, description:, image_file: nil,
+      commercial_product:, pricing_url:, pricing_model:, pricing_details:, hosting_model:
+    )
       product = Product.find_by(slug: slug)
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
         return {
@@ -41,6 +50,13 @@ module Mutations
       product.name = name
       product.aliases = aliases
       product.website = website
+
+      product.commercial_product = commercial_product.to_s.downcase == 'true'
+
+      product.pricing_url = pricing_url
+      product.hosting_model = hosting_model
+      product.pricing_model = pricing_model
+      product.pricing_details = pricing_details
 
       successful_operation = false
       ActiveRecord::Base.transaction do
