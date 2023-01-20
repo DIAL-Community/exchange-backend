@@ -14,7 +14,7 @@ module Queries
 
   class WorkflowQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::WorkflowType, null: false
+    type Types::WorkflowType, null: true
 
     def resolve(slug:)
       Workflow.find_by(slug: slug)

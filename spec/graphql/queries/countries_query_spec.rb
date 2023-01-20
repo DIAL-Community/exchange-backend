@@ -41,7 +41,7 @@ RSpec.describe(Queries::CountriesQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']).to(eq(nil))
+      expect(result['data']['country']).to(eq(nil))
     end
   end
 end

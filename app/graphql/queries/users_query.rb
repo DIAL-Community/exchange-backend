@@ -15,10 +15,10 @@ module Queries
 
   class UserQuery < Queries::BaseQuery
     argument :user_id, String, required: true
-    type Types::UserType, null: false
+    type Types::UserType, null: true
 
     def resolve(user_id:)
-      return nil if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
 
       User.find(user_id)
     end

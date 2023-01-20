@@ -119,7 +119,7 @@ module Mutations
 
     argument :play_slug, String, required: true
 
-    field :play, Types::PlayType, null: false
+    field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
     def resolve(play_slug:)

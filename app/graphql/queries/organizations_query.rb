@@ -19,7 +19,7 @@ module Queries
 
   class OrganizationQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::OrganizationType, null: false
+    type Types::OrganizationType, null: true
 
     def resolve(slug:)
       Organization.find_by(slug: slug)

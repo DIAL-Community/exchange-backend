@@ -16,7 +16,7 @@ module Queries
 
   class CandidateProductQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::CandidateProductType, null: false
+    type Types::CandidateProductType, null: true
 
     def resolve(slug:)
       return nil if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
@@ -32,7 +32,7 @@ module Queries
     type Types::CandidateProductType.connection_type, null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
 
       candidate_products = CandidateProduct.order(rejected: :desc).order(:slug)
       candidate_products = candidate_products.name_contains(search) unless search.blank?

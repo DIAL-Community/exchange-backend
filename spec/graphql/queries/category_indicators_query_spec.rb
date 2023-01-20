@@ -88,7 +88,7 @@ RSpec.describe(Queries::CategoryIndicatorsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['categoryIndicators']).to(eq(nil))
+      expect(result['data']['categoryIndicators']).to(eq([]))
     end
   end
 end

@@ -10,6 +10,13 @@ class Organization < ApplicationRecord
 
   attr_accessor :organization_description
 
+  has_and_belongs_to_many(
+    :datasets,
+    join_table: :organizations_datasets,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
   has_and_belongs_to_many :products, join_table: :organizations_products,
                                      after_add: :association_add,
                                      before_remove: :association_remove

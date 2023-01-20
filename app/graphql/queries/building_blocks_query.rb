@@ -14,7 +14,7 @@ module Queries
 
   class BuildingBlockQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::BuildingBlockType, null: false
+    type Types::BuildingBlockType, null: true
 
     def resolve(slug:)
       BuildingBlock.find_by(slug: slug)

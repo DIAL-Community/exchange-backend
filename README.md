@@ -32,7 +32,7 @@ This approach does not require installing PostgreSQL or Redis manually on the sy
 
 ### **Step 1** - Install dependencies
 * Required dependencies:
-  ```
+  ```sh
   sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev
   ```
 * `Ruby` (version 2.5 or greater) - see [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) for installation instructions.
@@ -42,13 +42,13 @@ This approach does not require installing PostgreSQL or Redis manually on the sy
 
 ### **Step 2** - Install the dependencies specified in Gemfile
 Execute the following command in a terminal:
-```
+```sh
 bundle install
 ```
 
 #### **Troubleshooting**
 If the command fails you might have to install additional libraries using the following command:
-```
+```sh
 gem install <package> -v <package version> --source 'https://rubygems.org/' --user-install
 ```
 
@@ -57,7 +57,7 @@ First, create a **setEnv.sh** file. Then, log in and request access to [Confluen
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
-```
+```sh
 source ./setEnv.sh dev
 ```
 
@@ -66,28 +66,28 @@ source ./setEnv.sh dev
 ### **Step 4** - Run PostgreSQL and Redis in Docker containers
 In the terminal, with environment variables set, execute the following command:
 
-```
+```sh
 docker-compose -f docker-compose-dev.yml up -d
 ```
 
 #### **Troubleshooting**
 If you encounter the following error in the terminal:
-```
+```sh
 listen tcp4 0.0.0.0:<POSTGRES_PORT>: bind: address already in use
 ```
 
 for example, if `POSTGRES_PORT` environment variable is set to `1234`:
-```
+```sh
 listen tcp4 0.0.0.0:1234: bind: address already in use
 ```
 
 then execute the following to find a process that uses this port:
-```
+```sh
 sudo lsof -i -P -n | grep 1234
 ```
 
 and kill the process by passing its `id` as an argument to:
-```
+```sh
 sudo kill -9 <id>
 ```
 
@@ -97,17 +97,17 @@ You can ask repository's maintainers for a database dump file.
 If you **do have a dump file** follow these instructions:
 1. Move the `registry.dump` (rename the file if its name is different) database dump file to `/db/backups` directory
 2. Execute the following command in the terminal: 
-    ```
+    ```sh
     rails db:restore
     ```
 3. (Optional) to additionally feed the test database execute the following command in the terminal:
-    ```
+    ```sh
     rails db:restore RAILS_ENV=test
     ```
 
 **Otherwise**, follow these instructions:
 1. Execute the following commands in the terminal:
-    ```
+    ```sh
     rails db:create
     rails db:schema:load
     rails db:seed
@@ -115,18 +115,18 @@ If you **do have a dump file** follow these instructions:
 
 ### **Step 6** - Run database migrations
 Execute the following command in the terminal:
-```
+```sh
 rails db:migrate
 ```
 
 (Optional) to additionally run migrations of test database, execute the following command in the terminal:
-```
+```sh
 rails db:restore RAILS_ENV=test
 ```
 
 ### **Step 7** - Start Puma web server
 Puma web server comes bundled with Rails. Execute the following command in the terminal:
-```
+```sh
 rails server
 ```
 
@@ -162,7 +162,7 @@ Once the development environment has been set up and run once, fewer steps are r
 
 ### **Step 1** - Install dependencies
 * Required dependencies:
-  ```
+  ```sh
   sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev
   ```
 * `Ruby` (version 2.5 or greater) - see [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) for installation instructions.
@@ -173,13 +173,13 @@ Once the development environment has been set up and run once, fewer steps are r
 
 ### **Step 2** - Install the dependencies specified in Gemfile
 Execute the following command in a terminal:
-```
+```sh
 bundle install
 ```
 
 #### **Troubleshooting**
 If the command fails you might have to install additional libraries using the following command:
-```
+```sh
 gem install <package> -v <package version> --source 'https://rubygems.org/' --user-install
 ```
 
@@ -188,7 +188,7 @@ First, create a **setEnv.sh** file. Then, log in and request access to [Confluen
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
-```
+```sh
 source ./setEnv.sh dev
 ```
 
@@ -198,18 +198,18 @@ source ./setEnv.sh dev
 Before running the application, you have to create a user in PostgreSQL whose username and password must align with the `POSTGRES_USER` and `POSTGRES_PASSWORD` environment variables respectively.
 
 To create a user in PostgreSQL, connect to PostgreSQL by executing the following command in the terminal:
-```
+```sh
 psql postgres
 ```
 
 Run the following commands in `psql` interactive terminal:
-```
+```sh
 create user <POSTGRES_USER> with password '<POSTGRES_PASSWORD>';
 alter user <POSTGRES_USER> with superuser;
 ```
 
 for example, if `POSTGRES_USER` environment variable is set to `abc` and `POSTGRES_PASSWORD` to `123` then the command would look as follows:
-```
+```sh
 create user abc with password '123';
 alter user abc with superuser;
 ```
@@ -223,17 +223,17 @@ You can ask project's maintainers for a database dump file.
 If you **do have** a dump file follow these instructions:
 1. Move the `registry.dump` (rename the file if its name is different) database dump file to `/db/backups` directory
 2. Execute the following command in the terminal: 
-    ```
+    ```sh
     rails db:restore
     ```
 3. (Optional) to additionally feed the test database execute the following command in the terminal:
-    ```
+    ```sh
     rails db:restore RAILS_ENV=test
     ```
 
 Otherwise, follow these instructions:
 1. Execute the following commands in the terminal:
-    ```
+    ```sh
     rails db:create
     rails db:schema:load
     rails db:seed
@@ -241,32 +241,32 @@ Otherwise, follow these instructions:
 
 ### **Step 6** - Run database migrations
 Execute the following command in the terminal:
-```
+```sh
 rails db:migrate
 ```
 
 (Optional) to additionally run migrations of test database, execute the following command in the terminal:
-```
+```sh
 rails db:restore RAILS_ENV=test
 ```
 
 ### **Step 7** - Start Redis store
 To start Redis store, open a new terminal and execute the following command:
-```
+```sh
 redis-server --requirepass <REDIS_PASSWORD>
 ```
 where `REDIS_PASSWORD` is the value of the `REDIS_PASSWORD` environment variable.
 
 ### **Step 8** - Start Puma web server
 Puma web server comes bundled with Rails. Execute the following command in the terminal:
-```
+```sh
 rails server
 ```
 
 Once executed, Puma web server should be up and running. The application will run on localhost port `3000` by default.
 
 The following is an expected example output:
-```
+```sh
 *  Min threads: 5
 *  Max threads: 5
 *  Environment: development
@@ -288,7 +288,7 @@ Once the development environment has been set up and run once, fewer steps are r
 ## Useful commands
 ### Connect to PostgreSQL database run in a Docker container
 If you set up the development environment using the semi-containerized approach, execute the following command to connect to the database:
-```
+```sh
 psql -h localhost -U <POSTGRES_USER> -W <POSTGRES_DB>
 ```
 
@@ -296,7 +296,7 @@ where `POSTGRES_USER` and `POSTGRES_DB` are environment variables set is `setEnv
 
 ### Create a database dump file (backup)
 In order to create database dump file from your current database content, execute the following command:
-```
+```sh
 rails db:backup
 ``` 
 The dump file will be stored saved in `db/backups` directory.
@@ -304,20 +304,156 @@ The dump file will be stored saved in `db/backups` directory.
 ### Create GraphQL schema dump
 
 To create GraphQL schema dump, execute the following command:
-```
+```sh
 rails graphql:schema:dump
 ```
 
 ### Run unit tests
 In order to run unit tests, execute the following command:
-```
+```sh
 bundle exec rspec
 ```
 
 ### Run Rubocop
 To run Rubocop linter, execute the following command:
-```
+```sh
 bundle exec rubocop
+```
+
+## Standardized GraphQL Structure
+
+### Returning Object
+
+Object field in a type or GraphQL returning object will always return the object or nil value by setting the parameter ```null: true```. This will allow the field or the returned data to always be there instead of returning GraphQL error to the front-end when the object's value is nil.
+
+Example:
+
+```ruby
+# From organization_type.rb
+field :endorser_level, String, null: true
+
+# From product_type.rb
+field :main_repository, Types::ProductRepositoryType, null: true
+```
+
+When the ```endorser_level``` or ```main_repository``` is nil, the front-end will receive:
+
+```json
+{
+    "data": {
+        "organization": {
+            "endorser_level": null
+        }
+    }
+}
+```
+
+```json
+{
+    "data": {
+        "product": {
+            "mainRepository": null
+        }
+    }
+}
+```
+
+The following ```find_by``` will return ```nil``` if the slug record is not in the database. Without ```null: true```, the query will return GraphQL error to the front-end because the resolver is expecting non-null value.
+
+```ruby
+# From products_query.rb
+class ProductQuery < Queries::BaseQuery
+  argument :slug, String, required: true
+  
+  type Types::ProductType, null: true
+
+  def resolve(slug:)
+    Product.find_by(slug: slug)
+  end
+end
+```
+
+When the ```find_by``` return nil, the front-end will receive:
+
+```json
+{
+    "data": {
+        "productQuery": null
+    }
+}
+```
+
+### Returning Array
+
+Array field in a type or GraphQL returning array will always return array of the intended objects or empty array by setting the parameter ```[ExpectedType], null: false```.
+
+Example:
+
+```ruby
+# From organization_type.rb
+field :products, [Types::ProductType], null: false
+```
+
+With this configuration, the front-end will receive the following data:
+
+```json
+{
+    "data": {
+        "organization": {
+            "products": []
+        }
+    }
+}
+// With non-empty products array
+{
+    "data": {
+        "organization": {
+            "products": [{
+                "name": "Example Product",
+                "slug": "example_product"
+            }, {
+                "name": "Other Product",
+                "slug": "other_product"
+            }]
+        }
+    }
+}
+```
+
+Another example:
+
+```ruby
+class OrganizationsQuery < Queries::BaseQuery
+  argument :search, String, required: false, default_value: ''
+
+  type [Types::OrganizationType], null: false
+  
+  def resolve(search:)
+  ...
+  end
+end
+```
+
+With this configuration, the front-end will receive the following data:
+
+```json
+{
+    "data": {
+        "organizations": []
+    }
+}
+// With non-empty search results
+{
+    "data": {
+        "organizations": [{
+            "name": "Example Organization",
+            "slug": "example_organization"
+        }, {
+            "name": "Other Organization",
+            "slug": "other_organization"
+        }]
+    }
+}
 ```
 
 ---

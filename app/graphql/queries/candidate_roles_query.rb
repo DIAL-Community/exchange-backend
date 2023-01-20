@@ -22,6 +22,7 @@ module Queries
     argument :organization_id, String, required: true
     argument :dataset_id, String, required: true
     argument :email, String, required: true
+
     type Types::CandidateRoleType, null: true
 
     def resolve(product_id:, organization_id:, dataset_id:, email:)
@@ -47,7 +48,7 @@ module Queries
     type Types::CandidateRoleType.connection_type, null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
 
       candidate_roles = CandidateRole.order(rejected: :desc).order(:email)
       candidate_roles = candidate_roles.email_contains(search) unless search.blank?

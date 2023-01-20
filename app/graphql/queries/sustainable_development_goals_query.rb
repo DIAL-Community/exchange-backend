@@ -18,7 +18,7 @@ module Queries
 
   class SustainableDevelopmentGoalQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::SustainableDevelopmentGoalType, null: false
+    type Types::SustainableDevelopmentGoalType, null: true
 
     def resolve(slug:)
       SustainableDevelopmentGoal.find_by(slug: slug)
