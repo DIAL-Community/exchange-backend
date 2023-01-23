@@ -102,3 +102,6 @@ lib/tasks/local_setup.rake
 
 # .rbenv local ruby version file
 .ruby-version
+
+/lib/assets/credentials.json
+/lib/assets/token.yaml

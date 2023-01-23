@@ -17,11 +17,12 @@ module Queries
   class MoveQuery < Queries::BaseQuery
     argument :play_slug, String, required: true
     argument :slug, String, required: true
-    type Types::MoveType, null: false
+    type Types::MoveType, null: true
 
     def resolve(play_slug:, slug:)
       play = Play.find_by(slug: play_slug)
-      PlayMove.find_by(slug: slug, play_id: play.id)
+      play_move = PlayMove.find_by(slug: slug, play_id: play.id) unless play.nil?
+      play_move
     end
   end
 

@@ -45,7 +45,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
     aggregate_failures do
       expect(result['data']['applyAsOwner']['candidateRole'])
         .to(eq({
-          "description" => "product ownership requested from the new UX.",
+          "description" => "Product ownership requested from the new UX.",
           "email" => "user@gmail.com",
           "organizationId" => nil,
           "productId" => "1001",
@@ -73,7 +73,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
     aggregate_failures do
       expect(result['data']['applyAsOwner']['candidateRole'])
         .to(eq({
-          "description" => "organization ownership requested from the new UX.",
+          "description" => "Organization ownership requested from the new UX.",
           "email" => "user@gmail.com",
           "organizationId" => "1001",
           "productId" => nil,

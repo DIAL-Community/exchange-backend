@@ -14,7 +14,7 @@ module Queries
 
   class TagQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::TagType, null: false
+    type Types::TagType, null: true
 
     def resolve(slug:)
       Tag.find_by(slug: slug)

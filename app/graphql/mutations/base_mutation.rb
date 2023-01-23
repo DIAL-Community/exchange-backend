@@ -32,7 +32,7 @@ module Mutations
     end
 
     def a_dataset_owner(dataset_id)
-      !context[:current_user].nil? && context[:current_user].dataset_id.equal?(dataset_id)
+      !context[:current_user].nil? && context[:current_user].user_datasets.include?(dataset_id)
     end
 
     def a_content_editor

@@ -18,7 +18,7 @@ module Queries
 
   class ProjectQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::ProjectType, null: false
+    type Types::ProjectType, null: true
 
     def resolve(slug:)
       Project.find_by(slug: slug)

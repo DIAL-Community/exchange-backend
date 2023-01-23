@@ -24,6 +24,7 @@ module Mutations
       end
       assign_auditable_user(tag)
 
+      successful_operation = false
       ActiveRecord::Base.transaction do
         delete_query = <<~SQL
           tags = ARRAY_REMOVE(tags, :tag_name)
@@ -38,20 +39,24 @@ module Mutations
         Project.update_all(sanitized_sql)
         UseCase.update_all(sanitized_sql)
 
-        if tag.destroy
-          # Successful deletion, return the nil tag with no errors
-          return {
-            tag: tag,
-            errors: []
-          }
-        end
+        tag.destroy
+
+        successful_operation = true
       end
-      # Failed delete, return the errors to the client.
-      # We will only reach this block if the transaction is failed.
-      {
-        tag: nil,
-        errors: tag.errors.full_messages
-      }
+
+      if successful_operation
+        # Successful deletion, return the nil tag with no errors
+        {
+          tag: tag,
+          errors: []
+        }
+      else
+        # Failed delete, return the errors to the client.
+        {
+          tag: nil,
+          errors: tag.errors.full_messages
+        }
+      end
     end
   end
 end

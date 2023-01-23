@@ -18,7 +18,7 @@ module Queries
 
   class ProductQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::ProductType, null: false
+    type Types::ProductType, null: true
 
     def resolve(slug:)
       Product.find_by(slug: slug)
@@ -309,7 +309,7 @@ module Queries
 
   class ProductRepositoryQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::ProductRepositoryType, null: false
+    type Types::ProductRepositoryType, null: true
 
     def resolve(slug:)
       ProductRepository.find_by(slug: slug)

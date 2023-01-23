@@ -49,9 +49,11 @@ module Mutations
       organization.website = website
       organization.is_endorser = is_endorser
 
-      date = when_endorsed.to_s
-      timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "UTC")
-      organization.when_endorsed = timestamp
+      unless when_endorsed.nil?
+        date = when_endorsed.to_s
+        timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "+00:00")
+        organization.when_endorsed = timestamp
+      end
 
       organization.endorser_level = endorser_level
       organization.is_mni = is_mni
