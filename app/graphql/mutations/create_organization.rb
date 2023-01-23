@@ -51,7 +51,7 @@ module Mutations
 
       unless when_endorsed.nil?
         date = when_endorsed.to_s
-        timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "UTC")
+        timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "+00:00")
         organization.when_endorsed = timestamp
       end
 
