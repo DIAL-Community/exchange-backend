@@ -694,7 +694,7 @@ module Modules
 
       product_repositories.each do |repo|
         next if repo.statistical_data == {} || repo.statistical_data.class == String ||
-                repo.statistical_data["data"]["repository"].nil?
+                repo.statistical_data["data"].nil? || repo.statistical_data["data"]["repository"].nil?
         if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
                                            "openPullRequestCount", "mergedPullRequestCount"])
           unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil?
