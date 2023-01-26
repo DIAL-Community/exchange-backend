@@ -32,8 +32,8 @@ RSpec.describe(Mutations::DeleteOrganization, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['deleteOrganization']['organization'])
-        .to(be(nil))
+      expect(result['data']['deleteOrganization']['organization']['id'])
+        .to(eq('1000'))
       expect(result['data']['deleteOrganization']['errors'])
         .to(eq([]))
     end

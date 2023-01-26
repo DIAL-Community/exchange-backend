@@ -49,6 +49,12 @@ class Product < ApplicationRecord
     before_remove: :association_remove
   )
 
+  has_and_belongs_to_many(
+    :plays,
+    join_table: :plays_products,
+    dependent: :delete_all
+  )
+
   has_and_belongs_to_many :origins, join_table: :products_origins,
                                     dependent: :delete_all,
                                     after_add: :association_add, before_remove: :association_remove
