@@ -569,7 +569,8 @@ CREATE TABLE public.candidate_products (
     approved_by_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description character varying
+    description character varying,
+    commercial_product boolean DEFAULT false NOT NULL
 );
 
 
@@ -7501,6 +7502,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221216075319'),
 ('20221220085731'),
 ('20221227105319'),
-('20221227105322');
+('20221227105322'),
+('20230123155236');
 
 
