@@ -35,9 +35,10 @@ RSpec.describe(Mutations::CreateComment, type: :graphql) do
   end
 
   it 'creates comment' do
-    create(:user, id: 1, username: "username")
+    current_user = create(:user, id: 1, username: "username")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      current_user,
       mutation,
       variables: { commentId: "d10a77ac-8ed5-4778-ad9d-6f0d51711b30", commentObjectType: 'PRODUCT',
                    commentObjectId: 1, text: 'Some comment', userId: 1, parentCommentId: nil },
@@ -56,13 +57,14 @@ RSpec.describe(Mutations::CreateComment, type: :graphql) do
   end
 
   it 'creates reply' do
-    create(:user, id: 1, username: "username")
+    current_user = create(:user, id: 1, username: "username")
     create(:product, id: 1, name: "test", slug: "test")
     create(:comment, id: 5, comment_id: "be01ea21-a13a-4d97-8218-250c2ab9ef40", comment_object_type: 'PRODUCT',
                      comment_object_id: 1, text: 'Some comment',
                      author: { "id": 1, "username": "username" })
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      current_user,
       mutation,
       variables: { commentId: "3eb0da0f-2d13-4d96-b350-7ce49a80f088", commentObjectType: 'PRODUCT',
                    commentObjectId: 1, text: 'Some reply', userId: 1,
@@ -82,11 +84,13 @@ RSpec.describe(Mutations::CreateComment, type: :graphql) do
   end
 
   it 'updates comment' do
+    current_user = create(:user, id: 1, username: "username")
     create(:comment, comment_id: "d10a77ac-8ed5-4778-ad9d-6f0d51711b30", comment_object_type: 'PRODUCT',
                      comment_object_id: 1, text: 'Some comment',
                      author: { "id": 5, "username": "username5" })
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      current_user,
       mutation,
       variables: { commentId: "d10a77ac-8ed5-4778-ad9d-6f0d51711b30", commentObjectType: 'PRODUCT',
                    commentObjectId: 1, text: 'Some updated comment', userId: 1, parentCommentId: nil },
