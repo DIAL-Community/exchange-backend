@@ -226,3 +226,10 @@ products:
     SDGs: [3]
     license: APL-2.0
     repositoryURL: https://github.com/OpenLabConnect/OpenLabConnect
+  - name: Open Data Kit
+    description: Open Data Kit lets you build powerful offline forms to collect the data you need wherever it is. It’s the global standard for mobile data collection.
+    website: https://getodk.org
+    organizations: [{"name":"Open Data Kit","website":"getodk.org","org_type":"owner"}]
+    SDGs: [3]
+    license: Apache-2.0
+    repositoryURL: https://github.com/getodk/central

@@ -42,6 +42,16 @@ if review_category.nil?
   review_category.save
 end
 
+community_support_category = RubricCategory.find_by(slug: slug_em('Community Support'))
+if community_support_category.nil?
+  community_support_category = RubricCategory.new(
+    name: 'Community Support',
+    slug: slug_em('Community Support'),
+    weight: 1
+  )
+  community_support_category.save
+end
+
 # Add indicators to each category
 
 open_pr_indicator = CategoryIndicator.find_by(slug: slug_em('Pull Requests'))
@@ -360,6 +370,111 @@ if api_docs_indicator.nil?
     indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
     indicator_desc.description = 'The product has a documented API (Swagger/OpenAPI).'
     indicator_desc.category_indicator_id = api_docs_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+developer_indicator = CategoryIndicator.find_by(slug: slug_em('Developer, Contributor and Implementor Community Engagement'))
+if developer_indicator.nil?
+  developer_indicator = CategoryIndicator.new(
+    name: 'Developer, Contributor and Implementor Community Engagement',
+    slug: slug_em('Developer, Contributor and Implementor Community Engagement'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: community_support_category.id,
+    data_source: 'Digital Square',
+    source_indicator: 'Developer, Contributor and Implementor Community Engagement'
+  )
+  if developer_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: developer_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Developer, Contributor and Implementor Community Engagement'
+    indicator_desc.category_indicator_id = developer_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+governance_indicator = CategoryIndicator.find_by(slug: slug_em('Community Governance'))
+if governance_indicator.nil?
+  governance_indicator = CategoryIndicator.new(
+    name: 'Community Governance',
+    slug: slug_em('Community Governance'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: community_support_category.id,
+    data_source: 'Digital Square',
+    source_indicator: 'Community Governance'
+  )
+  if governance_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: governance_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Community Governance'
+    indicator_desc.category_indicator_id = governance_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+roadmap_indicator = CategoryIndicator.find_by(slug: slug_em('Software Roadmap'))
+if roadmap_indicator.nil?
+  roadmap_indicator = CategoryIndicator.new(
+    name: 'Software Roadmap',
+    slug: slug_em('Software Roadmap'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: community_support_category.id,
+    data_source: 'Digital Square',
+    source_indicator: 'Software Roadmap'
+  )
+  if roadmap_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: roadmap_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Software Roadmap'
+    indicator_desc.category_indicator_id = roadmap_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+user_doc_indicator = CategoryIndicator.find_by(slug: slug_em('User Documentation'))
+if user_doc_indicator.nil?
+  user_doc_indicator = CategoryIndicator.new(
+    name: 'User Documentation',
+    slug: slug_em('User Documentation'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: community_support_category.id,
+    data_source: 'Digital Square',
+    source_indicator: 'User Documentation'
+  )
+  if user_doc_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: user_doc_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'User Documentation'
+    indicator_desc.category_indicator_id = user_doc_indicator.id
+    indicator_desc.locale = 'en'
+    indicator_desc.save
+  end
+end
+
+multi_lingual_indicator = CategoryIndicator.find_by(slug: slug_em('Multi-Lingual Support'))
+if multi_lingual_indicator.nil?
+  multi_lingual_indicator = CategoryIndicator.new(
+    name: 'Multi-Lingual Support',
+    slug: slug_em('Multi-Lingual Support'),
+    indicator_type: 'boolean',
+    weight: 0.2,
+    rubric_category_id: community_support_category.id,
+    data_source: 'Digital Square',
+    source_indicator: 'Multi-Lingual Support'
+  )
+  if multi_lingual_indicator.save
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: multi_lingual_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
+    indicator_desc.description = 'Multi-Lingual Support'
+    indicator_desc.category_indicator_id = multi_lingual_indicator.id
     indicator_desc.locale = 'en'
     indicator_desc.save
   end
