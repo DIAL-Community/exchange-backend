@@ -174,9 +174,6 @@ namespace :maturity_sync do
 
   task :update_maturity_scores, [:path] => :environment do |_, _params|
     Product.all.each do |product|
-      product_indicators = ProductIndicator.where(product_id: product.id)
-      next unless product_indicators.any?
-
       puts "UPDATING SCORES FOR: #{product.name}"
       calculate_maturity_scores(product.id)
       calculate_product_indicators(product.id)

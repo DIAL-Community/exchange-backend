@@ -91,10 +91,6 @@ module Modules
         category_indicator_scores = []
 
         category_indicators.each do |category_indicator|
-          product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
-                                                       product_id: product_id)
-
-          next if product_indicator.nil?
           indicator_value = product_indicators[category_indicator.id.to_s]
           indicator_type = category_indicator.indicator_type
           indicator_description = category_indicator.category_indicator_descriptions.first
@@ -194,6 +190,10 @@ module Modules
 
       response = http.request(request)
       product_repository.statistical_data = JSON.parse(response.body)
+
+      # Get the number of collaborators and append
+      collaborator_count = get_collaborator_count(product_repository)
+      product_repository.statistical_data["collaborators"] = collaborator_count
 
       puts "Repository statistical data for #{product_repository.name} saved." if product_repository.save!
     end
@@ -376,6 +376,32 @@ module Modules
       response = http.request(request)
       json_response = JSON.parse(response.body)
       json_response.size
+    end
+
+    def get_collaborator_count(repository)
+      return 0 if repository.absolute_url.blank?
+      repo_regex = /(github.com\/)(\S+)\/(\S+)\/?/
+      return unless (match = repository.absolute_url.match(repo_regex))
+
+      _, owner, repo = match.captures
+
+      github_uri = URI.parse("https://api.github.com/repos/#{owner}/#{repo}/contributors?per_page=1&anon=true")
+      http = Net::HTTP.new(github_uri.host, github_uri.port)
+      http.use_ssl = true
+
+      request = Net::HTTP::Get.new(github_uri)
+      if ENV['GITHUB_USERNAME'].nil? || ENV['GITHUB_PERSONAL_TOKEN'].nil?
+        raise NoGithubCredentialsException
+      end
+      request.basic_auth(ENV['GITHUB_USERNAME'], ENV['GITHUB_PERSONAL_TOKEN'])
+
+      response = http.request(request)
+
+      return 0 if response['Link'].nil?
+
+      link_header = response['Link'].split(',')[1]
+      collaborator_count = link_header.partition("&page=").last
+      collaborator_count.partition(">;").first
     end
 
     def get_homepage_url(repository)
@@ -690,17 +716,28 @@ module Modules
     def calculate_total_repo_statistical_data(indicator, product_repositories)
       total_repo_statistical_data = Hash.new(0)
       counter = 0
+      ratio_counter = 0
       update_date = "1950-01-10T00:00:01Z"
 
       product_repositories.each do |repo|
         next if repo.statistical_data == {} || repo.statistical_data.class == String ||
                 repo.statistical_data["data"].nil? || repo.statistical_data["data"]["repository"].nil?
-        if indicator.source_indicator.in?(["releases", "stargazers", "closedIssues", "openIssues",
-                                           "openPullRequestCount", "mergedPullRequestCount"])
+        if indicator.source_indicator.in?(["releases", "stargazers", "watchers"])
           unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil?
             counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
           end
           total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["openIssues", "openPullRequestCount"])
+          if indicator.source_indicator == "openIssues"
+            closed_indicator = "closedIssues"
+          else
+            closed_indicator = "closedPullRequestCount"
+          end
+          unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil? ||
+            repo.statistical_data["data"]["repository"][indicator.source_indicator] == 0
+            counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
+            ratio_counter += repo.statistical_data["data"]["repository"][closed_indicator]["totalCount"]
+          end
         elsif indicator.source_indicator.in?(["downloadCount"])
           download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
           unless download_data.nil?
@@ -728,13 +765,23 @@ module Modules
         elsif indicator.source_indicator.in?(["forkCount"])
           counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]
           total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["collaborators"])
+          counter += repo.statistical_data["collaborators"].to_i unless repo.statistical_data["collaborators"].nil?
+          total_repo_statistical_data[indicator.name] = counter
+        elsif indicator.source_indicator.in?(["cloneCount"])
+          counter += repo.statistical_data["collaborators"].to_i unless repo.statistical_data["collaborators"].nil?
+          total_repo_statistical_data[indicator.name] = counter
         end
+      end
+      if indicator.source_indicator.in?(["openIssues", "openPullRequestCount"])
+        total_repo_statistical_data[indicator.name] = counter / ratio_counter unless ratio_counter == 0
       end
       total_repo_statistical_data
     end
 
     def calculate_indicator_value(config_file, indicator, datum, flag)
-      indicator_config = read_indicator_config(config_file, "Repository Info", indicator.name)
+      indicator_category = RubricCategory.find(indicator.rubric_category_id)
+      indicator_config = read_indicator_config(config_file, indicator_category.name, indicator.name)
       flag_weight = 1
       condition_counter = 0..(indicator_config[flag].count - 1)
       condition_counter.each do |counter|

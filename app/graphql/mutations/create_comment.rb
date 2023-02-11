@@ -19,6 +19,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(comment_id:, comment_object_type:, comment_object_id:, text:, user_id:, parent_comment_id: nil)
+      authenticated_user = context[:current_user]
+      if authenticated_user.nil? || authenticated_user.id != user_id
+        return {
+          comment: nil,
+          errors: ['Need to be a registered and authenticated user to post comment.']
+        }
+      end
+
       current_user = User.find_by(id: user_id)
       comment = Comment.find_by(comment_id: comment_id)
 

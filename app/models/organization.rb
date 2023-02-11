@@ -40,9 +40,20 @@ class Organization < ApplicationRecord
                                      after_add: :association_add,
                                      before_remove: :association_remove
 
-  has_many :organizations_contacts, after_add: :association_add, before_remove: :association_remove
-  has_many :contacts, through: :organizations_contacts,
-                      after_add: :association_add, before_remove: :association_remove
+  has_many(
+    :organizations_contacts,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
+
+  has_many(
+    :contacts,
+    through: :organizations_contacts,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
 
   has_many :organizations_products, after_add: :association_add, before_remove: :association_remove
   has_many :products, through: :organizations_products,

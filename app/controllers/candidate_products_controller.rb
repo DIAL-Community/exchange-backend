@@ -16,6 +16,7 @@ class CandidateProductsController < ApplicationController
     product = Product.new
     product.name = @candidate_product.name.to_s.strip
     product.website = @candidate_product.website
+    product.commercial_product = @candidate_product.commercial_product
 
     product.slug = @candidate_product.slug
 

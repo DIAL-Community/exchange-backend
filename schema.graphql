@@ -172,14 +172,15 @@ type CandidateOrganizationEdge {
 }
 
 type CandidateProduct {
+  commercialProduct: Boolean!
   description: String
   id: ID!
-  name: String
+  name: String!
   rejected: Boolean
-  repository: String
+  repository: String!
   slug: String!
-  submitterEmail: String
-  website: String
+  submitterEmail: String!
+  website: String!
 }
 
 """
@@ -946,7 +947,7 @@ type Mutation {
   createBuildingBlock(description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, dataType: String!, dataUrl: String!, dataVisualizationUrl: String, description: String!, name: String!, slug: String!, submitterEmail: String!): CreateCandidateDatasetPayload
   createCandidateOrganization(captcha: String!, description: String!, email: String!, name: String!, organizationName: String!, title: String!, website: String!): CreateCandidateOrganizationPayload
-  createCandidateProduct(captcha: String!, description: String!, email: String!, name: String!, repository: String!, website: String!): CreateCandidateProductPayload
+  createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String!, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload
   createComment(commentId: String, commentObjectId: Int!, commentObjectType: String!, parentCommentId: String, text: String!, userId: Int!): CreateCommentPayload
   createCountry(name: String!, slug: String): CreateCountryPayload

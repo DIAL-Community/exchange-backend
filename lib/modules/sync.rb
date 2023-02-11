@@ -276,7 +276,7 @@ module Modules
 
       # Find maturity data if it exists and update
       digisquare_maturity.each do |ds_maturity|
-        next if existing_product.name != ds_maturity['name']
+        next if existing_product.name.downcase != ds_maturity['name'].downcase
 
         ds_maturity['maturity'].each do |key, value|
           # Find the correct category and indicator
