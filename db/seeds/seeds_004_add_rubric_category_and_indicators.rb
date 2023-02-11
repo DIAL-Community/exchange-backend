@@ -375,6 +375,7 @@ if api_docs_indicator.nil?
   end
 end
 
+# rubocop:disable Layout/LineLength
 developer_indicator = CategoryIndicator.find_by(slug: slug_em('Developer, Contributor and Implementor Community Engagement'))
 if developer_indicator.nil?
   developer_indicator = CategoryIndicator.new(
@@ -471,7 +472,8 @@ if multi_lingual_indicator.nil?
     source_indicator: 'Multi-Lingual Support'
   )
   if multi_lingual_indicator.save
-    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: multi_lingual_indicator.id, locale: 'en')
+    indicator_desc = CategoryIndicatorDescription.find_by(category_indicator_id: multi_lingual_indicator.id,
+locale: 'en')
     indicator_desc = CategoryIndicatorDescription.new if indicator_desc.nil?
     indicator_desc.description = 'Multi-Lingual Support'
     indicator_desc.category_indicator_id = multi_lingual_indicator.id
