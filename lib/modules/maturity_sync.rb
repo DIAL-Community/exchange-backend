@@ -91,10 +91,6 @@ module Modules
         category_indicator_scores = []
 
         category_indicators.each do |category_indicator|
-          product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
-                                                       product_id: product_id)
-
-          next if product_indicator.nil?
           indicator_value = product_indicators[category_indicator.id.to_s]
           indicator_type = category_indicator.indicator_type
           indicator_description = category_indicator.category_indicator_descriptions.first

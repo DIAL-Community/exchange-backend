@@ -381,7 +381,7 @@ if developer_indicator.nil?
   developer_indicator = CategoryIndicator.new(
     name: 'Developer, Contributor and Implementor Community Engagement',
     slug: slug_em('Developer, Contributor and Implementor Community Engagement'),
-    indicator_type: 'boolean',
+    indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
     data_source: 'Digital Square',
@@ -402,7 +402,7 @@ if governance_indicator.nil?
   governance_indicator = CategoryIndicator.new(
     name: 'Community Governance',
     slug: slug_em('Community Governance'),
-    indicator_type: 'boolean',
+    indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
     data_source: 'Digital Square',
@@ -423,7 +423,7 @@ if roadmap_indicator.nil?
   roadmap_indicator = CategoryIndicator.new(
     name: 'Software Roadmap',
     slug: slug_em('Software Roadmap'),
-    indicator_type: 'boolean',
+    indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
     data_source: 'Digital Square',
@@ -444,7 +444,7 @@ if user_doc_indicator.nil?
   user_doc_indicator = CategoryIndicator.new(
     name: 'User Documentation',
     slug: slug_em('User Documentation'),
-    indicator_type: 'boolean',
+    indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
     data_source: 'Digital Square',
@@ -465,7 +465,7 @@ if multi_lingual_indicator.nil?
   multi_lingual_indicator = CategoryIndicator.new(
     name: 'Multi-Lingual Support',
     slug: slug_em('Multi-Lingual Support'),
-    indicator_type: 'boolean',
+    indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
     data_source: 'Digital Square',
