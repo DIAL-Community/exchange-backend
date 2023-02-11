@@ -3,11 +3,11 @@
   rank: 1
 - name: Java
   rank: 2
-- name: JavaScript
+- name: TypeScript
   rank: 3
 - name: C++
   rank: 4
-- name: TypeScript
+- name: JavaScript
   rank: 5
 - name: Go
   rank: 6
@@ -21,9 +21,9 @@
   rank: 10
 - name: Ruby
   rank: 11
-- name: Shell
-  rank: 12
 - name: Rust
+  rank: 12
+- name: Shell
   rank: 13
 - name: Kotlin
   rank: 14
@@ -31,21 +31,21 @@
   rank: 15
 - name: Swift
   rank: 16
-- name: Groovy
-  rank: 17
 - name: Lua
-  rank: 18
+  rank: 17
 - name: Jupyter Notebook
-  rank: 19
+  rank: 18
 - name: Scala
-  rank: 20
-- name: Objective-C
-  rank: 21
+  rank: 19
 - name: Nix
-  rank: 22
-- name: Adblock Filter List
-  rank: 23
+  rank: 20
 - name: Perl
+  rank: 21
+- name: Adblock Filter List
+  rank: 22
+- name: Objective-C
+  rank: 23
+- name: Groovy
   rank: 24
-- name: SystemVerilog
+- name: CSS
   rank: 25
