@@ -481,8 +481,9 @@ module Modules
       product_repositories.each do |repository|
         file_list = read_repository_file_list(repository)
         dockerfile = check_file(file_list, 'Dockerfile')
+        docker_compose = check_file(file_list, 'docker-compose.yml')
 
-        if dockerfile == true
+        if dockerfile == true || docker_compose == true
           product_indicator.indicator_value = 't'
           break
         end
@@ -504,6 +505,9 @@ module Modules
       product_repositories.each do |repository|
         file_list = read_repository_file_list(repository)
         license_file = check_file(file_list, 'LICENSE')
+        unless license_file
+          license_file = check_file(file_list, 'LICENSE.md')
+        end
 
         if license_file == true
           product_indicator.indicator_value = 't'
