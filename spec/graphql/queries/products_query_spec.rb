@@ -21,7 +21,7 @@ RSpec.describe(Queries::ProductsQuery, type: :graphql) do
         $productTypes: [String!],
         $endorsers: [String!],
         $productDeployable: Boolean,
-        $withMaturity: Boolean,
+        $isEndorsed: Boolean,
         $licenseTypes: [String!],
         $search: String!
       ) {
@@ -40,7 +40,7 @@ RSpec.describe(Queries::ProductsQuery, type: :graphql) do
           productTypes: $productTypes,
           endorsers: $endorsers,
           productDeployable: $productDeployable,
-          withMaturity: $withMaturity,
+          isEndorsed: $isEndorsed,
           licenseTypes: $licenseTypes,
           search: $search
         ) {
@@ -152,6 +152,19 @@ RSpec.describe(Queries::OwnedProductsQuery, type: :graphql) do
     GQL
   end
 
+  let(:product_query) do
+    <<~GQL
+      query Product($slug: String!) {
+        product(slug: $slug) {
+          id
+          slug
+          name
+          owner
+        }
+      }
+    GQL
+  end
+
   it 'pulls owned products for logged used' do
     first = create(:product, slug: 'first_product', name: 'First Product', id: 1)
     second = create(:product, slug: 'second_product', name: 'Second Product', id: 2)
@@ -162,6 +175,11 @@ RSpec.describe(Queries::OwnedProductsQuery, type: :graphql) do
     aggregate_failures do
       expect(result['data']['ownedProducts'].count)
         .to(eq(2))
+    end
+
+    product_query_result = execute_graphql_as_user(user, product_query, variables: { slug: 'first_product' })
+    aggregate_failures do
+      expect(product_query_result['data']['product']['owner']).to(eq(user.id.to_s))
     end
   end
 
@@ -174,5 +192,58 @@ RSpec.describe(Queries::OwnedProductsQuery, type: :graphql) do
       expect(result['data']['ownedProducts'].count)
         .to(eq(0))
     end
+  end
+end
+
+RSpec.describe(Queries::Product, type: :graphql) do
+  let(:query) do
+    <<~GQL
+      query Product($slug: String!) {
+        product(slug: $slug) {
+          productIndicators {
+            indicatorValue
+            categoryIndicator {
+              name
+              indicatorType
+            }
+          }
+          notAssignedCategoryIndicators {
+            name
+            indicatorType
+          }
+        }
+      }
+    GQL
+  end
+
+  it 'pulls owned products for logged used' do
+    create(:product, name: 'Some Product', slug: 'some_product', id: 1000)
+
+    create(:rubric_category, name: 'Some RC', slug: 'some_rc', id: 1)
+
+    category_indicator_1 = create(:category_indicator, name: 'Category Indicator 1',
+                                                       slug: 'category_indicator_1',
+                                                       indicator_type: 'scale',
+                                                       rubric_category_id: 1)
+    create(:category_indicator, name: 'Category Indicator 2',
+                                slug: 'category_indicator_2',
+                                indicator_type: 'boolean',
+                                rubric_category_id: 1)
+
+    create(:product_indicator, product_id: 1000,
+                               category_indicator_id: category_indicator_1.id,
+                               indicator_value: 'medium')
+
+    result = execute_graphql(
+      query,
+      variables: { slug: 'some_product' }
+    )
+
+    expect(result['data']['product']['notAssignedCategoryIndicators'])
+      .not_to(include({ "indicatorType" => "scale", "name" => "Category Indicator 1" }))
+
+    expect(result['data']['product']['productIndicators'])
+      .to(eq([{ "categoryIndicator" => { "indicatorType" => "scale", "name" => "Category Indicator 1" },
+                "indicatorValue" => "medium" }]))
   end
 end

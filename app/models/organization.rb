@@ -10,6 +10,13 @@ class Organization < ApplicationRecord
 
   attr_accessor :organization_description
 
+  has_and_belongs_to_many(
+    :datasets,
+    join_table: :organizations_datasets,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
   has_and_belongs_to_many :products, join_table: :organizations_products,
                                      after_add: :association_add,
                                      before_remove: :association_remove
@@ -33,9 +40,20 @@ class Organization < ApplicationRecord
                                      after_add: :association_add,
                                      before_remove: :association_remove
 
-  has_many :organizations_contacts, after_add: :association_add, before_remove: :association_remove
-  has_many :contacts, through: :organizations_contacts,
-                      after_add: :association_add, before_remove: :association_remove
+  has_many(
+    :organizations_contacts,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
+
+  has_many(
+    :contacts,
+    through: :organizations_contacts,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
 
   has_many :organizations_products, after_add: :association_add, before_remove: :association_remove
   has_many :products, through: :organizations_products,

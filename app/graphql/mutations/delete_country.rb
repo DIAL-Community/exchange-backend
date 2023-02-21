@@ -23,21 +23,19 @@ module Mutations
         }
       end
 
-      ActiveRecord::Base.transaction do
-        if country.destroy
-          # Successful deletion, return the nil country with no errors
-          return {
-            country: country,
-            errors: []
-          }
-        end
+      if country.destroy
+        # Successful deletion, return the nil country with no errors
+        {
+          country: country,
+          errors: []
+        }
+      else
+        # Failed delete, return the errors to the client.
+        {
+          country: nil,
+          errors: country.errors.full_messages
+        }
       end
-      # Failed delete, return the errors to the client.
-      # We will only reach this block if the transaction is failed.
-      {
-        country: nil,
-        errors: country.errors.full_messages
-      }
     end
   end
 end

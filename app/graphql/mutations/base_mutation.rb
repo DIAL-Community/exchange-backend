@@ -13,22 +13,30 @@ module Mutations
       true
     end
 
-    def an_admin
-      if !context[:current_user].nil? && context[:current_user].roles.include?('admin')
-        # Return true to continue the mutation:
-        true
-      else
-        false
-        # raise GraphQL::ExecutionError, "Only admins can run this mutation"
+    def assign_auditable_user(mutating_object)
+      if !mutating_object.nil? && mutating_object.class.method_defined?(:auditable_current_user)
+        mutating_object.auditable_current_user(context[:current_user])
       end
     end
 
+    def an_admin
+      !context[:current_user].nil? && context[:current_user].roles.include?('admin')
+    end
+
     def a_product_owner(product_id)
-      if !context[:current_user].nil? && context[:current_user].user_products.include?(product_id)
-        true
-      else
-        false
-      end
+      !context[:current_user].nil? && context[:current_user].user_products.include?(product_id)
+    end
+
+    def an_org_owner(organization_id)
+      !context[:current_user].nil? && context[:current_user].organization_id.equal?(organization_id)
+    end
+
+    def a_dataset_owner(dataset_id)
+      !context[:current_user].nil? && context[:current_user].user_datasets.include?(dataset_id)
+    end
+
+    def a_content_editor
+      !context[:current_user].nil? && context[:current_user].roles.include?('content_editor')
     end
 
     def product_owner_check_for_project(project)
@@ -41,14 +49,6 @@ module Mutations
       false
     end
 
-    def an_org_owner(organization_id)
-      if !context[:current_user].nil? && context[:current_user].organization_id.equal?(organization_id)
-        true
-      else
-        false
-      end
-    end
-
     def org_owner_check_for_project(project)
       organizations = project.organizations
       organizations.each do |organization|
@@ -57,14 +57,6 @@ module Mutations
         end
       end
       false
-    end
-
-    def a_content_editor
-      if !context[:current_user].nil? && context[:current_user].roles.include?('content_editor')
-        true
-      else
-        false
-      end
     end
 
     def generate_offset(first_duplicate)
@@ -76,6 +68,14 @@ module Mutations
                               .to_i + 1
       end
       "_dup#{size}"
+    end
+
+    def captcha_verification(captcha)
+      Recaptcha.verify_via_api_call(captcha,
+                                    {
+                                      secret_key: Rails.application.secrets.captcha_secret_key,
+                                      skip_remote_ip: true
+                                    })
     end
   end
 end

@@ -23,11 +23,12 @@ module Types
     field :aliases, GraphQL::Types::JSON, null: true
     field :tags, GraphQL::Types::JSON, null: true
     field :owner, String, null: true
+    field :languages, GraphQL::Types::JSON, null: true
 
     field :is_launchable, Boolean, null: true
     field :product_type, String, null: false
 
-    field :maturity_score, Integer, null: true
+    field :maturity_score, GraphQL::Types::JSON, null: true
 
     field :main_repository, Types::ProductRepositoryType, null: true
 
@@ -45,6 +46,9 @@ module Types
       argument :first, Integer, required: false
     end
 
+    field :product_indicators, [Types::ProductIndicatorType], null: true
+    field :not_assigned_category_indicators, [Types::CategoryIndicatorType], null: true
+
     field :projects, [Types::ProjectType], null: true
 
     field :building_blocks, [Types::BuildingBlockType], null: true
@@ -56,12 +60,14 @@ module Types
 
     field :interoperates_with, [Types::ProductType], null: true
     field :includes, [Types::ProductType], null: true
-    field :maturity_scores, GraphQL::Types::JSON, null: true
+    field :maturity_score_details, GraphQL::Types::JSON, null: true
     field :manual_update, Boolean, null: false
 
     field :commercial_product, Boolean, null: false
     field :pricing_model, String, null: true
     field :pricing_details, String, null: true
     field :hosting_model, String, null: true
+
+    field :playbooks, [Types::PlaybookType], null: true
   end
 end

@@ -160,7 +160,7 @@
     }
   },
   {
-    "name":"ODK",
+    "name":"Open Data Kit",
     "maturity":{
       "Country Utilization":"high",
       "Country Strategy":"medium",
@@ -245,7 +245,7 @@
       "Country Utilization":"medium",
       "Country Strategy":"medium",
       "Digital Health Interventions":"medium",
-      "Source Code Accessibility":"medium",
+      "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
       "Developer, Contributor and Implementor Community Engagement":"high",
       "Community Governance":"high",
@@ -255,7 +255,7 @@
       "Technical Documentation":"medium",
       "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
-      "Security":"medium",
+      "Security":"high",
       "Scalability": "high"
     }
   },

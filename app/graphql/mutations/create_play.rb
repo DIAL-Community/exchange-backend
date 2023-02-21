@@ -10,12 +10,14 @@ module Mutations
     argument :slug, String, required: true
     argument :tags, GraphQL::Types::JSON, required: false, default_value: []
     argument :description, String, required: true
+    argument :products_slugs, [String], required: false
+    argument :building_blocks_slugs, [String], required: false
     argument :playbook_slug, String, required: false
 
-    field :play, Types::PlayType, null: false
+    field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
-    def resolve(name:, slug:, description:, tags:, playbook_slug: nil)
+    def resolve(name:, slug:, description:, tags:, products_slugs:, building_blocks_slugs:, playbook_slug: nil)
       unless an_admin || a_content_editor
         return {
           play: nil,
@@ -49,31 +51,54 @@ module Mutations
 
       play.tags = tags
 
-      if play.save
+      play.building_blocks = []
+      building_blocks_slugs&.each do |building_block_slug|
+        current_building_block = BuildingBlock.find_by(slug: building_block_slug)
+        play.building_blocks << current_building_block unless current_building_block.nil?
+      end
+
+      play.products = []
+      products_slugs&.each do |product_slug|
+        current_product = Product.find_by(slug: product_slug)
+        play.products << current_product unless current_product.nil?
+      end
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(play)
+        play.save
+
         play_desc = PlayDescription.find_by(play: play, locale: I18n.locale)
         play_desc = PlayDescription.new if play_desc.nil?
         play_desc.play = play
         play_desc.locale = I18n.locale
         play_desc.description = description
-        if play_desc.save
-          # Need to figure out how to add logger here!
-          puts("Description for '#{play.name}' saved.")
-        end
+
+        assign_auditable_user(play_desc)
+        play_desc.save
 
         playbook = Playbook.find_by(slug: playbook_slug)
-        unless playbook.nil?
+        assigned_play = PlaybookPlay
+                        .joins(:playbook)
+                        .joins(:play)
+                        .find_by(playbook: { slug: playbook_slug }, play: { slug: play.slug })
+        # Only create assignment if the playbook is not yet assigned.
+        if !playbook.nil? && assigned_play.nil?
           max_order = PlaybookPlay.where(playbook: playbook).maximum('order')
           max_order = max_order.nil? ? 0 : (max_order + 1)
           assigned_play = PlaybookPlay.new
           assigned_play.play = play
           assigned_play.playbook = playbook
           assigned_play.order = max_order
-          if assigned_play.save
-            # Need to figure out how to add logger here!
-            puts("Play '#{play.name}' assigned to '#{playbook.name}'.")
-          end
+
+          assign_auditable_user(assigned_play)
+          assigned_play.save
         end
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           play: play,
@@ -94,7 +119,7 @@ module Mutations
 
     argument :play_slug, String, required: true
 
-    field :play, Types::PlayType, null: false
+    field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
     def resolve(play_slug:)
@@ -115,6 +140,7 @@ module Mutations
 
       # Create a duplicate of the base play object.
       duplicate_play = base_play.dup
+      assign_auditable_user(duplicate_play)
 
       # Update the slug to the new slug value ($slug + '_dupX').
       first_duplicate = Play.slug_simple_starts_with(base_play.slug).order(slug: :desc).first
@@ -129,85 +155,6 @@ module Mutations
         {
           play: nil,
           errors: "Unable to create duplicate play record. Message: #{duplicate_play.errors.full_messages}."
-        }
-      end
-    end
-  end
-
-  class UpdatePlayOrder < Mutations::BaseMutation
-    argument :playbook_slug, String, required: true
-    argument :play_slug, String, required: true
-    argument :operation, String, required: true
-    argument :distance, Integer, required: false
-
-    field :play, Types::PlayType, null: false
-    field :errors, [String], null: false
-
-    def resolve(playbook_slug:, play_slug:, operation:, distance:)
-      unless an_admin
-        return {
-          play: nil,
-          errors: ['Not allowed to update playbook.']
-        }
-      end
-
-      playbook = Playbook.find_by(slug: playbook_slug)
-
-      if playbook.nil?
-        return {
-          play: nil,
-          errors: 'Unable to find playbook record.'
-        }
-      end
-
-      play = Play.find_by(slug: play_slug)
-
-      if play.nil?
-        return {
-          play: nil,
-          errors: 'Unable to find play record.'
-        }
-      end
-
-      successful_operation = false
-      case operation
-      when 'UNASSIGN'
-        # We're deleting the play because the order -1
-        deleted = playbook.plays.delete(play)
-        successful_operation = true unless deleted.nil?
-      when 'ASSIGN'
-        # We're adding a play, the order is length of the current plays (appending as the last play).
-        max_order = PlaybookPlay.where(playbook: playbook).maximum('order')
-        max_order = max_order.nil? ? 0 : (max_order + 1)
-
-        assigned_play = PlaybookPlay.new
-        assigned_play.play = play
-        assigned_play.playbook = playbook
-        assigned_play.order = max_order
-        successful_operation = true if assigned_play.save
-      else
-        # Reordering actually trigger swap order with adjacent play.
-        playbook_play = PlaybookPlay.find_by(playbook: playbook, play: play)
-        playbook_play_index = playbook.playbook_plays.index(playbook_play)
-        # Find adjacent play
-        swapped_playbook_play = playbook.playbook_plays[playbook_play_index + distance]
-        # Swap the order
-        temp_order = playbook_play.order
-        playbook_play.order = swapped_playbook_play.order
-        swapped_playbook_play.order = temp_order
-        # Save both playbook_play
-        successful_operation = true if playbook_play.save && swapped_playbook_play.save
-      end
-
-      if successful_operation
-        {
-          play: play,
-          errors: []
-        }
-      else
-        {
-          play: nil,
-          errors: "Unable to add play record. Message: #{playbook.errors.full_messages}."
         }
       end
     end

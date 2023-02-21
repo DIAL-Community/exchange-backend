@@ -48,6 +48,7 @@ module Mutations
         origin = Origin.find_by(slug: 'manually_entered')
         sector_origin_id = origin.id
       end
+      assign_auditable_user(sector)
 
       # Update field of the sector object
       sector.name = name

@@ -67,14 +67,24 @@ module Mutations
         project.organizations << organization unless organization.nil?
       end
 
-      if project.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(project)
+        project.save
+
         project_desc = ProjectDescription.find_by(project_id: project.id, locale: I18n.locale)
         project_desc = ProjectDescription.new if project_desc.nil?
         project_desc.description = description
         project_desc.project_id = project.id
         project_desc.locale = I18n.locale
+
+        assign_auditable_user(project_desc)
         project_desc.save
 
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           project: project,

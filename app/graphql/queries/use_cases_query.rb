@@ -8,7 +8,7 @@ module Queries
 
     def resolve(search:, mature:)
       if mature
-        use_cases = UseCase.where(maturity: 'MATURE').order(:name)
+        use_cases = UseCase.where(maturity: 'PUBLISHED').order(:name)
       else
         use_cases = UseCase.order(:name)
       end
@@ -19,24 +19,25 @@ module Queries
 
   class UseCaseQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::UseCaseType, null: false
+    type Types::UseCaseType, null: true
 
     def resolve(slug:)
       use_case = UseCase.find_by(slug: slug)
-
-      workflows = []
-      if use_case.use_case_steps && !use_case.use_case_steps.empty?
-        use_case.use_case_steps.each do |use_case_step|
-          workflows |= use_case_step.workflows
+      unless use_case.nil?
+        workflows = []
+        if use_case.use_case_steps && !use_case.use_case_steps.empty?
+          use_case.use_case_steps.each do |use_case_step|
+            workflows |= use_case_step.workflows
+          end
         end
-      end
-      use_case.workflows = workflows.sort_by { |w| w.name.downcase }
+        use_case.workflows = workflows.sort_by { |w| w.name.downcase }
 
-      building_blocks = []
-      workflows.each do |workflow|
-        building_blocks |= workflow.building_blocks
+        building_blocks = []
+        workflows.each do |workflow|
+          building_blocks |= workflow.building_blocks
+        end
+        use_case.building_blocks = building_blocks.sort_by { |b| b.name.downcase }
       end
-      use_case.building_blocks = building_blocks.sort_by { |b| b.name.downcase }
       use_case
     end
   end
@@ -66,7 +67,7 @@ module Queries
                              .where(sdg_targets: { sdg_number: sdg_numbers })
       end
 
-      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:MATURE]) unless show_beta
+      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
 
       use_cases.distinct
     end
@@ -89,16 +90,29 @@ module Queries
 
     def resolve(slug:)
       use_case = UseCase.find_by(slug: slug)
-      UseCaseStep.where(use_case_id: use_case.id).order(step_number: :asc)
+      use_case_steps = UseCaseStep.where(use_case_id: use_case.id)
+                                  .order(step_number: :asc) unless use_case.nil?
+      use_case_steps
     end
   end
 
   class UseCaseStepQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::UseCaseStepType, null: false
+    type Types::UseCaseStepType, null: true
 
     def resolve(slug:)
       UseCaseStep.find_by(slug: slug)
+    end
+  end
+
+  class UseCasesForSectorQuery < Queries::BaseQuery
+    argument :sectors_slugs, [String], required: true
+    type [Types::UseCaseType], null: false
+
+    def resolve(sectors_slugs:)
+      use_cases = UseCase.joins(:sector).where(sectors: { slug: sectors_slugs, locale: I18n.locale },
+                                               maturity: 'PUBLISHED')
+      use_cases.uniq
     end
   end
 end

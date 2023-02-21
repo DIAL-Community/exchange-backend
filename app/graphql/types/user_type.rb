@@ -8,6 +8,7 @@ module Types
     field :reset_password_token, String, null: true
     field :reset_password_sent_at, GraphQL::Types::ISO8601DateTime, null: true
     field :remember_created_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :authentication_token, String, null: false
 
     field :confirmed, Boolean, method: :confirmed_user
     field :confirmation_token, String, null: true
@@ -28,7 +29,7 @@ module Types
     field :username, String, null: true
 
     field :organization, Types::OrganizationType, null: true
-    field :products, [Types::ProductType], null: true
+    field :products, [Types::ProductType], null: true, method: :user_products_full
 
     field :all_roles, GraphQL::Types::JSON, null: true
   end

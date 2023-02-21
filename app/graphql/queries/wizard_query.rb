@@ -2,41 +2,42 @@
 
 module Queries
   class WizardQuery < Queries::BaseQuery
-    argument :sector, String, required: false
-    argument :subsector, String, required: false
-    argument :sdg, String, required: false
+    argument :sectors, [String], required: false, default_value: []
+    argument :use_case, String, required: false
+    argument :sdgs, [String], required: false
     argument :building_blocks, [String], required: false
 
     type Types::WizardType, null: false
 
-    def resolve(sector:, subsector:, sdg:, building_blocks:)
+    def resolve(sectors:, use_case:, sdgs:, building_blocks:)
       wizard = {}
       wizard['digital_principles'] = DigitalPrinciple.all
 
-      sector_name = sector
-      sector_name += ":#{subsector}" if !subsector.nil? && subsector != ''
-      curr_sector = Sector.find_by(name: sector_name)
-      curr_sdg = SustainableDevelopmentGoal.find_by(name: sdg)
+      curr_sectors = Sector.where(name: sectors, locale: I18n.locale)
 
-      sector_use_cases = []
-      sdg_use_cases = []
+      curr_sdgs = SustainableDevelopmentGoal.where(name: sdgs)
 
-      unless curr_sector.nil?
-        sector_ids = [curr_sector.id]
-        if curr_sector.parent_sector_id.nil?
-          (sector_ids << Sector.where(parent_sector_id: curr_sector.id).map(&:id)).flatten!
+      if use_case == ''
+        sector_use_cases = []
+        sdg_use_cases = []
+
+        unless curr_sectors.nil?
+          sector_use_cases = UseCase.where(sector_id: curr_sectors, maturity: 'PUBLISHED')
         end
-        sector_ids << curr_sector.parent_sector_id unless curr_sector.parent_sector_id.nil?
-        sector_use_cases = UseCase.where(sector_id: sector_ids, maturity: 'MATURE')
+
+        curr_sdgs.each do |curr_sdg|
+          next if curr_sdgs.nil?
+          curr_targets = SdgTarget.where(sdg_number: curr_sdg.number)
+          sdg_use_cases << UseCase.where(
+            "id in (select use_case_id from use_cases_sdg_targets where sdg_target_id in (?)) and maturity='PUBLISHED'",
+            curr_targets.ids
+          )
+        end
+        wizard['use_cases'] = (sector_use_cases + sdg_use_cases.flatten).uniq
+      else
+        wizard['use_cases'] = [UseCase.find_by(name: use_case)]
       end
-      unless curr_sdg.nil?
-        curr_targets = SdgTarget.where(sdg_number: curr_sdg.number)
-        sdg_use_cases = UseCase.where(
-          "id in (select use_case_id from use_cases_sdg_targets where sdg_target_id in (?)) and maturity='MATURE'",
-          curr_targets.ids
-        )
-      end
-      wizard['use_cases'] = (sector_use_cases + sdg_use_cases).uniq
+
       wizard['building_blocks'] = BuildingBlock.where(name: building_blocks)
       # Build list of resources manually
       wizard['resources'] = Resource.all

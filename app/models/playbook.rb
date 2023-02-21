@@ -2,6 +2,7 @@
 
 class Playbook < ApplicationRecord
   include Auditable
+
   attr_accessor :playbook_overview, :playbook_audience, :playbook_outcomes, :playbook_cover
 
   has_many :playbook_descriptions, dependent: :destroy

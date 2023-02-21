@@ -15,7 +15,7 @@ module Queries
 
   class SectorQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::SectorType, null: false
+    type Types::SectorType, null: true
 
     def resolve(slug:)
       Sector.find_by(slug: slug)

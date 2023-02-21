@@ -301,7 +301,8 @@ dpga_origin.id, dpga_list)
       description = extract_description(response.body)
       next if description.nil?
 
-      product_description = ProductDescription.new
+      product_description = ProductDescription.find_by(product_id: generated_product.id, locale: I18n.locale)
+      product_description = ProductDescription.new if product_description.nil?
       product_description.product_id = product.id
       product_description.locale = I18n.locale
       product_description.description = description.strip
@@ -353,7 +354,7 @@ dpga_origin.id, dpga_list)
   task :export_public_goods, [:path] => :environment do |_, _params|
     puts 'Exporting OSC and Digital Square global goods ...'
 
-    export_products('dial_osc')
+    export_products('dial')
     export_products('digital_square')
   end
 
@@ -407,7 +408,7 @@ dpga_origin.id, dpga_list)
   task :update_public_goods_repo, [:path] => :environment do |_, params|
     puts 'Updating changes to OSC and Digital Square goods to publicgoods repository'
 
-    export_products('dial_osc')
+    export_products('dial')
     export_products('digital_square')
 
     Dir.entries('./export').select { |item| item.include?('.json') }.each do |entry|
@@ -429,22 +430,6 @@ dpga_origin.id, dpga_list)
     end
   end
 
-  task :update_license_data, [] => :environment do
-    puts 'Starting to pull license data ...'
-
-    ProductRepository.all.each do |product_repository|
-      sync_license_information(product_repository)
-    end
-  end
-
-  task :update_statistics_data, [] => :environment do
-    puts 'Starting to pull statistic data ...'
-
-    ProductRepository.all.each do |product_repository|
-      sync_product_statistics(product_repository)
-    end
-  end
-
   task :update_tco_data, [] => :environment do
     puts 'Updating TCO data for products.'
 
@@ -453,19 +438,7 @@ dpga_origin.id, dpga_list)
     end
   end
 
-  task :update_language_data, [] => :environment do
-    puts 'Updating language data for products.'
-
-    ProductRepository.all.each do |product_repository|
-      sync_product_languages(product_repository)
-    end
-  end
-
   task :sync_giz_projects, [] => :environment do
-    # First, set all existing sector origins to DIAL
-    dial_origin = Origin.find_by(name: 'DIAL OSC')
-    Sector.where('origin_id is null').update_all(origin_id: dial_origin.id)
-
     giz_origin = Origin.find_by(name: 'GIZ')
     if giz_origin.nil?
       giz_origin = Origin.new

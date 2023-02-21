@@ -13,6 +13,7 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :step_number, Integer, null: false
+    field :markdown_url, String, null: true
 
     field :use_case_step_descriptions, [Types::UseCaseStepDescriptionType], null: true
     field :use_case_step_description, Types::UseCaseStepDescriptionType, null: true,
@@ -20,6 +21,7 @@ module Types
 
     field :use_case, Types::UseCaseType, null: false
     field :workflows, [Types::WorkflowType], null: false
+    field :datasets, [Types::DatasetType], null: true
     field :products, [Types::ProductType], null: true
     field :building_blocks, [Types::BuildingBlockType], null: true
   end

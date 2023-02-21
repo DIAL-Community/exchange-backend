@@ -29,7 +29,6 @@ module Mutations
       end
 
       playbook = Playbook.find_by(slug: slug)
-
       if playbook.nil?
         playbook = Playbook.new(name: name)
         playbook.slug = slug_em(name)
@@ -57,7 +56,8 @@ module Mutations
       playbook.author = author
       playbook.draft = draft
 
-      if playbook.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
         unless cover.nil?
           uploader = LogoUploader.new(playbook, cover.original_filename, context[:current_user])
           begin
@@ -68,6 +68,24 @@ module Mutations
           playbook.auditable_image_changed(cover.original_filename)
         end
 
+        index = 0
+        playbook.plays = []
+        plays.each do |play|
+          curr_play = Play.find(play['id'])
+          next if curr_play.nil?
+
+          playbook.plays << curr_play
+          playbook_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: curr_play.id)
+          playbook_play.order = index
+
+          assign_auditable_user(playbook_play)
+          playbook_play.save
+          index += 1
+        end
+
+        assign_auditable_user(playbook)
+        playbook.save
+
         playbook_desc = PlaybookDescription.find_by(playbook: playbook, locale: I18n.locale)
         playbook_desc = PlaybookDescription.new if playbook_desc.nil?
         playbook_desc.playbook = playbook
@@ -75,24 +93,14 @@ module Mutations
         playbook_desc.overview = overview
         playbook_desc.audience = audience
         playbook_desc.outcomes = outcomes
+
+        assign_auditable_user(playbook_desc)
         playbook_desc.save
 
-        index = 0
-        playbook.plays = []
-        plays.each do |play|
-          curr_play = Play.find(play['id'])
-          next if curr_play.nil?
+        successful_operation = true
+      end
 
-          playbook_play = PlaybookPlay.new
-          playbook_play.playbook = playbook
-          playbook_play.play = curr_play
-          playbook_play.order = index
-          playbook_play.save
-
-          index += 1
-        end
-        playbook.save
-
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           playbook: playbook,

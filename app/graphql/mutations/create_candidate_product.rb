@@ -6,43 +6,61 @@ module Mutations
   class CreateCandidateProduct < Mutations::BaseMutation
     include Modules::Slugger
 
+    argument :slug, String, required: false, default_value: ''
     argument :name, String, required: true
     argument :website, String, required: true
     argument :repository, String, required: true
     argument :description, String, required: true
-    argument :email, String, required: true
+    argument :submitter_email, String, required: true
+    argument :commercial_product, Boolean, required: false, default_value: false
     argument :captcha, String, required: true
 
-    field :slug, String, null: true
+    field :candidate_product, Types::CandidateProductType, null: true
+    field :errors, [String], null: true
 
-    def resolve(name:, website:, repository:, description:, email:, captcha:)
-      candidate_product_params = {
-        name: name,
-        website: website,
-        repository: repository,
-        submitter_email: email,
-        description: description
-      }
-      candidate_product_params[:slug] = slug_em(candidate_product_params[:name])
+    def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
+      candidate_product = CandidateProduct.find_by(slug: slug)
+      if !candidate_product.nil? && !candidate_product.rejected.nil?
+        return {
+          candidate_product: nil,
+          errors: ['Attempting to edit rejected or approved candidate product.']
+        }
+      end
 
-      candidate_products = CandidateProduct.where(slug: candidate_product_params[:slug])
-      unless candidate_products.empty?
-        first_duplicate = CandidateProduct.slug_simple_starts_with(candidate_product_params[:slug])
+      if candidate_product.nil?
+        candidate_product = CandidateProduct.new
+        # Generate slug for the candidate product.
+        slug = slug_em(name)
+        # Check if we need to add _dup to the slug.
+        first_duplicate = CandidateProduct.slug_simple_starts_with(candidate_product.slug)
                                           .order(slug: :desc).first
-        candidate_product_params[:slug] = candidate_product_params[:slug] + generate_offset(first_duplicate).to_s
+        if !first_duplicate.nil?
+          candidate_product.slug = slug + generate_offset(first_duplicate)
+        else
+          candidate_product.slug = slug
+        end
       end
 
-      candidate_product = CandidateProduct.new(candidate_product_params)
+      candidate_product.name = name
+      candidate_product.website = website
+      candidate_product.repository = repository
+      candidate_product.submitter_email = submitter_email
+      candidate_product.description = description
+      candidate_product.commercial_product = commercial_product
 
-      response = {}
-      response[:slug] = if Recaptcha.verify_via_api_call(captcha,
-                                                         {
-                                                           secret_key: Rails.application.secrets.captcha_secret_key,
-                                                           skip_remote_ip: true
-                                                         }) && candidate_product.save!
-        candidate_product.slug
+      if candidate_product.save && captcha_verification(captcha)
+        # Successful creation, return the created object with no errors
+        {
+          candidate_product: candidate_product,
+          errors: []
+        }
+      else
+        # Failed save, return the errors to the client
+        {
+          candidate_product: nil,
+          errors: candidate_product.errors.full_messages
+        }
       end
-      response
     end
   end
 end

@@ -49,6 +49,7 @@ module Types
     field :use_cases, resolver: Queries::UseCasesQuery
     field :use_case, resolver: Queries::UseCaseQuery
     field :search_use_cases, resolver: Queries::SearchUseCasesQuery
+    field :use_cases_for_sector, resolver: Queries::UseCasesForSectorQuery
 
     field :use_cases_steps, resolver: Queries::UseCasesStepsQuery
     field :use_case_steps, resolver: Queries::UseCaseStepsQuery
@@ -57,6 +58,9 @@ module Types
     field :users, resolver: Queries::UsersQuery
     field :user, resolver: Queries::UserQuery
     field :search_users, resolver: Queries::SearchUsersQuery
+    field :user_authentication_token_check, resolver: Queries::UserAuthenticationTokenCheckQuery
+    field :user_roles, resolver: Queries::UserRolesQuery
+    field :user_email_check, resolver: Queries::UserEmailCheckQuery
 
     field :countries, resolver: Queries::CountriesQuery
     field :country, resolver: Queries::CountryQuery
@@ -104,10 +108,15 @@ module Types
     field :candidate_role, resolver: Queries::CandidateRoleQuery
     field :search_candidate_roles, resolver: Queries::SearchCandidateRolesQuery
 
+    field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
+    field :search_candidate_datasets, resolver: Queries::SearchCandidateDatasetsQuery
+    field :owned_datasets, resolver: Queries::OwnedDatasetsQuery
+
     field :playbooks, resolver: Queries::PlaybooksQuery
     field :playbook, resolver: Queries::PlaybookQuery
     field :search_playbooks, resolver: Queries::SearchPlaybooksQuery
     field :search_playbook_tags, resolver: Queries::SearchPlaybookTagsQuery
+    field :paginated_playbooks, resolver: Queries::PaginatedPlaybooksQuery
 
     field :plays, resolver: Queries::PlaysQuery
     field :play, resolver: Queries::PlayQuery
@@ -126,6 +135,7 @@ module Types
     field :rubric_categories, resolver: Queries::RubricCategoriesQuery
     field :rubric_category, resolver: Queries::RubricCategoryQuery
 
+    field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
   end
 end

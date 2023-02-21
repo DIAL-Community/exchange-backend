@@ -96,6 +96,21 @@ CREATE TYPE public.category_indicator_type AS ENUM (
 
 
 --
+-- Name: comment_object_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.comment_object_type AS ENUM (
+    'PRODUCT',
+    'OPEN_DATA',
+    'PROJECT',
+    'USE_CASE',
+    'BUILDING_BLOCK',
+    'PLAYBOOK',
+    'ORGANIZATION'
+);
+
+
+--
 -- Name: digisquare_maturity_level; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -126,7 +141,9 @@ CREATE TYPE public.entity_status_type AS ENUM (
     'BETA',
     'MATURE',
     'SELF-REPORTED',
-    'VALIDATED'
+    'VALIDATED',
+    'PUBLISHED',
+    'DRAFT'
 );
 
 
@@ -282,7 +299,8 @@ CREATE TYPE public.user_role AS ENUM (
     'product_user',
     'mni',
     'content_writer',
-    'content_editor'
+    'content_editor',
+    'dataset_user'
 );
 
 
@@ -416,7 +434,8 @@ CREATE TABLE public.building_blocks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
-    maturity public.entity_status_type DEFAULT 'BETA'::public.entity_status_type NOT NULL,
+    maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
+    spec_url character varying
 );
 
 
@@ -437,6 +456,48 @@ CREATE SEQUENCE public.building_blocks_id_seq
 --
 
 ALTER SEQUENCE public.building_blocks_id_seq OWNED BY public.building_blocks.id;
+
+
+--
+-- Name: candidate_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.candidate_datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    data_url character varying NOT NULL,
+    data_visualization_url character varying,
+    data_type character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.candidate_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.candidate_datasets_id_seq OWNED BY public.candidate_datasets.id;
 
 
 --
@@ -508,7 +569,8 @@ CREATE TABLE public.candidate_products (
     approved_by_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    description character varying
+    description character varying,
+    commercial_product boolean DEFAULT false NOT NULL
 );
 
 
@@ -548,7 +610,8 @@ CREATE TABLE public.candidate_roles (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     product_id integer,
-    organization_id integer
+    organization_id integer,
+    dataset_id bigint
 );
 
 
@@ -616,7 +679,8 @@ CREATE TABLE public.category_indicators (
     data_source character varying,
     source_indicator character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    script_name character varying
 );
 
 
@@ -744,6 +808,42 @@ ALTER SEQUENCE public.classifications_id_seq OWNED BY public.classifications.id;
 
 
 --
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comments (
+    id bigint NOT NULL,
+    comment_object_id integer NOT NULL,
+    author jsonb NOT NULL,
+    text character varying NOT NULL,
+    comment_id character varying NOT NULL,
+    parent_comment_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    comment_object_type public.comment_object_type NOT NULL
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.comments_id_seq OWNED BY public.comments.id;
+
+
+--
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -815,6 +915,206 @@ ALTER SEQUENCE public.countries_id_seq OWNED BY public.countries.id;
 
 
 --
+-- Name: dataset_descriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dataset_descriptions (
+    id bigint NOT NULL,
+    dataset_id bigint,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dataset_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dataset_descriptions_id_seq OWNED BY public.dataset_descriptions.id;
+
+
+--
+-- Name: dataset_sectors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dataset_sectors (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sector_id bigint NOT NULL,
+    mapping_status public.mapping_status_type DEFAULT 'BETA'::public.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dataset_sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dataset_sectors_id_seq OWNED BY public.dataset_sectors.id;
+
+
+--
+-- Name: dataset_sustainable_development_goals; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dataset_sustainable_development_goals (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sustainable_development_goal_id bigint NOT NULL,
+    mapping_status public.mapping_status_type DEFAULT 'BETA'::public.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dataset_sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dataset_sustainable_development_goals_id_seq OWNED BY public.dataset_sustainable_development_goals.id;
+
+
+--
+-- Name: datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    website character varying NOT NULL,
+    visualization_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    dataset_type character varying NOT NULL,
+    geographic_coverage character varying,
+    time_range character varying,
+    manual_update boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    license character varying,
+    languages character varying,
+    data_format character varying
+);
+
+
+--
+-- Name: datasets_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.datasets_countries (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.datasets_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.datasets_countries_id_seq OWNED BY public.datasets_countries.id;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.datasets_id_seq OWNED BY public.datasets.id;
+
+
+--
+-- Name: datasets_origins; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.datasets_origins (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    origin_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.datasets_origins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.datasets_origins_id_seq OWNED BY public.datasets_origins.id;
+
+
+--
 -- Name: deploys; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -852,6 +1152,40 @@ CREATE SEQUENCE public.deploys_id_seq
 --
 
 ALTER SEQUENCE public.deploys_id_seq OWNED BY public.deploys.id;
+
+
+--
+-- Name: dial_spreadsheet_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dial_spreadsheet_data (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    spreadsheet_type character varying NOT NULL,
+    spreadsheet_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    deleted boolean DEFAULT false NOT NULL,
+    updated_by bigint,
+    updated_date timestamp without time zone
+);
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dial_spreadsheet_data_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dial_spreadsheet_data_id_seq OWNED BY public.dial_spreadsheet_data.id;
 
 
 --
@@ -1186,6 +1520,7 @@ CREATE SEQUENCE public.handbooks_id_seq
 
 ALTER SEQUENCE public.handbooks_id_seq OWNED BY public.handbooks.id;
 
+
 --
 -- Name: move_descriptions; Type: TABLE; Schema: public; Owner: -
 --
@@ -1402,6 +1737,38 @@ CREATE SEQUENCE public.organizations_countries_id_seq
 --
 
 ALTER SEQUENCE public.organizations_countries_id_seq OWNED BY public.organizations_countries.id;
+
+
+--
+-- Name: organizations_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organizations_datasets (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    organization_type public.org_type DEFAULT 'owner'::public.org_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: organizations_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organizations_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organizations_datasets_id_seq OWNED BY public.organizations_datasets.id;
 
 
 --
@@ -1709,7 +2076,8 @@ CREATE TABLE public.playbooks (
     tags character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    draft boolean DEFAULT true NOT NULL
+    draft boolean DEFAULT true NOT NULL,
+    author character varying
 );
 
 
@@ -2043,7 +2411,8 @@ CREATE TABLE public.product_indicators (
     id bigint NOT NULL,
     product_id bigint NOT NULL,
     category_indicator_id bigint NOT NULL,
-    indicator_value character varying NOT NULL
+    indicator_value character varying NOT NULL,
+    updated_at timestamp without time zone
 );
 
 
@@ -2186,7 +2555,7 @@ ALTER SEQUENCE public.product_sectors_id_seq OWNED BY public.product_sectors.id;
 CREATE TABLE public.product_sustainable_development_goals (
     product_id bigint NOT NULL,
     sustainable_development_goal_id bigint NOT NULL,
-    mapping_status public.mapping_status_type NOT NULL,
+    mapping_status public.mapping_status_type DEFAULT 'BETA'::public.mapping_status_type NOT NULL,
     id bigint NOT NULL,
     slug character varying NOT NULL
 );
@@ -2227,9 +2596,16 @@ CREATE TABLE public.products (
     default_url character varying DEFAULT 'http://<host_ip>'::character varying NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
-    maturity_score integer,
+    maturity_score jsonb,
     product_type public.product_type_save DEFAULT 'product'::public.product_type_save,
-    manual_update boolean DEFAULT false
+    manual_update boolean DEFAULT false,
+    commercial_product boolean DEFAULT false,
+    pricing_model character varying,
+    pricing_details character varying,
+    hosting_model character varying,
+    pricing_date date,
+    pricing_url character varying,
+    languages jsonb
 );
 
 
@@ -3042,8 +3418,69 @@ CREATE TABLE public.use_case_steps (
     step_number integer NOT NULL,
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    markdown_url character varying
 );
+
+
+--
+-- Name: use_case_steps_building_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.use_case_steps_building_blocks (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    building_block_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.use_case_steps_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.use_case_steps_building_blocks_id_seq OWNED BY public.use_case_steps_building_blocks.id;
+
+
+--
+-- Name: use_case_steps_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.use_case_steps_datasets (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    dataset_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.use_case_steps_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.use_case_steps_datasets_id_seq OWNED BY public.use_case_steps_datasets.id;
 
 
 --
@@ -3117,7 +3554,7 @@ CREATE TABLE public.use_cases (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
-    maturity public.entity_status_type DEFAULT 'BETA'::public.entity_status_type NOT NULL,
+    maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     tags character varying[] DEFAULT '{}'::character varying[]
 );
 
@@ -3208,16 +3645,17 @@ CREATE TABLE public.users (
     organization_id bigint,
     expired boolean,
     expired_at timestamp without time zone,
-    saved_products bigint[],
-    saved_use_cases bigint[],
-    saved_projects bigint[],
+    saved_products bigint[] DEFAULT '{}'::bigint[],
+    saved_use_cases bigint[] DEFAULT '{}'::bigint[],
+    saved_projects bigint[] DEFAULT '{}'::bigint[],
     saved_urls character varying[] DEFAULT '{}'::character varying[],
-    roles public.user_role[],
+    roles public.user_role[] DEFAULT '{}'::public.user_role[],
     authentication_token text,
     authentication_token_created_at timestamp without time zone,
     user_products bigint[] DEFAULT '{}'::bigint[],
     receive_admin_emails boolean DEFAULT false,
-    username character varying
+    username character varying,
+    user_datasets bigint[] DEFAULT '{}'::bigint[]
 );
 
 
@@ -3238,16 +3676,6 @@ CREATE SEQUENCE public.users_id_seq
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
-
-
---
--- Name: users_products; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users_products (
-    user_id bigint NOT NULL,
-    product_id bigint NOT NULL
-);
 
 
 --
@@ -3363,6 +3791,13 @@ ALTER TABLE ONLY public.building_blocks ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: candidate_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets ALTER COLUMN id SET DEFAULT nextval('public.candidate_datasets_id_seq'::regclass);
+
+
+--
 -- Name: candidate_organizations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3419,6 +3854,13 @@ ALTER TABLE ONLY public.classifications ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments ALTER COLUMN id SET DEFAULT nextval('public.comments_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3433,10 +3875,59 @@ ALTER TABLE ONLY public.countries ALTER COLUMN id SET DEFAULT nextval('public.co
 
 
 --
+-- Name: dataset_descriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_descriptions ALTER COLUMN id SET DEFAULT nextval('public.dataset_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sectors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sectors ALTER COLUMN id SET DEFAULT nextval('public.dataset_sectors_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sustainable_development_goals id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('public.dataset_sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets ALTER COLUMN id SET DEFAULT nextval('public.datasets_id_seq'::regclass);
+
+
+--
+-- Name: datasets_countries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_countries ALTER COLUMN id SET DEFAULT nextval('public.datasets_countries_id_seq'::regclass);
+
+
+--
+-- Name: datasets_origins id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_origins ALTER COLUMN id SET DEFAULT nextval('public.datasets_origins_id_seq'::regclass);
+
+
+--
 -- Name: deploys id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.deploys ALTER COLUMN id SET DEFAULT nextval('public.deploys_id_seq'::regclass);
+
+
+--
+-- Name: dial_spreadsheet_data id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dial_spreadsheet_data ALTER COLUMN id SET DEFAULT nextval('public.dial_spreadsheet_data_id_seq'::regclass);
 
 
 --
@@ -3556,6 +4047,13 @@ ALTER TABLE ONLY public.organizations_contacts ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.organizations_countries ALTER COLUMN id SET DEFAULT nextval('public.organizations_countries_id_seq'::regclass);
+
+
+--
+-- Name: organizations_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_datasets ALTER COLUMN id SET DEFAULT nextval('public.organizations_datasets_id_seq'::regclass);
 
 
 --
@@ -3888,6 +4386,20 @@ ALTER TABLE ONLY public.use_case_steps ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
+-- Name: use_case_steps_building_blocks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_building_blocks ALTER COLUMN id SET DEFAULT nextval('public.use_case_steps_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets ALTER COLUMN id SET DEFAULT nextval('public.use_case_steps_datasets_id_seq'::regclass);
+
+
+--
 -- Name: use_case_steps_products id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3970,6 +4482,14 @@ ALTER TABLE ONLY public.building_blocks
 
 
 --
+-- Name: candidate_datasets candidate_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT candidate_datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: candidate_organizations candidate_organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4034,6 +4554,14 @@ ALTER TABLE ONLY public.classifications
 
 
 --
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4050,11 +4578,67 @@ ALTER TABLE ONLY public.countries
 
 
 --
+-- Name: dataset_descriptions dataset_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_descriptions
+    ADD CONSTRAINT dataset_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sectors dataset_sectors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sectors
+    ADD CONSTRAINT dataset_sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sustainable_development_goals dataset_sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sustainable_development_goals
+    ADD CONSTRAINT dataset_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_countries datasets_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_countries
+    ADD CONSTRAINT datasets_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_origins datasets_origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_origins
+    ADD CONSTRAINT datasets_origins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets
+    ADD CONSTRAINT datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: deploys deploys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.deploys
     ADD CONSTRAINT deploys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dial_spreadsheet_data dial_spreadsheet_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dial_spreadsheet_data
+    ADD CONSTRAINT dial_spreadsheet_data_pkey PRIMARY KEY (id);
 
 
 --
@@ -4183,6 +4767,14 @@ ALTER TABLE ONLY public.organizations_contacts
 
 ALTER TABLE ONLY public.organizations_countries
     ADD CONSTRAINT organizations_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_datasets organizations_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_datasets
+    ADD CONSTRAINT organizations_datasets_pkey PRIMARY KEY (id);
 
 
 --
@@ -4570,6 +5162,22 @@ ALTER TABLE ONLY public.use_case_step_descriptions
 
 
 --
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: use_case_steps use_case_steps_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4668,6 +5276,13 @@ CREATE UNIQUE INDEX block_prods ON public.product_building_blocks USING btree (b
 
 
 --
+-- Name: building_blocks_use_case_steps_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON public.use_case_steps_building_blocks USING btree (building_block_id, use_case_step_id);
+
+
+--
 -- Name: candidate_roles_unique_fields; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4679,6 +5294,20 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON public.candidate_roles USIN
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON public.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: dataset_sdg_index_on_sdg_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX dataset_sdg_index_on_sdg_id ON public.dataset_sustainable_development_goals USING btree (sustainable_development_goal_id);
+
+
+--
+-- Name: datasets_use_case_steps_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX datasets_use_case_steps_idx ON public.use_case_steps_datasets USING btree (dataset_id, use_case_step_id);
 
 
 --
@@ -4738,6 +5367,20 @@ CREATE INDEX index_candidate_contacts_on_contact_id_and_candidate_id ON public.c
 
 
 --
+-- Name: index_candidate_datasets_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_approved_by_id ON public.candidate_datasets USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_datasets_on_rejected_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_rejected_by_id ON public.candidate_datasets USING btree (rejected_by_id);
+
+
+--
 -- Name: index_candidate_organizations_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4770,6 +5413,13 @@ CREATE INDEX index_candidate_products_on_rejected_by_id ON public.candidate_prod
 --
 
 CREATE INDEX index_candidate_roles_on_approved_by_id ON public.candidate_roles USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_roles_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_dataset_id ON public.candidate_roles USING btree (dataset_id);
 
 
 --
@@ -4812,6 +5462,62 @@ CREATE INDEX index_ckeditor_assets_on_type ON public.ckeditor_assets USING btree
 --
 
 CREATE UNIQUE INDEX index_contacts_on_slug ON public.contacts USING btree (slug);
+
+
+--
+-- Name: index_dataset_descriptions_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dataset_descriptions_on_dataset_id ON public.dataset_descriptions USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_dataset_id ON public.dataset_sectors USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_sector_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_sector_id ON public.dataset_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_dataset_sustainable_development_goals_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_dataset_sustainable_development_goals_on_dataset_id ON public.dataset_sustainable_development_goals USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_countries_on_country_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_country_id ON public.datasets_countries USING btree (country_id);
+
+
+--
+-- Name: index_datasets_countries_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_dataset_id ON public.datasets_countries USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_dataset_id ON public.datasets_origins USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_origin_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_origin_id ON public.datasets_origins USING btree (origin_id);
 
 
 --
@@ -4931,6 +5637,20 @@ CREATE INDEX index_organizations_countries_on_country_id ON public.organizations
 --
 
 CREATE INDEX index_organizations_countries_on_organization_id ON public.organizations_countries USING btree (organization_id);
+
+
+--
+-- Name: index_organizations_datasets_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_datasets_on_dataset_id ON public.organizations_datasets USING btree (dataset_id);
+
+
+--
+-- Name: index_organizations_datasets_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organizations_datasets_on_organization_id ON public.organizations_datasets USING btree (organization_id);
 
 
 --
@@ -5417,13 +6137,6 @@ CREATE UNIQUE INDEX products_use_case_steps_idx ON public.use_case_steps_product
 
 
 --
--- Name: products_users_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX products_users_idx ON public.users_products USING btree (product_id, user_id);
-
-
---
 -- Name: projects_organizations_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5494,6 +6207,20 @@ CREATE UNIQUE INDEX sectors_projects_idx ON public.projects_sectors USING btree 
 
 
 --
+-- Name: use_case_steps_building_blocks_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_building_blocks_idx ON public.use_case_steps_building_blocks USING btree (use_case_step_id, building_block_id);
+
+
+--
+-- Name: use_case_steps_datasets_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_datasets_idx ON public.use_case_steps_datasets USING btree (use_case_step_id, dataset_id);
+
+
+--
 -- Name: use_case_steps_products_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5526,13 +6253,6 @@ CREATE UNIQUE INDEX usecases_workflows ON public.workflows_use_cases USING btree
 --
 
 CREATE INDEX user_index ON public.audits USING btree (user_id, user_role);
-
-
---
--- Name: users_products_idx; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX users_products_idx ON public.users_products USING btree (user_id, product_id);
 
 
 --
@@ -5645,6 +6365,14 @@ ALTER TABLE ONLY public.handbook_pages
 
 
 --
+-- Name: datasets_origins fk_rails_1000d63cee; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_origins
+    ADD CONSTRAINT fk_rails_1000d63cee FOREIGN KEY (origin_id) REFERENCES public.origins(id);
+
+
+--
 -- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5741,6 +6469,30 @@ ALTER TABLE ONLY public.candidate_roles
 
 
 --
+-- Name: organizations_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_datasets
+    ADD CONSTRAINT fk_rails_37920930c1 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_393a906ad8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT fk_rails_393a906ad8 FOREIGN KEY (rejected_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: candidate_roles fk_rails_3a1d782b99; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_roles
+    ADD CONSTRAINT fk_rails_3a1d782b99 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
 -- Name: organization_descriptions fk_rails_3a6b8edce9; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5789,6 +6541,14 @@ ALTER TABLE ONLY public.plays_building_blocks
 
 
 --
+-- Name: dataset_sectors fk_rails_4d5afa2af0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sectors
+    ADD CONSTRAINT fk_rails_4d5afa2af0 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
 -- Name: operator_services fk_rails_5c31270ff7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5802,6 +6562,14 @@ ALTER TABLE ONLY public.operator_services
 
 ALTER TABLE ONLY public.organizations_countries
     ADD CONSTRAINT fk_rails_61354fe2dd FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: dataset_descriptions fk_rails_6233152996; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_descriptions
+    ADD CONSTRAINT fk_rails_6233152996 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
 
 
 --
@@ -5850,6 +6618,14 @@ ALTER TABLE ONLY public.workflow_descriptions
 
 ALTER TABLE ONLY public.playbook_plays
     ADD CONSTRAINT fk_rails_6b205fb457 FOREIGN KEY (playbook_id) REFERENCES public.playbooks(id);
+
+
+--
+-- Name: datasets_countries fk_rails_6c45cff588; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_countries
+    ADD CONSTRAINT fk_rails_6c45cff588 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
 
 
 --
@@ -5914,6 +6690,14 @@ ALTER TABLE ONLY public.rubric_category_descriptions
 
 ALTER TABLE ONLY public.candidate_roles
     ADD CONSTRAINT fk_rails_80a7b4e918 FOREIGN KEY (rejected_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: dataset_sectors fk_rails_8398ea4f75; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dataset_sectors
+    ADD CONSTRAINT fk_rails_8398ea4f75 FOREIGN KEY (sector_id) REFERENCES public.sectors(id);
 
 
 --
@@ -6029,6 +6813,22 @@ ALTER TABLE ONLY public.product_descriptions
 
 
 --
+-- Name: organizations_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_datasets
+    ADD CONSTRAINT fk_rails_c82c326076 FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
+-- Name: datasets_countries fk_rails_c8d14ec1b4; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_countries
+    ADD CONSTRAINT fk_rails_c8d14ec1b4 FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
 -- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6050,6 +6850,14 @@ ALTER TABLE ONLY public.use_cases
 
 ALTER TABLE ONLY public.product_classifications
     ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: datasets_origins fk_rails_d604ea34b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.datasets_origins
+    ADD CONSTRAINT fk_rails_d604ea34b3 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
 
 
 --
@@ -6122,6 +6930,14 @@ ALTER TABLE ONLY public.principle_descriptions
 
 ALTER TABLE ONLY public.regions
     ADD CONSTRAINT fk_rails_f2ba72ccee FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_f460267737; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_datasets
+    ADD CONSTRAINT fk_rails_f460267737 FOREIGN KEY (approved_by_id) REFERENCES public.users(id);
 
 
 --
@@ -6365,6 +7181,38 @@ ALTER TABLE ONLY public.product_product_relationships
 
 
 --
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_block_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_block_fk FOREIGN KEY (building_block_id) REFERENCES public.building_blocks(id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_step_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_step_fk FOREIGN KEY (use_case_step_id) REFERENCES public.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_dataset_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_dataset_fk FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_step_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_step_fk FOREIGN KEY (use_case_step_id) REFERENCES public.use_case_steps(id);
+
+
+--
 -- Name: use_case_steps_products use_case_steps_products_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6418,22 +7266,6 @@ ALTER TABLE ONLY public.use_cases_sdg_targets
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT user_organization_fk FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
-
-
---
--- Name: users_products users_products_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_products
-    ADD CONSTRAINT users_products_product_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
-
-
---
--- Name: users_products users_products_user_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.users_products
-    ADD CONSTRAINT users_products_user_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -6642,6 +7474,35 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20211203193339'),
 ('20220114212158'),
 ('20220309190707'),
-('20220316170226');
+('20220316170226'),
+('20220404230635'),
+('20220427215908'),
+('20220428193227'),
+('20220519205858'),
+('20220624201750'),
+('20220629054904'),
+('20220712054023'),
+('20220722063623'),
+('20220803183512'),
+('20220817061256'),
+('20220817062227'),
+('20220825102332'),
+('20220902075138'),
+('20220909073617'),
+('20220909100954'),
+('20220909101028'),
+('20220916115012'),
+('20220923161216'),
+('20220930090351'),
+('20221018015421'),
+('20221018202451'),
+('20221018203042'),
+('20221102104046'),
+('20221208074203'),
+('20221216075319'),
+('20221220085731'),
+('20221227105319'),
+('20221227105322'),
+('20230123155236');
 
 

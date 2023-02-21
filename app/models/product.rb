@@ -34,13 +34,26 @@ class Product < ApplicationRecord
   has_many :sectors, through: :product_sectors,
                      after_add: :association_add, before_remove: :association_remove
 
-  has_many :product_building_blocks, dependent: :delete_all,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
-  has_many :building_blocks, through: :product_building_blocks,
-                             dependent: :delete_all,
-                             after_add: :association_add,
-                             before_remove: :association_remove
+  has_many(
+    :product_building_blocks,
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_many(
+    :building_blocks,
+    through: :product_building_blocks,
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_and_belongs_to_many(
+    :plays,
+    join_table: :plays_products,
+    dependent: :delete_all
+  )
 
   has_and_belongs_to_many :origins, join_table: :products_origins,
                                     dependent: :delete_all,
@@ -111,19 +124,25 @@ class Product < ApplicationRecord
   end
 
   def owner
-    owner = User.joins(:products).where(products: { id: id })
-    owner.first.id unless owner.empty?
+    owner_id = nil
+    owners = User.where('? = ANY(user_products)', id)
+    owner_id = owners.first.id unless owners.empty?
+    owner_id
   end
 
   def main_repository
-    product_repositories.find_by(main_repository: true)
+    main_repository = product_repositories.find_by(main_repository: true)
+    if main_repository.nil?
+      main_repository = product_repositories.first
+    end
+    main_repository
   end
 
   def current_projects(num_projects)
     projects.limit(num_projects[:first])
   end
 
-  def maturity_scores
+  def maturity_score_details
     maturity_scores = calculate_maturity_scores(id)[:rubric_scores].first
     maturity_scores = maturity_scores[:category_scores] unless maturity_scores.nil?
     maturity_scores
@@ -218,5 +237,44 @@ class Product < ApplicationRecord
       return mapping_status unless mapping_status.nil?
     end
     nil
+  end
+
+  def product_indicators
+    product_indicators = ProductIndicator.where(product_id: id)
+
+    product_indicators_list = []
+    product_indicators.each do |indicator|
+      category = CategoryIndicator.find_by(id: indicator.category_indicator_id)
+      unless category.rubric_category_id.nil?
+        product_indicators_list << indicator
+      end
+    end
+    product_indicators_list
+  end
+
+  def not_assigned_category_indicators
+    product_indicators = ProductIndicator.where(product_id: id)
+
+    used_categories_ids = []
+    product_indicators.each do |indicator|
+      current_category = CategoryIndicator.find_by(id: indicator.category_indicator_id)
+      unless current_category.rubric_category_id.nil?
+        used_categories_ids << current_category.id
+      end
+    end
+
+    not_used_categories = []
+    CategoryIndicator.all.each do |category|
+      if !category.id.in?(used_categories_ids) && !category.rubric_category_id.nil?
+        not_used_categories << category
+      end
+    end
+
+    not_used_categories
+  end
+
+  def playbooks
+    plays = Play.joins(:products).where(products: { id: id })
+    Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
   end
 end

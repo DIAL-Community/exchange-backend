@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Tag < ApplicationRecord
+  include Auditable
+
   attr_accessor :tag_desc
 
   has_many :tag_descriptions, dependent: :destroy

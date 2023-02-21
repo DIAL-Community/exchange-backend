@@ -94,9 +94,11 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
 
-  # Silencing output of the rspec tests.
-  config.before(:all, &:supress_puts)
-  config.after(:all,  &:allow_puts)
+  # Silencing output of the rspec tests. Disabling this as we're changing the output to
+  # documentation style.
+
+  # config.before(:all, &:supress_puts)
+  # config.after(:all,  &:allow_puts)
 end
 
 public

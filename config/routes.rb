@@ -174,8 +174,6 @@ Rails.application.routes.draw do
     get 'export_data', on: :collection
   end
 
-  get :update_locale, controller: 'application'
-
   # Start of external API routes
   get 'api/v1/organizations/:id', to: 'organizations#unique_search'
   get 'api/v1/organizations', to: 'organizations#simple_search', defaults: { format: 'json' }
@@ -267,6 +265,7 @@ Rails.application.routes.draw do
   post '/save_url', to: 'application#save_url', as: :save_url
   post '/remove_url', to: 'application#remove_url', as: :remove_url
   post '/send_email', to: 'application#send_email', as: :send_email
+  post '/create_issue', to: 'application#create_issue', as: :create_issue
 
   get 'export', to: 'organizations#export'
   get 'candidate_organization_duplicates', to: 'candidate_organizations#duplicates'

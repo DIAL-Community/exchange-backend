@@ -4,13 +4,15 @@ module Types
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
     field :create_candidate_organization, mutation: Mutations::CreateCandidateOrganization
+    field :create_candidate_dataset, mutation: Mutations::CreateCandidateDataset
+    field :approve_reject_candidate_dataset, mutation: Mutations::ApproveRejectCandidateDataset
 
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
+    field :delete_playbook, mutation: Mutations::DeletePlaybook
 
     field :create_play, mutation: Mutations::CreatePlay
     field :auto_save_play, mutation: Mutations::CreatePlay
-    field :update_play_order, mutation: Mutations::UpdatePlayOrder
     field :duplicate_play, mutation: Mutations::DuplicatePlay
 
     field :create_move, mutation: Mutations::CreateMove
@@ -18,7 +20,7 @@ module Types
     field :update_move_order, mutation: Mutations::UpdateMoveOrder
     field :create_resource, mutation: Mutations::CreateResource
 
-    field :update_user, mutation: Mutations::UpdateUser
+    field :create_user, mutation: Mutations::CreateUser
 
     field :create_spreadsheet_data, mutation: Mutations::CreateSpreadsheetData
     field :delete_spreadsheet_data, mutation: Mutations::DeleteSpreadsheetData
@@ -38,6 +40,7 @@ module Types
     field :update_organization_offices, mutation: Mutations::UpdateOrganizationOffices
 
     field :create_product, mutation: Mutations::CreateProduct
+    field :delete_product, mutation: Mutations::DeleteProduct
 
     field :update_product_sectors, mutation: Mutations::UpdateProductSectors
     field :update_product_building_blocks, mutation: Mutations::UpdateProductBuildingBlocks
@@ -45,8 +48,11 @@ module Types
     field :update_product_projects, mutation: Mutations::UpdateProductProjects
     field :update_product_tags, mutation: Mutations::UpdateProductTags
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
+    field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
 
     field :create_dataset, mutation: Mutations::CreateDataset
+    field :delete_dataset, mutation: Mutations::DeleteDataset
+
     field :update_dataset_countries, mutation: Mutations::UpdateDatasetCountries
     field :update_dataset_organizations, mutation: Mutations::UpdateDatasetOrganizations
     field :update_dataset_sdgs, mutation: Mutations::UpdateDatasetSdgs
@@ -62,6 +68,7 @@ module Types
     field :update_project_tags, mutation: Mutations::UpdateProjectTags
 
     field :create_use_case, mutation: Mutations::CreateUseCase
+    field :delete_use_case, mutation: Mutations::DeleteUseCase
 
     field :update_use_case_sdg_targets, mutation: Mutations::UpdateUseCaseSdgTargets
     field :update_use_case_tags, mutation: Mutations::UpdateUseCaseTags
@@ -69,10 +76,12 @@ module Types
     field :create_use_case_step, mutation: Mutations::CreateUseCaseStep
 
     field :update_use_case_step_workflows, mutation: Mutations::UpdateUseCaseStepWorkflows
+    field :update_use_case_step_datasets, mutation: Mutations::UpdateUseCaseStepDatasets
     field :update_use_case_step_products, mutation: Mutations::UpdateUseCaseStepProducts
     field :update_use_case_step_building_blocks, mutation: Mutations::UpdateUseCaseStepBuildingBlocks
 
     field :create_building_block, mutation: Mutations::CreateBuildingBlock
+    field :delete_building_block, mutation: Mutations::DeleteBuildingBlock
 
     field :update_building_block_workflows, mutation: Mutations::UpdateBuildingBlockWorkflows
     field :update_building_block_products, mutation: Mutations::UpdateBuildingBlockProducts
@@ -81,6 +90,7 @@ module Types
     field :delete_sector, mutation: Mutations::DeleteSector
 
     field :create_workflow, mutation: Mutations::CreateWorkflow
+    field :delete_workflow, mutation: Mutations::DeleteWorkflow
     field :update_workflow_building_blocks, mutation: Mutations::UpdateWorkflowBuildingBlocks
 
     field :create_country, mutation: Mutations::CreateCountry
@@ -93,5 +103,16 @@ module Types
     field :delete_comment, mutation: Mutations::DeleteComment
 
     field :create_rubric_category, mutation: Mutations::CreateRubricCategory
+    field :update_rubric_category_indicators, mutation: Mutations::UpdateRubricCategoryIndicators
+    field :delete_rubric_category, mutation: Mutations::DeleteRubricCategory
+
+    field :delete_category_indicator, mutation: Mutations::DeleteCategoryIndicator
+    field :create_category_indicator, mutation: Mutations::CreateCategoryIndicator
+
+    field :create_wizard_guidance_mail, mutation: Mutations::CreateWizardGuidanceMail
+
+    field :apply_as_owner, mutation: Mutations::ApplyAsOwner
+
+    field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
   end
 end

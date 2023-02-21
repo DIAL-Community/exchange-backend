@@ -14,7 +14,7 @@ module Queries
 
   class PlayQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::PlayType, null: false
+    type Types::PlayType, null: true
 
     def resolve(slug:)
       Play.find_by(slug: slug)

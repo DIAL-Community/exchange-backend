@@ -11,8 +11,10 @@ class UseCaseStep < ApplicationRecord
                                      after_add: :association_add, before_remove: :association_remove
   has_and_belongs_to_many :workflows, join_table: :use_case_steps_workflows,
                                       after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :datasets, join_table: :use_case_steps_datasets,
+                                     after_add: :association_add, before_remove: :association_remove
   has_and_belongs_to_many :building_blocks, join_table: :use_case_steps_building_blocks,
-                                            after_add: :association_add, before_remove: :association_remove
+                                      after_add: :association_add, before_remove: :association_remove
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
@@ -55,8 +57,6 @@ class UseCaseStep < ApplicationRecord
   def as_json(options = {})
     json = super(options)
     json['use_case'] = use_case.as_json({ only: %i[name slug], api_path: api_path(options) })
-    if options[:include_relationships].present?
-    end
     json['self_url'] = self_url(options) if options[:collection_path].present? || options[:api_path].present?
     json['collection_url'] = collection_url(options) if options[:item_path].present?
     json

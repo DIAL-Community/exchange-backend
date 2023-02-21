@@ -14,11 +14,16 @@ cd /t4d
 rake sync:public_goods
 rake sync:digi_square_digital_good
 rake sync:osc_digital_good_local
-rake sync:update_license_data
-rake sync:update_statistics_data
-rake sync:update_language_data
+rake maturity_sync:update_license_data
+rake maturity_sync:update_statistics_data
+rake maturity_sync:update_code_review_indicators
+rake maturity_sync:update_language_data
+rake maturity_sync:update_products_languages
+rake maturity_sync:update_api_docs_indicators
 rake maturity_sync:sync_data['/product-evaluation-rubric']
 rake sync:fetch_website_data
+
+rake endorsers:sync_form_response
 
 rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet

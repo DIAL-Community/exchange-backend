@@ -2,30 +2,8 @@
 
 module Modules
   module WizardHelpers
-    def get_sector_list(sector, subsector)
-      sector_ids = []
-
-      sector_name = sector.first
-      sector_name += ":#{subsector.first}" if !subsector.nil? && !subsector.first.nil? && subsector.first != ''
-      curr_sector = Sector.find_by(name: sector_name)
-
-      unless curr_sector.nil?
-        sector_ids = [curr_sector.id]
-        if curr_sector.parent_sector_id.nil?
-          (sector_ids << Sector.where(parent_sector_id: curr_sector.id).map(&:id)).flatten!
-        end
-      end
-
-      [sector_ids, curr_sector]
-    end
-
-    def get_project_list(sector_ids, curr_sector, countries, tags, sort_hint, offset_params = {})
-      unless sector_ids.empty?
-        sector_projects = ProjectsSector.where(sector_id: sector_ids).map(&:project_id)
-        if sector_projects.empty? && !curr_sector.parent_sector_id.nil?
-          sector_projects = ProjectsSector.where(sector_id: curr_sector.parent_sector_id).map(&:project_id)
-        end
-      end
+    def get_project_list(sector_ids, countries, tags, sort_hint, offset_params = {})
+      sector_projects = ProjectsSector.where(sector_id: sector_ids).map(&:project_id)
 
       unless countries.nil?
         country_projects = ProjectsCountry.joins(:country).where(countries: { name: countries }).map(&:project_id)
@@ -78,7 +56,8 @@ module Modules
       project_list.where(id: sector_tag_projects)
     end
 
-    def filter_matching_products(product_bb, product_project, product_sector, product_tag, sort_hint, offset_params)
+    def filter_matching_products(product_bb, product_project, product_sector, product_tag, product_use_case_steps,
+      commercial_product, sort_hint, offset_params)
       # First, identify products that are aligned with selected sector and tags
       # Next, identify products that are aligned with needed building blocks
       # Finally, add products that are connected to relevant projects
@@ -108,6 +87,14 @@ module Modules
         sector_tag_products = product_project
       end
 
+      if sector_tag_products.length > 10 && !product_use_case_steps
+        # Since we have several products, try filtering by use case steps
+        combined_products = sector_tag_products & product_use_case_steps
+        sector_tag_products = combined_products if combined_products && combined_products.length > 4
+      elsif sector_tag_products.empty? && !product_use_case_steps.nil?
+        sector_tag_products = product_use_case_steps
+      end
+
       product_list = Product.all
       case sort_hint.to_s.downcase
       when 'country'
@@ -122,7 +109,51 @@ module Modules
 
       product_list = product_list.offset(offset_params[:offset]) unless offset_params.empty?
 
+      unless commercial_product.nil?
+        product_list = product_list.where(commercial_product: commercial_product)
+      end
+
       product_list.where(id: sector_tag_products).limit(20)
+    end
+
+    def filter_matching_playbooks(playbook_sector, playbook_tag, sort_hint, offset_params)
+      combined_playbooks = playbook_tag
+      combined_playbooks = playbook_sector + playbook_tag unless playbook_sector.nil?
+      sector_tag_playbooks = combined_playbooks.uniq unless combined_playbooks.nil?
+
+      playbook_list = Playbook.all
+      case sort_hint.to_s.downcase
+      when 'sector'
+        playbook_list = playbook_list.joins(:sectors).order('sectors.name')
+      when 'tag'
+        playbook_list = playbook_list.order('tags')
+      else
+        playbook_list = playbook_list.order('name')
+      end
+
+      playbook_list = playbook_list.offset(offset_params[:offset]) unless offset_params.empty?
+
+      playbook_list.where(id: sector_tag_playbooks).limit(20)
+    end
+
+    def filter_matching_datasets(dataset_sector, dataset_tag, sort_hint, offset_params)
+      combined_datasets = dataset_tag
+      combined_datasets = dataset_sector + dataset_tag unless dataset_sector.nil?
+      sector_tag_datasets = combined_datasets.uniq unless combined_datasets.nil?
+
+      dataset_list = Dataset.all
+      case sort_hint.to_s.downcase
+      when 'sector'
+        dataset_list = dataset_list.joins(:sectors).order('sectors.name')
+      when 'tag'
+        dataset_list = dataset_list.order('tags')
+      else
+        dataset_list = dataset_list.order('name')
+      end
+
+      dataset_list = dataset_list.offset(offset_params[:offset]) unless offset_params.empty?
+
+      dataset_list.where(id: sector_tag_datasets).limit(20)
     end
   end
 end

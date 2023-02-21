@@ -9,6 +9,7 @@ module Types
   end
 
   class CategoryIndicatorType < Types::BaseObject
+    field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
     field :indicator_type, String, null: true
@@ -17,6 +18,8 @@ module Types
     field :data_source, String, null: true
     field :source_indicator, String, null: true
     field :script_name, String, null: true
+
+    field :rubric_category, Types::RubricCategoryType, null: true
 
     field :category_indicator_descriptions, [Types::CategoryIndicatorDescriptionType], null: true
     field :category_indicator_description, Types::CategoryIndicatorDescriptionType, null: true,

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Sector < ApplicationRecord
+  include Auditable
+
   attr_accessor :parent_sector_name
 
   has_and_belongs_to_many :organizations

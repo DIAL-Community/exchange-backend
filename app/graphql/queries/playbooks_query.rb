@@ -14,10 +14,14 @@ module Queries
 
   class PlaybookQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::PlaybookType, null: false
+    type Types::PlaybookType, null: true
 
     def resolve(slug:)
-      Playbook.find_by(slug: slug)
+      playbook = Playbook.find_by(slug: slug)
+
+      return nil if playbook.draft == true && !(an_admin || a_content_editor)
+
+      playbook
     end
   end
 
@@ -85,5 +89,34 @@ module Queries
       end
       tags
     end
+  end
+
+  class PaginatedPlaybooksQuery < Queries::BaseQuery
+    include ActionView::Helpers::TextHelper
+    include Queries
+
+    argument :sectors, [String], required: false, default_value: []
+    argument :tags, [String], required: false, default_value: []
+    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :playbook_sort_hint, String, required: false, default_value: 'name'
+
+    type Types::PlaybookType.connection_type, null: false
+
+    def resolve(sectors:, tags:, playbook_sort_hint:, offset_attributes:)
+      wizard_playbooks(sectors, tags, playbook_sort_hint, offset_attributes)
+    end
+  end
+
+  def wizard_playbooks(sectors, tags, sort_hint, offset_params = {})
+    sectors_playbooks = Playbook.joins(:sectors).where(sectors: { name: sectors, locale: I18n.locale }).map(&:id)
+
+    unless tags.nil?
+      tag_playbooks = []
+      tags.each do |tag|
+        tag_playbooks += Playbook.where('LOWER(:tag) = ANY(LOWER(tags::text)::text[])', tag: tag).map(&:id)
+      end
+    end
+
+    filter_matching_playbooks(sectors_playbooks, tag_playbooks, sort_hint, offset_params).uniq
   end
 end

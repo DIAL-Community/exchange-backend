@@ -3,6 +3,8 @@
 require('csv')
 
 class User < ApplicationRecord
+  include Auditable
+
   acts_as_token_authenticatable
 
   enum user_role: { admin: 'admin', ict4sdg: 'ict4sdg', principle: 'principle',
@@ -11,13 +13,10 @@ class User < ApplicationRecord
                     content_editor: 'content_editor' }
   after_initialize :set_default_role, if: :new_record?
 
-  has_and_belongs_to_many :products, join_table: :users_products
-
   validates :password, confirmation: true, on: :create
   validates :password_confirmation, presence: true, on: :create
   validates :password_confirmation, presence: true, on: :update, if: :password_changed?
   validates :username, presence: true, on: :create
-  validates :username, uniqueness: true, on: :create
 
   # Custom function validation
   validate :validate_organization, :validate_product
@@ -42,6 +41,10 @@ class User < ApplicationRecord
     {
       except: %i[created_at updated_at]
     }
+  end
+
+  def user_products_full
+    Product.where('id in (?)', user_products)
   end
 
   def self.to_csv

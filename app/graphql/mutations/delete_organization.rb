@@ -15,17 +15,18 @@ module Mutations
         }
       end
       organization = Organization.find_by(id: id)
+      assign_auditable_user(organization)
 
       if organization.destroy
         # Successful deletetion, return the nil organization with no errors
         {
-          organization: nil,
+          organization: organization,
           errors: []
         }
       else
         # Failed delete, return the errors to the client
         {
-          organization: organization,
+          organization: nil,
           errors: organization.errors.full_messages
         }
       end

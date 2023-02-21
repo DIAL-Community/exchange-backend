@@ -58,7 +58,12 @@ module Mutations
       play_move.play = play
       play_move.order = play.play_moves.count
       play_move.resources = resources.reject { |resource| resource['name'].blank? || resource['url'].blank? }
-      if play_move.save
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(play_move)
+        play_move.save!
+
         move_desc = MoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
         if move_desc.nil?
           move_desc = MoveDescription.new
@@ -66,8 +71,14 @@ module Mutations
           move_desc.locale = I18n.locale
         end
         move_desc.description = description
-        move_desc.save
 
+        assign_auditable_user(move_desc)
+        move_desc.save!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           move: play_move,
@@ -127,6 +138,7 @@ module Mutations
         end
       end
 
+      assign_auditable_user(play_move)
       if play_move.save
         # Successful creation, return the created object with no errors
         { move: play_move, errors: [] }
@@ -146,7 +158,7 @@ module Mutations
     field :move, Types::MoveType, null: true
     field :errors, [String], null: false
 
-    def resolve(play_slug:, move_slug:, operation:, distance:)
+    def resolve(play_slug:, move_slug:, operation:, distance: 0)
       unless an_admin
         return {
           move: nil,
@@ -187,7 +199,11 @@ module Mutations
         play_move.order = swapped_play_move.order
         swapped_play_move.order = temp_order
         # Save both playbook_play
-        successful_operation = true if play_move.save && swapped_play_move.save
+        ActiveRecord::Base.transaction do
+          play_move.save
+          swapped_play_move.save
+          successful_operation = true
+        end
       end
 
       if successful_operation
@@ -198,7 +214,7 @@ module Mutations
       else
         {
           move: nil,
-          errors: "Unable to add play record. Message: #{play_move.errors.full_messages}."
+          errors: move.errors.full_messages
         }
       end
     end

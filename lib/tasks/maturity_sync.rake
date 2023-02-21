@@ -166,7 +166,7 @@ namespace :maturity_sync do
       category_count = osc_category['items'].count
       osc_category['items'].each do |indicator|
         puts "Category: #{osc_category['header']} INDICATOR: #{indicator['code']}"
-        create_indicator(indicator['code'], indicator['desc'], 'DIAL OSC', category_count, 'boolean',
+        create_indicator(indicator['code'], indicator['desc'], 'DIAL', category_count, 'boolean',
                          rubric_category.id)
       end
     end
@@ -174,15 +174,89 @@ namespace :maturity_sync do
 
   task :update_maturity_scores, [:path] => :environment do |_, _params|
     Product.all.each do |product|
-      product_indicators = ProductIndicator.where(product_id: product.id)
-      next unless product_indicators.any?
+      puts "UPDATING SCORES FOR: #{product.name}"
+      calculate_maturity_scores(product.id)
+      calculate_product_indicators(product.id)
+    end
+  end
 
-      puts "UPDATING SCORE FOR: #{product.name}"
-      maturity_score = calculate_maturity_scores(product.id)
-      overall_score = maturity_score[:rubric_scores][0][:overall_score].to_i
-      puts "OVERALL SCORE: #{overall_score}"
-      product.maturity_score = overall_score
+  task :update_license_data, [] => :environment do
+    puts 'Starting to pull license data ...'
+
+    ProductRepository.all.each do |product_repository|
+      sync_license_information(product_repository)
+    end
+  end
+
+  task :update_statistics_data, [] => :environment do
+    puts 'Starting to pull statistic data ...'
+
+    ProductRepository.all.each do |product_repository|
+      sync_product_statistics(product_repository)
+    end
+  end
+
+  task :update_language_data, [] => :environment do
+    puts 'Updating language data for products.'
+
+    ProductRepository.all.each do |product_repository|
+      sync_product_languages(product_repository)
+    end
+  end
+
+  task :update_code_review_indicators, [] => :environment do
+    puts 'Updating code review indicators data for products.'
+
+    lang_file = YAML.load_file('utils/top_25_languages.yml')
+    config_file = YAML.load_file('config/indicator_config.yml')
+
+    Product.all.each do |product|
+      puts "Updating code review indicators data for product: #{product.name}"
+      sync_containerized_indicator(product)
+      sync_license_indicator(product)
+      sync_language_indicator(config_file, lang_file, product)
+      sync_documentation_indicator(product)
+    end
+  end
+
+  task :update_top_25_languages, [] => :environment do
+    read_languages_file
+  end
+
+  task :update_products_languages, [] => :environment do
+    Product.all.each do |product|
+      puts "Updating top languages for product: #{product.name}."
+      product_repositories = ProductRepository.where(product_id: product.id)
+      product_languages = []
+      product_repositories.each do |repository|
+        unless repository.language_data == {} || repository.language_data["data"]["repository"].nil?
+          repo_languages = repository.language_data["data"]["repository"]["languages"]["edges"]
+          product_languages << repo_languages
+        end
+      end
+
+      product_languages = sum_languages(product_languages.flatten)
+
+      unless product_languages[4..(product_languages.count - 1)].nil?
+        counter = 0
+        product_languages[4..(product_languages.count - 1)].each do |product_language|
+          counter += product_language["size"]
+        end
+        if counter > 0
+          product_languages.push({ "node" => { "name" => "Other", "color" => "#fd807f" }, "size" => counter })
+        end
+      end
+
+      top_languages = (product_languages[0..2] << product_languages[-1]).flatten.uniq
+      product.languages = top_languages
+      product.languages = nil if top_languages == [nil]
       product.save!
+    end
+  end
+
+  task :update_api_docs_indicators, [] => :environment do
+    ProductRepository.all.each do |product_repository|
+      api_check(product_repository)
     end
   end
 end
