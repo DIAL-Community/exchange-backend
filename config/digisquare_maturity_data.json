@@ -1,5 +1,25 @@
 [
   {
+    "name":"Android FHIR SDK",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"medium",
+      "Source Code Accessibility":"medium",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "low",
+      "Technical Documentation":"medium",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "low"
+    }
+  },
+  {
     "name":"Bahmni",
     "maturity":{
       "Country Utilization":"medium",
@@ -8,14 +28,14 @@
       "Source Code Accessibility":"high",
       "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"high",
-      "Community Governance":"medium",
+      "Community Governance":"high",
       "Software Roadmap":"high",
-      "User Documentation":"medium",
+      "User Documentation":"high",
       "Multi-Lingual Support": "high",
-      "Technical Documentation":"medium",
-      "Software Productization":"medium",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
-      "Security":"medium",
+      "Security":"high",
       "Scalability": "high"
     }
   },
@@ -40,7 +60,7 @@
     }
   },
   {
-    "name":"Medic Mobile",
+    "name":"Community Health Toolkit",
     "maturity":{
       "Country Utilization":"high",
       "Country Strategy":"high",
@@ -48,13 +68,13 @@
       "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
       "Developer, Contributor and Implementor Community Engagement":"high",
-      "Community Governance":"medium",
+      "Community Governance":"high",
       "Software Roadmap":"high",
       "User Documentation":"high",
       "Multi-Lingual Support": "high",
       "Technical Documentation":"high",
       "Software Productization":"high",
-      "Interoperability and Data Accessibility":"medium",
+      "Interoperability and Data Accessibility":"high",
       "Security":"medium",
       "Scalability": "high"
     }
@@ -67,8 +87,8 @@
       "Digital Health Interventions":"high",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
-      "Developer, Contributor and Implementor Community Engagement":"medium",
-      "Community Governance":"medium",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"high",
       "Software Roadmap":"high",
       "User Documentation":"high",
       "Multi-Lingual Support": "high",
@@ -77,6 +97,106 @@
       "Interoperability and Data Accessibility":"high",
       "Security":"high",
       "Scalability": "high"
+    }
+  },
+  {
+    "name":"DIVOC",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"medium",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"medium",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "low",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Everwell Hub",
+    "maturity":{
+      "Country Utilization":"high",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"medium",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Geoprism Registry",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"medium",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Global Open Facility Registry",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"medium",
+      "Scalability": "medium"
+    }
+  },
+  {
+    "name":"GNU Health",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"high",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "medium"
     }
   },
   {
@@ -100,43 +220,83 @@
     }
   },
   {
+    "name":"Iaso",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"medium",
+      "Software Roadmap":"low",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"high",
+      "Scalability": "medium"
+    }
+  },
+  {
     "name":"iHRIS",
     "maturity":{
       "Country Utilization":"high",
-      "Country Strategy":"medium",
+      "Country Strategy":"high",
       "Digital Health Interventions":"high",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"medium",
       "Community Governance":"high",
-      "Software Roadmap":"high",
+      "Software Roadmap":"medium",
       "User Documentation":"high",
-      "Multi-Lingual Support": "high",
-      "Technical Documentation":"high",
-      "Software Productization":"high",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
       "Interoperability and Data Accessibility":"high",
       "Security":"medium",
-      "Scalability": "high"
+      "Scalability": "medium"
     }
   },
   {
     "name":"mHero",
     "maturity":{
-      "Country Utilization":"medium",
+      "Country Utilization":"low",
       "Country Strategy":"low",
       "Digital Health Interventions":"medium",
       "Source Code Accessibility":"medium",
       "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"low",
       "Community Governance":"low",
-      "Software Roadmap":"low",
+      "Software Roadmap":"medium",
       "User Documentation":"high",
-      "Multi-Lingual Support": "low",
+      "Multi-Lingual Support": "medium",
       "Technical Documentation":"medium",
       "Software Productization":"medium",
       "Interoperability and Data Accessibility":"medium",
       "Security":"medium",
-      "Scalability": "low"
+      "Scalability": "medium"
+    }
+  },
+  {
+    "name":"Medic Mobile",
+    "maturity":{
+      "Country Utilization":"high",
+      "Country Strategy":"high",
+      "Digital Health Interventions":"medium",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"medium",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"medium",
+      "Scalability": "high"
     }
   },
   {
@@ -147,13 +307,13 @@
       "Digital Health Interventions":"high",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
-      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Developer, Contributor and Implementor Community Engagement":"high",
       "Community Governance":"medium",
       "Software Roadmap":"medium",
-      "User Documentation":"high",
-      "Multi-Lingual Support": "low",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "high",
       "Technical Documentation":"medium",
-      "Software Productization":"medium",
+      "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
       "Security":"medium",
       "Scalability": "medium"
@@ -163,19 +323,79 @@
     "name":"Open Data Kit",
     "maturity":{
       "Country Utilization":"high",
-      "Country Strategy":"medium",
-      "Digital Health Interventions":"medium",
+      "Country Strategy":"high",
+      "Digital Health Interventions":"high",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
       "Developer, Contributor and Implementor Community Engagement":"high",
       "Community Governance":"high",
       "Software Roadmap":"high",
       "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"OpenBoxes",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
       "Multi-Lingual Support": "medium",
       "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"medium",
+      "Scalability": "medium"
+    }
+  },
+  {
+    "name":"OpenClinic GA",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
       "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
       "Security":"high",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"OpenCR",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"medium",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"low",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "low",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"medium",
       "Scalability": "medium"
     }
   },
@@ -185,13 +405,33 @@
       "Country Utilization":"low",
       "Country Strategy":"low",
       "Digital Health Interventions":"high",
-      "Source Code Accessibility":"high",
+      "Source Code Accessibility":"medium",
       "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"high",
+      "Software Roadmap":"low",
+      "User Documentation":"low",
+      "Multi-Lingual Support": "low",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"high",
+      "Scalability": "low"
+    }
+  },
+  {
+    "name":"OpenELIS",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"medium",
       "Community Governance":"medium",
-      "Software Roadmap":"low",
-      "User Documentation":"high",
-      "Multi-Lingual Support": "medium",
+      "Software Roadmap":"high",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "high",
       "Technical Documentation":"high",
       "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
@@ -200,43 +440,83 @@
     }
   },
   {
-    "name":"OpenELIS",
+    "name":"OpenEyes",
     "maturity":{
       "Country Utilization":"medium",
       "Country Strategy":"medium",
-      "Digital Health Interventions":"high",
-      "Source Code Accessibility":"medium",
-      "Funding and Revenue": "medium",
-      "Developer, Contributor and Implementor Community Engagement":"medium",
-      "Community Governance":"medium",
-      "Software Roadmap":"medium",
+      "Digital Health Interventions":"medium",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"high",
+      "Software Roadmap":"high",
       "User Documentation":"medium",
-      "Multi-Lingual Support": "high",
+      "Multi-Lingual Support": "medium",
       "Technical Documentation":"medium",
-      "Software Productization":"medium",
-      "Interoperability and Data Accessibility":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"medium",
       "Security":"high",
-      "Scalability": "medium"
+      "Scalability": "high"
     }
   },
   {
-    "name":"OpenHIM",
+    "name":"OpenFn",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"high",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"medium",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "low"
+    }
+  },
+  {
+    "name":"OpenHexa",
     "maturity":{
       "Country Utilization":"medium",
-      "Country Strategy":"medium",
+      "Country Strategy":"low",
       "Digital Health Interventions":"medium",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"medium",
       "Community Governance":"medium",
       "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "low",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"medium",
+      "Security":"medium",
+      "Scalability": "low"
+    }
+  },
+  {
+    "name":"OpenHIM",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"medium",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"low",
+      "Software Roadmap":"high",
       "User Documentation":"high",
       "Multi-Lingual Support": "low",
       "Technical Documentation":"high",
-      "Software Productization":"medium",
-      "Interoperability and Data Accessibility":"medium",
-      "Security":"high",
-      "Scalability": "medium"
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "low"
     }
   },
   {
@@ -262,21 +542,21 @@
   {
     "name":"OpenLMIS",
     "maturity":{
-      "Country Utilization":"medium",
+      "Country Utilization":"high",
       "Country Strategy":"medium",
-      "Digital Health Interventions":"high",
+      "Digital Health Interventions":"medium",
       "Source Code Accessibility":"high",
-      "Funding and Revenue": "low",
-      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"high",
       "Community Governance":"high",
       "Software Roadmap":"high",
       "User Documentation":"medium",
       "Multi-Lingual Support": "medium",
       "Technical Documentation":"high",
-      "Software Productization":"high",
+      "Software Productization":"medium",
       "Interoperability and Data Accessibility":"high",
       "Security":"medium",
-      "Scalability": "high"
+      "Scalability": "medium"
     }
   },
   {
@@ -286,10 +566,10 @@
       "Country Strategy":"medium",
       "Digital Health Interventions":"medium",
       "Source Code Accessibility":"high",
-      "Funding and Revenue": "medium",
-      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
       "Community Governance":"high",
-      "Software Roadmap":"medium",
+      "Software Roadmap":"high",
       "User Documentation":"medium",
       "Multi-Lingual Support": "medium",
       "Technical Documentation":"medium",
@@ -302,20 +582,100 @@
   {
     "name":"OpenSRP",
     "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"high",
+      "Community Governance":"high",
+      "Software Roadmap":"medium",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Project Catalog Management Tool",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"high",
+      "Software Roadmap":"medium",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"medium",
+      "Scalability": "medium"
+    }
+  },
+  {
+    "name":"RapidPro",
+    "maturity":{
       "Country Utilization":"high",
       "Country Strategy":"high",
       "Digital Health Interventions":"high",
       "Source Code Accessibility":"high",
       "Funding and Revenue": "medium",
       "Developer, Contributor and Implementor Community Engagement":"high",
-      "Community Governance":"medium",
+      "Community Governance":"high",
       "Software Roadmap":"high",
       "User Documentation":"high",
-      "Multi-Lingual Support": "high",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Reveal",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "medium",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"high",
+      "Software Roadmap":"high",
+      "User Documentation":"medium",
+      "Multi-Lingual Support": "medium",
       "Technical Documentation":"medium",
-      "Software Productization":"medium",
-      "Interoperability and Data Accessibility":"medium",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
       "Security":"medium",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"SanteMPI",
+    "maturity":{
+      "Country Utilization":"low",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
       "Scalability": "high"
     }
   },
@@ -328,13 +688,73 @@
       "Source Code Accessibility":"high",
       "Funding and Revenue": "high",
       "Developer, Contributor and Implementor Community Engagement":"high",
-      "Community Governance":"high",
-      "Software Roadmap":"high",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
       "User Documentation":"high",
       "Multi-Lingual Support": "high",
       "Technical Documentation":"high",
       "Software Productization":"high",
       "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Tamanu",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"medium",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"medium",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"medium",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"medium",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "medium"
+    }
+  },
+  {
+    "name":"Tupaia",
+    "maturity":{
+      "Country Utilization":"high",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "high",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"medium",
+      "Software Roadmap":"medium",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "medium",
+      "Technical Documentation":"medium",
+      "Software Productization":"medium",
+      "Interoperability and Data Accessibility":"high",
+      "Security":"high",
+      "Scalability": "high"
+    }
+  },
+  {
+    "name":"Vxnaid",
+    "maturity":{
+      "Country Utilization":"medium",
+      "Country Strategy":"low",
+      "Digital Health Interventions":"high",
+      "Source Code Accessibility":"high",
+      "Funding and Revenue": "low",
+      "Developer, Contributor and Implementor Community Engagement":"low",
+      "Community Governance":"low",
+      "Software Roadmap":"high",
+      "User Documentation":"high",
+      "Multi-Lingual Support": "high",
+      "Technical Documentation":"high",
+      "Software Productization":"high",
+      "Interoperability and Data Accessibility":"medium",
       "Security":"high",
       "Scalability": "high"
     }
