@@ -58,7 +58,7 @@ RSpec.describe(Queries::ProductsQuery, type: :graphql) do
             slug
             imageFile
             isLaunchable
-            maturityScore
+            overallMaturityScore
             productType
             tags
             commercialProduct
