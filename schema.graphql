@@ -1338,12 +1338,12 @@ type Product {
   languages: JSON
   mainRepository: ProductRepository
   manualUpdate: Boolean!
-  maturityScore: JSON
   maturityScoreDetails: JSON
   name: String!
   notAssignedCategoryIndicators: [CategoryIndicator!]
   organizations: [Organization!]
   origins: [Origin!]
+  overallMaturityScore: Float
   owner: String
   playbooks: [Playbook!]
   pricingDetails: String
