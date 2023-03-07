@@ -53,107 +53,105 @@ module Modules
       product_indicators = ProductIndicator
                            .where('product_id = ?', product_id)
                            .map { |indicator| { indicator.category_indicator_id.to_s => indicator.indicator_value } }
-
-      product_indicators = product_indicators.reduce({}, :merge)
-
-      product_score = { rubric_scores: [] }
-
-      rubric_score = {
-        category_scores: [],
-        indicator_count: 0,
-        # Number of indicator without score at the rubric level.
-        missing_score: 0,
-        # Overall score at the rubric level
-        overall_score: 0
-      }
+                           .reduce({}, :merge)
 
       rubric_categories = RubricCategory.includes(:rubric_category_descriptions)
+
+      rubric_missing_score = 0
+      rubric_overall_score = 0
+      rubric_maximum_score = 0
+      rubric_indicator_count = 0
       rubric_category_scores = []
-
       rubric_categories.each do |rubric_category|
-        category_description = rubric_category.rubric_category_descriptions.first
-        category_score = {
-          id: rubric_category.id,
-          name: rubric_category.name,
-          weight: rubric_category.weight,
-          description: !category_description.nil? && !category_description.description.nil? &&
-                        category_description.description.gsub(/<\/?[^>]*>/, ''),
-          indicator_scores: [],
-          # Number of indicator without score at the category level.
-          missing_score: 0,
-          # Overall score at the category level
-          overall_score: 0
-        }
-
         category_indicators = CategoryIndicator.where(rubric_category: rubric_category)
                                                .includes(:category_indicator_descriptions)
-
+        category_missing_score = 0
+        category_overall_score = 0
+        category_maximum_score = 0
         category_indicator_scores = []
-
         category_indicators.each do |category_indicator|
           indicator_value = product_indicators[category_indicator.id.to_s]
           indicator_type = category_indicator.indicator_type
           indicator_description = category_indicator.category_indicator_descriptions.first
 
-          indicator_score = {
-            id: category_indicator.id,
-            name: category_indicator.name,
-            weight: category_indicator.weight,
-            description: !indicator_description.nil? && indicator_description.description.gsub(/<\/?[^>]*>/, ''),
-            score: convert_to_numeric(indicator_value, indicator_type, category_indicator.weight)
-          }
-
-          if indicator_score[:score].nil?
-            category_score[:missing_score] += 1
+          description = indicator_description&.description&.gsub(/<\/?[^>]*>/, '')
+          score = convert_score_scale(indicator_value, indicator_type, category_indicator.weight)
+          if score == 'N/A'
+            category_missing_score += 1
           else
-            category_score[:overall_score] += indicator_score[:score]
+            category_overall_score += score
+            category_maximum_score += category_indicator.weight * 10
           end
-          category_score[:indicator_scores] << indicator_score
 
-          unless indicator_score[:score].nil?
-            category_indicator_scores << { 'id' => indicator_score[:id], 'score' => indicator_score[:score] }
-          end
+          category_indicator_scores << {
+            'id' => category_indicator.id,
+            'name' => category_indicator.name,
+            'weight' => category_indicator.weight,
+            'description' => description,
+            'score' => score
+          }
         end
 
         # Occasionally, rounding errors can lead to a score > 10
-        category_score[:overall_score] = 10.0 if category_score[:overall_score] > 10
-        rubric_score[:indicator_count] += category_score[:indicator_scores].count
-        rubric_score[:missing_score] += category_score[:missing_score]
-        rubric_score[:overall_score] += category_score[:overall_score]
-        rubric_score[:category_scores] << category_score
+        category_overall_score = 10.0 if category_overall_score > 10
 
-        unless category_score[:indicator_scores].empty?
-          rubric_category_scores << { 'id' => category_score[:id],
-                                      'score' => category_score[:overall_score],
-                                      'categoryIndicators' => category_indicator_scores }
-        end
+        # Update rubric level data
+        rubric_overall_score += category_overall_score
+        rubric_maximum_score += category_maximum_score
 
-        maturity_score['rubricCategory'] = rubric_category_scores
+        # Update other metadata about the maturity
+        rubric_missing_score += category_missing_score
+        rubric_indicator_count += category_indicator_scores.count
+
+        category_description = rubric_category.rubric_category_descriptions.first
+        rubric_category_scores << {
+          'id' => rubric_category.id,
+          'name' => rubric_category.name,
+          'weight' => rubric_category.weight,
+          'description' => category_description&.description&.gsub(/<\/?[^>]*>/, ''),
+          'overallScore' => category_overall_score,
+          'maximumScore' => category_maximum_score,
+          'missingScore' => category_missing_score,
+          'categoryIndicators' => category_indicator_scores
+        }
+
+        maturity_score['rubricCategories'] = rubric_category_scores
       end
+
       # Now do final score calculation
-      total_categories = 0
-      rubric_score[:category_scores].each do |category|
-        total_categories += 1 if (category[:overall_score]).positive?
+      valid_category_count = 0
+      overall_category_score = 0
+      maturity_score['rubricCategories'].each do |category|
+        if category['overallScore'].positive?
+          valid_category_count += 1
+          overall_category_score += category['overallScore'].to_f / category['maximumScore'].to_f
+        end
       end
-      if total_categories.positive?
-        rubric_score[:overall_score] =
-          rubric_score[:overall_score] * 10 / total_categories
-      end
-      product_score[:rubric_scores] << rubric_score
 
-      maturity_score['overallScore'] = product_score[:rubric_scores][0][:overall_score].to_i
+      if valid_category_count.positive?
+        overall_maturity_score = overall_category_score.to_f / valid_category_count * 100
+      end
+
+      maturity_score['totalScore'] = rubric_overall_score&.round(2)
+      maturity_score['maximumScore'] = rubric_maximum_score&.round(2)
+      maturity_score['overallScore'] = overall_maturity_score&.round(2)
+
+      # Other metadata for the rubric calculation.
+      maturity_score['missingScore'] = rubric_missing_score
+      maturity_score['indicatorCount'] = rubric_indicator_count
+
+      # Change to info to output data to console.
+      logger.debug("Maturity data: #{maturity_score.inspect}.")
 
       product = Product.find_by(id: product_id)
       product.maturity_score = JSON.parse(maturity_score.to_json)
       product.save!
-
-      logger.debug("Rubric score for product: #{product_id} is: #{product_score.to_json}")
-      product_score
     end
 
-    def convert_to_numeric(score, type, weight)
+    def convert_score_scale(score, type, weight)
+      return 'N/A' if score.nil? || score == 'N/A'
+
       numeric_value = 0
-      return numeric_value if score.nil?
 
       case type
       when 'boolean'
@@ -518,7 +516,7 @@ module Modules
     end
 
     def check_file(file_list, file_name)
-      unless file_list.nil? || file_list["data"]["repository"].nil?
+      unless file_list.nil? || file_list["data"].nil? || file_list["data"]["repository"].nil?
         file_list = file_list["data"]["repository"]["object"]["entries"]
 
         file_list.each do |file|
@@ -703,11 +701,19 @@ module Modules
 
         statistical_data = calculate_total_repo_statistical_data(indicator, product_repositories)
 
-        scale = [:low, :medium, :high]
+        indicator_scales = [:low, :medium, :high]
 
-        statistical_data.each do |datum|
-          scale.each do |flag|
-            indicator_value = calculate_indicator_value(config_file, indicator, datum[1], flag)
+        statistical_data.each do |statistical_data_pair|
+          indicator_name, statistical_value = statistical_data_pair
+          if statistical_value == 'N/A'
+            product_indicator.indicator_value = 'N/A'
+            product_indicator.save
+            puts "Setting N/A for #{indicator_name}."
+            next
+          end
+
+          indicator_scales.each do |indicator_scale|
+            indicator_value = calculate_indicator_value(config_file, indicator, statistical_value, indicator_scale)
             unless indicator_value.nil?
               product_indicator.indicator_value = indicator_value
               product_indicator.save
@@ -726,11 +732,13 @@ module Modules
       product_repositories.each do |repo|
         next if repo.statistical_data == {} || repo.statistical_data.class == String ||
                 repo.statistical_data["data"].nil? || repo.statistical_data["data"]["repository"].nil?
+
         if indicator.source_indicator.in?(["releases", "stargazers", "watchers"])
           unless repo.statistical_data["data"]["repository"][indicator.source_indicator].nil?
             counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
           end
           total_repo_statistical_data[indicator.name] = counter
+
         elsif indicator.source_indicator.in?(["openIssues", "openPullRequestCount"])
           if indicator.source_indicator == "openIssues"
             closed_indicator = "closedIssues"
@@ -742,6 +750,7 @@ module Modules
             counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]["totalCount"]
             ratio_counter += repo.statistical_data["data"]["repository"][closed_indicator]["totalCount"]
           end
+
         elsif indicator.source_indicator.in?(["downloadCount"])
           download_data = repo.statistical_data["data"]["repository"]["releases"]["edges"][0]
           unless download_data.nil?
@@ -753,6 +762,7 @@ module Modules
             end
           end
           total_repo_statistical_data[indicator.source_indicator] = counter
+
         elsif indicator.source_indicator.in?(["commitsOnMasterBranch, commitsOnMainBranch"])
           unless repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"].nil?
             counter += repo.statistical_data["data"]["repository"]["commitsOnMasterBranch"]["history"]["totalCount"]
@@ -761,49 +771,58 @@ module Modules
             counter += repo.statistical_data["data"]["repository"]["commitsOnMainBranch"]["history"]["totalCount"]
           end
           total_repo_statistical_data[indicator.name] = counter
+
         elsif indicator.source_indicator.in?(["updatedAt"])
           if repo.statistical_data["data"]["repository"][indicator.source_indicator] > update_date
             update_date = repo.statistical_data["data"]["repository"][indicator.source_indicator]
           end
           total_repo_statistical_data[indicator.name] = (Date.today - update_date.to_date).to_i
+
         elsif indicator.source_indicator.in?(["forkCount"])
           counter += repo.statistical_data["data"]["repository"][indicator.source_indicator]
           total_repo_statistical_data[indicator.name] = counter
+
         elsif indicator.source_indicator.in?(["collaborators"])
           counter += repo.statistical_data["collaborators"].to_i unless repo.statistical_data["collaborators"].nil?
           total_repo_statistical_data[indicator.name] = counter
+
         elsif indicator.source_indicator.in?(["cloneCount"])
           counter += repo.statistical_data["collaborators"].to_i unless repo.statistical_data["collaborators"].nil?
           total_repo_statistical_data[indicator.name] = counter
         end
       end
       if indicator.source_indicator.in?(["openIssues", "openPullRequestCount"])
-        total_repo_statistical_data[indicator.name] = counter / ratio_counter unless ratio_counter == 0
+        if ratio_counter == 0
+          total_repo_statistical_data[indicator.name] = 'N/A'
+        else
+          total_repo_statistical_data[indicator.name] = counter.to_f / ratio_counter.to_f
+        end
       end
       total_repo_statistical_data
     end
 
-    def calculate_indicator_value(config_file, indicator, datum, flag)
+    def calculate_indicator_value(config_file, indicator, statistical_value, indicator_scale)
       indicator_category = RubricCategory.find(indicator.rubric_category_id)
       indicator_config = read_indicator_config(config_file, indicator_category.name, indicator.name)
-      flag_weight = 1
-      condition_counter = 0..(indicator_config[flag].count - 1)
+
+      indicator_scale_weight = 1
+      condition_counter = 0..(indicator_config[indicator_scale].count - 1)
       condition_counter.each do |counter|
-        if indicator_config[flag][counter][:operator].to_s == "equalTo"
-          if datum != indicator_config[flag][counter][:value]
-            flag_weight *= 0
+        if indicator_config[indicator_scale][counter][:operator].to_s == "equalTo"
+          if statistical_value != indicator_config[indicator_scale][counter][:value]
+            indicator_scale_weight *= 0
           end
-        elsif indicator_config[flag][counter][:operator].to_s == "greaterThan"
-          if datum < indicator_config[flag][counter][:value]
-            flag_weight *= 0
+        elsif indicator_config[indicator_scale][counter][:operator].to_s == "greaterThan"
+          if statistical_value < indicator_config[indicator_scale][counter][:value]
+            indicator_scale_weight *= 0
           end
-        elsif indicator_config[flag][counter][:operator].to_s == "lessThan"
-          if datum > indicator_config[flag][counter][:value]
-            flag_weight *= 0
+        elsif indicator_config[indicator_scale][counter][:operator].to_s == "lessThan"
+          if statistical_value > indicator_config[indicator_scale][counter][:value]
+            indicator_scale_weight *= 0
           end
         end
       end
-      flag.to_s if flag_weight == 1
+      indicator_scale.to_s if indicator_scale_weight == 1
     end
 
     def api_check(repository)
@@ -856,23 +875,21 @@ module Modules
       end
 
       product_top_languages = product.languages
+      return if product_top_languages.nil?
+
       product_indicator.indicator_value = 'low'
-      calc = 'low'
-      scale = [:low, :medium, :high]
-      unless product_top_languages.nil?
-        lang_file.each do |lang|
-          next if product_top_languages[0]["node"]["name"] != lang["name"]
-          datum = lang["rank"]
-          scale.each do |flag|
-            calc = calculate_indicator_value(config_file, indicator, datum, flag)
-            unless calc.nil?
-              product_indicator.indicator_value = calc
-              break
-            end
-          end
+      indicator_scales = [:low, :medium, :high]
+      lang_file.each do |lang|
+        next if product_top_languages[0]["node"]["name"] != lang["name"]
+        language_value = lang["rank"]
+        indicator_scales.each do |indicator_scale|
+          current_indicator_scale = calculate_indicator_value(config_file, indicator, language_value, indicator_scale)
+          next if current_indicator_scale.nil?
+
+          product_indicator.indicator_value = current_indicator_scale
         end
-        product_indicator.save!
       end
+      product_indicator.save!
     end
   end
 end

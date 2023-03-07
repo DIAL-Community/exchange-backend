@@ -142,10 +142,16 @@ class Product < ApplicationRecord
     projects.limit(num_projects[:first])
   end
 
+  def overall_maturity_score
+    return nil if maturity_score.nil?
+
+    maturity_score['overallScore'].is_a?(Numeric) ? maturity_score['overallScore'].to_f : nil
+  end
+
   def maturity_score_details
-    maturity_scores = calculate_maturity_scores(id)[:rubric_scores].first
-    maturity_scores = maturity_scores[:category_scores] unless maturity_scores.nil?
-    maturity_scores
+    return [] if maturity_score.nil?
+
+    maturity_score['rubricCategories']
   end
 
   # overridden
