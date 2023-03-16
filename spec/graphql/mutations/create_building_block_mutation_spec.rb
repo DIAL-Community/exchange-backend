@@ -11,13 +11,15 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
         $slug: String!
         $description: String!
         $maturity: String!
+        $category: String
         $specUrl: String
-        ) {
+      ) {
         createBuildingBlock(
           name: $name
           slug: $slug
           description: $description
           maturity: $maturity
+          category: $category
           specUrl: $specUrl
         ) {
             buildingBlock
@@ -28,6 +30,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
                 description
               }
               maturity
+              category
               specUrl
             }
             errors
@@ -41,17 +44,27 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", maturity: "PUBLISHED",
-                   specUrl: "some.url" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        maturity: "PUBLISHED",
+        category: "DPI",
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
-                 "buildingBlockDescription" => { "description" => "some description" },
-                 "maturity" => "PUBLISHED", "specUrl" => "some.url" }))
-      expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "buildingBlockDescription" => { "description" => "some description" },
+          "maturity" => "PUBLISHED",
+          "category" => "DPI",
+          "specUrl" => "some.url"
+        }))
+      expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
@@ -60,17 +73,27 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", maturity: "BETA",
-                   specUrl: "some.url" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        maturity: "BETA",
+        category: nil,
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
-                 "buildingBlockDescription" => { "description" => "some description" },
-                 "maturity" => "BETA", "specUrl" => "some.url" }))
-      expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "buildingBlockDescription" => { "description" => "some description" },
+          "maturity" => "BETA",
+          "category" => nil,
+          "specUrl" => "some.url"
+        }))
+      expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
@@ -80,17 +103,27 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", description: "some description",
-                   maturity: "BETA", specUrl: "some.url" },
+      variables: {
+        name: "Some new name",
+        slug: "some_name",
+        description: "some description",
+        maturity: "BETA",
+        category: nil,
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name",
-                 "buildingBlockDescription" => { "description" => "some description" },
-                 "maturity" => "BETA", "specUrl" => "some.url" }))
-      expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "name" => "Some new name",
+          "slug" => "some_name",
+          "buildingBlockDescription" => { "description" => "some description" },
+          "maturity" => "BETA",
+          "category" => nil,
+          "specUrl" => "some.url"
+        }))
+      expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
@@ -100,15 +133,26 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", maturity: "BETA",
-                   specUrl: "some.url" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        maturity: "BETA",
+        category: nil,
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name_dup0",
-                 "buildingBlockDescription" => { "description" => "some description" },
-                 "maturity" => "BETA", "specUrl" => "some.url" }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name_dup0",
+          "buildingBlockDescription" => { "description" => "some description" },
+          "maturity" => "BETA",
+          "category" => nil,
+          "specUrl" => "some.url"
+        }))
       expect(result['data']['createBuildingBlock']['errors'])
         .to(eq([]))
     end
@@ -120,8 +164,14 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", maturity: "BETA",
-                   specUrl: "some.url" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        maturity: "BETA",
+        category: nil,
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
@@ -135,8 +185,14 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description", maturity: "BETA",
-                   specUrl: "some.url" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        description: "some description",
+        maturity: "BETA",
+        category: nil,
+        specUrl: "some.url"
+      }
     )
 
     aggregate_failures do
