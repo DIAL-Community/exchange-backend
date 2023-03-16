@@ -58,6 +58,6 @@ volumes:
   assets:
     driver_opts:
       type: "nfs"
-      o: "addr=solutionsapp01.dial.community,nolock,soft,rw"
+      o: "addr=exchangeapp01.dial.global,nolock,soft,rw"
       device: ":/root/product-registry/public"
 
