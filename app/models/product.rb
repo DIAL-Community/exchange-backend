@@ -283,4 +283,11 @@ class Product < ApplicationRecord
     plays = Play.joins(:products).where(products: { id: id })
     Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
   end
+
+  def linked_with_dpi
+    building_blocks.each do |building_block|
+      return true if building_block.category == BuildingBlock.category_types[:DPI]
+    end
+    false
+  end
 end

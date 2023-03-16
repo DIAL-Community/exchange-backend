@@ -32,11 +32,14 @@ module Queries
         end
         use_case.workflows = workflows.sort_by { |w| w.name.downcase }
 
+        # Append each step's building block list to the use case's building block list
         building_blocks = []
-        workflows.each do |workflow|
-          building_blocks |= workflow.building_blocks
+        if use_case.use_case_steps && !use_case.use_case_steps.empty?
+          use_case.use_case_steps.each do |use_case_step|
+            building_blocks |= use_case_step.building_blocks
+          end
         end
-        use_case.building_blocks = building_blocks.sort_by { |b| b.name.downcase }
+        use_case.building_blocks = building_blocks.sort_by(&:display_order)
       end
       use_case
     end
@@ -101,7 +104,18 @@ module Queries
     type Types::UseCaseStepType, null: true
 
     def resolve(slug:)
-      UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug: slug)
+
+      # Append each step's building block list to the use case's building block list
+      building_blocks = []
+      use_case = use_case_step.use_case
+      if use_case.use_case_steps && !use_case.use_case_steps.empty?
+        use_case.use_case_steps.each do |use_case_step|
+          building_blocks |= use_case_step.building_blocks
+        end
+      end
+      use_case.building_blocks = building_blocks.sort_by(&:display_order)
+      use_case_step
     end
   end
 
@@ -110,8 +124,9 @@ module Queries
     type [Types::UseCaseType], null: false
 
     def resolve(sectors_slugs:)
-      use_cases = UseCase.joins(:sector).where(sectors: { slug: sectors_slugs, locale: I18n.locale },
-                                               maturity: 'PUBLISHED')
+      use_cases = UseCase.joins(:sector)
+                         .where(sectors: { slug: sectors_slugs, locale: I18n.locale })
+                         .where(maturity: 'PUBLISHED')
       use_cases.uniq
     end
   end

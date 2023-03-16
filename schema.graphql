@@ -25,6 +25,7 @@ type ApproveRejectCandidateRolePayload {
 type BuildingBlock {
   buildingBlockDescription: BuildingBlockDescription
   buildingBlockDescriptions: [BuildingBlockDescription!]
+  category: String
   id: ID!
   imageFile: String
   maturity: String
@@ -944,7 +945,7 @@ type Mutation {
   autoSaveMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   autoSavePlay(buildingBlocksSlugs: [String!], description: String!, name: String!, playbookSlug: String, productsSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, plays: JSON = [], slug: String!, tags: JSON = []): CreatePlaybookPayload
-  createBuildingBlock(description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
+  createBuildingBlock(category: String, description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, dataType: String!, dataUrl: String!, dataVisualizationUrl: String, description: String!, name: String!, slug: String!, submitterEmail: String!): CreateCandidateDatasetPayload
   createCandidateOrganization(captcha: String!, description: String!, email: String!, name: String!, organizationName: String!, title: String!, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String!, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
@@ -1336,6 +1337,7 @@ type Product {
   interoperatesWith: [Product!]
   isLaunchable: Boolean
   languages: JSON
+  linkedWithDpi: Boolean!
   mainRepository: ProductRepository
   manualUpdate: Boolean!
   maturityScoreDetails: JSON
@@ -1727,6 +1729,7 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+    categoryTypes: [String!] = []
 
     """
     Returns the first _n_ elements from the list.
@@ -2048,6 +2051,7 @@ type Query {
     """
     first: Int
     isEndorsed: Boolean = false
+    isLinkedWithDpi: Boolean = false
 
     """
     Returns the last _n_ elements from the list.
@@ -2062,7 +2066,6 @@ type Query {
     sdgs: [String!] = []
     search: String = ""
     sectors: [String!] = []
-    subSectors: [String!] = []
     tags: [String!] = []
     useCases: [String!] = []
     workflows: [String!] = []
