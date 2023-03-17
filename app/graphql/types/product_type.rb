@@ -69,7 +69,7 @@ module Types
     field :pricing_details, String, null: true
     field :hosting_model, String, null: true
 
-    field :is_linked_with_dpi, Boolean, null: false
+    field :is_linked_with_dpi, Boolean, null: false, method: :is_linked_with_dpi
 
     field :playbooks, [Types::PlaybookType], null: true
   end
