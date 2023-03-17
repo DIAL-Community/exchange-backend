@@ -1336,8 +1336,8 @@ type Product {
   includes: [Product!]
   interoperatesWith: [Product!]
   isLaunchable: Boolean
+  isLinkedWithDpi: Boolean!
   languages: JSON
-  linkedWithDpi: Boolean!
   mainRepository: ProductRepository
   manualUpdate: Boolean!
   maturityScoreDetails: JSON
