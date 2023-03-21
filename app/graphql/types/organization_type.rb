@@ -43,6 +43,13 @@ module Types
     field :projects, [Types::ProjectType], null: false
     field :products, [Types::ProductType], null: false
     field :contacts, [Types::ContactType], null: true
+
+    def contacts
+      an_admin = context[:current_user]&.roles&.include?('admin')
+      an_organization_owner = context[:current_user]&.organization_id&.equal?(object&.id)
+      an_admin || an_organization_owner ? object.contacts : []
+    end
+
     field :aliases, GraphQL::Types::JSON, null: true
   end
 end
