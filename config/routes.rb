@@ -90,7 +90,7 @@ Rails.application.routes.draw do
   get 'about/learnmore'
   get 'about', to: 'about#index'
 
-  devise_for :users, controllers: { registrations: 'registrations', sessions: 'sessions' }
+  devise_for :users, controllers: { registrations: 'registrations', sessions: 'sessions', confirmations: 'confirmations' }
   scope '/devise' do
     resources :users do
       get 'statistics', on: :collection
