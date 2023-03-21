@@ -13,9 +13,10 @@ RSpec.describe(Queries::UsersQuery, type: :graphql) do
   end
 
   it 'pulls the list of available user roles' do
-    expect_any_instance_of(Queries::UserRolesQuery).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       user_roles_query
     )
 
@@ -25,9 +26,10 @@ RSpec.describe(Queries::UsersQuery, type: :graphql) do
   end
 
   it 'returns nil if user is not an admin' do
-    expect_any_instance_of(Queries::UserRolesQuery).to(receive(:an_admin).and_return(false))
+    basic_user = create(:user, email: 'user@gmail.com', roles: [:user])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      basic_user,
       user_roles_query
     )
 
@@ -46,8 +48,10 @@ RSpec.describe(Queries::UsersQuery, type: :graphql) do
 
   it 'returns true if provided email exists' do
     create(:user, email: 'some@email.email')
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       user_email_check_query,
       variables: { email: 'some@email.email' }
     )
@@ -58,7 +62,10 @@ RSpec.describe(Queries::UsersQuery, type: :graphql) do
   end
 
   it 'returns false if provided email does not exist' do
-    result = execute_graphql(
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
+
+    result = execute_graphql_as_user(
+      admin_user,
       user_email_check_query,
       variables: { email: 'some@email.com' }
     )

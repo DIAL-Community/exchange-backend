@@ -6,7 +6,7 @@ module Queries
     type [Types::UserType], null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return [] unless an_admin
 
       users = User.name_contains(search) unless search.blank?
       users
@@ -18,7 +18,7 @@ module Queries
     type Types::UserType, null: true
 
     def resolve(user_id:)
-      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return unless an_admin
 
       User.find(user_id)
     end
@@ -44,7 +44,7 @@ module Queries
     type Types::UserType.connection_type, null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return [] unless an_admin
 
       users = User.order(:email)
       users = users.name_contains(search) unless search.blank?
@@ -68,8 +68,9 @@ module Queries
     type Boolean, null: true
 
     def resolve(email:)
-      email_exists = false
+      return false unless an_admin
 
+      email_exists = false
       unless User.find_by(email: email).nil?
         email_exists = true
       end
