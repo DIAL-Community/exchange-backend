@@ -12,7 +12,7 @@ class LogoUploadMailer < ApplicationMailer
     admin_users.each do |admin|
       mail_to += "#{admin.email}; "
     end
-    mail(from: 'notifier@solutions.dial.community',
+    mail(from: 'notifier@exchange.dial.global',
          to: mail_to,
          subject: 'New Logo Received.')
   end
