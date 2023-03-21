@@ -82,7 +82,7 @@ module Mutations
 
       email_body = "Hi #{username}! <br />Your account have been created.<br />Password: #{password}"
 
-      AdminMailer.send_mail_from_client('notifier@solutions.dial.community',
+      AdminMailer.send_mail_from_client('notifier@exchange.dial.global',
         email, email_subject, email_body, "text/html").deliver_now
     end
   end

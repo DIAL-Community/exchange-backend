@@ -140,7 +140,7 @@ end
 
 if Resource.where(slug: 'd4d_handbook').count.zero?
   Resource.create(name: 'D4D Handbook', slug: 'd4d_handbook', phase: 'Planning',
-                  image_url: 'https://solutions.dial.community//assets/playbooks/pictures/608/PLAYBOOK_FOR_CATALOG.png',
+                  image_url: 'https://exchange.dial.global//assets/playbooks/pictures/608/PLAYBOOK_FOR_CATALOG.png',
                   description: 'Comprehensive guide for implementing a D4D program',
                   link: 'https://resources.dial.community/resources/md4d_handbook')
 end
@@ -153,7 +153,7 @@ end
 
 if Resource.where(slug: 'roi_toolkit').count.zero?
   Resource.create(name: 'Valuing Impact Toolkit', slug: 'roi_toolkit', phase: 'Evaluation',
-                  image_url: 'https://solutions.dial.community/assets/playbooks/pictures/773/Screen_Shot_2021-05-20_at_12.52.30_PM.png',
+                  image_url: 'https://exchange.dial.global/assets/playbooks/pictures/773/Screen_Shot_2021-05-20_at_12.52.30_PM.png',
                   description: 'Tools for measuring Project Impact', link: 'https://resources.dial.community/resources/valuing_impact_toolkit')
 end
 

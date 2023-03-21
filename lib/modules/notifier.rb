@@ -14,7 +14,7 @@ module Modules
                  "#{comment.text} \n\n" \
                  "Click on <a href='#{get_comment_link(comment)}'>this link</a> to view comments"
 
-      AdminMailer.send_mail_from_client('notifier@solutions.dial.community', originator.email,
+      AdminMailer.send_mail_from_client('notifier@exchange.dial.global', originator.email,
                                 "#{comment.author['username']} Responded to your comment", email_body, 'text/html')
                  .deliver_now
     end

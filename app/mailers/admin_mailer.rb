@@ -2,7 +2,7 @@
 
 class AdminMailer < ApplicationMailer
   def send_mail_from_client(mail_from, mail_to, email_subject, email_body, content_type = 'text/plain')
-    # issues@solutions.dial.community
+    # issues@exchange.dial.global
 
     mail(from: mail_from,
          to: mail_to,
@@ -34,17 +34,17 @@ class AdminMailer < ApplicationMailer
     admin_users.each do |admin|
       mail_to += "#{admin.email}; "
     end
-    mail(from: 'notifier@solutions.dial.community',
+    mail(from: 'notifier@exchange.dial.global',
          to: mail_to,
          subject: email_subject,
          body: email_body)
   end
 
   def notify_product_owner_approval
-    mail(from: 'notifier@solutions.dial.community',
+    mail(from: 'notifier@exchange.dial.global',
          to: [params[:user_email]],
          subject: 'Product Owner Approval',
-         body: 'Your account have been approved in the DIAL Catalog (https://solutions.dial.community).'\
+         body: 'Your account have been approved in the DIAL Catalog (https://exchange.dial.global).'\
                'You may now log in to the system.')
   end
 
@@ -66,7 +66,7 @@ class AdminMailer < ApplicationMailer
     admin_users.each do |admin|
       mail_to += "#{admin.email}; "
     end
-    mail(from: 'notifier@solutions.dial.community',
+    mail(from: 'notifier@exchange.dial.global',
          to: mail_to,
          subject: email_subject,
          body: email_body)
