@@ -6,7 +6,7 @@ module Queries
     type [Types::CandidateOrganizationType], null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return [] unless an_admin
 
       candidate_organizations = CandidateOrganization.order(:name)
       candidate_organizations = candidate_organizations.name_contains(search) unless search.blank?
@@ -19,7 +19,7 @@ module Queries
     type Types::CandidateOrganizationType, null: true
 
     def resolve(slug:)
-      return nil if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return nil unless an_admin
 
       CandidateOrganization.find_by(slug: slug)
     end
@@ -32,7 +32,7 @@ module Queries
     type Types::CandidateOrganizationType.connection_type, null: false
 
     def resolve(search:)
-      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return unless an_admin
 
       candidate_organizations = CandidateOrganization.order(rejected: :desc).order(:slug)
       candidate_organizations = candidate_organizations.name_contains(search) unless search.blank?
