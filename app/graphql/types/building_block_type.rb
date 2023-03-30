@@ -14,6 +14,7 @@ module Types
     field :slug, String, null: false
     field :image_file, String, null: true
     field :maturity, String, null: true
+    field :category, String, null: true
     field :spec_url, String, null: true
 
     field :building_block_descriptions, [Types::BuildingBlockDescriptionType], null: true

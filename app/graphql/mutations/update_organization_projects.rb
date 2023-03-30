@@ -9,14 +9,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(projects_slugs:, slug:)
-      unless an_admin
+      organization = Organization.find_by(slug: slug)
+
+      unless an_admin || an_org_owner(organization.id)
         return {
           organization: nil,
           errors: ['Must be admin to update an organization']
         }
       end
-
-      organization = Organization.find_by(slug: slug)
 
       organization.projects = []
       if !projects_slugs.nil? && !projects_slugs.empty?

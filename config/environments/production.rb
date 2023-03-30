@@ -55,8 +55,8 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  config.action_mailer.default_url_options = { host: 'solutions.dial.community', port: 80 }
-  Rails.application.routes.default_url_options[:host] = 'solutions.dial.community'
+  config.action_mailer.default_url_options = { host: 'exchange.dial.global', port: 80 }
+  Rails.application.routes.default_url_options[:host] = 'exchange.dial.global'
 
   #config.action_mailer.delivery_method = :mailgun
 

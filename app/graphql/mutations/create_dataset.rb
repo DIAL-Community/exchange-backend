@@ -23,7 +23,7 @@ module Mutations
     field :dataset, Types::DatasetType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, aliases:, website:, visualization_url:, geographic_coverage:,
+    def resolve(name:, slug:, aliases:, website:, visualization_url: nil, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
       dataset = Dataset.find_by(slug: slug)
       if dataset.nil?

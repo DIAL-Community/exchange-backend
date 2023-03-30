@@ -320,7 +320,7 @@
     }
   },
   {
-    "name":"Open Data Kit",
+    "name":"ODK",
     "maturity":{
       "Country Utilization":"high",
       "Country Strategy":"high",

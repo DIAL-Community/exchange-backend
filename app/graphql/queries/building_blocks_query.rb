@@ -28,11 +28,12 @@ module Queries
     argument :sdgs, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
     argument :workflows, [String], required: false, default_value: []
+    argument :category_types, [String], required: false, default_value: []
     argument :show_mature, Boolean, required: false, default_value: false
 
     type Types::BuildingBlockType.connection_type, null: false
 
-    def resolve(search:, sdgs:, use_cases:, workflows:, show_mature:)
+    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, show_mature:)
       building_blocks = BuildingBlock.order(:name)
       unless search.blank?
         name_bbs = building_blocks.name_contains(search)
@@ -76,7 +77,10 @@ module Queries
         end
       end
 
-      building_blocks = building_blocks.where(maturity: BuildingBlock.entity_status_types[:PUBLISHED]) if show_mature
+      published_building_block = BuildingBlock.entity_status_types[:PUBLISHED]
+      building_blocks = building_blocks.where(maturity: published_building_block) if show_mature
+
+      building_blocks = building_blocks.where(category: category_types) unless category_types.empty?
 
       building_blocks.distinct
     end

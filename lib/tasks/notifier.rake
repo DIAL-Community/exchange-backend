@@ -21,7 +21,7 @@ namespace :notifier do
     end
 
     admin_users.each do |admin|
-      AdminMailer.send_mail_from_client('notifier@solutions.dial.community',
+      AdminMailer.send_mail_from_client('notifier@exchange.dial.global',
          admin.email, email_subject, email_body, "text/html").deliver_now
     end
   end

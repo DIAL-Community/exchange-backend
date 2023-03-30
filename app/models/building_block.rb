@@ -6,6 +6,11 @@ class BuildingBlock < ApplicationRecord
   include EntityStatusType
   include Auditable
 
+  enum category_type: {
+    DPI: 'DPI',
+    FUNCTIONAL: 'FUNCTIONAL'
+  }
+
   has_many(
     :product_building_blocks,
     dependent: :delete_all,

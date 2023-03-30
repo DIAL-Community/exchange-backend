@@ -96,6 +96,16 @@ CREATE TYPE public.category_indicator_type AS ENUM (
 
 
 --
+-- Name: category_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.category_type AS ENUM (
+    'DPI',
+    'FUNCTIONAL'
+);
+
+
+--
 -- Name: comment_object_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -435,7 +445,9 @@ CREATE TABLE public.building_blocks (
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
     maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
-    spec_url character varying
+    spec_url character varying,
+    category public.category_type,
+    display_order integer DEFAULT 0 NOT NULL
 );
 
 
@@ -2314,7 +2326,6 @@ ALTER SEQUENCE public.principle_descriptions_id_seq OWNED BY public.principle_de
 CREATE TABLE public.product_building_blocks (
     building_block_id bigint NOT NULL,
     product_id bigint NOT NULL,
-    link_type character varying DEFAULT 'Beta'::character varying,
     mapping_status public.mapping_status_type DEFAULT 'BETA'::public.mapping_status_type NOT NULL,
     id bigint NOT NULL,
     slug character varying NOT NULL
@@ -7503,6 +7514,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221220085731'),
 ('20221227105319'),
 ('20221227105322'),
-('20230123155236');
+('20230123155236'),
+('20230308023907'),
+('20230308024946'),
+('20230314191751');
 
 
