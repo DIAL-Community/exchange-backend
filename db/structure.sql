@@ -116,7 +116,8 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'USE_CASE',
     'BUILDING_BLOCK',
     'PLAYBOOK',
-    'ORGANIZATION'
+    'ORGANIZATION',
+    'OPPORTUNITY'
 );
 
 
@@ -213,6 +214,30 @@ CREATE TYPE public.mobile_services AS ENUM (
     'User-Interface',
     'USSD',
     'Voice'
+);
+
+
+--
+-- Name: opportunity_status_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.opportunity_status_type AS ENUM (
+    'UPCOMING',
+    'OPEN',
+    'CLOSED'
+);
+
+
+--
+-- Name: opportunity_type_type; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.opportunity_type_type AS ENUM (
+    'BID',
+    'TENDER',
+    'INNOVATION',
+    'BUILDING BLOCK',
+    'OTHER'
 );
 
 
@@ -1634,6 +1659,100 @@ CREATE SEQUENCE public.operator_services_id_seq
 --
 
 ALTER SEQUENCE public.operator_services_id_seq OWNED BY public.operator_services.id;
+
+
+--
+-- Name: opportunities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    contact_name character varying NOT NULL,
+    contact_email character varying NOT NULL,
+    opening_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    closing_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    opportunity_type public.opportunity_type_type DEFAULT 'OTHER'::public.opportunity_type_type NOT NULL,
+    opportunity_status public.opportunity_status_type DEFAULT 'UPCOMING'::public.opportunity_status_type NOT NULL,
+    web_address character varying,
+    requirements character varying,
+    budget numeric(12,2),
+    tags character varying[] DEFAULT '{}'::character varying[],
+    origin_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: opportunities_building_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities_building_blocks (
+    building_block_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities_countries (
+    country_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.opportunities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.opportunities_id_seq OWNED BY public.opportunities.id;
+
+
+--
+-- Name: opportunities_organizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities_organizations (
+    organization_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_sectors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities_sectors (
+    sector_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_use_cases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.opportunities_use_cases (
+    use_case_id bigint,
+    opportunity_id bigint
+);
 
 
 --
@@ -4033,6 +4152,13 @@ ALTER TABLE ONLY public.operator_services ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: opportunities id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities ALTER COLUMN id SET DEFAULT nextval('public.opportunities_id_seq'::regclass);
+
+
+--
 -- Name: organization_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4754,6 +4880,14 @@ ALTER TABLE ONLY public.offices
 
 ALTER TABLE ONLY public.operator_services
     ADD CONSTRAINT operator_services_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: opportunities opportunities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities
+    ADD CONSTRAINT opportunities_pkey PRIMARY KEY (id);
 
 
 --
@@ -5630,6 +5764,83 @@ CREATE INDEX index_operator_services_on_country_id ON public.operator_services U
 
 
 --
+-- Name: index_opportunities_building_blocks_on_building_block_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_building_block_id ON public.opportunities_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_opportunities_building_blocks_on_opportunity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_opportunity_id ON public.opportunities_building_blocks USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_countries_on_country_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_country_id ON public.opportunities_countries USING btree (country_id);
+
+
+--
+-- Name: index_opportunities_countries_on_opportunity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_opportunity_id ON public.opportunities_countries USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_on_origin_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_on_origin_id ON public.opportunities USING btree (origin_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_opportunity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_opportunity_id ON public.opportunities_organizations USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_organization_id ON public.opportunities_organizations USING btree (organization_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_opportunity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_opportunity_id ON public.opportunities_sectors USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_sector_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_sector_id ON public.opportunities_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_opportunity_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_opportunity_id ON public.opportunities_use_cases USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_use_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_use_case_id ON public.opportunities_use_cases USING btree (use_case_id);
+
+
+--
 -- Name: index_organization_descriptions_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6043,6 +6254,13 @@ CREATE INDEX index_workflow_descriptions_on_workflow_id ON public.workflow_descr
 
 
 --
+-- Name: opportunities_unique_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX opportunities_unique_slug ON public.opportunities USING btree (slug);
+
+
+--
 -- Name: org_sectors; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6408,6 +6626,14 @@ ALTER TABLE ONLY public.candidate_roles
 
 
 --
+-- Name: opportunities_organizations fk_rails_1e1b217e25; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_organizations
+    ADD CONSTRAINT fk_rails_1e1b217e25 FOREIGN KEY (opportunity_id) REFERENCES public.opportunities(id);
+
+
+--
 -- Name: building_block_descriptions fk_rails_1e30d5f2cb; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6429,6 +6655,14 @@ ALTER TABLE ONLY public.candidate_products
 
 ALTER TABLE ONLY public.deploys
     ADD CONSTRAINT fk_rails_1ffce4bab2 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: opportunities_building_blocks fk_rails_215b65662e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_215b65662e FOREIGN KEY (opportunity_id) REFERENCES public.opportunities(id);
 
 
 --
@@ -6536,6 +6770,14 @@ ALTER TABLE ONLY public.tag_descriptions
 
 
 --
+-- Name: opportunities_countries fk_rails_49a664b2f7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_countries
+    ADD CONSTRAINT fk_rails_49a664b2f7 FOREIGN KEY (opportunity_id) REFERENCES public.opportunities(id);
+
+
+--
 -- Name: candidate_roles fk_rails_4aa113bd52; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6560,11 +6802,27 @@ ALTER TABLE ONLY public.dataset_sectors
 
 
 --
+-- Name: opportunities_sectors fk_rails_572c40b423; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_sectors
+    ADD CONSTRAINT fk_rails_572c40b423 FOREIGN KEY (opportunity_id) REFERENCES public.opportunities(id);
+
+
+--
 -- Name: operator_services fk_rails_5c31270ff7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.operator_services
     ADD CONSTRAINT fk_rails_5c31270ff7 FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: opportunities fk_rails_5f8d9a4134; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities
+    ADD CONSTRAINT fk_rails_5f8d9a4134 FOREIGN KEY (origin_id) REFERENCES public.origins(id);
 
 
 --
@@ -6656,6 +6914,14 @@ ALTER TABLE ONLY public.category_indicators
 
 
 --
+-- Name: opportunities_use_cases fk_rails_74085c04cd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_74085c04cd FOREIGN KEY (opportunity_id) REFERENCES public.opportunities(id);
+
+
+--
 -- Name: product_repositories fk_rails_76210df50f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6704,6 +6970,14 @@ ALTER TABLE ONLY public.candidate_roles
 
 
 --
+-- Name: opportunities_use_cases fk_rails_8350c2b67e; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_8350c2b67e FOREIGN KEY (use_case_id) REFERENCES public.use_cases(id);
+
+
+--
 -- Name: dataset_sectors fk_rails_8398ea4f75; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6733,6 +7007,14 @@ ALTER TABLE ONLY public.project_descriptions
 
 ALTER TABLE ONLY public.use_case_descriptions
     ADD CONSTRAINT fk_rails_94ea5f52ff FOREIGN KEY (use_case_id) REFERENCES public.use_cases(id);
+
+
+--
+-- Name: opportunities_sectors fk_rails_973eb5ee0a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_sectors
+    ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES public.sectors(id);
 
 
 --
@@ -6784,6 +7066,14 @@ ALTER TABLE ONLY public.plays_products
 
 
 --
+-- Name: opportunities_organizations fk_rails_a699f03037; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_organizations
+    ADD CONSTRAINT fk_rails_a699f03037 FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
 -- Name: products_endorsers fk_rails_a70896ae9e; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6808,6 +7098,14 @@ ALTER TABLE ONLY public.aggregator_capabilities
 
 
 --
+-- Name: opportunities_building_blocks fk_rails_bd7e32857c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_bd7e32857c FOREIGN KEY (building_block_id) REFERENCES public.building_blocks(id);
+
+
+--
 -- Name: organizations_states fk_rails_bea3577035; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6821,6 +7119,14 @@ ALTER TABLE ONLY public.organizations_states
 
 ALTER TABLE ONLY public.product_descriptions
     ADD CONSTRAINT fk_rails_c0bc9f9c8a FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: opportunities_countries fk_rails_c231d14160; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.opportunities_countries
+    ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES public.countries(id);
 
 
 --
@@ -7517,6 +7823,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230123155236'),
 ('20230308023907'),
 ('20230308024946'),
-('20230314191751');
+('20230314191751'),
+('20230321132329'),
+('20230321142940'),
+('20230322141250'),
+('20230327224648');
 
 
