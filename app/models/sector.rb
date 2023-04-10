@@ -14,6 +14,7 @@ class Sector < ApplicationRecord
   has_many :datasets, through: :dataset_sectors, dependent: :destroy
 
   has_and_belongs_to_many :projects, join_table: :projects_sectors
+  has_and_belongs_to_many :opportunities, join_table: :opportunities_sectors
 
   belongs_to :parent_sector, class_name: :Sector, optional: true
   has_many :sectors, foreign_key: :parent_sector_id, dependent: :destroy
