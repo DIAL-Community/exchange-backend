@@ -29,6 +29,15 @@ module Types
     field :update_product_repository, mutation: Mutations::UpdateProductRepository
     field :delete_product_repository, mutation: Mutations::DeleteProductRepository
 
+    field :create_opportunity, mutation: Mutations::CreateOpportunity
+    field :delete_opportunity, mutation: Mutations::DeleteOpportunity
+
+    field :update_opportunity_building_blocks, mutation: Mutations::UpdateOpportunityBuildingBlocks
+    field :update_opportunity_countries, mutation: Mutations::UpdateOpportunityCountries
+    field :update_opportunity_organizations, mutation: Mutations::UpdateOpportunityOrganizations
+    field :update_opportunity_sectors, mutation: Mutations::UpdateOpportunitySectors
+    field :update_opportunity_use_cases, mutation: Mutations::UpdateOpportunityUseCases
+
     field :create_organization, mutation: Mutations::CreateOrganization
     field :delete_organization, mutation: Mutations::DeleteOrganization
 

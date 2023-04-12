@@ -70,6 +70,10 @@ module Types
     field :organization, resolver: Queries::OrganizationQuery
     field :search_organizations, resolver: Queries::SearchOrganizationsQuery
 
+    field :opportunities, resolver: Queries::OpportunitiesQuery
+    field :opportunity, resolver: Queries::OpportunityQuery
+    field :search_opportunities, resolver: Queries::SearchOpportunitiesQuery
+
     field :aggregators, resolver: Queries::AggregatorsQuery
     field :aggregator, resolver: Queries::AggregatorQuery
     field :search_aggregators, resolver: Queries::SearchAggregatorsQuery

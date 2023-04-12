@@ -41,6 +41,7 @@ class BuildingBlock < ApplicationRecord
     before_remove: :association_remove
   )
 
+  has_and_belongs_to_many :opportunities, join_table: :opportunities_building_blocks
   has_many :building_block_descriptions, dependent: :destroy
 
   scope :name_contains, ->(name) { where('LOWER(building_blocks.name) like LOWER(?)', "%#{name}%") }
