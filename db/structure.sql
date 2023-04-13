@@ -3549,7 +3549,8 @@ CREATE TABLE public.use_case_steps (
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    markdown_url character varying
+    markdown_url character varying,
+    example_implementation character varying
 );
 
 
@@ -3685,7 +3686,8 @@ CREATE TABLE public.use_cases (
     updated_at timestamp without time zone NOT NULL,
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
     maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    markdown_url character varying
 );
 
 
@@ -7827,6 +7829,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230321132329'),
 ('20230321142940'),
 ('20230322141250'),
-('20230327224648');
+('20230327224648'),
+('20230403213850'),
+('20230403213927');
 
 
