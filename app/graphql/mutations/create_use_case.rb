@@ -11,12 +11,13 @@ module Mutations
     argument :sector_slug, String, required: true
     argument :maturity, String, required: true
     argument :description, String, required: true
+    argument :markdown_url, String, required: false
     argument :image_file, ApolloUploadServer::Upload, required: false
 
     field :use_case, Types::UseCaseType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, sector_slug:, maturity:, description:, image_file: nil)
+    def resolve(name:, slug:, sector_slug:, maturity:, description:, markdown_url: nil, image_file: nil)
       unless an_admin || a_content_editor
         return {
           use_case: nil,
@@ -42,6 +43,7 @@ module Mutations
       # allow user to rename use case but don't re-slug it
       use_case.name = name
       use_case.maturity = maturity
+      use_case.markdown_url = markdown_url
 
       sector = Sector.find_by(slug: sector_slug)
       use_case.sector = sector unless sector.nil?

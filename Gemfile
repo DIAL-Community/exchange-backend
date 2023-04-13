@@ -29,7 +29,8 @@ gem 'Dhalang', github: 'conradsp/Dhalang', branch: 'master'
 gem 'haml'
 
 # Used to sync maturity data from github.
-gem 'kramdown', '~> 2.3.1'
+gem 'kramdown'
+gem 'kramdown-parser-gfm'
 
 gem 'recaptcha'
 
