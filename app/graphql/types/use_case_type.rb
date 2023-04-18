@@ -21,7 +21,7 @@ module Types
     field :slug, String, null: false
     field :image_file, String, null: true
     field :maturity, String, null: false
-    field :markdown_url, String, null: false
+    field :markdown_url, String, null: true
 
     field :use_case_descriptions, [Types::UseCaseDescriptionType], null: true
     field :use_case_description, Types::UseCaseDescriptionType, null: false,
