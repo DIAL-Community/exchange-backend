@@ -2916,7 +2916,7 @@ type UseCase {
   buildingBlocks: [BuildingBlock!]
   id: ID!
   imageFile: String
-  markdownUrl: String!
+  markdownUrl: String
   maturity: String!
   name: String!
   sdgTargets: [SustainableDevelopmentGoalTarget!]!
