@@ -10209,6 +10209,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "markdownUrl",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "imageFile",
                   "description": null,
                   "type": {
@@ -28072,6 +28084,20 @@
             },
             {
               "name": "imageFile",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "markdownUrl",
               "description": null,
               "args": [
 

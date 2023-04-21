@@ -455,9 +455,7 @@ Layout/SpaceInsideStringInterpolation:
   - no_space
 
 Style/SymbolProc:
-  IgnoredMethods:
-  - respond_to
-  - define_method
+  Enabled: true
 
 Style/TernaryParentheses:
   EnforcedStyle: require_no_parentheses

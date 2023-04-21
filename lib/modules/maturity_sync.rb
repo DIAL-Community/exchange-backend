@@ -525,6 +525,7 @@ module Modules
           end
         end
       end
+      false
     end
 
     class NoGithubCredentialsException < StandardError
