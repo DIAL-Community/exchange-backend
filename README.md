@@ -19,7 +19,7 @@ https://gitlab.com/dial/online-catalog/catalog-front/-/tree/development
 
 Complete documentation is available (including detailed installation and configuration
 instructions) at 
-[https://docs.osc.dial.community/projects/product-registry/en/latest/](https://docs.osc.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
+[https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
 
 Please also reference the [Wiki page for the Catalog](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
 
