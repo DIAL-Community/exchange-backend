@@ -6,9 +6,9 @@ require 'rails_helper'
 RSpec.describe(Mutations::UpdateProjectProducts, type: :graphql) do
   let(:mutation) do
     <<~GQL
-      mutation($productsSlugs: [String!]!, $slug: String!) {
+      mutation($productSlugs: [String!]!, $slug: String!) {
         updateProjectProducts(
-          productsSlugs: $productsSlugs
+          productSlugs: $productSlugs
           slug: $slug
         ) {
           project {
@@ -32,7 +32,7 @@ RSpec.describe(Mutations::UpdateProjectProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -52,7 +52,7 @@ RSpec.describe(Mutations::UpdateProjectProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -72,7 +72,7 @@ RSpec.describe(Mutations::UpdateProjectProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -91,7 +91,7 @@ RSpec.describe(Mutations::UpdateProjectProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

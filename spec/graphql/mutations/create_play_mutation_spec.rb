@@ -11,16 +11,16 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         $slug: String!
         $description: String!
         $playbookSlug: String
-        $productsSlugs: [String!]
-        $buildingBlocksSlugs: [String!]
+        $productSlugs: [String!]
+        $buildingBlockSlugs: [String!]
       ) {
         createPlay (
           name: $name
           slug: $slug
           description: $description
           playbookSlug: $playbookSlug
-          productsSlugs:$productsSlugs
-          buildingBlocksSlugs: $buildingBlocksSlugs
+          productSlugs: $productSlugs
+          buildingBlockSlugs: $buildingBlockSlugs
         ) {
           play {
             name
@@ -54,8 +54,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Description",
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       }
     )
 
@@ -88,8 +88,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         slug: "some_name",
         description: "Some Description",
         playbookSlug: 'some_playbook',
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       }
     )
 
@@ -115,8 +115,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         slug: "some_name",
         description: "Some Updated Description",
         playbookSlug: 'some_playbook',
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       }
     )
 
@@ -148,8 +148,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Description",
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       },
     )
 
@@ -175,8 +175,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Description",
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       },
     )
 
@@ -199,8 +199,8 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         name: "Some name",
         slug: "some_name",
         description: "Some Description",
-        productsSlugs: ["some_product"],
-        buildingBlocksSlugs: ["some_bb"]
+        productSlugs: ["some_product"],
+        buildingBlockSlugs: ["some_bb"]
       },
     )
 

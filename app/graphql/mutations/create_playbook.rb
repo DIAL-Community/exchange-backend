@@ -76,7 +76,7 @@ module Mutations
 
           playbook.plays << curr_play
           playbook_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: curr_play.id)
-          playbook_play.order = index
+          playbook_play.play_order = index
 
           assign_auditable_user(playbook_play)
           playbook_play.save

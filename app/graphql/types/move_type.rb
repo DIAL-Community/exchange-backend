@@ -12,7 +12,7 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :order, Integer, null: true
+    field :move_order, Integer, null: true
     field :resources, GraphQL::Types::JSON, null: false
 
     field :move_descriptions, [Types::MoveDescriptionType], null: true

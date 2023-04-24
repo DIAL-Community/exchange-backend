@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateUseCaseStepProducts, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateUseCaseStepProducts (
-        $productsSlugs: [String!]!
+        $productSlugs: [String!]!
         $slug: String!
         ) {
           updateUseCaseStepProducts (
-            productsSlugs: $productsSlugs
+            productSlugs: $productSlugs
             slug: $slug
           ) {
             useCaseStep {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -96,7 +96,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepProducts, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { productsSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
+      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

@@ -61,8 +61,6 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
       }
     )
 
-    puts "Result: #{result.inspect}."
-
     aggregate_failures do
       expect(result['data']['createOpportunity']['opportunity']['name'])
         .to(eq("Opportunity A"))
