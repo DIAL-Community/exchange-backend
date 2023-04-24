@@ -17,7 +17,6 @@ module Types
 
     field :create_move, mutation: Mutations::CreateMove
     field :auto_save_move, mutation: Mutations::CreateMove
-    field :update_move_order, mutation: Mutations::UpdateMoveOrder
     field :create_resource, mutation: Mutations::CreateResource
 
     field :create_user, mutation: Mutations::CreateUser

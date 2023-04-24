@@ -31,7 +31,7 @@ module Queries
     def resolve(slug:)
       Play.joins(:playbooks)
           .where(playbooks: { slug: slug })
-          .order('playbook_plays.order')
+          .order('playbook_plays.play_order')
     end
   end
 

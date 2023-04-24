@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateUseCaseStepBuildingBlocks (
-        $buildingBlocksSlugs: [String!]!
+        $buildingBlockSlugs: [String!]!
         $slug: String!
         ) {
           updateUseCaseStepBuildingBlocks (
-            buildingBlocksSlugs: $buildingBlocksSlugs
+            buildingBlockSlugs: $buildingBlockSlugs
             slug: $slug
           ) {
             useCaseStep {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -96,7 +96,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

@@ -19,7 +19,7 @@ module Queries
     def resolve(slug:)
       playbook = Playbook.find_by(slug: slug)
 
-      return nil if playbook.draft == true && !(an_admin || a_content_editor)
+      return nil if playbook&.draft == true && !(an_admin || a_content_editor)
 
       playbook
     end
