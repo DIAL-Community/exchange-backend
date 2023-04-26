@@ -16,7 +16,7 @@ module Types
     field :playbook_slug, String, null: true
     field :play_slug, String, null: true
     field :play_name, String, null: true
-    field :order, Integer, null: true
+    field :play_order, Integer, null: true
   end
 
   class PlaybookType < Types::BaseObject

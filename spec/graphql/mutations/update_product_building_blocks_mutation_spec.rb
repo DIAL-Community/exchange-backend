@@ -7,12 +7,12 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProductBuildingBlocks (
-        $buildingBlocksSlugs: [String!]!
+        $buildingBlockSlugs: [String!]!
         $slug: String!
         $mappingStatus: String!
         ) {
           updateProductBuildingBlocks (
-            buildingBlocksSlugs: $buildingBlocksSlugs
+            buildingBlockSlugs: $buildingBlockSlugs
             slug: $slug
             mappingStatus: $mappingStatus
           ) {
@@ -37,7 +37,7 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do
@@ -56,7 +56,7 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlocksSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do

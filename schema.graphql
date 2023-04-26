@@ -902,8 +902,8 @@ type Move {
   id: ID!
   moveDescription: MoveDescription
   moveDescriptions: [MoveDescription!]
+  moveOrder: Int
   name: String!
-  order: Int
   play: Play!
   playName: String
   playSlug: String
@@ -959,7 +959,7 @@ type Mutation {
   approveRejectCandidateDataset(action: String!, slug: String!): ApproveRejectCandidateDatasetPayload
   approveRejectCandidateRole(action: String!, candidateRoleId: ID!): ApproveRejectCandidateRolePayload
   autoSaveMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
-  autoSavePlay(buildingBlocksSlugs: [String!], description: String!, name: String!, playbookSlug: String, productsSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
+  autoSavePlay(buildingBlockSlugs: [String!], description: String!, moves: JSON = [], name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, plays: JSON = [], slug: String!, tags: JSON = []): CreatePlaybookPayload
   createBuildingBlock(category: String, description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, dataType: String!, dataUrl: String!, dataVisualizationUrl: String, description: String!, name: String!, slug: String!, submitterEmail: String!): CreateCandidateDatasetPayload
@@ -972,7 +972,7 @@ type Mutation {
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean = false, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
-  createPlay(buildingBlocksSlugs: [String!], description: String!, name: String!, playbookSlug: String, productsSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
+  createPlay(buildingBlockSlugs: [String!], description: String!, moves: JSON = [], name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: JSON = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, plays: JSON = [], slug: String!, tags: JSON = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, slug: String!): CreateProductRepositoryPayload
@@ -1004,14 +1004,13 @@ type Mutation {
   deleteUseCase(id: ID!): DeleteUseCasePayload
   deleteWorkflow(id: ID!): DeleteWorkflowPayload
   duplicatePlay(playSlug: String!): DuplicatePlayPayload
-  updateBuildingBlockProducts(mappingStatus: String!, productsSlugs: [String!]!, slug: String!): UpdateBuildingBlockProductsPayload
+  updateBuildingBlockProducts(mappingStatus: String!, productSlugs: [String!]!, slug: String!): UpdateBuildingBlockProductsPayload
   updateBuildingBlockWorkflows(slug: String!, workflowsSlugs: [String!]!): UpdateBuildingBlockWorkflowsPayload
   updateDatasetCountries(countrySlugs: [String!]!, slug: String!): UpdateDatasetCountriesPayload
   updateDatasetOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateDatasetOrganizationsPayload
   updateDatasetSdgs(mappingStatus: String!, sdgSlugs: [String!]!, slug: String!): UpdateDatasetSdgsPayload
   updateDatasetSectors(sectorSlugs: [String!]!, slug: String!): UpdateDatasetSectorsPayload
   updateDatasetTags(slug: String!, tagNames: [String!]!): UpdateDatasetTagsPayload
-  updateMoveOrder(distance: Int, moveSlug: String!, operation: String!, playSlug: String!): UpdateMoveOrderPayload
   updateOpportunityBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateOpportunityBuildingBlocksPayload
   updateOpportunityCountries(countrySlugs: [String!]!, slug: String!): UpdateOpportunityCountriesPayload
   updateOpportunityOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateOpportunityOrganizationsPayload
@@ -1020,10 +1019,10 @@ type Mutation {
   updateOrganizationContacts(contacts: JSON!, slug: String!): UpdateOrganizationContactsPayload
   updateOrganizationCountry(countriesSlugs: [String!]!, slug: String!): UpdateOrganizationCountryPayload
   updateOrganizationOffices(offices: [JSON!]!, slug: String!): UpdateOrganizationOfficesPayload
-  updateOrganizationProducts(productsSlugs: [String!]!, slug: String!): UpdateOrganizationProductsPayload
+  updateOrganizationProducts(productSlugs: [String!]!, slug: String!): UpdateOrganizationProductsPayload
   updateOrganizationProjects(projectsSlugs: [String!]!, slug: String!): UpdateOrganizationProjectsPayload
   updateOrganizationSectors(sectorsSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
-  updateProductBuildingBlocks(buildingBlocksSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
+  updateProductBuildingBlocks(buildingBlockSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
   updateProductOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
   updateProductProjects(projectsSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
@@ -1033,17 +1032,17 @@ type Mutation {
   updateProductTags(slug: String!, tags: [String!]!): UpdateProductTagsPayload
   updateProjectCountries(countriesSlugs: [String!]!, slug: String!): UpdateProjectCountriesPayload
   updateProjectOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProjectOrganizationsPayload
-  updateProjectProducts(productsSlugs: [String!]!, slug: String!): UpdateProjectProductsPayload
+  updateProjectProducts(productSlugs: [String!]!, slug: String!): UpdateProjectProductsPayload
   updateProjectSectors(sectorsSlugs: [String!]!, slug: String!): UpdateProjectSectorsPayload
   updateProjectTags(slug: String!, tags: [String!]!): UpdateProjectTagsPayload
   updateRubricCategoryIndicators(categoryIndicatorSlugs: [String!]!, rubricCategorySlug: String!): UpdateRubricCategoryIndicatorsPayload
   updateUseCaseSdgTargets(sdgTargetsIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
-  updateUseCaseStepBuildingBlocks(buildingBlocksSlugs: [String!]!, slug: String!): UpdateUseCaseStepBuildingBlocksPayload
+  updateUseCaseStepBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateUseCaseStepBuildingBlocksPayload
   updateUseCaseStepDatasets(datasetsSlugs: [String!]!, slug: String!): UpdateUseCaseStepDatasetsPayload
-  updateUseCaseStepProducts(productsSlugs: [String!]!, slug: String!): UpdateUseCaseStepProductsPayload
+  updateUseCaseStepProducts(productSlugs: [String!]!, slug: String!): UpdateUseCaseStepProductsPayload
   updateUseCaseStepWorkflows(slug: String!, workflowsSlugs: [String!]!): UpdateUseCaseStepWorkflowsPayload
   updateUseCaseTags(slug: String!, tags: [String!]!): UpdateUseCaseTagsPayload
-  updateWorkflowBuildingBlocks(buildingBlocksSlugs: [String!]!, slug: String!): UpdateWorkflowBuildingBlocksPayload
+  updateWorkflowBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateWorkflowBuildingBlocksPayload
 }
 
 type Office {
@@ -1399,8 +1398,8 @@ type PlaybookEdge {
 
 type PlaybookPlay {
   id: ID!
-  order: Int
   playName: String
+  playOrder: Int
   playSlug: String
   playbookSlug: String
 }
@@ -2645,14 +2644,6 @@ Autogenerated return type of UpdateDatasetTags
 type UpdateDatasetTagsPayload {
   dataset: Dataset
   errors: [String!]
-}
-
-"""
-Autogenerated return type of UpdateMoveOrder
-"""
-type UpdateMoveOrderPayload {
-  errors: [String!]!
-  move: Move
 }
 
 """

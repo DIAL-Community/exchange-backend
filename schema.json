@@ -6896,6 +6896,20 @@
               "deprecationReason": null
             },
             {
+              "name": "moveOrder",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "name",
               "description": null,
               "args": [
@@ -6909,20 +6923,6 @@
                   "name": "String",
                   "ofType": null
                 }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "order",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -7502,6 +7502,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "moves",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "JSON",
+                    "ofType": null
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "description",
                   "description": null,
                   "type": {
@@ -7518,7 +7530,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -7538,7 +7550,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "buildingBlocksSlugs",
+                  "name": "buildingBlockSlugs",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -7565,7 +7577,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -9139,6 +9151,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "moves",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "JSON",
+                    "ofType": null
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "description",
                   "description": null,
                   "type": {
@@ -9155,7 +9179,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -9175,7 +9199,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "buildingBlocksSlugs",
+                  "name": "buildingBlockSlugs",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -9202,7 +9226,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -11091,7 +11115,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -11484,79 +11508,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateDatasetTagsPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updateMoveOrder",
-              "description": null,
-              "args": [
-                {
-                  "name": "playSlug",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "moveSlug",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "operation",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "distance",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UpdateMoveOrderPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -11983,7 +11934,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12142,7 +12093,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "buildingBlocksSlugs",
+                  "name": "buildingBlockSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12740,7 +12691,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13005,7 +12956,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "buildingBlocksSlugs",
+                  "name": "buildingBlockSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13111,7 +13062,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "productsSlugs",
+                  "name": "productSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13270,7 +13221,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "buildingBlocksSlugs",
+                  "name": "buildingBlockSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -16123,20 +16074,6 @@
               "deprecationReason": null
             },
             {
-              "name": "order",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "playName",
               "description": null,
               "args": [
@@ -16145,6 +16082,20 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "playOrder",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -26416,59 +26367,6 @@
                     "ofType": null
                   }
                 }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [
-
-          ],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "UpdateMoveOrderPayload",
-          "description": "Autogenerated return type of UpdateMoveOrder",
-          "fields": [
-            {
-              "name": "errors",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "LIST",
-                  "name": null,
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  }
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "move",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Move",
-                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null

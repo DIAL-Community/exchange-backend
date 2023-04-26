@@ -2104,7 +2104,7 @@ CREATE TABLE public.play_moves (
     play_id bigint,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    "order" integer NOT NULL,
+    move_order integer DEFAULT 0 NOT NULL,
     resources jsonb DEFAULT '[]'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -2172,7 +2172,7 @@ CREATE TABLE public.playbook_plays (
     playbook_id bigint NOT NULL,
     play_id bigint NOT NULL,
     phase character varying,
-    "order" integer
+    play_order integer DEFAULT 0 NOT NULL
 );
 
 
@@ -7831,6 +7831,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230322141250'),
 ('20230327224648'),
 ('20230403213850'),
-('20230403213927');
+('20230403213927'),
+('20230420032636');
 
 
