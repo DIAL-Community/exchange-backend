@@ -92,7 +92,11 @@ module Queries
       desc_products = products.joins(:product_descriptions)
                               .where('LOWER(description) like LOWER(?)', "%#{search}%")
       alias_products = products.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
-      products = products.where(id: (name_products + desc_products + alias_products).uniq)
+      by_sectors = Product.joins(:sectors)
+                          .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
+                          .ids
+
+      products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
     end
 
     filtered, filtered_building_blocks = filter_building_blocks(
