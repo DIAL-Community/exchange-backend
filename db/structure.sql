@@ -1672,8 +1672,8 @@ CREATE TABLE public.opportunities (
     description character varying NOT NULL,
     contact_name character varying NOT NULL,
     contact_email character varying NOT NULL,
-    opening_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    closing_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    opening_date timestamp without time zone,
+    closing_date timestamp without time zone,
     opportunity_type public.opportunity_type_type DEFAULT 'OTHER'::public.opportunity_type_type NOT NULL,
     opportunity_status public.opportunity_status_type DEFAULT 'UPCOMING'::public.opportunity_status_type NOT NULL,
     web_address character varying,
@@ -7832,6 +7832,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230327224648'),
 ('20230403213850'),
 ('20230403213927'),
-('20230420032636');
+('20230420032636'),
+('20230424122850');
 
 
