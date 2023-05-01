@@ -28,3 +28,4 @@ rake endorsers:sync_form_response
 rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet
 rake data_processors:process_exported_json_files
+rake markdown_sync:use_case_definition
