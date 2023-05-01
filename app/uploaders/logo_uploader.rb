@@ -80,11 +80,16 @@ class LogoUploader < CarrierWave::Uploader::Base
     "#{model.slug}.png"
   end
 
-  def send_notification(file)
+  def send_notification(_file)
+    filename = @file_name
+    if filename.nil?
+      filename = file.original_filename
+    end
+
     LogoUploadMailer
       .with(user: @current_user,
-            filename: file.original_filename,
-            name: model.name,
+            filename: @file_name,
+            name: filename,
             type: model.class.to_s.downcase)
       .notify_upload
       .deliver_later
