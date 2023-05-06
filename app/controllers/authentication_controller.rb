@@ -19,32 +19,27 @@ class AuthenticationController < Devise::SessionsController
   def sign_in_ux
     user = User.find_by(email: params['user']['email'])
     if user.nil? || !user.valid_password?(params['user']['password'])
-      respond_to do |format|
-        format.json do
-          render(
-            json: unauthorized_response,
-            status: :unauthorized
-          )
-        end
+      return respond_to do |format|
+        format.json { render(json: unauthorized_response, status: :unauthorized) }
+      end
+    end
+
+    if user.valid_password?(params['user']['password']) && !user.confirmed?
+      return respond_to do |format|
+        format.json { render(json: unauthorized_response, status: :forbidden) }
       end
     end
 
     sign_in(user, store: true)
+
+    return_status = :ok
+    return_json = unauthorized_response
     respond_to do |format|
-      status = :unauthorized
-      json = unauthorized_response
-      if user.update(authentication_token: Devise.friendly_token)
+      if return_status == :ok && user.update(authentication_token: Devise.friendly_token)
         organization = Organization.find(user.organization_id) if user.organization_id
-        can_edit = user.roles.include?('admin') || user.roles.include?('content_editor')
-        status = :ok
-        json = ok_response(user, can_edit, organization)
+        return_json = ok_response(user, organization)
       end
-      format.json do
-        render(
-          json: json,
-          status: status
-        )
-      end
+      format.json { render(json: return_json, status: return_status) }
     end
   end
 
@@ -64,14 +59,13 @@ class AuthenticationController < Devise::SessionsController
       end
     else
       sign_in(user, store: true)
-      can_edit = user.roles.include?('admin') || user.roles.include?('content_editor')
       organization = Organization.find(user.organization_id) if user.organization_id
       respond_to do |format|
         status = :unauthorized
         json = unauthorized_response
         if user.update(authentication_token: Devise.friendly_token)
           status = :ok
-          json = ok_response(user, can_edit, organization)
+          json = ok_response(user, organization)
         end
         format.json do
           render(
@@ -83,10 +77,12 @@ class AuthenticationController < Devise::SessionsController
     end
   end
 
-  def fetch_token
+  def resend_activation_email
     user = User.find_by(email: request.headers['X-User-Email'])
+    user&.resend_confirmation_instructions
+
     respond_to do |format|
-      format.json { render(json: { userToken: user.authentication_token }) }
+      format.json { render(json: { message: 'Activation email request processed.' }, status: :ok) }
     end
   end
 
@@ -172,8 +168,20 @@ class AuthenticationController < Devise::SessionsController
           .permit(:reset_password_token, :password, :password_confirmation)
   end
 
+  def forbidden_response(user)
+    {
+      id: user.id,
+      userEmail: user.email,
+      userName: user.username,
+      canEdit: false,
+      roles: nil,
+      userToken: nil
+    }
+  end
+
   def unauthorized_response
     {
+      id: nil,
       userEmail: nil,
       userName: nil,
       canEdit: false,
@@ -182,17 +190,18 @@ class AuthenticationController < Devise::SessionsController
     }
   end
 
-  def ok_response(user, can_edit, organization)
+  def ok_response(user, organization)
     {
       id: user.id,
       userEmail: user.email,
-      name: user.username,
+      userName: user.username,
       own: {
         products: user.user_products.any? ? user.user_products.map : [],
         organization: organization
       },
-      canEdit: can_edit,
       roles: user.roles,
+      isAdminUser: user.roles.include?('admin'),
+      isEditorUser: user.roles.include?('content_editor'),
       userToken: user.authentication_token
     }
   end

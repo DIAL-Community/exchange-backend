@@ -14,7 +14,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:)
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           tag: nil,
           errors: ['Must be admin or content editor to create a tag']

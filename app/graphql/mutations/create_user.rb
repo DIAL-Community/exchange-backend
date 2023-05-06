@@ -57,7 +57,7 @@ module Mutations
       if user.save
         {
           user: user,
-          errors: nil
+          errors: []
         }
       else
         {

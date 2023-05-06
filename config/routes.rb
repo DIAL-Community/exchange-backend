@@ -44,7 +44,8 @@ Rails.application.routes.draw do
     post '/authenticate/credentials', to: 'authentication#sign_in_ux'
     post '/authenticate/auth0', to: 'authentication#sign_in_auth0'
     post '/authenticate/signup', to: 'authentication#sign_up_ux'
-    get '/authenticate/token', to: 'authentication#fetch_token'
+
+    post '/auth/resend-activation-email', to: 'authentication#resend_activation_email'
     delete '/auth/invalidate', to: 'authentication#invalidate_token'
     post '/auth/reset-password', to: 'authentication#reset_password'
     post '/auth/apply-reset-token', to: 'authentication#apply_reset_token'

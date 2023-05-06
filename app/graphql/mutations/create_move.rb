@@ -56,7 +56,7 @@ module Mutations
       end
 
       play_move.play = play
-      play_move.order = play.play_moves.count
+      play_move.move_order = play.play_moves.count
       play_move.resources = resources.reject { |resource| resource['name'].blank? || resource['url'].blank? }
 
       successful_operation = false

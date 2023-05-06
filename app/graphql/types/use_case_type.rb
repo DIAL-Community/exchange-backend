@@ -32,6 +32,10 @@ module Types
     field :use_case_headers, [Types::UseCaseHeaderType], null: true
 
     field :sdg_targets, [Types::SustainableDevelopmentGoalTargetType], null: false
+    def sdg_targets
+      object.sdg_targets&.order(:sdg_number)&.order(:target_number)
+    end
+
     field :building_blocks, [Types::BuildingBlockType], null: true
     field :workflows, [Types::WorkflowType], null: true
     field :tags, GraphQL::Types::JSON, null: true
