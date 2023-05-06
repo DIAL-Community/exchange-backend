@@ -15,7 +15,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug: nil)
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           country: nil,
           errors: ['Must be admin or content editor to create a country.']

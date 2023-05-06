@@ -17,7 +17,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, origin_id:, parent_sector_id:, is_displayable:, locale:)
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           sector: nil,
           errors: ['Must be admin or content editor to create an sector']
