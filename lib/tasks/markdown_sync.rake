@@ -21,7 +21,7 @@ namespace :markdown_sync do
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        use_case_description = UseCaseDescription.find_by(use_case: use_case, locale: 'en')
+        use_case_description = UseCaseDescription.find_by(use_case:, locale: 'en')
         use_case_description = UseCaseDescription.new if use_case_description.nil?
         use_case_description.description = find_use_case_description(html_fragment)&.strip
         use_case_description.use_case = use_case
@@ -115,7 +115,7 @@ namespace :markdown_sync do
         use_case_step = UseCaseStep.new(
           name: step_name,
           slug: slug_em(step_name),
-          use_case: use_case
+          use_case:
         )
 
         # Check if we need to add _dup to the slug.

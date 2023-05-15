@@ -21,7 +21,7 @@ module Queries
     def resolve(slug:)
       return nil unless an_admin
 
-      CandidateProduct.find_by(slug: slug)
+      CandidateProduct.find_by(slug:)
     end
   end
 

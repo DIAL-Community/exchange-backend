@@ -28,12 +28,12 @@ module Mutations
       end
 
       current_user = User.find_by(id: user_id)
-      comment = Comment.find_by(comment_id: comment_id)
+      comment = Comment.find_by(comment_id:)
 
       if comment.nil?
-        comment = Comment.new(comment_object_type: comment_object_type,
-                              comment_object_id: comment_object_id,
-                              comment_id: comment_id)
+        comment = Comment.new(comment_object_type:,
+                              comment_object_id:,
+                              comment_id:)
         comment.parent_comment_id = parent_comment_id unless parent_comment_id.nil?
 
         comment.author = { "id": current_user.id,
@@ -48,7 +48,7 @@ module Mutations
 
         # Successful creation, return the created object with no errors
         {
-          comment: comment,
+          comment:,
           errors: []
         }
       else

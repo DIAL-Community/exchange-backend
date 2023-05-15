@@ -15,12 +15,12 @@ module Mutations
         }
       end
 
-      use_case = UseCase.find_by(id: id)
+      use_case = UseCase.find_by(id:)
       assign_auditable_user(use_case)
       if use_case.destroy
         # Successful deletion, return the nil use_case with no errors
         {
-          use_case: use_case,
+          use_case:,
           errors: []
         }
       else

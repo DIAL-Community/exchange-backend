@@ -71,7 +71,7 @@ module Queries
       return false unless an_admin
 
       email_exists = false
-      unless User.find_by(email: email).nil?
+      unless User.find_by(email:).nil?
         email_exists = true
       end
       email_exists

@@ -53,7 +53,7 @@ class EntitiesController < ApplicationController
 
   def generate_product(json_data)
     slug = slug_em(json_data[:name])
-    contacts = Product.where(slug: slug)
+    contacts = Product.where(slug:)
     unless contacts.empty?
       first_duplicate = Product.slug_starts_with(slug).order(slug: :desc).first
       slug += generate_offset(first_duplicate).to_s
@@ -92,20 +92,20 @@ class EntitiesController < ApplicationController
     Product.new(
       name: json_data[:name],
       aliases: valid_aliases,
-      slug: slug,
+      slug:,
       license: json_data[:license],
-      origin: origin,
-      sectors: sectors,
-      organizations: organizations,
+      origin:,
+      sectors:,
+      organizations:,
       repository_url: json_data[:repositoryURL],
       website: json_data[:website],
-      product_type: product_type
+      product_type:
     )
   end
 
   def generate_project(json_data)
     slug = slug_em(json_data[:name])
-    contacts = Project.where(slug: slug)
+    contacts = Project.where(slug:)
     unless contacts.empty?
       first_duplicate = Project.slug_starts_with(slug).order(slug: :desc).first
       slug += generate_offset(first_duplicate).to_s
@@ -148,15 +148,15 @@ class EntitiesController < ApplicationController
 
     Project.new(
       name: json_data[:name],
-      slug: slug,
+      slug:,
       start_date: Time.iso8601(json_data[:start_date]),
       end_date: Time.iso8601(json_data[:end_date]),
       project_url: json_data[:project_url],
-      origin: origin,
-      products: products,
-      organizations: organizations,
-      countries: countries,
-      sectors: sectors
+      origin:,
+      products:,
+      organizations:,
+      countries:,
+      sectors:
     )
   end
 end

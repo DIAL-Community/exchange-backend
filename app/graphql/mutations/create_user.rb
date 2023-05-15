@@ -20,12 +20,12 @@ module Mutations
         }
       end
 
-      user = User.find_by(email: email)
+      user = User.find_by(email:)
       if user.nil?
         password = random_password
-        user = User.new(email: email,
+        user = User.new(email:,
                         created_at: Time.now,
-                        password: password,
+                        password:,
                         password_confirmation: password)
 
         send_email_with_password(username, email, password)
@@ -56,7 +56,7 @@ module Mutations
 
       if user.save
         {
-          user: user,
+          user:,
           errors: []
         }
       else

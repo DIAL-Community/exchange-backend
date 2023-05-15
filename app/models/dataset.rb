@@ -71,7 +71,7 @@ class Dataset < ApplicationRecord
   end
 
   def owner
-    owner = User.joins(:datasets).where(datasets: { id: id })
+    owner = User.joins(:datasets).where(datasets: { id: })
     owner.first.id unless owner.empty?
   end
 

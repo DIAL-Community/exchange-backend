@@ -21,7 +21,7 @@ module Queries
     type Types::HandbookType, null: false
 
     def resolve(slug:)
-      handbook = Handbook.find_by(slug: slug)
+      handbook = Handbook.find_by(slug:)
       handbook.handbook_pages.each do |page|
         child_pages = HandbookPage.where(parent_page_id: page)
                                   .order(:page_order)
@@ -53,8 +53,8 @@ module Queries
     type [Types::HandbookSearchPageType], null: false
 
     def resolve(slug:, search:)
-      handbook = Handbook.find_by(slug: slug)
-      child_pages = HandbookPage.where(handbook: handbook)
+      handbook = Handbook.find_by(slug:)
+      child_pages = HandbookPage.where(handbook:)
                                 .order(:page_order)
 
       matched_child_pages = []
@@ -125,7 +125,7 @@ module Queries
     type Types::PageContentType, null: false
 
     def resolve(handbook_page_id:, locale:)
-      PageContent.find_by(handbook_page_id: handbook_page_id, locale: locale[0, 2])
+      PageContent.find_by(handbook_page_id:, locale: locale[0, 2])
     end
   end
 end

@@ -280,7 +280,7 @@ class Product < ApplicationRecord
   end
 
   def playbooks
-    plays = Play.joins(:products).where(products: { id: id })
+    plays = Play.joins(:products).where(products: { id: })
     Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
   end
 

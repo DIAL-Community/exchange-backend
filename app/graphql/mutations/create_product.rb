@@ -26,7 +26,7 @@ module Mutations
       name:, slug:, aliases: nil, website: nil, description:, image_file: nil,
       commercial_product:, pricing_url:, pricing_model:, pricing_details:, hosting_model:
     )
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
         return {
           product: nil,
@@ -35,7 +35,7 @@ module Mutations
       end
 
       if product.nil?
-        product = Product.new(name: name)
+        product = Product.new(name:)
         product.slug = slug_em(name)
 
         if Product.where(slug: slug_em(name)).count.positive?
@@ -88,7 +88,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          product: product,
+          product:,
           errors: []
         }
       else

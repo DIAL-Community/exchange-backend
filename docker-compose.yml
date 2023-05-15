@@ -40,13 +40,3 @@ services:
     restart: always
     ports:
       - 3001:3001
-  redis:
-    image: redis
-    command: "--requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}"
-    environment:
-      - REDIS_PORT=${REDIS_PORT}
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
-    expose:
-      - "${REDIS_PORT}"
-    restart: always

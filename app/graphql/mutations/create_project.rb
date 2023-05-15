@@ -20,7 +20,7 @@ module Mutations
 
     def resolve(name:, slug:, start_date: nil, end_date: nil, project_url: nil, description:,
       product_id: nil, organization_id: nil)
-      project = Project.find_by(slug: slug)
+      project = Project.find_by(slug:)
       check = false
       if project.nil?
         check = an_admin || (a_product_owner(product_id) unless product_id.nil?) ||
@@ -37,7 +37,7 @@ module Mutations
       end
 
       if project.nil?
-        project = Project.new(name: name)
+        project = Project.new(name:)
         project.slug = slug_em(name)
 
         if Project.where(slug: slug_em(name)).count.positive?
@@ -87,7 +87,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          project: project,
+          project:,
           errors: []
         }
       else

@@ -16,7 +16,7 @@ module Mutations
         }
       end
 
-      use_case_step = UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug:)
 
       use_case_step.building_blocks = []
       building_block_slugs&.each do |building_block_slug|
@@ -27,7 +27,7 @@ module Mutations
       if use_case_step.save
         # Successful creation, return the created object with no errors
         {
-          use_case_step: use_case_step,
+          use_case_step:,
           errors: []
         }
       else

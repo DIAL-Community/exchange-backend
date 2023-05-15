@@ -17,7 +17,7 @@ module Queries
     type Types::PlayType, null: true
 
     def resolve(slug:)
-      Play.find_by(slug: slug)
+      Play.find_by(slug:)
     end
   end
 
@@ -30,7 +30,7 @@ module Queries
 
     def resolve(slug:)
       Play.joins(:playbooks)
-          .where(playbooks: { slug: slug })
+          .where(playbooks: { slug: })
           .order('playbook_plays.play_order')
     end
   end

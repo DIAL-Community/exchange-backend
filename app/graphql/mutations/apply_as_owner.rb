@@ -82,7 +82,7 @@ module Mutations
       if candidate_role.save!
         # Successful creation, return the created object with no errors
         {
-          candidate_role: candidate_role,
+          candidate_role:,
           errors: []
         }
       else

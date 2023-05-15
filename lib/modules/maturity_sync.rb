@@ -63,7 +63,7 @@ module Modules
       rubric_indicator_count = 0
       rubric_category_scores = []
       rubric_categories.each do |rubric_category|
-        category_indicators = CategoryIndicator.where(rubric_category: rubric_category)
+        category_indicators = CategoryIndicator.where(rubric_category:)
                                                .includes(:category_indicator_descriptions)
         category_missing_score = 0
         category_overall_score = 0
@@ -689,15 +689,15 @@ module Modules
     end
 
     def calculate_product_indicators(product_id)
-      product_repositories = ProductRepository.where(product_id: product_id)
+      product_repositories = ProductRepository.where(product_id:)
       github_category_indicators = CategoryIndicator.where(data_source: 'GitHub')
 
       config_file = YAML.load_file('config/indicator_config.yml')
 
       github_category_indicators.each do |indicator|
-        product_indicator = ProductIndicator.find_by(product_id: product_id, category_indicator_id: indicator.id)
+        product_indicator = ProductIndicator.find_by(product_id:, category_indicator_id: indicator.id)
         if product_indicator.nil?
-          product_indicator = ProductIndicator.new(product_id: product_id, category_indicator_id: indicator.id)
+          product_indicator = ProductIndicator.new(product_id:, category_indicator_id: indicator.id)
         end
 
         statistical_data = calculate_total_repo_statistical_data(indicator, product_repositories)

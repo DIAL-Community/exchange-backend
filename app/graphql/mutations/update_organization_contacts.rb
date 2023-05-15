@@ -13,7 +13,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(contacts:, slug:)
-      organization = Organization.find_by(slug: slug)
+      organization = Organization.find_by(slug:)
 
       unless an_admin || an_org_owner(organization.id)
         return {
@@ -36,7 +36,7 @@ module Mutations
       if organization.save
         # Successful creation, return the created object with no errors
         {
-          organization: organization,
+          organization:,
           errors: []
         }
       else
@@ -49,7 +49,7 @@ module Mutations
     end
 
     def create_new_contact(name, email, title)
-      contact = Contact.new(name: name, email: email, title: title)
+      contact = Contact.new(name:, email:, title:)
       contact.slug = slug_em(name)
 
       if Contact.where(slug: slug_em(name)).count.positive?

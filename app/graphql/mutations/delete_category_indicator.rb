@@ -9,7 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      category_indicator = CategoryIndicator.find_by(id: id)
+      category_indicator = CategoryIndicator.find_by(id:)
 
       unless an_admin
         return {
@@ -32,7 +32,7 @@ module Mutations
       else
         # Failed delete, return the errors to the client
         {
-          category_indicator: category_indicator,
+          category_indicator:,
           rubric_category_slug: rubric_category.slug,
           errors: category_indicator.errors.full_messages
         }

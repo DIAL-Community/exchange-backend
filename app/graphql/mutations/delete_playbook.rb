@@ -15,13 +15,13 @@ module Mutations
         }
       end
 
-      playbook = Playbook.find_by(id: id)
+      playbook = Playbook.find_by(id:)
       assign_auditable_user(playbook)
 
       if playbook.destroy
         # Successful deletion, return the nil playbook with no errors
         {
-          playbook: playbook,
+          playbook:,
           errors: []
         }
       else

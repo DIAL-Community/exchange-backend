@@ -11,7 +11,7 @@ module Modules
     end
 
     def update_workflow_desc(slug, desc)
-      workflow_obj = Workflow.find_by(slug: slug)
+      workflow_obj = Workflow.find_by(slug:)
       unless workflow_obj.nil?
         workflow_obj['description'] = desc
         puts "Workflow updated: #{workflow_obj['slug']}." if workflow_obj.save
@@ -19,7 +19,7 @@ module Modules
     end
 
     def update_use_case_desc(slug, desc)
-      uc_obj = UseCase.find_by(slug: slug)
+      uc_obj = UseCase.find_by(slug:)
       unless uc_obj.nil?
         uc_obj['description'] = desc
         puts "Use Case updated: #{uc_obj['slug']}." if uc_obj.save

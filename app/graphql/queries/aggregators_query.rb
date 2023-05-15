@@ -17,7 +17,7 @@ module Queries
     type Types::OrganizationType, null: true
 
     def resolve(slug:)
-      Organization.find_by(slug: slug)
+      Organization.find_by(slug:)
     end
   end
 

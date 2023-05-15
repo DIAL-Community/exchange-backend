@@ -20,7 +20,7 @@ module Queries
     type Types::CategoryIndicatorType, null: true
 
     def resolve(slug:)
-      category_indicator = CategoryIndicator.find_by(slug: slug) if an_admin
+      category_indicator = CategoryIndicator.find_by(slug:) if an_admin
       category_indicator
     end
   end

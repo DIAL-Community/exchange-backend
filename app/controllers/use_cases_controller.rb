@@ -34,7 +34,7 @@ class UseCasesController < ApplicationController
     results = {
       url: request.original_url,
       count: use_cases.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)
@@ -146,7 +146,7 @@ class UseCasesController < ApplicationController
     results = {
       url: request.original_url,
       count: use_cases.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)

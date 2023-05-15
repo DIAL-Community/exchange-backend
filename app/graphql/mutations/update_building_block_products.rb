@@ -17,7 +17,7 @@ module Mutations
         }
       end
 
-      building_block = BuildingBlock.find_by(slug: slug)
+      building_block = BuildingBlock.find_by(slug:)
 
       building_block.products = []
       product_slugs&.each do |product_slug|
@@ -34,7 +34,7 @@ module Mutations
       if building_block.save
         # Successful creation, return the created object with no errors
         {
-          building_block: building_block,
+          building_block:,
           errors: []
         }
       else

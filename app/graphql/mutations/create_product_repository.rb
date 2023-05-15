@@ -16,10 +16,10 @@ module Mutations
 
     def resolve(slug:, name:, absolute_url:, description:, main_repository:)
       repository_params = {
-        name: name,
-        absolute_url: absolute_url,
-        description: description,
-        main_repository: main_repository
+        name:,
+        absolute_url:,
+        description:,
+        main_repository:
       }
       repository_params[:slug] = slug_em(repository_params[:name])
 
@@ -32,7 +32,7 @@ module Mutations
 
       response = { slug: nil }
       current_user = context[:current_user]
-      current_product = Product.find_by(slug: slug)
+      current_product = Product.find_by(slug:)
       if (current_user.user_products.include?(current_product.id) &&
         current_user.roles.include?(User.user_roles[:product_user])) ||
          current_user.roles.include?(User.user_roles[:admin]) ||
@@ -66,15 +66,15 @@ module Mutations
 
     def resolve(name:, slug:, absolute_url:, description:, main_repository:)
       repository_params = {
-        name: name,
-        absolute_url: absolute_url,
-        description: description,
-        main_repository: main_repository
+        name:,
+        absolute_url:,
+        description:,
+        main_repository:
       }
 
       response = { slug: nil }
       current_user = context[:current_user]
-      product_repository = ProductRepository.find_by(slug: slug)
+      product_repository = ProductRepository.find_by(slug:)
       if (current_user.user_products.include?(product_repository.product.id) &&
         current_user.roles.include?(User.user_roles[:product_user])) ||
          current_user.roles.include?(User.user_roles[:admin]) ||
@@ -104,7 +104,7 @@ module Mutations
 
       response = { slug: nil }
       current_user = context[:current_user]
-      product_repository = ProductRepository.find_by(slug: slug)
+      product_repository = ProductRepository.find_by(slug:)
       if (current_user.user_products.include?(product_repository.product.id) &&
         current_user.roles.include?(User.user_roles[:product_user])) ||
          current_user.roles.include?(User.user_roles[:admin]) ||

@@ -8,7 +8,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(comment_id:)
-      comment = Comment.find_by(comment_id: comment_id)
+      comment = Comment.find_by(comment_id:)
 
       unless an_admin || a_comment_author(comment.author['id'])
         return {
@@ -29,7 +29,7 @@ module Mutations
       else
         # Failed delete, return the errors to the client
         {
-          comment: comment,
+          comment:,
           errors: comment.errors.full_messages
         }
       end

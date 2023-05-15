@@ -1,8 +1,7 @@
-image: ruby:2.7.2
+image: ruby:3.2.2
 
 services:
   - postgres:latest
-  - redis:latest
 
 stages:
   - build
@@ -22,8 +21,6 @@ variables:
   DB_USERNAME: registry
   DB_PASSWORD: 'Password!1'
   RAILS_ENV: test
-  REDIS_HOST: redis
-  REDIS_PORT: 6379
 
 cache:
   key:
@@ -39,8 +36,9 @@ build_rails:
   timeout: 30m
   script:
     - apt-get update -yy && apt-get install build-essential libpq-dev postgresql postgresql-contrib cmake -y
-    - gem install bundler -v 2.2.13
-    - bundle install -j $(nproc) --path vendor/bundle
+    - gem install bundler:2.4.10
+    - bundle config set path 'vendor/bundle'
+    - bundle install
 
 lint_rails:
   tags:
@@ -48,8 +46,10 @@ lint_rails:
   stage: lint
   timeout: 10m
   before_script:
-    - bundle check || bundle install -j $(nproc) --path vendor/bundle
+    - bundle config set path 'vendor/bundle'
+    - bundle check || bundle install
   script:
+    - bundle config set path 'vendor/bundle'
     - bundle exec rubocop --config .rubocop.yml
 
 test_rails:
@@ -60,7 +60,8 @@ test_rails:
   before_script:
     - curl -sL https://deb.nodesource.com/setup_16.x | bash -
     - apt-get update -yy && apt-get install postgresql postgresql-contrib nodejs -y
-    - bundle check || bundle install -j $(nproc) --path vendor/bundle
+    - bundle config set path 'vendor/bundle'
+    - bundle check || bundle install
     - cp config/database.yml.gitlab config/database.yml
     - until PGPASSWORD=Password!1 psql -h "postgres" -U "registry" -d "registry_test" -c '\q'; do sleep 2s; done
     - RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load db:migrate
