@@ -24,9 +24,9 @@ module Mutations
         }
       end
 
-      sector = Sector.find_by(slug: slug)
+      sector = Sector.find_by(slug:)
       if sector.nil?
-        sector = Sector.new(name: name, slug: slug_em(name))
+        sector = Sector.new(name:, slug: slug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Sector.slug_simple_starts_with(sector.slug).order(slug: :desc).first
@@ -60,7 +60,7 @@ module Mutations
       if sector.save
         # Successful creation, return the created object with no errors
         {
-          sector: sector,
+          sector:,
           errors: []
         }
       else

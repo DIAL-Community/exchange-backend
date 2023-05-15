@@ -9,7 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(organizations_slugs:, slug:)
-      project = Project.find_by(slug: slug)
+      project = Project.find_by(slug:)
 
       unless an_admin || org_owner_check(organizations_slugs) || product_owner_check(project)
         return {
@@ -29,7 +29,7 @@ module Mutations
       if project.save
         # Successful creation, return the created object with no errors
         {
-          project: project,
+          project:,
           errors: []
         }
       else
@@ -43,7 +43,7 @@ module Mutations
 
     def org_owner_check(organizations_slugs)
       organizations_slugs.each do |slug|
-        organization = Organization.find_by(slug: slug)
+        organization = Organization.find_by(slug:)
         if an_org_owner(organization.id)
           return true
         end

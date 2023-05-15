@@ -22,9 +22,9 @@ module Mutations
         }
       end
 
-      rubric_category = RubricCategory.find_by(slug: slug)
+      rubric_category = RubricCategory.find_by(slug:)
       if rubric_category.nil?
-        rubric_category = RubricCategory.new(name: name)
+        rubric_category = RubricCategory.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -61,7 +61,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          rubric_category: rubric_category,
+          rubric_category:,
           errors: []
         }
       else

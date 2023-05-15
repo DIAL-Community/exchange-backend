@@ -25,9 +25,9 @@ module Mutations
         }
       end
 
-      building_block = BuildingBlock.find_by(slug: slug)
+      building_block = BuildingBlock.find_by(slug:)
       if building_block.nil?
-        building_block = BuildingBlock.new(name: name)
+        building_block = BuildingBlock.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -78,7 +78,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          building_block: building_block,
+          building_block:,
           errors: []
         }
       else

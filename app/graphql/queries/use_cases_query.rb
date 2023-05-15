@@ -22,7 +22,7 @@ module Queries
     type Types::UseCaseType, null: true
 
     def resolve(slug:)
-      use_case = UseCase.find_by(slug: slug)
+      use_case = UseCase.find_by(slug:)
       unless use_case.nil?
         workflows = []
         if use_case.use_case_steps && !use_case.use_case_steps.empty?
@@ -92,7 +92,7 @@ module Queries
     type [Types::UseCaseStepType], null: false
 
     def resolve(slug:)
-      use_case = UseCase.find_by(slug: slug)
+      use_case = UseCase.find_by(slug:)
       use_case_steps = UseCaseStep.where(use_case_id: use_case.id)
                                   .order(step_number: :asc) unless use_case.nil?
       use_case_steps
@@ -104,7 +104,7 @@ module Queries
     type Types::UseCaseStepType, null: true
 
     def resolve(slug:)
-      use_case_step = UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug:)
 
       # Append each step's building block list to the use case's building block list
       building_blocks = []

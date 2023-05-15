@@ -22,13 +22,13 @@ module Mutations
       end
 
       # Prevent duplicating tag by the name of the tag.
-      tag = Tag.find_by(slug: slug)
+      tag = Tag.find_by(slug:)
       if tag.nil?
-        tag = Tag.find_by(name: name)
+        tag = Tag.find_by(name:)
       end
 
       if tag.nil?
-        tag = Tag.new(name: name, slug: slug_em(name))
+        tag = Tag.new(name:, slug: slug_em(name))
       end
 
       # Not a new record and current name is different with the existing name.
@@ -76,7 +76,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          tag: tag,
+          tag:,
           errors: []
         }
       else

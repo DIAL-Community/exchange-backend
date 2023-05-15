@@ -22,7 +22,7 @@ module Mutations
       end
 
       slug = slug_em(spreadsheet_data['name'])
-      record = DialSpreadsheetData.find_by(slug: slug, spreadsheet_type: spreadsheet_type)
+      record = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
       if record.nil? && assoc != 'products' && assoc != 'datasets'
         # Trying to update association when we don't have the base spreadsheet record yet.
         return {
@@ -32,7 +32,7 @@ module Mutations
       end
 
       if record.nil?
-        record = DialSpreadsheetData.new(slug: slug)
+        record = DialSpreadsheetData.new(slug:)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = DialSpreadsheetData.slug_simple_starts_with(record.slug).order(slug: :desc).first

@@ -25,9 +25,9 @@ module Mutations
         }
       end
 
-      use_case = UseCase.find_by(slug: slug)
+      use_case = UseCase.find_by(slug:)
       if use_case.nil?
-        use_case = UseCase.new(name: name)
+        use_case = UseCase.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -78,7 +78,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          use_case: use_case,
+          use_case:,
           errors: []
         }
       else

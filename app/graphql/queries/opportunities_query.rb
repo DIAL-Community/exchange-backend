@@ -17,7 +17,7 @@ module Queries
     type Types::OpportunityType, null: true
 
     def resolve(slug:)
-      Opportunity.find_by(slug: slug)
+      Opportunity.find_by(slug:)
     end
   end
 

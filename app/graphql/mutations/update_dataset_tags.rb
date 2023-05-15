@@ -9,7 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(tag_names:, slug:)
-      dataset = Dataset.find_by(slug: slug)
+      dataset = Dataset.find_by(slug:)
 
       unless an_admin
         return {
@@ -29,7 +29,7 @@ module Mutations
       if dataset.save
         # Successful creation, return the created object with no errors
         {
-          dataset: dataset,
+          dataset:,
           errors: []
         }
       else

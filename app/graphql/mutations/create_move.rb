@@ -31,9 +31,9 @@ module Mutations
         }
       end
 
-      play_move = PlayMove.find_by(play: play, slug: move_slug)
+      play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
-        play_move = PlayMove.new(name: name)
+        play_move = PlayMove.new(name:)
         play_move.slug = slug_em(name)
 
         if PlayMove.where(slug: play_move.slug).count.positive?
@@ -115,18 +115,18 @@ module Mutations
       play = Play.find_by(slug: play_slug)
       return { move: nil, errors: ['Unable to find play.'] } if play.nil?
 
-      play_move = PlayMove.find_by(play: play, slug: move_slug)
+      play_move = PlayMove.find_by(play:, slug: move_slug)
       return { move: nil, errors: ['Unable to find move.'] } if play_move.nil?
 
       if index >= play_move.resources.count
         # The index is higher or equal than the current count of the resource.
         # Append the new resource to the move.
-        play_move.resources << {
+        play_move.resources << ({
           i: play_move.resources.count,
-          name: name,
-          description: description,
-          url: url
-        }
+          name:,
+          description:,
+          url:
+        })
       else
         # The index is less length of the resources
         play_move.resources.each_with_index do |resource, i|

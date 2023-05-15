@@ -28,9 +28,9 @@ module Mutations
         }
       end
 
-      playbook = Playbook.find_by(slug: slug)
+      playbook = Playbook.find_by(slug:)
       if playbook.nil?
-        playbook = Playbook.new(name: name)
+        playbook = Playbook.new(name:)
         playbook.slug = slug_em(name)
 
         if Playbook.where(slug: slug_em(name)).count.positive?
@@ -86,7 +86,7 @@ module Mutations
         assign_auditable_user(playbook)
         playbook.save
 
-        playbook_desc = PlaybookDescription.find_by(playbook: playbook, locale: I18n.locale)
+        playbook_desc = PlaybookDescription.find_by(playbook:, locale: I18n.locale)
         playbook_desc = PlaybookDescription.new if playbook_desc.nil?
         playbook_desc.playbook = playbook
         playbook_desc.locale = I18n.locale
@@ -103,7 +103,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          playbook: playbook,
+          playbook:,
           errors: []
         }
       else

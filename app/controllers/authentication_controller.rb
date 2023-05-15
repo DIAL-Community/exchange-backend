@@ -52,8 +52,8 @@ class AuthenticationController < Devise::SessionsController
         json = new_user_response(params['user']['email'])
         format.json do
           render(
-            json: json,
-            status: status
+            json:,
+            status:
           )
         end
       end
@@ -69,8 +69,8 @@ class AuthenticationController < Devise::SessionsController
         end
         format.json do
           render(
-            json: json,
-            status: status
+            json:,
+            status:
           )
         end
       end
@@ -88,7 +88,7 @@ class AuthenticationController < Devise::SessionsController
 
   def validate_reset_token
     reset_password_token = Devise.token_generator.digest(self, :reset_password_token, request.headers['X-User-Token'])
-    user = User.find_by(reset_password_token: reset_password_token)
+    user = User.find_by(reset_password_token:)
     respond_to do |format|
       if user.nil?
         format.json { render(json: { message: 'Invalid reset token.' }, status: :unprocessable_entity) }
@@ -100,7 +100,7 @@ class AuthenticationController < Devise::SessionsController
 
   def apply_reset_token
     reset_password_token = Devise.token_generator.digest(self, :reset_password_token, request.headers['X-User-Token'])
-    user = User.find_by(reset_password_token: reset_password_token)
+    user = User.find_by(reset_password_token:)
     if user.nil?
       # User is not in the database based on the email address.
       respond_to do |format|
@@ -197,7 +197,7 @@ class AuthenticationController < Devise::SessionsController
       userName: user.username,
       own: {
         products: user.user_products.any? ? user.user_products.map : [],
-        organization: organization
+        organization:
       },
       roles: user.roles,
       isAdminUser: user.roles.include?('admin'),

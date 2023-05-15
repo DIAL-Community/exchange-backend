@@ -26,7 +26,7 @@ class WorkflowsController < ApplicationController
     results = {
       url: request.original_url,
       count: workflows.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)
@@ -134,7 +134,7 @@ class WorkflowsController < ApplicationController
     results = {
       url: request.original_url,
       count: workflows.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)

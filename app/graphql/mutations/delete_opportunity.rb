@@ -14,13 +14,13 @@ module Mutations
           errors: ['Must be admin to delete an opportunity']
         }
       end
-      opportunity = Opportunity.find_by(id: id)
+      opportunity = Opportunity.find_by(id:)
       assign_auditable_user(opportunity)
 
       if opportunity.destroy
         # Successful deletetion, return the nil opportunity with no errors
         {
-          opportunity: opportunity,
+          opportunity:,
           errors: []
         }
       else

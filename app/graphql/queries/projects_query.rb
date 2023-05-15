@@ -21,7 +21,7 @@ module Queries
     type Types::ProjectType, null: true
 
     def resolve(slug:)
-      Project.find_by(slug: slug)
+      Project.find_by(slug:)
     end
   end
 

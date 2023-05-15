@@ -17,7 +17,7 @@ module Queries
     type Types::BuildingBlockType, null: true
 
     def resolve(slug:)
-      BuildingBlock.find_by(slug: slug)
+      BuildingBlock.find_by(slug:)
     end
   end
 

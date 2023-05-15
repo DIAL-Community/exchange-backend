@@ -7,7 +7,7 @@ module Queries
     type [Types::SectorType], null: false
 
     def resolve(search:, locale:)
-      sectors = Sector.where(is_displayable: true, locale: locale).order(:name)
+      sectors = Sector.where(is_displayable: true, locale:).order(:name)
       sectors = sectors.name_contains(search) unless search.blank?
       sectors
     end
@@ -18,7 +18,7 @@ module Queries
     type Types::SectorType, null: true
 
     def resolve(slug:)
-      Sector.find_by(slug: slug)
+      Sector.find_by(slug:)
     end
   end
 
@@ -27,7 +27,7 @@ module Queries
     type [Types::SectorType], null: false
 
     def resolve(locale:)
-      Sector.where(parent_sector_id: nil, is_displayable: true, locale: locale).order(:name)
+      Sector.where(parent_sector_id: nil, is_displayable: true, locale:).order(:name)
     end
   end
 
@@ -45,9 +45,9 @@ module Queries
     def resolve(search:, locale:, parent_sector_id:, is_displayable:)
       sectors = Sector.order(:name)
 
-      sectors = sectors.where(locale: locale) unless locale.nil?
-      sectors = sectors.where(parent_sector_id: parent_sector_id) unless parent_sector_id.nil?
-      sectors = sectors.where(is_displayable: is_displayable) unless is_displayable.nil?
+      sectors = sectors.where(locale:) unless locale.nil?
+      sectors = sectors.where(parent_sector_id:) unless parent_sector_id.nil?
+      sectors = sectors.where(is_displayable:) unless is_displayable.nil?
 
       sectors = sectors.name_contains(search) unless search.blank?
       sectors

@@ -23,8 +23,8 @@ module Mutations
       end
 
       # Find existing country record.
-      country = Country.find_by(name: name)
-      country = Country.find_by(slug: slug) if country.nil? && !slug.nil?
+      country = Country.find_by(name:)
+      country = Country.find_by(slug:) if country.nil? && !slug.nil?
 
       # Read our country lookup YAML file. The file will have the 3 alphas country code.
       country_lookup_data = YAML.load_file('config/country_lookup.yml')
@@ -83,7 +83,7 @@ module Mutations
       if country.save
         # Successful creation, return the created object with no errors
         {
-          country: country,
+          country:,
           errors: []
         }
       else

@@ -38,7 +38,7 @@ class OrganizationsController < ApplicationController
     results = {
       url: request.original_url,
       count: organizations.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)
@@ -116,7 +116,7 @@ class OrganizationsController < ApplicationController
     results = {
       url: request.original_url,
       count: organizations.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)

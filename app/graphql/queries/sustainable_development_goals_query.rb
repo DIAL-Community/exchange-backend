@@ -21,7 +21,7 @@ module Queries
     type Types::SustainableDevelopmentGoalType, null: true
 
     def resolve(slug:)
-      SustainableDevelopmentGoal.find_by(slug: slug)
+      SustainableDevelopmentGoal.find_by(slug:)
     end
   end
 

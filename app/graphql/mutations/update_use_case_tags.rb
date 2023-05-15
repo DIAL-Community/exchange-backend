@@ -16,14 +16,14 @@ module Mutations
         }
       end
 
-      use_case = UseCase.find_by(slug: slug)
+      use_case = UseCase.find_by(slug:)
 
       use_case.tags = tags
 
       if use_case.save
         # Successful creation, return the created object with no errors
         {
-          use_case: use_case,
+          use_case:,
           errors: []
         }
       else

@@ -15,7 +15,7 @@ module Mutations
         }
       end
 
-      tag = Tag.find_by(id: id)
+      tag = Tag.find_by(id:)
       if tag.nil?
         return {
           tag: nil,
@@ -47,7 +47,7 @@ module Mutations
       if successful_operation
         # Successful deletion, return the nil tag with no errors
         {
-          tag: tag,
+          tag:,
           errors: []
         }
       else

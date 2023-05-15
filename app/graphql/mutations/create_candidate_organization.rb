@@ -18,7 +18,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(organization_name:, website:, description:, name:, email:, title:, captcha:)
-      candidate_params = { name: organization_name, website: website, description: description }
+      candidate_params = { name: organization_name, website:, description: }
       candidate_params[:slug] = slug_em(candidate_params[:name])
 
       candidate_organizations = CandidateOrganization.where(slug: candidate_params[:slug])
@@ -31,7 +31,7 @@ module Mutations
       candidate_organization = CandidateOrganization.new(candidate_params)
 
       unless name.blank?
-        contact_params = { name: name, email: email, title: title }
+        contact_params = { name:, email:, title: }
         contact_params[:slug] = slug_em(contact_params[:name])
 
         contacts = Contact.where(slug: contact_params[:slug])
@@ -45,7 +45,7 @@ module Mutations
       if candidate_organization.save && captcha_verification(captcha)
         # Successful creation, return the created object with no errors
         {
-          candidate_organization: candidate_organization,
+          candidate_organization:,
           errors: []
         }
       else

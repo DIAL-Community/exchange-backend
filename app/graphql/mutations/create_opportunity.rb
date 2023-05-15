@@ -28,7 +28,7 @@ module Mutations
       name:, slug:, web_address:, description:, contact_name:, contact_email:,
       opportunity_type:, opportunity_status:, opening_date:, closing_date:, image_file: nil
     )
-      opportunity = Opportunity.find_by(slug: slug)
+      opportunity = Opportunity.find_by(slug:)
       unless an_admin
         return {
           opportunity: nil,
@@ -37,7 +37,7 @@ module Mutations
       end
 
       if opportunity.nil?
-        opportunity = Opportunity.new(name: name)
+        opportunity = Opportunity.new(name:)
         opportunity.slug = slug_em(name)
 
         if Opportunity.where(slug: slug_em(name)).count.positive?
@@ -85,7 +85,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          opportunity: opportunity,
+          opportunity:,
           errors: []
         }
       else

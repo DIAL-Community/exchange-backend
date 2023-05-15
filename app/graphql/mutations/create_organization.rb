@@ -22,7 +22,7 @@ module Mutations
 
     def resolve(name:, slug:, aliases:, website:, is_endorser:, when_endorsed:, endorser_level:,
       is_mni:, description:, image_file: nil)
-      organization = Organization.find_by(slug: slug)
+      organization = Organization.find_by(slug:)
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
         return {
           organization: nil,
@@ -31,7 +31,7 @@ module Mutations
       end
 
       if organization.nil?
-        organization = Organization.new(name: name)
+        organization = Organization.new(name:)
         organization.slug = slug_em(name)
 
         if Organization.where(slug: slug_em(name)).count.positive?
@@ -88,7 +88,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          organization: organization,
+          organization:,
           errors: []
         }
       else

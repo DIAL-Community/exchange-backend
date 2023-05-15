@@ -24,9 +24,9 @@ module Mutations
         }
       end
 
-      use_case_step = UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug:)
       if use_case_step.nil?
-        use_case_step = UseCaseStep.new(name: name)
+        use_case_step = UseCaseStep.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -66,7 +66,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          use_case_step: use_case_step,
+          use_case_step:,
           errors: []
         }
       else

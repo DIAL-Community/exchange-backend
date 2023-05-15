@@ -20,7 +20,7 @@ module Mutations
         }
       end
 
-      candidate_dataset = CandidateDataset.find_by(slug: slug)
+      candidate_dataset = CandidateDataset.find_by(slug:)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_dataset)
@@ -36,7 +36,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          candidate_dataset: candidate_dataset,
+          candidate_dataset:,
           errors: []
         }
       else
