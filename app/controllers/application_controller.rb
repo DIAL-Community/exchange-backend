@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
 
     # Project list in JIRA. Adding this for reference.
     _project_keys = [
-      ['bb-information-mediator', 'IM'],
+      ['bb-information-mediation', 'IM'],
       ['bb-consent', 'CON'],
       ['bb-digital-registries', 'DR'],
       ['bb-identity', 'ID'],
@@ -114,9 +114,11 @@ class ApplicationController < ActionController::Base
       ['bb-ux', 'UX'],
       ['bb-esignature', 'SIG'],
       ['bb-emarketplace', 'MKT'],
+      ['bb-cms', 'CMS'],
       ['bb-cloud-infrastructure-hosting', 'INF'],
       ['govstack-country-engagement-playbook', 'GSCIJ'],
-      ['product-use-cases', 'PRD'],
+      ['use-cases', 'PRD'],
+      ['sandbox', 'SND'],
       ['default-value', 'TECH']
     ]
 
