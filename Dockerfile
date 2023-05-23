@@ -1,4 +1,4 @@
-FROM ruby:2.6 AS build-web
+FROM ruby:3.1.4 AS build-web
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get update -qq && apt-get install -y cron git imagemagick build-essential libpq-dev nodejs logrotate cmake cloc
@@ -32,7 +32,7 @@ WORKDIR /t4d
 COPY . /t4d
 
 
-FROM ruby:2.6 AS build-web2
+FROM ruby:3.1.4 AS build-web2
 
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get update -qq && apt-get install -y cron git imagemagick build-essential libpq-dev nodejs logrotate cmake cloc

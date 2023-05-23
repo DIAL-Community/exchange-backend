@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: agg_capabilities; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1672,8 +1679,8 @@ CREATE TABLE public.opportunities (
     description character varying NOT NULL,
     contact_name character varying NOT NULL,
     contact_email character varying NOT NULL,
-    opening_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    closing_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    opening_date timestamp without time zone,
+    closing_date timestamp without time zone,
     opportunity_type public.opportunity_type_type DEFAULT 'OTHER'::public.opportunity_type_type NOT NULL,
     opportunity_status public.opportunity_status_type DEFAULT 'UPCOMING'::public.opportunity_status_type NOT NULL,
     web_address character varying,
@@ -3549,7 +3556,6 @@ CREATE TABLE public.use_case_steps (
     use_case_id bigint NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    markdown_url character varying,
     example_implementation character varying
 );
 
@@ -7832,6 +7838,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230327224648'),
 ('20230403213850'),
 ('20230403213927'),
-('20230420032636');
+('20230420032636'),
+('20230424122850'),
+('20230508150944'),
+('20230508150945'),
+('20230508150946'),
+('20230511202225');
 
 

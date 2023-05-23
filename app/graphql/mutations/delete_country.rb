@@ -15,7 +15,7 @@ module Mutations
         }
       end
 
-      country = Country.find_by(id: id)
+      country = Country.find_by(id:)
       if country.nil?
         return {
           country: nil,
@@ -26,7 +26,7 @@ module Mutations
       if country.destroy
         # Successful deletion, return the nil country with no errors
         {
-          country: country,
+          country:,
           errors: []
         }
       else

@@ -73,8 +73,8 @@ namespace :endorsers do
       # organization.endorser_level = 'none'
 
       if contact_person.to_s == 'Yes'
-        existing_contact = Contact.find_by(name: name, email: email_address)
-        existing_contact = Contact.new(name: name, email: email_address, title: title) if existing_contact.nil?
+        existing_contact = Contact.find_by(name:, email: email_address)
+        existing_contact = Contact.new(name:, email: email_address, title:) if existing_contact.nil?
       else
         existing_contact = Contact.find_by(name: contact_name, email: contact_email)
         existing_contact = Contact.new(name: contact_name, email: contact_email, title: contact_title) \

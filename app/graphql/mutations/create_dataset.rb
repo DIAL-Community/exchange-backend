@@ -25,9 +25,9 @@ module Mutations
 
     def resolve(name:, slug:, aliases:, website:, visualization_url: nil, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
-      dataset = Dataset.find_by(slug: slug)
+      dataset = Dataset.find_by(slug:)
       if dataset.nil?
-        dataset = Dataset.new(name: name)
+        dataset = Dataset.new(name:)
         dataset.slug = slug_em(name)
 
         if Dataset.where(slug: slug_em(name)).count.positive?
@@ -85,7 +85,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          dataset: dataset,
+          dataset:,
           errors: []
         }
       else

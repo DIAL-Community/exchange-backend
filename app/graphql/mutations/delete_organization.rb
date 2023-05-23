@@ -14,13 +14,13 @@ module Mutations
           errors: ['Must be admin to delete an organization']
         }
       end
-      organization = Organization.find_by(id: id)
+      organization = Organization.find_by(id:)
       assign_auditable_user(organization)
 
       if organization.destroy
         # Successful deletetion, return the nil organization with no errors
         {
-          organization: organization,
+          organization:,
           errors: []
         }
       else

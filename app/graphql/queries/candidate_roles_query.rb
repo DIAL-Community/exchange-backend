@@ -10,9 +10,9 @@ module Queries
       return [] unless an_admin
 
       candidate_roles = CandidateRole
-      candidate_roles = candidate_roles.where(product_id: product_id) unless product_id.nil?
+      candidate_roles = candidate_roles.where(product_id:) unless product_id.nil?
 
-      candidate_roles = candidate_roles.where(organization_id: organization_id) unless organization_id.nil?
+      candidate_roles = candidate_roles.where(organization_id:) unless organization_id.nil?
       candidate_roles
     end
   end
@@ -36,7 +36,7 @@ module Queries
         candidate_roles = candidate_roles.where(organization_id: organization_id.to_i)
       end
 
-      candidate_roles = candidate_roles.where(email: email).order(updated_at: :desc) unless email.nil?
+      candidate_roles = candidate_roles.where(email:).order(updated_at: :desc) unless email.nil?
       candidate_roles.first
     end
   end

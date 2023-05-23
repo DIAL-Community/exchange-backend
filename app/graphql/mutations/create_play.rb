@@ -26,9 +26,9 @@ module Mutations
         }
       end
 
-      play = Play.find_by(slug: slug)
+      play = Play.find_by(slug:)
       if play.nil?
-        play = Play.new(name: name)
+        play = Play.new(name:)
         play.slug = slug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
@@ -69,7 +69,7 @@ module Mutations
         assign_auditable_user(play)
         play.save
 
-        play_desc = PlayDescription.find_by(play: play, locale: I18n.locale)
+        play_desc = PlayDescription.find_by(play:, locale: I18n.locale)
         play_desc = PlayDescription.new if play_desc.nil?
         play_desc.play = play
         play_desc.locale = I18n.locale
@@ -97,7 +97,7 @@ module Mutations
                         .find_by(playbook: { slug: playbook_slug }, play: { slug: play.slug })
         # Only create assignment if the playbook is not yet assigned.
         if !playbook.nil? && assigned_play.nil?
-          max_order = PlaybookPlay.where(playbook: playbook).maximum('play_order')
+          max_order = PlaybookPlay.where(playbook:).maximum('play_order')
           max_order = max_order.nil? ? 0 : (max_order + 1)
           assigned_play = PlaybookPlay.new
           assigned_play.play = play
@@ -114,7 +114,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          play: play,
+          play:,
           errors: []
         }
       else

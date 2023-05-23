@@ -9,7 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(sector_slugs:, slug:)
-      opportunity = Opportunity.find_by(slug: slug)
+      opportunity = Opportunity.find_by(slug:)
 
       unless an_admin || an_org_owner(opportunity.id)
         return {
@@ -31,7 +31,7 @@ module Mutations
       if opportunity.save
         # Successful creation, return the created object with no errors
         {
-          opportunity: opportunity,
+          opportunity:,
           errors: []
         }
       else

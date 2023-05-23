@@ -29,7 +29,7 @@ module Mutations
       end
 
       category_indicator_slugs.each do |slug|
-        current_category_indicator = CategoryIndicator.find_by(slug: slug)
+        current_category_indicator = CategoryIndicator.find_by(slug:)
         rubric_category.category_indicators << current_category_indicator
       end
 
@@ -38,7 +38,7 @@ module Mutations
       if rubric_category.save
         # Successful creation, return the created object with no errors
         {
-          rubric_category: rubric_category,
+          rubric_category:,
           errors: []
         }
       else

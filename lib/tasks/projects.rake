@@ -310,7 +310,7 @@ namespace :projects do
 
       country = Country.find_by(name: mm_proj['country'])
       unless country.nil?
-        existing_country = ProjectsCountry.find_by(project: curr_proj, country: country)
+        existing_country = ProjectsCountry.find_by(project: curr_proj, country:)
         curr_proj.countries << country if existing_country.nil?
       end
       curr_proj.save
@@ -343,7 +343,7 @@ namespace :projects do
         proj_org.save
       end
       %w[en de fr].each do |locale|
-        project_desc = ProjectDescription.find_by(project: curr_proj, locale: locale)
+        project_desc = ProjectDescription.find_by(project: curr_proj, locale:)
         project_desc = ProjectDescription.new if project_desc.nil?
         project_desc.project = curr_proj
         project_desc.locale = locale
@@ -391,7 +391,7 @@ namespace :projects do
     headers.each do |header|
       indicator = header.slice(0, 3)
       desc = header[4..-1]
-      next unless Classification.find_by(indicator: indicator).nil?
+      next unless Classification.find_by(indicator:).nil?
 
       puts 'Creating Classification.'
       classification = Classification.new
@@ -418,7 +418,7 @@ namespace :projects do
           next unless !column.nil? && !column.blank?
 
           indicator = headers[index].slice(0, 3)
-          classification = Classification.find_by(indicator: indicator)
+          classification = Classification.find_by(indicator:)
           next if classification.nil?
 
           puts "#{product} mapped to #{headers[index]}"
@@ -496,7 +496,7 @@ namespace :projects do
       next if project_desc.nil?
 
       %w[es pt sw].each do |locale|
-        new_desc = ProjectDescription.where(project_id: project, locale: locale).first || ProjectDescription.new
+        new_desc = ProjectDescription.where(project_id: project, locale:).first || ProjectDescription.new
         new_desc.locale = locale
         new_desc.project_id = project.id
         new_translation = translate.translate(project_desc.description, to: locale)
@@ -512,7 +512,7 @@ namespace :projects do
       next if product_desc.nil?
 
       %w[es pt sw].each do |locale|
-        new_desc = ProductDescription.where(product_id: product, locale: locale).first || ProductDescription.new
+        new_desc = ProductDescription.where(product_id: product, locale:).first || ProductDescription.new
         new_desc.locale = locale
         new_desc.product_id = product.id
         new_translation = translate.translate(product_desc.description, to: locale)
@@ -529,7 +529,7 @@ namespace :projects do
 
       %w[es pt sw].each do |locale|
         new_desc = OrganizationDescription.where(organization_id: org,
-                                                 locale: locale).first || OrganizationDescription.new
+                                                 locale:).first || OrganizationDescription.new
         new_desc.locale = locale
         new_desc.organization_id = org.id
         new_translation = translate.translate(org_desc.description, to: locale)

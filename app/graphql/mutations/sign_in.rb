@@ -19,7 +19,7 @@ module Mutations
 
           user.regenerate_authentication_token
           token = user.authentication_token # crypt.encrypt_and_sign("user-id:#{ user.id }")
-          { user: user, token: token }
+          { user:, token: }
         else
           GraphQL::ExecutionError.new('Incorrect Email/Password')
         end

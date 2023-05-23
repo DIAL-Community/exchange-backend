@@ -20,7 +20,7 @@ module Mutations
         }
       end
 
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
 
       indicators_data.each do |indicator_data|
         category_indicator = CategoryIndicator.find_by(slug: indicator_data['category_indicator_slug'])

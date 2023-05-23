@@ -21,7 +21,7 @@ module Queries
     type Types::ProductType, null: true
 
     def resolve(slug:)
-      Product.find_by(slug: slug)
+      Product.find_by(slug:)
     end
   end
 
@@ -219,7 +219,7 @@ module Queries
     unless tags.nil?
       tag_products = []
       tags.each do |tag|
-        tag_products += Product.where('LOWER(:tag) = ANY(LOWER(products.tags::text)::text[])', tag: tag)
+        tag_products += Product.where('LOWER(:tag) = ANY(LOWER(products.tags::text)::text[])', tag:)
                                .map(&:id)
       end
     end
@@ -316,7 +316,7 @@ module Queries
     type [Types::ProductRepositoryType], null: false
 
     def resolve(slug:)
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
       ProductRepository.where(product_id: product.id, deleted: false)
                        .order(main_repository: :desc, name: :asc)
     end
@@ -327,7 +327,7 @@ module Queries
     type Types::ProductRepositoryType, null: true
 
     def resolve(slug:)
-      ProductRepository.find_by(slug: slug)
+      ProductRepository.find_by(slug:)
     end
   end
 

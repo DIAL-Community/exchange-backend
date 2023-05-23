@@ -16,7 +16,7 @@ module Mutations
         }
       end
 
-      building_block = BuildingBlock.find_by(slug: slug)
+      building_block = BuildingBlock.find_by(slug:)
 
       building_block.workflows = []
       if !workflows_slugs.nil? && !workflows_slugs.empty?
@@ -29,7 +29,7 @@ module Mutations
       if building_block.save
         # Successful creation, return the created object with no errors
         {
-          building_block: building_block,
+          building_block:,
           errors: []
         }
       else

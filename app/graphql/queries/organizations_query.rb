@@ -22,7 +22,7 @@ module Queries
     type Types::OrganizationType, null: true
 
     def resolve(slug:)
-      Organization.find_by(slug: slug)
+      Organization.find_by(slug:)
     end
   end
 
@@ -50,7 +50,7 @@ module Queries
 
       organizations = organizations.where(is_endorser: true) if endorser_only
 
-      organizations = organizations.where(endorser_level: endorser_level) unless endorser_level.empty?
+      organizations = organizations.where(endorser_level:) unless endorser_level.empty?
 
       filtered_aggregators = aggregators.reject { |x| x.nil? || x.empty? }
       organizations = organizations.where(id: filtered_aggregators) unless filtered_aggregators.empty?

@@ -17,7 +17,7 @@ module Queries
     type Types::WorkflowType, null: true
 
     def resolve(slug:)
-      Workflow.find_by(slug: slug)
+      Workflow.find_by(slug:)
     end
   end
 

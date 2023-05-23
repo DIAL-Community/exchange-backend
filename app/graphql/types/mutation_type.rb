@@ -120,6 +120,7 @@ module Types
     field :create_wizard_guidance_mail, mutation: Mutations::CreateWizardGuidanceMail
 
     field :apply_as_owner, mutation: Mutations::ApplyAsOwner
+    field :apply_as_content_editor, mutation: Mutations::ApplyAsContentEditor
 
     field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
   end

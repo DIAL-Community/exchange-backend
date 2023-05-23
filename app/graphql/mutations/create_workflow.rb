@@ -22,9 +22,9 @@ module Mutations
         }
       end
 
-      workflow = Workflow.find_by(slug: slug)
+      workflow = Workflow.find_by(slug:)
       if workflow.nil?
-        workflow = Workflow.new(name: name)
+        workflow = Workflow.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -69,7 +69,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          workflow: workflow,
+          workflow:,
           errors: []
         }
       else

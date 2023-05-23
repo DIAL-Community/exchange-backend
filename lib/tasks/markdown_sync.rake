@@ -21,7 +21,7 @@ namespace :markdown_sync do
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        use_case_description = UseCaseDescription.find_by(use_case: use_case, locale: 'en')
+        use_case_description = UseCaseDescription.find_by(use_case:, locale: 'en')
         use_case_description = UseCaseDescription.new if use_case_description.nil?
         use_case_description.description = find_use_case_description(html_fragment)&.strip
         use_case_description.use_case = use_case
@@ -61,6 +61,24 @@ namespace :markdown_sync do
         end_description = true
       end
     end
+
+    start_stakeholders = false
+    end_stakeholders = false
+    until end_stakeholders
+      if !start_stakeholders && current_node.name == 'h2'
+        start_stakeholders = true
+      end
+
+      if start_description && !end_stakeholders
+        description += current_node.to_html
+      end
+
+      current_node = current_node.next
+      if start_stakeholders && current_node.name == 'h2'
+        end_stakeholders = true
+      end
+    end
+
     description
   end
 
@@ -115,7 +133,7 @@ namespace :markdown_sync do
         use_case_step = UseCaseStep.new(
           name: step_name,
           slug: slug_em(step_name),
-          use_case: use_case
+          use_case:
         )
 
         # Check if we need to add _dup to the slug.
@@ -171,6 +189,8 @@ namespace :markdown_sync do
 
   def update_step_workflows(use_case_step, step_root)
     current_node = find_strong_node(step_root, 'Workflow')
+    return if current_node.nil?
+
     puts "Processing node: #{current_node.content}"
 
     use_case_step_workflows = []
@@ -189,7 +209,10 @@ namespace :markdown_sync do
 
   def update_step_example_implementation(use_case_step, step_root)
     current_node = find_strong_node(step_root, 'Example Implementation')
+    return if current_node.nil?
+
     puts "Processing node: #{current_node.content}"
+
     example_implementation_info_node = current_node.at_css(' + p')
     puts "Example implementation: #{example_implementation_info_node.content}."
     if example_implementation_info_node.name == 'p'
@@ -199,6 +222,8 @@ namespace :markdown_sync do
 
   def update_step_building_blocks(use_case_step, step_root)
     current_node = find_strong_node(step_root, 'Building Block')
+    return if current_node.nil?
+
     puts "Processing node: #{current_node.content}"
 
     end_step = false
@@ -226,7 +251,7 @@ namespace :markdown_sync do
     current_node = starting_node
     until node_found || current_node.nil?
       current_node = current_node.next
-      next if current_node.children.empty?
+      next if current_node.nil? || current_node.children.empty?
 
       first_child, others = current_node.children
       next unless others.nil?

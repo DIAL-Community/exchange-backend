@@ -195,7 +195,7 @@ RSpec.describe(Queries::OwnedProductsQuery, type: :graphql) do
   end
 end
 
-RSpec.describe(Queries::Product, type: :graphql) do
+RSpec.describe(Queries::ProductQuery, type: :graphql) do
   let(:query) do
     <<~GQL
       query Product($slug: String!) {

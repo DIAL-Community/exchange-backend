@@ -10,7 +10,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(building_block_slugs:, mapping_status:, slug:)
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
 
       unless an_admin || a_product_owner(product.id)
         return {
@@ -36,7 +36,7 @@ module Mutations
       if product.save
         # Successful creation, return the created object with no errors
         {
-          product: product,
+          product:,
           errors: []
         }
       else

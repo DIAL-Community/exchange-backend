@@ -460,7 +460,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !product.nil? && !new_sector.nil? && !product.sectors.include?(new_sector)
 
@@ -477,7 +477,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !project.nil? && !new_sector.nil? && !project.sectors.include?(new_sector)
 
@@ -494,7 +494,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !org.nil? && !new_sector.nil? && !org.sectors.include?(new_sector)
 

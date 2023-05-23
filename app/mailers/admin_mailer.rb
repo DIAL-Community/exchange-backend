@@ -8,7 +8,7 @@ class AdminMailer < ApplicationMailer
          to: mail_to,
          subject: email_subject,
          body: email_body,
-         content_type: content_type)
+         content_type:)
   end
 
   def notify_product_owner_request

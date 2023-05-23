@@ -16,7 +16,7 @@ module Mutations
         }
       end
 
-      workflow = Workflow.find_by(slug: slug)
+      workflow = Workflow.find_by(slug:)
 
       workflow.building_blocks = []
       building_block_slugs&.each do |building_block_slug|
@@ -27,7 +27,7 @@ module Mutations
       if workflow.save
         # Successful creation, return the created object with no errors
         {
-          workflow: workflow,
+          workflow:,
           errors: []
         }
       else

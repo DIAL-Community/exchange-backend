@@ -75,8 +75,8 @@ namespace :data_processors do
   def generate_product(json_data, obj_type)
     slug = slug_em(json_data['name'])
 
-    product = Product.find_by(slug: slug) if obj_type == 'product'
-    product = Dataset.find_by(slug: slug) unless obj_type == 'product'
+    product = Product.find_by(slug:) if obj_type == 'product'
+    product = Dataset.find_by(slug:) unless obj_type == 'product'
     # Found existing product, return the product and skip processing the rest of the json.
     # return product unless product.nil? || product.manual_update
     product = Product.new if obj_type == 'product' && product.nil?
@@ -178,43 +178,43 @@ namespace :data_processors do
     product.update(
       name: json_data['name'],
       aliases: valid_aliases,
-      slug: slug,
+      slug:,
       # License is part of repository now, need to add repository url to the spreadsheet.
       # license: json_data['license'],
       # repository_url: json_data['repositoryUrl'],
       origins: [origin],
-      sectors: sectors,
-      product_building_blocks: product_building_blocks,
-      organizations: organizations,
+      sectors:,
+      product_building_blocks:,
+      organizations:,
       sustainable_development_goals: sdgs,
-      website: website,
-      product_type: product_type,
+      website:,
+      product_type:,
       commercial_product: json_data['commercialProduct'].to_s == 'true',
       hosting_model: json_data['hostingModel'],
       pricing_model: json_data['pricingModel'],
       pricing_details: json_data['pricingDetails'],
       pricing_date: json_data['pricingDate'].blank? ? nil : Date.strptime(json_data['pricingDate'], "%m/%d/%Y"),
       pricing_url: json_data['pricingUrl'],
-      tags: tags
+      tags:
     ) if obj_type == 'product'
 
     product.update(
       name: json_data['name'],
       aliases: valid_aliases,
-      slug: slug,
+      slug:,
       origins: [origin],
-      sectors: sectors,
-      organizations: organizations,
+      sectors:,
+      organizations:,
       sustainable_development_goals: sdgs,
-      website: website,
+      website:,
       visualization_url: json_data['visualizationUrl'],
       time_range: json_data['timeRange'],
-      countries: countries,
+      countries:,
       geographic_coverage: json_data['geographicCoverage'],
       license: json_data['license'],
       languages: json_data['languages'],
       data_format: json_data['format'],
-      tags: tags,
+      tags:,
       dataset_type: product_type
     ) unless obj_type == 'product'
 
@@ -234,8 +234,8 @@ namespace :data_processors do
 
         slug = slug_em(json_data['name'])
 
-        product = Product.find_by(slug: slug) if obj_type == 'product'
-        product = Dataset.find_by(slug: slug) unless obj_type == 'product'
+        product = Product.find_by(slug:) if obj_type == 'product'
+        product = Dataset.find_by(slug:) unless obj_type == 'product'
         # Found existing product, return the product and skip processing the rest of the json.
         next if product.nil?
 
@@ -271,8 +271,8 @@ namespace :data_processors do
 
         slug = slug_em(json_data['name'])
 
-        product = Product.find_by(slug: slug) if obj_type == 'product'
-        product = Dataset.find_by(slug: slug) unless obj_type == 'product'
+        product = Product.find_by(slug:) if obj_type == 'product'
+        product = Dataset.find_by(slug:) unless obj_type == 'product'
         # Found existing product, return the product and skip processing the rest of the json.
         next if product.nil?
 

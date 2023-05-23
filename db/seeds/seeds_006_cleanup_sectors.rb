@@ -45,7 +45,7 @@ sector_origin = Origin.find_by(slug: 'dial') if sector_origin.nil?
 translated_sector_names.each do |sector_slug, translated_names|
   translated_names.each do |locale, name|
     puts "Finding sector '#{name}' in '#{locale}' with slug: #{sector_slug}."
-    sector = Sector.find_by(slug: sector_slug, locale: locale)
+    sector = Sector.find_by(slug: sector_slug, locale:)
     next unless sector.nil?
 
     sector = Sector.new do |attribute|

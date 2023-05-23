@@ -26,14 +26,14 @@ module Mutations
         }
       end
 
-      candidate_dataset = CandidateDataset.find_by(slug: slug)
+      candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
-        candidate_dataset = CandidateDataset.new(name: name,
-                                                 data_url: data_url,
-                                                 data_visualization_url: data_visualization_url,
-                                                 data_type: data_type,
-                                                 submitter_email: submitter_email,
-                                                 description: description)
+        candidate_dataset = CandidateDataset.new(name:,
+                                                 data_url:,
+                                                 data_visualization_url:,
+                                                 data_type:,
+                                                 submitter_email:,
+                                                 description:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -54,7 +54,7 @@ module Mutations
       if candidate_dataset.save! && captcha_verification(captcha)
         # Successful creation, return the created object with no errors
         {
-          candidate_dataset: candidate_dataset,
+          candidate_dataset:,
           errors: []
         }
       else

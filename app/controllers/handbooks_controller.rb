@@ -208,7 +208,7 @@ class HandbooksController < ApplicationController
     json['data'] = Base64.strict_encode64(File.read(temporary.path))
 
     respond_to do |format|
-      format.json { render(json: json) }
+      format.json { render(json:) }
     end
   end
 
