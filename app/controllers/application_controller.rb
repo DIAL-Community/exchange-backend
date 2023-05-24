@@ -192,7 +192,7 @@ class ApplicationController < ActionController::Base
         issuetype: {
           id: 10002
         },
-        summary: 'Feedback on specifications, submitted by ' + params[:name] + ' (' + email_address + ')',
+        summary: 'Feedback on specifications, submitted by ' + params[:name] + ' (' + params[:encoded_email] + ')',
         description: {
           type: 'doc',
           version: 1,
