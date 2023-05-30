@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: agg_capabilities; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -3024,7 +3017,9 @@ CREATE TABLE public.resources (
     phase character varying NOT NULL,
     image_url character varying,
     link character varying,
-    description character varying
+    description character varying,
+    show_in_wizard boolean DEFAULT true NOT NULL,
+    show_in_exchange boolean DEFAULT false NOT NULL
 );
 
 
@@ -7843,6 +7838,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230508150944'),
 ('20230508150945'),
 ('20230508150946'),
-('20230511202225');
+('20230511202225'),
+('20230530143937'),
+('20230530144123');
 
 

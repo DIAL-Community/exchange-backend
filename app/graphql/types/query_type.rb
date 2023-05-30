@@ -141,5 +141,9 @@ module Types
 
     field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
+
+    field :resources, resolver: Queries::ResourcesQuery
+    field :resource, resolver: Queries::ResourceQuery
+    field :search_resources, resolver: Queries::SearchResourcesQuery
   end
 end

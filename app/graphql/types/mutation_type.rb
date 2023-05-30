@@ -127,5 +127,8 @@ module Types
     field :apply_as_content_editor, mutation: Mutations::ApplyAsContentEditor
 
     field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
+
+    field :create_resource, mutation: Mutations::CreateResource
+    field :delete_resource, mutation: Mutations::DeleteResource
   end
 end

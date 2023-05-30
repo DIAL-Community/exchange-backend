@@ -1,0 +1,69 @@
+# frozen_string_literal: true
+
+require 'modules/slugger'
+
+module Mutations
+  class CreateResource < Mutations::BaseMutation
+    include Modules::Slugger
+
+    argument :name, String, required: true
+    argument :slug, String, required: true
+    argument :phase, String, required: true
+
+    argument :link, String, required: false
+    argument :image_url, String, required: false
+    argument :description, String, required: false
+
+    argument :show_in_exchange, Boolean, required: true
+    argument :show_in_wizard, Boolean, required: true
+
+    field :resource, Types::ResourceType, null: true
+    field :errors, [String], null: true
+
+    def resolve(name:, slug:, phase:, link:, image_url:, description:, show_in_exchange:, show_in_wizard:)
+      unless an_admin
+        return {
+          resource: nil,
+          errors: ['Must be admin or content editor to create a resource']
+        }
+      end
+
+      resource = Resource.find_by(slug:)
+      if resource.nil?
+        resource = Resource.new(name:, slug: slug_em(name))
+
+        # Check if we need to add _dup to the slug.
+        first_duplicate = Resource.slug_simple_starts_with(resource.slug).order(slug: :desc).first
+        unless first_duplicate.nil?
+          resource.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      # Update field of the resource object
+      resource.name = name
+      resource.phase = phase
+
+      resource.link = link
+      resource.image_url = image_url
+      resource.description = description
+
+      resource.show_in_exchange = show_in_exchange
+      resource.show_in_wizard = show_in_wizard
+
+      assign_auditable_user(resource)
+      if resource.save
+        # Successful creation, return the created object with no errors
+        {
+          resource:,
+          errors: []
+        }
+      else
+        # Failed save, return the errors to the client
+        {
+          resource: nil,
+          errors: resource.errors.full_messages
+        }
+      end
+    end
+  end
+end

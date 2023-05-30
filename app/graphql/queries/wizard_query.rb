@@ -40,7 +40,7 @@ module Queries
 
       wizard['building_blocks'] = BuildingBlock.where(name: building_blocks)
       # Build list of resources manually
-      wizard['resources'] = Resource.all
+      wizard['resources'] = Resource.where(show_in_wizard: true)
       wizard
     end
   end
