@@ -14,7 +14,7 @@ module Mutations
       unless an_admin
         return {
           dataset: nil,
-          errors: ['Must be admin to update an dataset']
+          errors: ['Must be admin to update a dataset']
         }
       end
 

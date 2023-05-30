@@ -10,10 +10,14 @@ module Types
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
     field :delete_playbook, mutation: Mutations::DeletePlaybook
+    field :delete_playbook_play, mutation: Mutations::DeletePlaybookPlay
+    field :update_playbook_plays, mutation: Mutations::UpdatePlaybookPlays
 
     field :create_play, mutation: Mutations::CreatePlay
     field :auto_save_play, mutation: Mutations::CreatePlay
     field :duplicate_play, mutation: Mutations::DuplicatePlay
+    field :delete_play_move, mutation: Mutations::DeletePlayMove
+    field :update_play_moves, mutation: Mutations::UpdatePlayMoves
 
     field :create_move, mutation: Mutations::CreateMove
     field :auto_save_move, mutation: Mutations::CreateMove

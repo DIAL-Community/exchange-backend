@@ -46,7 +46,7 @@ RSpec.describe(Mutations::DeletePlaybook, type: :graphql) do
       expect(result['data']['deletePlaybook']['playbook'])
         .to(be(nil))
       expect(result['data']['deletePlaybook']['errors'])
-        .to(eq(["Must be admin to delete an playbook."]))
+        .to(eq(["Must be admin to delete a playbook."]))
     end
   end
 end

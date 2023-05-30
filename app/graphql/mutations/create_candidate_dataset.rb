@@ -22,7 +22,7 @@ module Mutations
       unless !context[:current_user].nil?
         return {
           candidate_dataset: nil,
-          errors: ['Must be logged in to create an candidate dataset']
+          errors: ['Must be logged in to create a candidate dataset']
         }
       end
 

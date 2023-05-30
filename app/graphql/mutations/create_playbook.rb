@@ -10,8 +10,7 @@ module Mutations
     argument :slug, String, required: true
     argument :cover, ApolloUploadServer::Upload, required: false
     argument :author, String, required: false
-    argument :tags, GraphQL::Types::JSON, required: false, default_value: []
-    argument :plays, GraphQL::Types::JSON, required: false, default_value: []
+    argument :tags, [String], required: false, default_value: []
     argument :overview, String, required: true
     argument :audience, String, required: false, default_value: ''
     argument :outcomes, String, required: false, default_value: ''
@@ -20,7 +19,7 @@ module Mutations
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, plays:, cover: nil, draft:)
+    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
       unless an_admin || a_content_editor
         return {
           playbook: nil,
@@ -66,21 +65,6 @@ module Mutations
             puts "Unable to save cover for: #{playbook.name}. Standard error: #{e}."
           end
           playbook.auditable_image_changed(cover.original_filename)
-        end
-
-        index = 0
-        playbook.plays = []
-        plays.each do |play|
-          curr_play = Play.find(play['id'])
-          next if curr_play.nil?
-
-          playbook.plays << curr_play
-          playbook_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: curr_play.id)
-          playbook_play.play_order = index
-
-          assign_auditable_user(playbook_play)
-          playbook_play.save
-          index += 1
         end
 
         assign_auditable_user(playbook)

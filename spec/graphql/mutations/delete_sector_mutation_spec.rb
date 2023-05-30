@@ -46,7 +46,7 @@ RSpec.describe(Mutations::DeleteSector, type: :graphql) do
       expect(result['data']['deleteSector']['sector'])
         .to(be(nil))
       expect(result['data']['deleteSector']['errors'])
-        .to(eq(["Must be admin to delete an sector."]))
+        .to(eq(["Must be admin to delete a sector."]))
     end
   end
 end
