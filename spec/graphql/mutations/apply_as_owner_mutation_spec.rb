@@ -29,6 +29,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
   end
 
   it 'creates product candidate role - user is logged in' do
+    create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
     user = create(:user, email: 'user@gmail.com')
 
     create(:product, name: "Some Product", slug: "some_product", id: 1001)
@@ -57,6 +58,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
   end
 
   it 'creates organization candidate role - user is logged in' do
+    create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
     user = create(:user, email: 'user@gmail.com')
 
     create(:organization, name: "Some Organization", slug: "some_organization", id: 1001)

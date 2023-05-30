@@ -22,7 +22,7 @@ module Mutations
       unless !context[:current_user].nil?
         return {
           candidate_dataset: nil,
-          errors: ['Must be logged in to create an candidate dataset']
+          errors: ['Must be logged in to create a candidate dataset']
         }
       end
 
@@ -52,6 +52,10 @@ module Mutations
       end
 
       if candidate_dataset.save! && captcha_verification(captcha)
+        AdminMailer
+          .with(candidate_name: candidate_dataset.name)
+          .notify_new_candidate_dataset
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
           candidate_dataset:,

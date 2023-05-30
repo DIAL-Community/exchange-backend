@@ -34,6 +34,11 @@ module Mutations
       end
 
       if successful_operation
+        AdminMailer
+          .with(rejected: action == 'REJECT', user_email: candidate_dataset.submitter_email)
+          .notify_candidate_dataset_approval
+          .deliver_now
+
         # Successful creation, return the created object with no errors
         {
           candidate_dataset:,

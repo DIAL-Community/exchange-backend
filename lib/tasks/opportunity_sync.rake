@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "faraday"
+require 'faraday'
+require 'json'
 require 'nokogiri'
 require 'tempfile'
 require 'modules/slugger'
-include Modules::Slugger
 
 namespace :opportunities_sync do
   desc 'Sync use case github structure.'
@@ -13,6 +13,9 @@ namespace :opportunities_sync do
     page_query = '?industries=JZmYlQ31enoN'
     base_leverist_url = 'https://app.leverist.de/api/opportunities'
 
+    leverist_sector_file = File.read('utils/leverist_sector.json')
+    leverist_sector_mapping = JSON.parse(leverist_sector_file)
+
     loop do
       puts "Opening: #{base_leverist_url}#{page_query}."
       response = Faraday.get("#{base_leverist_url}#{page_query}")
@@ -20,7 +23,7 @@ namespace :opportunities_sync do
       break unless response.status == 200
 
       leverist_data = JSON.parse(response.body)
-      process_leverist_data(leverist_data)
+      process_leverist_data(leverist_data, leverist_sector_mapping)
 
       pagination_info = leverist_data['meta']['pagination']
       pagination_links = pagination_info['links']
@@ -36,12 +39,12 @@ namespace :opportunities_sync do
     end
   end
 
-  def process_leverist_data(leverist_data)
+  def process_leverist_data(leverist_data, leverist_sector_mapping)
     opportunity_data = leverist_data['data']
     opportunity_data.each do |opportunity_structure|
       puts '----------'
       puts "Reading opportunity: #{opportunity_structure['title']}."
-      create_opportunity_record(opportunity_structure)
+      create_opportunity_record(opportunity_structure, leverist_sector_mapping)
     end
   end
 
@@ -53,7 +56,7 @@ namespace :opportunities_sync do
     node.children.all? { |child| node_is_blank?(child) }
   end
 
-  def create_opportunity_record(opportunity_structure)
+  def create_opportunity_record(opportunity_structure, leverist_sector_mapping)
     opportunity = Opportunity.find_by(slug: slug_em(opportunity_structure['title']))
     if opportunity.nil?
       opportunity = Opportunity.new(name: opportunity_structure['title'])
@@ -170,9 +173,14 @@ namespace :opportunities_sync do
     sector_data = opportunity_structure['industries']['data']
     unless sector_data.empty?
       sector_data.each do |sector_structure|
-        sector = Sector.find_by(name: sector_structure['name'])
-        opportunity_sectors << sector unless sector.nil?
-        puts "  Sector: Unable to find '#{sector_structure['name']}'." if sector.nil?
+        mapped_sector = leverist_sector_mapping[sector_structure['name']]
+        puts "  Sector: '#{sector_structure['name']}' mapped to -> '#{mapped_sector}'."
+
+        sector = Sector.find_by(name: mapped_sector, locale: I18n.locale)
+        unless sector.nil?
+          multi_locale_sectors = Sector.where(slug: sector.slug)
+          opportunity_sectors += multi_locale_sectors unless multi_locale_sectors.empty?
+        end
 
         # Skip if industry don't have partner data.
         next if sector_structure['partners'].nil?
@@ -184,11 +192,36 @@ namespace :opportunities_sync do
         partner_data.each do |partner_structure|
           organization = Organization.find_by(name: partner_structure['name'])
           opportunity_organizations << organization unless organization.nil?
-          puts "  Organization: Unable to find '#{partner_structure['name']}'." if organization.nil?
+
+          next unless organization.nil?
+
+          puts "  Organization: Unable to find '#{partner_structure['name']}'."
+          website = partner_structure['web']
+          description = partner_structure['description']
+          organization_name = partner_structure['name']
+
+          candidate_params = { name: organization_name, website:, description: }
+          candidate_params[:slug] = slug_em(organization_name)
+          candidate_organization = CandidateOrganization.find_by(slug: candidate_params[:slug])
+          unless candidate_organization.nil?
+            puts "    Skipping, existing candidate organization record found."
+            next
+          end
+
+          candidate_organizations = CandidateOrganization.where(slug: candidate_params[:slug])
+          unless candidate_organizations.empty?
+            first_duplicate = CandidateOrganization.slug_simple_starts_with(candidate_params[:slug])
+                                                   .order(slug: :desc).first
+            candidate_params[:slug] = candidate_params[:slug] + generate_offset(first_duplicate).to_s
+          end
+          candidate_organization = CandidateOrganization.new(candidate_params)
+          if candidate_organization.save
+            puts "    Saving '#{partner_structure['name']}' as candidate organization."
+          end
         end
       end
     end
-    opportunity.sectors = opportunity_sectors
+    opportunity.sectors = opportunity_sectors.uniq
     opportunity.organizations = opportunity_organizations
 
     successful_operation = false

@@ -75,7 +75,7 @@ class Opportunity < ApplicationRecord
   end
 
   def sectors_localized
-    sectors.where('locale = ?', I18n.locale)
+    sectors&.where('locale = ?', I18n.locale)&.order('name ASC')
   end
 
   def countries_ordered
