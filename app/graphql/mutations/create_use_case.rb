@@ -21,7 +21,7 @@ module Mutations
       unless an_admin || a_content_editor
         return {
           use_case: nil,
-          errors: ['Must be admin or content editor to create an use case']
+          errors: ['Must be admin or content editor to create a use case']
         }
       end
 

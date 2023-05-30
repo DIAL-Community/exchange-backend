@@ -59,7 +59,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
       expect(result['data']['createProduct']['product'])
         .to(be(nil))
       expect(result['data']['createProduct']['errors'])
-        .to(eq(['Must be admin or product owner to create an product']))
+        .to(eq(['Must be admin or product owner to create a product']))
     end
   end
 end

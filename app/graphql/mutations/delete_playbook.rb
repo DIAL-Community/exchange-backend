@@ -11,7 +11,7 @@ module Mutations
       unless an_admin
         return {
           playbook: nil,
-          errors: ['Must be admin to delete an playbook.']
+          errors: ['Must be admin to delete a playbook.']
         }
       end
 
