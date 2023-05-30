@@ -9,6 +9,13 @@ class AuthenticationController < Devise::SessionsController
     user = User.new(user_params)
     respond_to do |format|
       if user.save
+        AdminMailer
+          .with(user: {
+            email: user.email
+          })
+          .notify_user_request
+          .deliver_now
+
         format.json { render(json: {}, status: :created) }
       else
         format.json { render(json: user.errors, status: :unprocessable_entity) }

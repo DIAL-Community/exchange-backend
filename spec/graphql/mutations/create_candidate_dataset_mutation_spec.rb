@@ -40,6 +40,8 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
   end
 
   it 'creates candidate dataset - user is logged in' do
+    create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+
     user = create(:user, email: 'user@gmail.com')
     expect_any_instance_of(Mutations::CreateCandidateDataset).to(receive(:captcha_verification).and_return(true))
 

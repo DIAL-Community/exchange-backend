@@ -38,6 +38,10 @@ module Mutations
       end
 
       if candidate_role.save!
+        AdminMailer
+          .with(email: candidate_role.email)
+          .notify_new_content_editor
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
           candidate_role:,

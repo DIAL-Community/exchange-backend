@@ -10,13 +10,18 @@ module Modules
       # Get the parent commenter's email address
       originator = User.find(parent_comment.author["id"])
 
-      email_body = "#{comment.author['username']} Replied: \n\n" \
-                 "#{comment.text} \n\n" \
-                 "Click on <a href='#{get_comment_link(comment)}'>this link</a> to view comments"
+      email_body =
+        "#{comment.author['username']} Replied: \n\n" \
+        "#{comment.text} \n\n" \
+        "Click on <a href='#{get_comment_link(comment)}'>this link</a> to view comments"
 
-      AdminMailer.send_mail_from_client('notifier@exchange.dial.global', originator.email,
-                                "#{comment.author['username']} Responded to your comment", email_body, 'text/html')
-                 .deliver_now
+      AdminMailer.send_mail_from_client(
+        'notifier@exchange.dial.global',
+        originator.email,
+        "#{comment.author['username']} Responded to your comment",
+        email_body,
+        'text/html'
+      ).deliver_now
     end
 
     def get_comment_link(comment)

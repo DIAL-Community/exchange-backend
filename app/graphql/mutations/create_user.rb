@@ -77,13 +77,15 @@ module Mutations
       chars.sort_by { rand }.join[0...10]
     end
 
-    def send_email_with_password(username, email, password)
+    def send_email_with_password(username, email, _password)
       email_subject = 'Password for your account'
 
-      email_body = "Hi #{username}! <br />Your account have been created.<br />Password: #{password}"
+      email_body = "Hi #{username}! <br />Your account have been created.<br />"
 
-      AdminMailer.send_mail_from_client('notifier@exchange.dial.global',
-        email, email_subject, email_body, "text/html").deliver_now
+      AdminMailer.send_mail_from_client(
+        'notifier@exchange.dial.global',
+        email, email_subject, email_body, "text/html"
+      ).deliver_now
     end
   end
 end
