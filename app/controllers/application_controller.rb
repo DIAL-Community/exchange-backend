@@ -88,8 +88,11 @@ class ApplicationController < ActionController::Base
 
     email_body = "Issue Reported by #{params[:name]}(#{params[:email]}) \n\n" \
                  "Issue Type: #{params[:issue_type]}\n\n#{params[:issue]}"
-    AdminMailer.send_mail_from_client('notifier@exchange.dial.global', 'issues@exchange.dial.global',
-                                      'User Reported Issue ', email_body).deliver_now
+    AdminMailer.send_mail_from_client(
+      'notifier@exchange.dial.global',
+      'issues@exchange.dial.global',
+      'User Reported Issue ', email_body
+    ).deliver_now
 
     respond_to do |format|
       format.json { render(json: { email: 'Issue' }, status: :ok) }

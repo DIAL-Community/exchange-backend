@@ -43,6 +43,10 @@ module Mutations
       end
 
       if candidate_organization.save && captcha_verification(captcha)
+        AdminMailer
+          .with(candidate_name: candidate_organization.name)
+          .notify_new_candidate_organization
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
           candidate_organization:,

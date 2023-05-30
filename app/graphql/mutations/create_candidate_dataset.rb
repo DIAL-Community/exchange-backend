@@ -52,6 +52,10 @@ module Mutations
       end
 
       if candidate_dataset.save! && captcha_verification(captcha)
+        AdminMailer
+          .with(candidate_name: candidate_dataset.name)
+          .notify_new_candidate_dataset
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
           candidate_dataset:,

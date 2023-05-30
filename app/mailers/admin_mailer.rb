@@ -11,64 +11,164 @@ class AdminMailer < ApplicationMailer
          content_type:)
   end
 
-  def notify_product_owner_request
-    admin_users = User.where(receive_admin_emails: true)
-    user_hash = params[:user]
-
-    email_subject = 'User Sign Up Request'
-    email_body = "New user '#{user_hash[:email]}' has requested access to the registry. "\
-                 'Approval from an admin user is required.'
-    if user_hash[:product_id].present?
-      products = Product.where(id: user_hash[:product_id])
-      email_subject = 'Product Owner Request'
-      email_body = "New user '#{user_hash[:email]}' has requested product(s) ownership of: "\
-                   "[#{products.collect(&:name).join(', ')}]. "\
-                   'Approval from an admin user is required.'
-    elsif user_hash[:organization_id].present?
-      organization = Organization.find(user_hash[:organization_id])
-      email_subject = 'Organization Owner Request'
-      email_body = "New user '#{user_hash[:email]}' has requested organization ownership of: [#{organization.name}]. "\
-                   'Approval from an admin user is *NOT* required.'
-    end
-    mail_to = ''
-    admin_users.each do |admin|
-      mail_to += "#{admin.email}; "
-    end
-    mail(from: 'notifier@exchange.dial.global',
-         to: mail_to,
-         subject: email_subject,
-         body: email_body)
+  def default_text
+    "\n\nPlease don't reply to this automatically generated service email."
   end
 
-  def notify_product_owner_approval
-    mail(from: 'notifier@exchange.dial.global',
-         to: [params[:user_email]],
-         subject: 'Product Owner Approval',
-         body: 'Your account have been approved in the DIAL Catalog (https://exchange.dial.global).'\
-               'You may now log in to the system.')
-  end
-
-  def notify_ux_ownership_request
-    admin_users = User.where(receive_admin_emails: true)
+  def notify_user_request
     user_hash = params[:user]
-    if user_hash[:product_id].present?
-      product = Product.where(id: user_hash[:product_id])
+
+    email_subject = 'New User Sign Up'
+    email_body = "New user '#{user_hash[:email]}' created in the exchange. "\
+                 'User can do self activation, but admin may need check from time to time for un-activated users.'
+    if user_hash[:product_id].present? && !user_hash[:product_id].nil?
+      product = Product.find(user_hash[:product_id])
       email_subject = 'Product Owner Request'
-      email_body = "User '#{user_hash[:email]}' has requested product ownership of: #{product.name}. "\
+      email_body = "User '#{user_hash[:email]}' has requested ownership of: [#{product.name}]. "\
                    'Approval from an admin user is required.'
-    elsif user_hash[:organization_id].present?
+    elsif user_hash[:organization_id].present? && !user_hash[:organization_id].nil?
       organization = Organization.find(user_hash[:organization_id])
       email_subject = 'Organization Owner Request'
-      email_body = "User '#{user_hash[:email]}' has requested organization ownership of: [#{organization.name}]. "\
+      email_body = "User '#{user_hash[:email]}' has requested ownership of: [#{organization.name}]. "\
+                   'Approval from an admin user is required.'
+    elsif user_hash[:dataset_id].present? && !user_hash[:dataset_id].nil?
+      dataset = Dataset.find(user_hash[:dataset_id])
+      email_subject = 'Dataset Owner Request'
+      email_body = "User '#{user_hash[:email]}' has requested ownership of: [#{dataset.name}]. "\
                    'Approval from an admin user is required.'
     end
+
     mail_to = ''
-    admin_users.each do |admin|
-      mail_to += "#{admin.email}; "
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
     end
-    mail(from: 'notifier@exchange.dial.global',
-         to: mail_to,
-         subject: email_subject,
-         body: email_body)
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: email_subject,
+      body: email_body + default_text
+    )
+  end
+
+  def notify_owner_approval
+    if params[:organization_id].present? && !params[:organization_id].nil?
+      organization = Organization.find(params[:organization_id])
+      body_part = "You are the owner of [#{organization.name}] now. "
+      subject = "Organization Owner Request #{params[:rejected] ? 'Rejected' : 'Approved'}"
+    elsif params[:dataset_id].present? && !params[:dataset_id].nil?
+      dataset = Dataset.find(params[:dataset_id])
+      body_part = "You are the owner of [#{dataset.name}] now. "
+      subject = "Dataset Owner Request #{params[:rejected] ? 'Rejected' : 'Approved'}"
+    elsif params[:product_id].present? && !params[:product_id].nil?
+      product = Product.find(params[:product_id])
+      body_part = "You are the owner of [#{product.name}] now. "
+      subject = "Product Owner Request #{params[:rejected] ? 'Rejected' : 'Approved'}"
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: [params[:email]],
+      subject:,
+      body: (params[:rejected] ? '' : body_part).to_s +
+        'Your request in the Exchange (https://exchange.dial.global) have been updated.' +
+        default_text
+    )
+  end
+
+  def notify_candidate_organization_approval
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: [params[:user_email]],
+      subject: "Candidate Organization #{params[:rejected] ? 'Rejected' : 'Approved'}",
+      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
+    )
+  end
+
+  def notify_candidate_product_approval
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: [params[:user_email]],
+      subject: "Candidate Product #{params[:rejected] ? 'Rejected' : 'Approved'}",
+      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
+    )
+  end
+
+  def notify_candidate_dataset_approval
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: [params[:user_email]],
+      subject: "Candidate Dataset #{params[:rejected] ? 'Rejected' : 'Approved'}",
+      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
+    )
+  end
+
+  def notify_new_candidate_product
+    mail_to = ''
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: 'Candidate Product Created',
+      body: 'A new candidate record created. Please log in to see the changes. '\
+            "Candidate name: [#{params[:candidate_name]}]." + default_text
+    )
+  end
+
+  def notify_new_candidate_organization
+    mail_to = ''
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: 'Candidate Organization Created',
+      body: 'A new candidate record created. Please log in to see the changes. '\
+            "Candidate name: [#{params[:candidate_name]}]." + default_text
+    )
+  end
+
+  def notify_new_candidate_dataset
+    mail_to = ''
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: 'Candidate Dataset Created',
+      body: 'A new candidate record created. Please log in to see the changes. '\
+            "Candidate name: [#{params[:candidate_name]}]." + default_text
+    )
+  end
+
+  def notify_new_content_editor
+    mail_to = ''
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: 'Content Editor Request',
+      body: "User '#{params[:email]}' has requested elevated role 'Content Editor'. " + default_text
+    )
   end
 end
