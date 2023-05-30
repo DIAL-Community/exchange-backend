@@ -12,7 +12,7 @@ module Mutations
       unless an_admin || a_content_editor
         return {
           use_case_step: nil,
-          errors: ['Must be admin or content editor to update an use case step']
+          errors: ['Must be admin or content editor to update a use case step']
         }
       end
 

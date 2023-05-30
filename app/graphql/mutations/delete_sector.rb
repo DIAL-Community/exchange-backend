@@ -11,7 +11,7 @@ module Mutations
       unless an_admin
         return {
           sector: nil,
-          errors: ['Must be admin to delete an sector.']
+          errors: ['Must be admin to delete a sector.']
         }
       end
 
