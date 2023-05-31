@@ -6,6 +6,7 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :phase, String, null: false
+    field :image_file, String, null: false
 
     field :link, String, null: true
     field :image_url, String, null: true

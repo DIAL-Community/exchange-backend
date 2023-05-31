@@ -9,6 +9,7 @@ module Mutations
     argument :name, String, required: true
     argument :slug, String, required: true
     argument :phase, String, required: false, default_value: ''
+    argument :image_file, ApolloUploadServer::Upload, required: false
 
     argument :link, String, required: false, default_value: ''
     argument :image_url, String, required: false, default_value: ''
@@ -20,7 +21,11 @@ module Mutations
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, phase:, link:, image_url:, description:, show_in_exchange:, show_in_wizard:)
+    def resolve(
+      name:, slug:, phase:, image_file: nil,
+      link:, image_url:, description:,
+      show_in_exchange:, show_in_wizard:
+    )
       unless an_admin || a_content_editor
         return {
           resource: nil,
@@ -50,8 +55,25 @@ module Mutations
       resource.show_in_exchange = show_in_exchange
       resource.show_in_wizard = show_in_wizard
 
-      assign_auditable_user(resource)
-      if resource.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(resource)
+        resource.save
+
+        unless image_file.nil?
+          uploader = LogoUploader.new(resource, image_file.original_filename, context[:current_user])
+          begin
+            uploader.store!(image_file)
+          rescue StandardError => e
+            puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
+          end
+          resource.auditable_image_changed(image_file.original_filename)
+        end
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           resource:,
