@@ -8,11 +8,11 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
-    argument :phase, String, required: true
+    argument :phase, String, required: false, default_value: ''
 
-    argument :link, String, required: false
-    argument :image_url, String, required: false
-    argument :description, String, required: false
+    argument :link, String, required: false, default_value: ''
+    argument :image_url, String, required: false, default_value: ''
+    argument :description, String, required: false, default_value: ''
 
     argument :show_in_exchange, Boolean, required: true
     argument :show_in_wizard, Boolean, required: true
@@ -21,10 +21,10 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, phase:, link:, image_url:, description:, show_in_exchange:, show_in_wizard:)
-      unless an_admin
+      unless an_admin || a_content_editor
         return {
           resource: nil,
-          errors: ['Must be admin or content editor to create a resource']
+          errors: ['Must be admin or content editor to create a resource.']
         }
       end
 
