@@ -17,28 +17,43 @@ class Organization < ApplicationRecord
     before_remove: :association_remove
   )
 
-  has_and_belongs_to_many :products, join_table: :organizations_products,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
-  has_and_belongs_to_many :countries, join_table: :organizations_countries,
-                                      after_add: :association_add,
-                                      before_remove: :association_remove
-  has_and_belongs_to_many :states, join_table: :organizations_states,
-                                   after_add: :association_add,
-                                   before_remove: :association_remove
-  has_and_belongs_to_many :sectors, join_table: :organizations_sectors,
-                                    after_add: :association_add,
-                                    before_remove: :association_remove
-  has_and_belongs_to_many :projects, join_table: :projects_organizations,
-                                     dependent: :delete_all,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
+  has_and_belongs_to_many(
+    :countries,
+    join_table: :organizations_countries,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
 
-  has_many :aggregator_capabilities, join_table: :aggregator_capabilities,
-                                     foreign_key: 'aggregator_id',
-                                     dependent: :delete_all,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
+  has_and_belongs_to_many(
+    :states,
+    join_table: :organizations_states,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_and_belongs_to_many(
+    :sectors,
+    join_table: :organizations_sectors,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_and_belongs_to_many(
+    :projects,
+    join_table: :projects_organizations,
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
+
+  has_many(
+    :aggregator_capabilities,
+    join_table: :aggregator_capabilities,
+    foreign_key: 'aggregator_id',
+    dependent: :delete_all,
+    after_add: :association_add,
+    before_remove: :association_remove
+  )
 
   has_many(
     :organizations_contacts,

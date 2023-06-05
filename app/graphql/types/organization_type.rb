@@ -47,9 +47,25 @@ module Types
     def contacts
       an_admin = context[:current_user]&.roles&.include?('admin')
       an_organization_owner = context[:current_user]&.organization_id&.equal?(object&.id)
-      an_admin || an_organization_owner ? object.contacts : []
+
+      organizations_contacts = []
+      if an_admin || an_organization_owner
+        object.contacts.each do |contact|
+          current_contact = contact.as_json
+
+          organization_contact = OrganizationsContact.where(ended_at: nil)
+          organization_contact = organization_contact.where(organization_id: object.id)
+          organization_contact = organization_contact.where(contact_id: contact.id)
+          organization_contact = organization_contact.order(started_at: :desc)
+          organization_contact = organization_contact.first
+
+          current_contact['main_contact'] = false || organization_contact&.main_contact
+        end
+      end
+      organizations_contacts
     end
 
+    field :resources, [Types::ResourceType], null: true
     field :aliases, GraphQL::Types::JSON, null: true
   end
 end
