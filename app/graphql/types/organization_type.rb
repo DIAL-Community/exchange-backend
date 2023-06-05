@@ -59,7 +59,9 @@ module Types
           organization_contact = organization_contact.order(started_at: :desc)
           organization_contact = organization_contact.first
 
-          current_contact['main_contact'] = false || organization_contact&.main_contact
+          current_contact['main_contact'] = organization_contact&.main_contact
+
+          organizations_contacts << current_contact
         end
       end
       organizations_contacts
