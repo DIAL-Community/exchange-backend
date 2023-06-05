@@ -21,7 +21,7 @@ module Types
 
     field :create_move, mutation: Mutations::CreateMove
     field :auto_save_move, mutation: Mutations::CreateMove
-    field :create_resource, mutation: Mutations::CreateResource
+    field :create_move_resource, mutation: Mutations::CreateMoveResource
 
     field :create_user, mutation: Mutations::CreateUser
 
@@ -127,5 +127,8 @@ module Types
     field :apply_as_content_editor, mutation: Mutations::ApplyAsContentEditor
 
     field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
+
+    field :create_resource, mutation: Mutations::CreateResource
+    field :delete_resource, mutation: Mutations::DeleteResource
   end
 end
