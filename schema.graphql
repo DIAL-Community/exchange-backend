@@ -327,6 +327,7 @@ type Comment {
 type Contact {
   email: String
   id: ID!
+  mainContact: Boolean
   name: String!
   slug: String!
   title: String
@@ -1192,6 +1193,7 @@ type Organization {
   organizationDescriptions: [OrganizationDescription!]
   products: [Product!]!
   projects: [Project!]!
+  resources: [Resource!]
   sectors: [Sector!]
   slug: String!
   website: String
