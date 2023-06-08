@@ -67,6 +67,7 @@ module Types
       organizations_contacts
     end
 
+    field :specialties, [String], null: false
     field :resources, [Types::ResourceType], null: true
     field :aliases, GraphQL::Types::JSON, null: true
   end
