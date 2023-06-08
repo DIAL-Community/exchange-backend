@@ -6,9 +6,9 @@ require 'rails_helper'
 RSpec.describe(Mutations::UpdateOrganizationSectors, type: :graphql) do
   let(:mutation) do
     <<~GQL
-      mutation($sectorsSlugs: [String!]!, $slug: String!) {
+      mutation($sectorSlugs: [String!]!, $slug: String!) {
         updateOrganizationSectors(
-          sectorsSlugs: $sectorsSlugs
+          sectorSlugs: $sectorSlugs
           slug: $slug
         ) {
           organization {
@@ -32,7 +32,7 @@ RSpec.describe(Mutations::UpdateOrganizationSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: [first.slug, second.slug], slug: organization.slug },
+      variables: { sectorSlugs: [first.slug, second.slug], slug: organization.slug },
     )
 
     aggregate_failures do

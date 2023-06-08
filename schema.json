@@ -9435,7 +9435,7 @@
                     "name": "Boolean",
                     "ofType": null
                   },
-                  "defaultValue": "false",
+                  "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -11685,7 +11685,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "workflowsSlugs",
+                  "name": "workflowSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12329,7 +12329,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "countriesSlugs",
+                  "name": "countrySlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12488,7 +12488,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "projectsSlugs",
+                  "name": "projectSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12541,7 +12541,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sectorsSlugs",
+                  "name": "sectorSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12818,7 +12818,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "organizationsSlugs",
+                  "name": "organizationSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12871,7 +12871,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "projectsSlugs",
+                  "name": "projectSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13017,7 +13017,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sdgsSlugs",
+                  "name": "sdgSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13086,7 +13086,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sectorsSlugs",
+                  "name": "sectorSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13192,7 +13192,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "countriesSlugs",
+                  "name": "countrySlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13245,7 +13245,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "organizationsSlugs",
+                  "name": "organizationSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13351,7 +13351,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sectorsSlugs",
+                  "name": "sectorSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13510,7 +13510,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sdgTargetsIds",
+                  "name": "sdgTargetIds",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13616,7 +13616,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "datasetsSlugs",
+                  "name": "datasetSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -13722,7 +13722,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "workflowsSlugs",
+                  "name": "workflowSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -25087,7 +25087,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "sectorsSlugs",
+                  "name": "sectorSlugs",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",

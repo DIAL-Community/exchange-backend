@@ -2,13 +2,13 @@
 
 module Mutations
   class UpdateProductProjects < Mutations::BaseMutation
-    argument :projects_slugs, [String], required: true
+    argument :project_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
 
-    def resolve(projects_slugs:, slug:)
+    def resolve(project_slugs:, slug:)
       product = Product.find_by(slug:)
 
       unless an_admin || a_product_owner(product.id)
@@ -19,8 +19,8 @@ module Mutations
       end
 
       product.projects = []
-      if !projects_slugs.nil? && !projects_slugs.empty?
-        projects_slugs.each do |project_slug|
+      if !project_slugs.nil? && !project_slugs.empty?
+        project_slugs.each do |project_slug|
           current_project = Project.find_by(slug: project_slug)
           product.projects << current_project unless current_project.nil?
         end

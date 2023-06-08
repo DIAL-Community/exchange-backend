@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateProjectCountries, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProjectCountries (
-        $countriesSlugs: [String!]!
+        $countrySlugs: [String!]!
         $slug: String!
         ) {
           updateProjectCountries (
-            countriesSlugs: $countriesSlugs
+            countrySlugs: $countrySlugs
             slug: $slug
           ) {
             project {
@@ -34,7 +34,7 @@ RSpec.describe(Mutations::UpdateProjectCountries, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { countriesSlugs: ['c_2', 'c_3'], slug: 'some_name' },
+      variables: { countrySlugs: ['c_2', 'c_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -56,7 +56,7 @@ RSpec.describe(Mutations::UpdateProjectCountries, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { countriesSlugs: ['c_2', 'c_3'], slug: 'some_name' },
+      variables: { countrySlugs: ['c_2', 'c_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateProjectCountries, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { countriesSlugs: ['c_2', 'c_3'], slug: 'some_name' },
+      variables: { countrySlugs: ['c_2', 'c_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -95,7 +95,7 @@ RSpec.describe(Mutations::UpdateProjectCountries, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { countriesSlugs: ['c_2', 'c_3'], slug: 'some_name' },
+      variables: { countrySlugs: ['c_2', 'c_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

@@ -120,12 +120,12 @@ module Queries
   end
 
   class UseCasesForSectorQuery < Queries::BaseQuery
-    argument :sectors_slugs, [String], required: true
+    argument :sector_slugs, [String], required: true
     type [Types::UseCaseType], null: false
 
-    def resolve(sectors_slugs:)
+    def resolve(sector_slugs:)
       use_cases = UseCase.joins(:sector)
-                         .where(sectors: { slug: sectors_slugs, locale: I18n.locale })
+                         .where(sectors: { slug: sector_slugs, locale: I18n.locale })
                          .where(maturity: 'PUBLISHED')
       use_cases.uniq
     end

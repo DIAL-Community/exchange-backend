@@ -13,15 +13,18 @@ module Mutations
     argument :is_endorser, Boolean, required: false, default_value: false
     argument :when_endorsed, GraphQL::Types::ISO8601Date, required: false
     argument :endorser_level, String, required: false
-    argument :is_mni, Boolean, required: false, default_value: false
+    argument :is_mni, Boolean, required: false
     argument :description, String, required: false
     argument :image_file, ApolloUploadServer::Upload, required: false
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, aliases:, website:, is_endorser:, when_endorsed:, endorser_level:,
-      is_mni:, description:, image_file: nil)
+    def resolve(
+      name:, slug:, aliases:, website: nil,
+      is_endorser: false, when_endorsed: nil, endorser_level: nil, is_mni: false,
+      description:, image_file: nil
+    )
       organization = Organization.find_by(slug:)
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
         return {
@@ -46,8 +49,8 @@ module Mutations
       organization.name = name
 
       organization.aliases = aliases
-      organization.website = website
-      organization.is_endorser = is_endorser
+      organization.website = website unless website.nil?
+      organization.is_endorser = is_endorser if is_endorser
 
       unless when_endorsed.nil?
         date = when_endorsed.to_s
@@ -55,8 +58,8 @@ module Mutations
         organization.when_endorsed = timestamp
       end
 
-      organization.endorser_level = endorser_level
-      organization.is_mni = is_mni
+      organization.endorser_level = endorser_level unless endorser_level.nil?
+      organization.is_mni = is_mni if is_mni
 
       successful_operation = false
       ActiveRecord::Base.transaction do
@@ -73,11 +76,13 @@ module Mutations
           organization.auditable_image_changed(image_file.original_filename)
         end
 
-        organization_desc = OrganizationDescription.find_by(organization_id: organization.id, locale: I18n.locale)
-        organization_desc = OrganizationDescription.new if organization_desc.nil?
-        organization_desc.description = description
-        organization_desc.organization_id = organization.id
-        organization_desc.locale = I18n.locale
+        unless description.nil?
+          organization_desc = OrganizationDescription.find_by(organization_id: organization.id, locale: I18n.locale)
+          organization_desc = OrganizationDescription.new if organization_desc.nil?
+          organization_desc.description = description
+          organization_desc.organization_id = organization.id
+          organization_desc.locale = I18n.locale
+        end
 
         assign_auditable_user(organization_desc)
         organization_desc.save

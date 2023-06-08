@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateUseCaseSdgTargets (
-        $sdgTargetsIds: [Int!]!
+        $sdgTargetIds: [Int!]!
         $slug: String!
         ) {
           updateUseCaseSdgTargets (
-            sdgTargetsIds: $sdgTargetsIds
+            sdgTargetIds: $sdgTargetIds
             slug: $slug
           ) {
             useCase {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetsIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetsIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -74,7 +74,7 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetsIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
     )
 
     aggregate_failures do
