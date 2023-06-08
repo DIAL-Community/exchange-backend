@@ -70,6 +70,13 @@ class Organization < ApplicationRecord
     dependent: :delete_all
   )
 
+  has_and_belongs_to_many(
+    :resources,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
+
   has_and_belongs_to_many :opportunities, join_table: :opportunities_organizations
 
   has_many :organizations_products, after_add: :association_add, before_remove: :association_remove
