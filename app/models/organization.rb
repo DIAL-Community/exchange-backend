@@ -99,6 +99,14 @@ class Organization < ApplicationRecord
     end
   end
 
+  def hero_file
+    if File.exist?(File.join('public', 'assets', 'organizations', "#{slug}.png"))
+      "/assets/organizations/hero_#{slug}.png"
+    else
+      '/assets/organizations/hero_placeholder.png'
+    end
+  end
+
   def sectors_localized
     sectors.where('locale = ?', I18n.locale)
   end

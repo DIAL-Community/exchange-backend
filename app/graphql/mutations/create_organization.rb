@@ -17,13 +17,16 @@ module Mutations
     argument :description, String, required: false
     argument :image_file, ApolloUploadServer::Upload, required: false
 
+    argument :has_storefront, Boolean, required: false
+    argument :hero_file, ApolloUploadServer::Upload, required: false
+
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
     def resolve(
       name:, slug:, aliases:, website: nil,
       is_endorser: false, when_endorsed: nil, endorser_level: nil, is_mni: false,
-      description:, image_file: nil
+      has_storefront: false, description:, image_file: nil, hero_file: nil
     )
       organization = Organization.find_by(slug:)
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
@@ -61,6 +64,8 @@ module Mutations
       organization.endorser_level = endorser_level unless endorser_level.nil?
       organization.is_mni = is_mni if is_mni
 
+      organization.has_storefront = has_storefront if has_storefront
+
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(organization)
@@ -72,6 +77,16 @@ module Mutations
             uploader.store!(image_file)
           rescue StandardError => e
             puts "Unable to save image for: #{organization.name}. Standard error: #{e}."
+          end
+          organization.auditable_image_changed(image_file.original_filename)
+        end
+
+        unless hero_file.nil?
+          uploader = HeroUploader.new(organization, "hero_#{hero_file.original_filename}", context[:current_user])
+          begin
+            uploader.store!(image_file)
+          rescue StandardError => e
+            puts "Unable to save hero image for: #{organization.name}. Standard error: #{e}."
           end
           organization.auditable_image_changed(image_file.original_filename)
         end

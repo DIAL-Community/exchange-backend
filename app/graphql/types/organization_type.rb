@@ -70,5 +70,8 @@ module Types
     field :specialties, [String], null: false
     field :resources, [Types::ResourceType], null: true
     field :aliases, GraphQL::Types::JSON, null: true
+
+    field :hero_file, String, null: true
+    field :has_storefront, Boolean, null: true
   end
 end

@@ -1014,7 +1014,7 @@ type Mutation {
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
-  createOrganization(aliases: JSON, description: String, endorserLevel: String, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
+  createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
@@ -1185,6 +1185,8 @@ type Organization {
   contacts: [Contact!]
   countries: [Country!]
   endorserLevel: String
+  hasStorefront: Boolean
+  heroFile: String
   id: ID!
   imageFile: String
   isEndorser: Boolean
