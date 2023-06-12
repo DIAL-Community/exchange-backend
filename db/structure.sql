@@ -1807,7 +1807,8 @@ CREATE TABLE public.organizations (
     has_storefront boolean DEFAULT false NOT NULL,
     hero_url character varying,
     specialties jsonb DEFAULT '[]'::jsonb NOT NULL,
-    certifications jsonb DEFAULT '[]'::jsonb NOT NULL
+    certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
+    building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -7925,6 +7926,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230605183013'),
 ('20230605202219'),
 ('20230605203819'),
-('20230605203844');
+('20230605203844'),
+('20230612203109');
 
 

@@ -68,6 +68,19 @@ module Types
     end
 
     field :specialties, [String], null: false
+
+    field :certifications, [String], null: false
+    field :product_certifications, [Types::ProductType], null: false
+    def product_certifications
+      Product.where(id: object.certifications)
+    end
+
+    field :building_blocks, [String], null: false
+    field :building_block_certifications, [Types::BuildingBlockType], null: false
+    def building_block_certifications
+      BuildingBlock.where(id: object.building_blocks)
+    end
+
     field :resources, [Types::ResourceType], null: true
     field :aliases, GraphQL::Types::JSON, null: true
 

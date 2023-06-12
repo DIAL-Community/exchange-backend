@@ -25,8 +25,8 @@ module Mutations
 
     def resolve(
       name:, slug:, aliases:, website: nil,
-      is_endorser: false, when_endorsed: nil, endorser_level: nil, is_mni: false,
-      has_storefront: false, description:, image_file: nil, hero_file: nil
+      is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
+      has_storefront: nil, description:, image_file: nil, hero_file: nil
     )
       organization = Organization.find_by(slug:)
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
@@ -51,9 +51,9 @@ module Mutations
       # Don'r re-slug organization name
       organization.name = name
 
-      organization.aliases = aliases
+      organization.aliases = aliases unless aliases.nil?
       organization.website = website unless website.nil?
-      organization.is_endorser = is_endorser if is_endorser
+      organization.is_endorser = is_endorser unless is_endorser.nil?
 
       unless when_endorsed.nil?
         date = when_endorsed.to_s
@@ -61,10 +61,10 @@ module Mutations
         organization.when_endorsed = timestamp
       end
 
+      organization.is_mni = is_mni unless is_mni.nil?
       organization.endorser_level = endorser_level unless endorser_level.nil?
-      organization.is_mni = is_mni if is_mni
 
-      organization.has_storefront = has_storefront if has_storefront
+      organization.has_storefront = has_storefront unless has_storefront.nil?
 
       successful_operation = false
       ActiveRecord::Base.transaction do
