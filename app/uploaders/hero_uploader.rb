@@ -20,7 +20,7 @@ class HeroUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    Rails.root.join('public', 'assets', model.class.to_s.underscore.pluralize)
+    Rails.root.join('public', 'assets', model.class.to_s.underscore.pluralize, 'hero')
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -31,25 +31,7 @@ class HeroUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
-  process resize_image: 195
-  def resize_image(size)
-    manipulate! do |image|
-      image.strip
-      if image[:width] < image[:height]
-        if image[:height] > size
-          image.resize("x#{size}>")
-        elsif image[:height] < size
-          image.resize("x#{size}<")
-        end
-      elsif image[:width] > size
-        image.resize("#{size}>")
-      elsif image[:width] < size
-        image.resize("#{size}<")
-      end
-      image.format('png')
-      image
-    end
-  end
+  process resize_to_fit: [1920, 1280]
 
   # Process files as they are uploaded:
   # process scale: [200, 300]

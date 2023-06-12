@@ -95,15 +95,13 @@ class Organization < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'organizations', "#{slug}.png"))
       "/assets/organizations/#{slug}.png"
     else
-      '/assets/organizations/org_placeholder.png'
+      '/assets/organizations/organization_placeholder.png'
     end
   end
 
   def hero_file
-    if File.exist?(File.join('public', 'assets', 'organizations', "#{slug}.png"))
-      "/assets/organizations/hero_#{slug}.png"
-    else
-      '/assets/organizations/hero_placeholder.png'
+    if File.exist?(File.join('public', 'assets', 'organizations', 'hero', "hero_#{slug}.png"))
+      "/assets/organizations/hero/hero_#{slug}.png"
     end
   end
 

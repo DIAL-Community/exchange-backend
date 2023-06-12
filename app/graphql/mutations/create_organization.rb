@@ -75,6 +75,7 @@ module Mutations
           uploader = LogoUploader.new(organization, image_file.original_filename, context[:current_user])
           begin
             uploader.store!(image_file)
+            puts "Logo image: '#{uploader.filename}' saved."
           rescue StandardError => e
             puts "Unable to save image for: #{organization.name}. Standard error: #{e}."
           end
@@ -84,11 +85,12 @@ module Mutations
         unless hero_file.nil?
           uploader = HeroUploader.new(organization, "hero_#{hero_file.original_filename}", context[:current_user])
           begin
-            uploader.store!(image_file)
+            uploader.store!(hero_file)
+            puts "Hero image: '#{uploader.filename}' saved."
           rescue StandardError => e
             puts "Unable to save hero image for: #{organization.name}. Standard error: #{e}."
           end
-          organization.auditable_image_changed(image_file.original_filename)
+          organization.auditable_image_changed(hero_file.original_filename)
         end
 
         unless description.nil?
