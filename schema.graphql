@@ -1020,7 +1020,7 @@ type Mutation {
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
-  createResource(description: String = null, imageFile: Upload, imageUrl: String = null, link: String = null, name: String!, organizationSlug: String = null, phase: String = "", showInExchange: Boolean!, showInWizard: Boolean!, slug: String!): CreateResourcePayload
+  createResource(description: String = null, imageFile: Upload, imageUrl: String = null, link: String = null, name: String!, organizationSlug: String = null, phase: String = "", showInExchange: Boolean, showInWizard: Boolean, slug: String!): CreateResourcePayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload

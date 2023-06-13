@@ -3055,7 +3055,7 @@ CREATE TABLE public.resources (
     image_url character varying,
     link character varying,
     description character varying,
-    show_in_wizard boolean DEFAULT true NOT NULL,
+    show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL
 );
 
@@ -7927,6 +7927,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230605202219'),
 ('20230605203819'),
 ('20230605203844'),
-('20230612203109');
+('20230612203109'),
+('20230613201202');
 
 

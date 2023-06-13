@@ -120,7 +120,7 @@ module Queries
       end
 
       unless building_blocks.empty?
-        organizations = organizations.where('building_blocks ?| ARRAY[?]', building_blocks)
+        organizations = organizations.where('building_blocks ?| ARRAY[:building_blocks]', building_blocks:)
       end
 
       unless specialties.empty?

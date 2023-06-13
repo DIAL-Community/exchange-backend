@@ -59,7 +59,8 @@ RSpec.describe(Queries::ResourcesQuery, type: :graphql) do
     aggregate_failures do
       expect(result['data']['searchResources']['totalCount']).to(eq(1))
       expect(result['data']['searchResources']['nodes'])
-        .to(eq([{ 'name' => 'Resource A', 'slug' => 'resource_a', 'showInExchange' => false, 'showInWizard' => true }]))
+        .to(eq([{ 'name' => 'Resource A', 'slug' => 'resource_a', 'showInExchange' => false,
+                  'showInWizard' => false }]))
     end
   end
 
@@ -74,7 +75,7 @@ RSpec.describe(Queries::ResourcesQuery, type: :graphql) do
     aggregate_failures do
       expect(result['data']['searchResources']['totalCount']).to(eq(1))
       expect(result['data']['searchResources']['nodes'])
-        .to(eq([{ 'name' => 'Resource A', 'slug' => 'resource_a', 'showInExchange' => true, 'showInWizard' => true }]))
+        .to(eq([{ 'name' => 'Resource A', 'slug' => 'resource_a', 'showInExchange' => true, 'showInWizard' => false }]))
     end
   end
 
