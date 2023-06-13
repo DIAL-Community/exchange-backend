@@ -91,10 +91,12 @@ module Queries
     argument :search, String, required: false, default_value: ''
     argument :sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
+    argument :building_blocks, [String], required: false, default_value: []
+    argument :specialties, [String], required: false, default_value: []
 
     type Types::OrganizationType.connection_type, null: false
 
-    def resolve(search:, sectors:, countries:)
+    def resolve(search:, sectors:, countries:, building_blocks:, specialties:)
       organizations = Organization.order(:name).where(has_storefront: true)
 
       unless search.blank?
@@ -115,6 +117,14 @@ module Queries
       unless filtered_countries.empty?
         organizations = organizations.joins(:countries)
                                      .where(countries: { id: filtered_countries })
+      end
+
+      unless building_blocks.empty?
+        organizations = organizations.where('building_blocks ?| ARRAY[?]', building_blocks)
+      end
+
+      unless specialties.empty?
+        organizations = organizations.where('specialties ?| ARRAY[:specialties]', specialties:)
       end
 
       organizations

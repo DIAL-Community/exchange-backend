@@ -22,7 +22,7 @@ module Mutations
       if !building_block_slugs.nil? && !building_block_slugs.empty?
         building_block_slugs.each do |building_block_slug|
           building_block = BuildingBlock.find_by(slug: building_block_slug)
-          organization.building_blocks << building_block.id unless building_block.nil?
+          organization.building_blocks << building_block.id.to_s unless building_block.nil?
         end
       end
 

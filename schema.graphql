@@ -2356,6 +2356,7 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+    buildingBlocks: [String!] = []
     countries: [String!] = []
 
     """
@@ -2369,6 +2370,7 @@ type Query {
     last: Int
     search: String = ""
     sectors: [String!] = []
+    specialties: [String!] = []
   ): OrganizationConnection!
   searchTags(
     """

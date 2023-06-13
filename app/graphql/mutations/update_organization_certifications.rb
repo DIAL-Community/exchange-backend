@@ -22,7 +22,7 @@ module Mutations
       if !product_slugs.nil? && !product_slugs.empty?
         product_slugs.each do |product_slug|
           product = Product.find_by(slug: product_slug)
-          organization.certifications << product.id unless product.nil?
+          organization.certifications << product.id.to_s unless product.nil?
         end
       end
 
