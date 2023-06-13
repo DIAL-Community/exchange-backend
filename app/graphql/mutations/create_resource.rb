@@ -11,12 +11,14 @@ module Mutations
     argument :phase, String, required: false, default_value: ''
     argument :image_file, ApolloUploadServer::Upload, required: false
 
-    argument :link, String, required: false, default_value: ''
-    argument :image_url, String, required: false, default_value: ''
-    argument :description, String, required: false, default_value: ''
+    argument :link, String, required: false, default_value: nil
+    argument :image_url, String, required: false, default_value: nil
+    argument :description, String, required: false, default_value: nil
 
     argument :show_in_exchange, Boolean, required: true
     argument :show_in_wizard, Boolean, required: true
+
+    argument :organization_slug, String, required: false, default_value: nil
 
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
@@ -24,7 +26,8 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_file: nil,
       link:, image_url:, description:,
-      show_in_exchange:, show_in_wizard:
+      show_in_exchange:, show_in_wizard:,
+      organization_slug:
     )
       unless an_admin || a_content_editor
         return {
@@ -68,6 +71,14 @@ module Mutations
             puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
           end
           resource.auditable_image_changed(image_file.original_filename)
+        end
+
+        unless organization_slug.nil?
+          organization = Organization.find_by(slug: organization_slug)
+          unless organization.nil?
+            organization.resources << resource
+            organization.save
+          end
         end
 
         successful_operation = true

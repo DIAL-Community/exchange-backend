@@ -10213,7 +10213,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -10225,7 +10225,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -10237,7 +10237,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -10270,6 +10270,18 @@
                     }
                   },
                   "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "organizationSlug",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
