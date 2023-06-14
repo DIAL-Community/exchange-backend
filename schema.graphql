@@ -2357,6 +2357,7 @@ type Query {
     """
     before: String
     buildingBlocks: [String!] = []
+    certifications: [String!] = []
     countries: [String!] = []
 
     """
