@@ -10,11 +10,12 @@ module Mutations
 
     def valid_specialty(specialty)
       [
-        'UX & Design',
-        'Big Data',
         'AI / Machine Learning',
+        'Data Analytics & Visualization',
+        'Mobile Apps',
         'SaaS / Hosting Services',
-        'Mobile Apps'
+        'UX & Design',
+        'Web Development'
       ].include?(specialty)
     end
 
