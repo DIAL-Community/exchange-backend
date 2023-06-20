@@ -6,8 +6,8 @@ require 'rails_helper'
 RSpec.describe(Queries::UseCasesQuery, type: :graphql) do
   let(:query) do
     <<~GQL
-      query UseCasesForSector ($sectorsSlugs: [String!]!) {
-        useCasesForSector (sectorsSlugs: $sectorsSlugs) {
+      query UseCasesForSector ($sectorSlugs: [String!]!) {
+        useCasesForSector (sectorSlugs: $sectorSlugs) {
           name
         }
       }
@@ -21,7 +21,7 @@ RSpec.describe(Queries::UseCasesQuery, type: :graphql) do
 
     result = execute_graphql(
       query,
-      variables: { sectorsSlugs: "some_sector" }
+      variables: { sectorSlugs: "some_sector" }
     )
 
     aggregate_failures do

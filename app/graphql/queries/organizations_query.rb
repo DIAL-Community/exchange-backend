@@ -63,16 +63,7 @@ module Queries
         organizations = organizations.where(id: (name_orgs + desc_orgs + alias_orgs).uniq)
       end
 
-      filtered_sectors = []
-      user_sectors = sectors.reject { |x| x.nil? || x.empty? }
-      filtered_sectors = user_sectors.clone unless user_sectors.empty?
-      user_sectors.each do |user_sector|
-        curr_sector = Sector.find(user_sector)
-        if curr_sector.parent_sector_id.nil?
-          child_sectors = Sector.where(parent_sector_id: curr_sector.id)
-          filtered_sectors += child_sectors.map(&:id)
-        end
-      end
+      filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }
       unless filtered_sectors.empty?
         organizations = organizations.joins(:sectors)
                                      .where(sectors: { id: filtered_sectors })
@@ -91,6 +82,57 @@ module Queries
       else
         organizations.distinct
       end
+    end
+  end
+
+  class SearchStorefrontsQuery < Queries::BaseQuery
+    include ActionView::Helpers::TextHelper
+
+    argument :search, String, required: false, default_value: ''
+    argument :sectors, [String], required: false, default_value: []
+    argument :countries, [String], required: false, default_value: []
+    argument :building_blocks, [String], required: false, default_value: []
+    argument :specialties, [String], required: false, default_value: []
+    argument :certifications, [String], required: false, default_value: []
+
+    type Types::OrganizationType.connection_type, null: false
+
+    def resolve(search:, sectors:, countries:, building_blocks:, specialties:, certifications:)
+      organizations = Organization.order(:name).where(has_storefront: true)
+
+      unless search.blank?
+        name_orgs = organizations.name_contains(search)
+        desc_orgs = organizations.joins(:organization_descriptions)
+                                 .where('LOWER(description) like LOWER(?)', "%#{search}%")
+        alias_orgs = organizations.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
+        organizations = organizations.where(id: (name_orgs + desc_orgs + alias_orgs).uniq)
+      end
+
+      filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }
+      unless filtered_sectors.empty?
+        organizations = organizations.joins(:sectors)
+                                     .where(sectors: { id: filtered_sectors })
+      end
+
+      filtered_countries = countries.reject { |x| x.nil? || x.empty? }
+      unless filtered_countries.empty?
+        organizations = organizations.joins(:countries)
+                                     .where(countries: { id: filtered_countries })
+      end
+
+      unless building_blocks.empty?
+        organizations = organizations.where('building_blocks ?| ARRAY[:building_blocks]', building_blocks:)
+      end
+
+      unless certifications.empty?
+        organizations = organizations.where('certifications ?| ARRAY[:certifications]', certifications:)
+      end
+
+      unless specialties.empty?
+        organizations = organizations.where('specialties ?| ARRAY[:specialties]', specialties:)
+      end
+
+      organizations
     end
   end
 end

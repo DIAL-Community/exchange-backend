@@ -11,12 +11,14 @@ module Mutations
     argument :phase, String, required: false, default_value: ''
     argument :image_file, ApolloUploadServer::Upload, required: false
 
-    argument :link, String, required: false, default_value: ''
-    argument :image_url, String, required: false, default_value: ''
-    argument :description, String, required: false, default_value: ''
+    argument :link, String, required: false, default_value: nil
+    argument :image_url, String, required: false, default_value: nil
+    argument :description, String, required: false, default_value: nil
 
-    argument :show_in_exchange, Boolean, required: true
-    argument :show_in_wizard, Boolean, required: true
+    argument :show_in_exchange, Boolean, required: false
+    argument :show_in_wizard, Boolean, required: false
+
+    argument :organization_slug, String, required: false, default_value: nil
 
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
@@ -24,12 +26,21 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_file: nil,
       link:, image_url:, description:,
-      show_in_exchange:, show_in_wizard:
+      show_in_exchange: false, show_in_wizard: false,
+      organization_slug:
     )
       unless an_admin || a_content_editor
         return {
           resource: nil,
           errors: ['Must be admin or content editor to create a resource.']
+        }
+      end
+
+      organization = Organization.find_by(slug: organization_slug)
+      if !organization.nil? && an_org_owner(organization.id)
+        return {
+          resource: nil,
+          errors: ['Must be owner of the organization to create resource for it.']
         }
       end
 
@@ -53,6 +64,11 @@ module Mutations
       resource.description = description
 
       resource.show_in_exchange = show_in_exchange
+      unless organization.nil?
+        # Allow resource coming from
+        resource.show_in_exchange = true
+      end
+
       resource.show_in_wizard = show_in_wizard
 
       successful_operation = false
@@ -68,6 +84,11 @@ module Mutations
             puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
           end
           resource.auditable_image_changed(image_file.original_filename)
+        end
+
+        unless organization.nil?
+          organization.resources << resource
+          organization.save
         end
 
         successful_operation = true

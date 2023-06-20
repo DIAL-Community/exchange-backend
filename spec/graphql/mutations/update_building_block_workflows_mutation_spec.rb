@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateBuildingBlockWorkflows (
-        $workflowsSlugs: [String!]!
+        $workflowSlugs: [String!]!
         $slug: String!
         ) {
           updateBuildingBlockWorkflows (
-            workflowsSlugs: $workflowsSlugs
+            workflowSlugs: $workflowSlugs
             slug: $slug
           ) {
             buildingBlock {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -96,7 +96,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

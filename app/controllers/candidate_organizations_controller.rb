@@ -35,11 +35,12 @@ class CandidateOrganizationsController < ApplicationController
                                                              approved_by_id: current_user.id)
 
         candidate_organization_contact, _rest = @candidate_organization.contacts
-
-        AdminMailer
-          .with(rejected: false, user_email: candidate_organization_contact.email)
-          .notify_candidate_organization_approval
-          .deliver_now
+        if !candidate_organization_contact.nil? && !candidate_organization_contact.email.nil?
+          AdminMailer
+            .with(rejected: false, user_email: candidate_organization_contact.email)
+            .notify_candidate_organization_approval
+            .deliver_now
+        end
 
         format.html { redirect_to(organization_url(organization), notice: 'Candidate promoted to organization.') }
         format.json { render(json: { message: 'Candidate approved.' }, status: :ok) }
@@ -59,11 +60,12 @@ class CandidateOrganizationsController < ApplicationController
          @candidate_organization.update(rejected: true, rejected_date: Time.now, rejected_by_id: current_user.id)
 
         candidate_organization_contact, _rest = @candidate_organization.contacts
-
-        AdminMailer
-          .with(rejected: true, user_email: candidate_organization_contact.email)
-          .notify_candidate_organization_approval
-          .deliver_now
+        if !candidate_organization_contact.nil? && !candidate_organization_contact.email.nil?
+          AdminMailer
+            .with(rejected: true, user_email: candidate_organization_contact.email)
+            .notify_candidate_organization_approval
+            .deliver_now
+        end
 
         format.html { redirect_to(candidate_organizations_url, notice: 'Candidate rejected.') }
         format.json { render(json: { message: 'Candidate declined.' }, status: :ok) }

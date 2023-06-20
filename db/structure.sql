@@ -1803,7 +1803,12 @@ CREATE TABLE public.organizations (
     updated_at timestamp without time zone NOT NULL,
     is_mni boolean DEFAULT false,
     aliases character varying[] DEFAULT '{}'::character varying[],
-    endorser_level public.endorser_type DEFAULT 'none'::public.endorser_type
+    endorser_level public.endorser_type DEFAULT 'none'::public.endorser_type,
+    has_storefront boolean DEFAULT false NOT NULL,
+    hero_url character varying,
+    specialties jsonb DEFAULT '[]'::jsonb NOT NULL,
+    certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
+    building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -1817,7 +1822,8 @@ CREATE TABLE public.organizations_contacts (
     started_at timestamp without time zone,
     ended_at timestamp without time zone,
     id bigint NOT NULL,
-    slug character varying NOT NULL
+    slug character varying NOT NULL,
+    main_contact boolean DEFAULT false NOT NULL
 );
 
 
@@ -1951,6 +1957,36 @@ CREATE SEQUENCE public.organizations_products_id_seq
 --
 
 ALTER SEQUENCE public.organizations_products_id_seq OWNED BY public.organizations_products.id;
+
+
+--
+-- Name: organizations_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organizations_resources (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organizations_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organizations_resources_id_seq OWNED BY public.organizations_resources.id;
 
 
 --
@@ -2936,7 +2972,8 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 CREATE TABLE public.projects_organizations (
     project_id bigint NOT NULL,
     organization_id bigint NOT NULL,
-    org_type public.org_type DEFAULT 'owner'::public.org_type
+    org_type public.org_type DEFAULT 'owner'::public.org_type,
+    featured_project boolean DEFAULT false NOT NULL
 );
 
 
@@ -3018,7 +3055,7 @@ CREATE TABLE public.resources (
     image_url character varying,
     link character varying,
     description character varying,
-    show_in_wizard boolean DEFAULT true NOT NULL,
+    show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL
 );
 
@@ -4204,6 +4241,13 @@ ALTER TABLE ONLY public.organizations_products ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: organizations_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_resources ALTER COLUMN id SET DEFAULT nextval('public.organizations_resources_id_seq'::regclass);
+
+
+--
 -- Name: organizations_states id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4939,6 +4983,14 @@ ALTER TABLE ONLY public.organizations
 
 ALTER TABLE ONLY public.organizations_products
     ADD CONSTRAINT organizations_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_resources organizations_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_resources
+    ADD CONSTRAINT organizations_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -6278,6 +6330,13 @@ CREATE UNIQUE INDEX organizations_projects_idx ON public.projects_organizations 
 
 
 --
+-- Name: organizations_resources_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX organizations_resources_idx ON public.organizations_resources USING btree (organization_id, resource_id);
+
+
+--
 -- Name: origins_products_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6394,6 +6453,13 @@ CREATE UNIQUE INDEX projects_sdgs_idx ON public.projects_sdgs USING btree (proje
 --
 
 CREATE UNIQUE INDEX projects_sectors_idx ON public.projects_sectors USING btree (project_id, sector_id);
+
+
+--
+-- Name: resources_organizations_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX resources_organizations_idx ON public.organizations_resources USING btree (resource_id, organization_id);
 
 
 --
@@ -7309,6 +7375,22 @@ ALTER TABLE ONLY public.organizations_products
 
 
 --
+-- Name: organizations_resources organizations_resources_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_resources
+    ADD CONSTRAINT organizations_resources_organization_fk FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
+-- Name: organizations_resources organizations_resources_resource_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organizations_resources
+    ADD CONSTRAINT organizations_resources_resource_fk FOREIGN KEY (resource_id) REFERENCES public.resources(id);
+
+
+--
 -- Name: organizations_sectors organizations_sectors_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7840,6 +7922,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230508150946'),
 ('20230511202225'),
 ('20230530143937'),
-('20230530144123');
+('20230530144123'),
+('20230605183013'),
+('20230605202219'),
+('20230605203819'),
+('20230605203844'),
+('20230612203109'),
+('20230613201202');
 
 

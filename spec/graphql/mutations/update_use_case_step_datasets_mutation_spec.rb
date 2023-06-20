@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateUseCaseStepDatasets (
-        $datasetsSlugs: [String!]!
+        $datasetSlugs: [String!]!
         $slug: String!
         ) {
           updateUseCaseStepDatasets (
-            datasetsSlugs: $datasetsSlugs
+            datasetSlugs: $datasetSlugs
             slug: $slug
           ) {
             useCaseStep {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { datasetsSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
+      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { datasetsSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
+      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { datasetsSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
+      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -96,7 +96,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { datasetsSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
+      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

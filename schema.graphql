@@ -327,6 +327,7 @@ type Comment {
 type Contact {
   email: String
   id: ID!
+  mainContact: Boolean
   name: String!
   slug: String!
   title: String
@@ -1013,13 +1014,13 @@ type Mutation {
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
-  createOrganization(aliases: JSON, description: String, endorserLevel: String, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean = false, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
+  createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
-  createResource(description: String = "", imageFile: Upload, imageUrl: String = "", link: String = "", name: String!, phase: String = "", showInExchange: Boolean!, showInWizard: Boolean!, slug: String!): CreateResourcePayload
+  createResource(description: String = null, imageFile: Upload, imageUrl: String = null, link: String = null, name: String!, organizationSlug: String = null, phase: String = "", showInExchange: Boolean, showInWizard: Boolean, slug: String!): CreateResourcePayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
@@ -1050,7 +1051,7 @@ type Mutation {
   deleteWorkflow(id: ID!): DeleteWorkflowPayload
   duplicatePlay(playSlug: String!): DuplicatePlayPayload
   updateBuildingBlockProducts(mappingStatus: String!, productSlugs: [String!]!, slug: String!): UpdateBuildingBlockProductsPayload
-  updateBuildingBlockWorkflows(slug: String!, workflowsSlugs: [String!]!): UpdateBuildingBlockWorkflowsPayload
+  updateBuildingBlockWorkflows(slug: String!, workflowSlugs: [String!]!): UpdateBuildingBlockWorkflowsPayload
   updateDatasetCountries(countrySlugs: [String!]!, slug: String!): UpdateDatasetCountriesPayload
   updateDatasetOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateDatasetOrganizationsPayload
   updateDatasetSdgs(mappingStatus: String!, sdgSlugs: [String!]!, slug: String!): UpdateDatasetSdgsPayload
@@ -1061,33 +1062,37 @@ type Mutation {
   updateOpportunityOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateOpportunityOrganizationsPayload
   updateOpportunitySectors(sectorSlugs: [String!]!, slug: String!): UpdateOpportunitySectorsPayload
   updateOpportunityUseCases(slug: String!, useCaseSlugs: [String!]!): UpdateOpportunityUseCasesPayload
+  updateOrganizationBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateOrganizationBuildingBlocksPayload
+  updateOrganizationCertifications(productSlugs: [String!]!, slug: String!): UpdateOrganizationCertificationsPayload
   updateOrganizationContacts(contacts: JSON!, slug: String!): UpdateOrganizationContactsPayload
-  updateOrganizationCountry(countriesSlugs: [String!]!, slug: String!): UpdateOrganizationCountryPayload
+  updateOrganizationCountry(countrySlugs: [String!]!, slug: String!): UpdateOrganizationCountryPayload
   updateOrganizationOffices(offices: [JSON!]!, slug: String!): UpdateOrganizationOfficesPayload
   updateOrganizationProducts(productSlugs: [String!]!, slug: String!): UpdateOrganizationProductsPayload
-  updateOrganizationProjects(projectsSlugs: [String!]!, slug: String!): UpdateOrganizationProjectsPayload
-  updateOrganizationSectors(sectorsSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
+  updateOrganizationProjects(projectSlugs: [String!]!, slug: String!): UpdateOrganizationProjectsPayload
+  updateOrganizationResources(resourceSlugs: [String!]!, slug: String!): UpdateOrganizationResourcesPayload
+  updateOrganizationSectors(sectorSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
+  updateOrganizationSpecialties(slug: String!, specialties: [String!]!): UpdateOrganizationSpecialtiesPayload
   updatePlayMoves(moveSlugs: [String!]!, slug: String!): UpdatePlayMovesPayload
   updatePlaybookPlays(playSlugs: [String!]!, slug: String!): UpdatePlaybookPlaysPayload
   updateProductBuildingBlocks(buildingBlockSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
-  updateProductOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
-  updateProductProjects(projectsSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
+  updateProductOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
+  updateProductProjects(projectSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
   updateProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, slug: String!): UpdateProductRepositoryPayload
-  updateProductSdgs(mappingStatus: String!, sdgsSlugs: [String!]!, slug: String!): UpdateProductSdgsPayload
-  updateProductSectors(sectorsSlugs: [String!]!, slug: String!): UpdateProductSectorsPayload
+  updateProductSdgs(mappingStatus: String!, sdgSlugs: [String!]!, slug: String!): UpdateProductSdgsPayload
+  updateProductSectors(sectorSlugs: [String!]!, slug: String!): UpdateProductSectorsPayload
   updateProductTags(slug: String!, tags: [String!]!): UpdateProductTagsPayload
-  updateProjectCountries(countriesSlugs: [String!]!, slug: String!): UpdateProjectCountriesPayload
-  updateProjectOrganizations(organizationsSlugs: [String!]!, slug: String!): UpdateProjectOrganizationsPayload
+  updateProjectCountries(countrySlugs: [String!]!, slug: String!): UpdateProjectCountriesPayload
+  updateProjectOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateProjectOrganizationsPayload
   updateProjectProducts(productSlugs: [String!]!, slug: String!): UpdateProjectProductsPayload
-  updateProjectSectors(sectorsSlugs: [String!]!, slug: String!): UpdateProjectSectorsPayload
+  updateProjectSectors(sectorSlugs: [String!]!, slug: String!): UpdateProjectSectorsPayload
   updateProjectTags(slug: String!, tags: [String!]!): UpdateProjectTagsPayload
   updateRubricCategoryIndicators(categoryIndicatorSlugs: [String!]!, rubricCategorySlug: String!): UpdateRubricCategoryIndicatorsPayload
-  updateUseCaseSdgTargets(sdgTargetsIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
+  updateUseCaseSdgTargets(sdgTargetIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
   updateUseCaseStepBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateUseCaseStepBuildingBlocksPayload
-  updateUseCaseStepDatasets(datasetsSlugs: [String!]!, slug: String!): UpdateUseCaseStepDatasetsPayload
+  updateUseCaseStepDatasets(datasetSlugs: [String!]!, slug: String!): UpdateUseCaseStepDatasetsPayload
   updateUseCaseStepProducts(productSlugs: [String!]!, slug: String!): UpdateUseCaseStepProductsPayload
-  updateUseCaseStepWorkflows(slug: String!, workflowsSlugs: [String!]!): UpdateUseCaseStepWorkflowsPayload
+  updateUseCaseStepWorkflows(slug: String!, workflowSlugs: [String!]!): UpdateUseCaseStepWorkflowsPayload
   updateUseCaseTags(slug: String!, tags: [String!]!): UpdateUseCaseTagsPayload
   updateWorkflowBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateWorkflowBuildingBlocksPayload
 }
@@ -1179,9 +1184,14 @@ type OpportunityEdge {
 
 type Organization {
   aliases: JSON
+  buildingBlockCertifications: [BuildingBlock!]!
+  buildingBlocks: [String!]!
+  certifications: [String!]!
   contacts: [Contact!]
   countries: [Country!]
   endorserLevel: String
+  hasStorefront: Boolean
+  heroFile: String
   id: ID!
   imageFile: String
   isEndorser: Boolean
@@ -1190,10 +1200,13 @@ type Organization {
   offices: [Office!]
   organizationDescription: OrganizationDescription
   organizationDescriptions: [OrganizationDescription!]
+  productCertifications: [Product!]!
   products: [Product!]!
   projects: [Project!]!
+  resources: [Resource!]
   sectors: [Sector!]
   slug: String!
+  specialties: [String!]!
   website: String
   whenEndorsed: ISO8601Date
 }
@@ -2333,6 +2346,33 @@ type Query {
     parentSectorId: Int = null
     search: String = ""
   ): SectorConnection!
+  searchStorefronts(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+    buildingBlocks: [String!] = []
+    certifications: [String!] = []
+    countries: [String!] = []
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+    search: String = ""
+    sectors: [String!] = []
+    specialties: [String!] = []
+  ): OrganizationConnection!
   searchTags(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -2437,7 +2477,7 @@ type Query {
   useCaseStep(slug: String!): UseCaseStep
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!
-  useCasesForSector(sectorsSlugs: [String!]!): [UseCase!]!
+  useCasesForSector(sectorSlugs: [String!]!): [UseCase!]!
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User
   userAuthenticationTokenCheck(userAuthenticationToken: String!, userId: Int!): Boolean
@@ -2802,6 +2842,22 @@ type UpdateOpportunityUseCasesPayload {
 }
 
 """
+Autogenerated return type of UpdateOrganizationBuildingBlocks.
+"""
+type UpdateOrganizationBuildingBlocksPayload {
+  errors: [String!]
+  organization: Organization
+}
+
+"""
+Autogenerated return type of UpdateOrganizationCertifications.
+"""
+type UpdateOrganizationCertificationsPayload {
+  errors: [String!]
+  organization: Organization
+}
+
+"""
 Autogenerated return type of UpdateOrganizationContacts.
 """
 type UpdateOrganizationContactsPayload {
@@ -2842,9 +2898,25 @@ type UpdateOrganizationProjectsPayload {
 }
 
 """
+Autogenerated return type of UpdateOrganizationResources.
+"""
+type UpdateOrganizationResourcesPayload {
+  errors: [String!]
+  organization: Organization
+}
+
+"""
 Autogenerated return type of UpdateOrganizationSectors.
 """
 type UpdateOrganizationSectorsPayload {
+  errors: [String!]
+  organization: Organization
+}
+
+"""
+Autogenerated return type of UpdateOrganizationSpecialties.
+"""
+type UpdateOrganizationSpecialtiesPayload {
   errors: [String!]
   organization: Organization
 }
