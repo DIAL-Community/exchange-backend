@@ -69,6 +69,7 @@ module Types
     field :organizations, resolver: Queries::OrganizationsQuery
     field :organization, resolver: Queries::OrganizationQuery
     field :search_organizations, resolver: Queries::SearchOrganizationsQuery
+    field :search_storefronts, resolver: Queries::SearchStorefrontsQuery
 
     field :opportunities, resolver: Queries::OpportunitiesQuery
     field :opportunity, resolver: Queries::OpportunityQuery

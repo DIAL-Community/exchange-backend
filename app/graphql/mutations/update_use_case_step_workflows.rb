@@ -2,13 +2,13 @@
 
 module Mutations
   class UpdateUseCaseStepWorkflows < Mutations::BaseMutation
-    argument :workflows_slugs, [String], required: true
+    argument :workflow_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :use_case_step, Types::UseCaseStepType, null: true
     field :errors, [String], null: true
 
-    def resolve(workflows_slugs:, slug:)
+    def resolve(workflow_slugs:, slug:)
       unless an_admin || a_content_editor
         return {
           use_case_step: nil,
@@ -19,8 +19,8 @@ module Mutations
       use_case_step = UseCaseStep.find_by(slug:)
 
       use_case_step.workflows = []
-      if !workflows_slugs.nil? && !workflows_slugs.empty?
-        workflows_slugs.each do |workflow_slug|
+      if !workflow_slugs.nil? && !workflow_slugs.empty?
+        workflow_slugs.each do |workflow_slug|
           current_workflow = Workflow.find_by(slug: workflow_slug)
           use_case_step.workflows << current_workflow unless current_workflow.nil?
         end

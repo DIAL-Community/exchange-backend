@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateOrganizationSectors < Mutations::BaseMutation
-    argument :sector_slugs, [String], required: true
+  class UpdateOrganizationBuildingBlocks < Mutations::BaseMutation
+    argument :building_block_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(sector_slugs:, slug:)
+    def resolve(building_block_slugs: [], slug:)
       organization = Organization.find_by(slug:)
 
       unless an_admin || an_org_owner(organization.id)
@@ -18,13 +18,11 @@ module Mutations
         }
       end
 
-      organization.sectors = []
-      if !sector_slugs.nil? && !sector_slugs.empty?
-        sector_slugs.each do |sector_slug|
-          current_sector = Sector.where(slug: sector_slug, is_displayable: true)
-          unless current_sector.nil?
-            organization.sectors << current_sector
-          end
+      organization.building_blocks = []
+      if !building_block_slugs.nil? && !building_block_slugs.empty?
+        building_block_slugs.each do |building_block_slug|
+          building_block = BuildingBlock.find_by(slug: building_block_slug)
+          organization.building_blocks << building_block.id.to_s unless building_block.nil?
         end
       end
 

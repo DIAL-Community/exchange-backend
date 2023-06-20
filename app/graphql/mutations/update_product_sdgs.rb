@@ -2,14 +2,14 @@
 
 module Mutations
   class UpdateProductSdgs < Mutations::BaseMutation
-    argument :sdgs_slugs, [String], required: true
+    argument :sdg_slugs, [String], required: true
     argument :mapping_status, String, required: true
     argument :slug, String, required: true
 
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
 
-    def resolve(sdgs_slugs:, mapping_status:, slug:)
+    def resolve(sdg_slugs:, mapping_status:, slug:)
       product = Product.find_by(slug:)
 
       unless an_admin || a_product_owner(product.id)
@@ -20,8 +20,8 @@ module Mutations
       end
 
       product.sustainable_development_goals = []
-      if !sdgs_slugs.nil? && !sdgs_slugs.empty?
-        sdgs_slugs.each do |sdg_slug|
+      if !sdg_slugs.nil? && !sdg_slugs.empty?
+        sdg_slugs.each do |sdg_slug|
           current_sdg = SustainableDevelopmentGoal.find_by(slug: sdg_slug)
           product.sustainable_development_goals << current_sdg unless current_sdg.nil?
         end

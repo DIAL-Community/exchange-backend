@@ -2,16 +2,16 @@
 
 module Mutations
   class UpdateProjectOrganizations < Mutations::BaseMutation
-    argument :organizations_slugs, [String], required: true
+    argument :organization_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
-    def resolve(organizations_slugs:, slug:)
+    def resolve(organization_slugs:, slug:)
       project = Project.find_by(slug:)
 
-      unless an_admin || org_owner_check(organizations_slugs) || product_owner_check(project)
+      unless an_admin || org_owner_check(organization_slugs) || product_owner_check(project)
         return {
           project: nil,
           errors: ['Must have proper rights to update a project']
@@ -19,8 +19,8 @@ module Mutations
       end
 
       project.organizations = []
-      if !organizations_slugs.nil? && !organizations_slugs.empty?
-        organizations_slugs.each do |organization_slug|
+      if !organization_slugs.nil? && !organization_slugs.empty?
+        organization_slugs.each do |organization_slug|
           current_organization = Organization.find_by(slug: organization_slug)
           project.organizations << current_organization unless current_organization.nil?
         end
@@ -41,8 +41,8 @@ module Mutations
       end
     end
 
-    def org_owner_check(organizations_slugs)
-      organizations_slugs.each do |slug|
+    def org_owner_check(organization_slugs)
+      organization_slugs.each do |slug|
         organization = Organization.find_by(slug:)
         if an_org_owner(organization.id)
           return true

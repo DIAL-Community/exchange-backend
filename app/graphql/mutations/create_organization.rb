@@ -13,15 +13,21 @@ module Mutations
     argument :is_endorser, Boolean, required: false, default_value: false
     argument :when_endorsed, GraphQL::Types::ISO8601Date, required: false
     argument :endorser_level, String, required: false
-    argument :is_mni, Boolean, required: false, default_value: false
+    argument :is_mni, Boolean, required: false
     argument :description, String, required: false
     argument :image_file, ApolloUploadServer::Upload, required: false
+
+    argument :has_storefront, Boolean, required: false
+    argument :hero_file, ApolloUploadServer::Upload, required: false
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, aliases:, website:, is_endorser:, when_endorsed:, endorser_level:,
-      is_mni:, description:, image_file: nil)
+    def resolve(
+      name:, slug:, aliases:, website: nil,
+      is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
+      has_storefront: nil, description:, image_file: nil, hero_file: nil
+    )
       organization = Organization.find_by(slug:)
       unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
         return {
@@ -45,9 +51,9 @@ module Mutations
       # Don'r re-slug organization name
       organization.name = name
 
-      organization.aliases = aliases
-      organization.website = website
-      organization.is_endorser = is_endorser
+      organization.aliases = aliases unless aliases.nil?
+      organization.website = website unless website.nil?
+      organization.is_endorser = is_endorser unless is_endorser.nil?
 
       unless when_endorsed.nil?
         date = when_endorsed.to_s
@@ -55,8 +61,10 @@ module Mutations
         organization.when_endorsed = timestamp
       end
 
-      organization.endorser_level = endorser_level
-      organization.is_mni = is_mni
+      organization.is_mni = is_mni unless is_mni.nil?
+      organization.endorser_level = endorser_level unless endorser_level.nil?
+
+      organization.has_storefront = has_storefront unless has_storefront.nil?
 
       successful_operation = false
       ActiveRecord::Base.transaction do
@@ -67,17 +75,31 @@ module Mutations
           uploader = LogoUploader.new(organization, image_file.original_filename, context[:current_user])
           begin
             uploader.store!(image_file)
+            puts "Logo image: '#{uploader.filename}' saved."
           rescue StandardError => e
             puts "Unable to save image for: #{organization.name}. Standard error: #{e}."
           end
           organization.auditable_image_changed(image_file.original_filename)
         end
 
-        organization_desc = OrganizationDescription.find_by(organization_id: organization.id, locale: I18n.locale)
-        organization_desc = OrganizationDescription.new if organization_desc.nil?
-        organization_desc.description = description
-        organization_desc.organization_id = organization.id
-        organization_desc.locale = I18n.locale
+        unless hero_file.nil?
+          uploader = HeroUploader.new(organization, "hero_#{hero_file.original_filename}", context[:current_user])
+          begin
+            uploader.store!(hero_file)
+            puts "Hero image: '#{uploader.filename}' saved."
+          rescue StandardError => e
+            puts "Unable to save hero image for: #{organization.name}. Standard error: #{e}."
+          end
+          organization.auditable_image_changed(hero_file.original_filename)
+        end
+
+        unless description.nil?
+          organization_desc = OrganizationDescription.find_by(organization_id: organization.id, locale: I18n.locale)
+          organization_desc = OrganizationDescription.new if organization_desc.nil?
+          organization_desc.description = description
+          organization_desc.organization_id = organization.id
+          organization_desc.locale = I18n.locale
+        end
 
         assign_auditable_user(organization_desc)
         organization_desc.save

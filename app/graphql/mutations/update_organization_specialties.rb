@@ -1,14 +1,25 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateOrganizationSectors < Mutations::BaseMutation
-    argument :sector_slugs, [String], required: true
+  class UpdateOrganizationSpecialties < Mutations::BaseMutation
+    argument :specialties, [String], required: true
     argument :slug, String, required: true
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(sector_slugs:, slug:)
+    def valid_specialty(specialty)
+      [
+        'AI / Machine Learning',
+        'Data Analytics & Visualization',
+        'Mobile Apps',
+        'SaaS / Hosting Services',
+        'UX & Design',
+        'Web Development'
+      ].include?(specialty)
+    end
+
+    def resolve(specialties: [], slug:)
       organization = Organization.find_by(slug:)
 
       unless an_admin || an_org_owner(organization.id)
@@ -18,13 +29,10 @@ module Mutations
         }
       end
 
-      organization.sectors = []
-      if !sector_slugs.nil? && !sector_slugs.empty?
-        sector_slugs.each do |sector_slug|
-          current_sector = Sector.where(slug: sector_slug, is_displayable: true)
-          unless current_sector.nil?
-            organization.sectors << current_sector
-          end
+      organization.specialties = []
+      if !specialties.nil? && !specialties.empty?
+        specialties.each do |specialty|
+          organization.specialties << specialty if valid_specialty(specialty)
         end
       end
 
