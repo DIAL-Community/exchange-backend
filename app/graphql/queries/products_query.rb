@@ -275,7 +275,6 @@ module Queries
   end
 
   class PaginatedProductsQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
@@ -283,7 +282,7 @@ module Queries
     argument :tags, [String], required: false, default_value: []
     argument :building_blocks, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
-    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :offset_attributes, Attributes::OffsetAttributes, required: true
     argument :commercial_product, Boolean, required: false
     argument :product_sort_hint, String, required: false, default_value: 'name'
 

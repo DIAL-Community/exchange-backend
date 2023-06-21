@@ -1110,9 +1110,10 @@ type Office {
 }
 
 """
-Attributes for pagination
+Input attributes for pagination
 """
-input OffsetAttributeInput {
+input OffsetAttributes {
+  limit: Int
   offset: Int!
 }
 
@@ -1331,6 +1332,18 @@ type PageInfo {
   When paginating backwards, the cursor to continue.
   """
   startCursor: String
+}
+
+type PaginatedUseCase {
+  paginationAttributes: PaginationAttributes!
+  useCases: [UseCase!]!
+}
+
+"""
+Output attributes for pagination
+"""
+type PaginationAttributes {
+  totalCount: Int!
 }
 
 type Play {
@@ -1689,7 +1702,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    offsetAttributes: OffsetAttributeInput!
+    offsetAttributes: OffsetAttributes!
     search: String = ""
     sectors: [String!] = []
     services: [String!] = []
@@ -1716,7 +1729,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    offsetAttributes: OffsetAttributeInput!
+    offsetAttributes: OffsetAttributes!
     sectors: [String!] = []
     tags: [String!] = []
   ): DatasetConnection!
@@ -1740,7 +1753,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    offsetAttributes: OffsetAttributeInput!
+    offsetAttributes: OffsetAttributes!
     playbookSortHint: String = "name"
     sectors: [String!] = []
     tags: [String!] = []
@@ -1768,7 +1781,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    offsetAttributes: OffsetAttributeInput!
+    offsetAttributes: OffsetAttributes!
     productSortHint: String = "name"
     sectors: [String!] = []
     tags: [String!] = []
@@ -1795,11 +1808,12 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    offsetAttributes: OffsetAttributeInput!
+    offsetAttributes: OffsetAttributes!
     projectSortHint: String = "name"
     sectors: [String!] = []
     tags: [String!] = []
   ): ProjectConnection!
+  paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginatedUseCase!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!

@@ -41,4 +41,9 @@ module Types
     field :tags, GraphQL::Types::JSON, null: true
     field :sector, Types::SectorType, null: false
   end
+
+  class PaginatedUseCaseType < Types::BaseObject
+    field :use_cases, [Types::UseCaseType], null: false
+    field :pagination_attributes, Attributes::PaginationAttributes, null: false
+  end
 end
