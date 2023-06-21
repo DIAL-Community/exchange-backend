@@ -25,7 +25,17 @@ module Types
 
     field :use_case_descriptions, [Types::UseCaseDescriptionType], null: true
     field :use_case_description, Types::UseCaseDescriptionType, null: false,
-                                                                method: :use_case_description_localized
+      method: :use_case_description_localized
+
+    field :sanitized_description, String, null: false
+    def sanitized_description
+      use_case_description = object.use_case_description_localized
+      return '' if use_case_description.nil?
+
+      html_fragment = Nokogiri::HTML.fragment(use_case_description.description)
+      html_fragment.search('.//table').remove
+      html_fragment
+    end
 
     field :use_case_steps, [Types::UseCaseStepType], null: true
 

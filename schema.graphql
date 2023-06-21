@@ -1334,11 +1334,6 @@ type PageInfo {
   startCursor: String
 }
 
-type PaginatedUseCase {
-  paginationAttributes: PaginationAttributes!
-  useCases: [UseCase!]!
-}
-
 """
 Output attributes for pagination
 """
@@ -1813,7 +1808,7 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): ProjectConnection!
-  paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginatedUseCase!
+  paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
@@ -2488,6 +2483,7 @@ type Query {
   tag(slug: String!): Tag
   tags(search: String = ""): [Tag!]!
   useCase(slug: String!): UseCase
+  useCasePaginationAttributes(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   useCaseStep(slug: String!): UseCaseStep
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!
@@ -3127,6 +3123,7 @@ type UseCase {
   markdownUrl: String
   maturity: String!
   name: String!
+  sanitizedDescription: String!
   sdgTargets: [SustainableDevelopmentGoalTarget!]!
   sector: Sector!
   slug: String!

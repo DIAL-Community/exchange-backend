@@ -49,8 +49,10 @@ module Types
     field :use_cases, resolver: Queries::UseCasesQuery
     field :use_case, resolver: Queries::UseCaseQuery
     field :search_use_cases, resolver: Queries::SearchUseCasesQuery
-    field :paginated_use_cases, resolver: Queries::PaginatedUseCasesQuery
     field :use_cases_for_sector, resolver: Queries::UseCasesForSectorQuery
+
+    field :paginated_use_cases, resolver: Queries::PaginatedUseCasesQuery
+    field :use_case_pagination_attributes, resolver: Queries::UseCasePaginationAttributesQuery
 
     field :use_cases_steps, resolver: Queries::UseCasesStepsQuery
     field :use_case_steps, resolver: Queries::UseCaseStepsQuery
