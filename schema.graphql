@@ -2698,6 +2698,7 @@ type SustainableDevelopmentGoalTarget {
   id: ID!
   imageFile: String
   name: String!
+  sdg: SustainableDevelopmentGoal!
   sdgNumber: String!
   sustainableDevelopmentGoal: SustainableDevelopmentGoal!
   targetNumber: String!
