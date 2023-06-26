@@ -78,7 +78,7 @@ class UseCasesController < ApplicationController
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
     if !params[:show_beta].present? || params[:show_beta].to_s == 'false'
-      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:MATURE])
+      use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED])
     end
 
     use_cases = use_cases.name_contains(params[:search]) if params[:search].present?
