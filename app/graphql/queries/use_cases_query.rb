@@ -51,9 +51,10 @@ module Queries
     argument :search, String, required: false, default_value: ''
     argument :sdgs, [String], required: false, default_value: []
     argument :show_beta, Boolean, required: false, default_value: false
+    argument :gov_stack_only, Boolean, required: false, default_value: false
     type Types::UseCaseType.connection_type, null: false
 
-    def resolve(search:, sdgs:, show_beta:)
+    def resolve(search:, sdgs:, show_beta:, gov_stack_only:)
       use_cases = UseCase.order(:name)
       unless search.blank?
         name_ucs = use_cases.name_contains(search)
@@ -71,6 +72,7 @@ module Queries
       end
 
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
+      use_cases = use_cases.where.not(markdown_url: nil) if gov_stack_only
 
       use_cases.distinct
     end
@@ -120,12 +122,12 @@ module Queries
   end
 
   class UseCasesForSectorQuery < Queries::BaseQuery
-    argument :sectors_slugs, [String], required: true
+    argument :sector_slugs, [String], required: true
     type [Types::UseCaseType], null: false
 
-    def resolve(sectors_slugs:)
+    def resolve(sector_slugs:)
       use_cases = UseCase.joins(:sector)
-                         .where(sectors: { slug: sectors_slugs, locale: I18n.locale })
+                         .where(sectors: { slug: sector_slugs, locale: I18n.locale })
                          .where(maturity: 'PUBLISHED')
       use_cases.uniq
     end

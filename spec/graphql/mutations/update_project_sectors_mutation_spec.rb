@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateProjectSectors, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProjectSectors (
-        $sectorsSlugs: [String!]!
+        $sectorSlugs: [String!]!
         $slug: String!
         ) {
           updateProjectSectors (
-            sectorsSlugs: $sectorsSlugs
+            sectorSlugs: $sectorSlugs
             slug: $slug
           ) {
             project {
@@ -34,7 +34,7 @@ RSpec.describe(Mutations::UpdateProjectSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -56,7 +56,7 @@ RSpec.describe(Mutations::UpdateProjectSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,7 +77,7 @@ RSpec.describe(Mutations::UpdateProjectSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -95,7 +95,7 @@ RSpec.describe(Mutations::UpdateProjectSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

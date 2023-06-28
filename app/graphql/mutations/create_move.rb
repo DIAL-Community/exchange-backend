@@ -94,7 +94,7 @@ module Mutations
     end
   end
 
-  class CreateResource < Mutations::BaseMutation
+  class CreateMoveResource < Mutations::BaseMutation
     require 'modules/slugger'
 
     include Modules::Slugger

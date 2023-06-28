@@ -20,6 +20,7 @@ RSpec.describe(Mutations::ApplyAsContentEditor, type: :graphql) do
   end
 
   it 'creates content editor role - user is logged in' do
+    create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
     user = create(:user, email: 'user@gmail.com')
 
     result = execute_graphql_as_user(

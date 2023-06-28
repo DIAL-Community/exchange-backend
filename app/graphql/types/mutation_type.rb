@@ -10,14 +10,18 @@ module Types
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
     field :delete_playbook, mutation: Mutations::DeletePlaybook
+    field :delete_playbook_play, mutation: Mutations::DeletePlaybookPlay
+    field :update_playbook_plays, mutation: Mutations::UpdatePlaybookPlays
 
     field :create_play, mutation: Mutations::CreatePlay
     field :auto_save_play, mutation: Mutations::CreatePlay
     field :duplicate_play, mutation: Mutations::DuplicatePlay
+    field :delete_play_move, mutation: Mutations::DeletePlayMove
+    field :update_play_moves, mutation: Mutations::UpdatePlayMoves
 
     field :create_move, mutation: Mutations::CreateMove
     field :auto_save_move, mutation: Mutations::CreateMove
-    field :create_resource, mutation: Mutations::CreateResource
+    field :create_move_resource, mutation: Mutations::CreateMoveResource
 
     field :create_user, mutation: Mutations::CreateUser
 
@@ -46,6 +50,10 @@ module Types
     field :update_organization_sectors, mutation: Mutations::UpdateOrganizationSectors
     field :update_organization_projects, mutation: Mutations::UpdateOrganizationProjects
     field :update_organization_offices, mutation: Mutations::UpdateOrganizationOffices
+    field :update_organization_resources, mutation: Mutations::UpdateOrganizationResources
+    field :update_organization_specialties, mutation: Mutations::UpdateOrganizationSpecialties
+    field :update_organization_certifications, mutation: Mutations::UpdateOrganizationCertifications
+    field :update_organization_building_blocks, mutation: Mutations::UpdateOrganizationBuildingBlocks
 
     field :create_product, mutation: Mutations::CreateProduct
     field :delete_product, mutation: Mutations::DeleteProduct
@@ -123,5 +131,8 @@ module Types
     field :apply_as_content_editor, mutation: Mutations::ApplyAsContentEditor
 
     field :approve_reject_candidate_role, mutation: Mutations::ApproveRejectCandidateRole
+
+    field :create_resource, mutation: Mutations::CreateResource
+    field :delete_resource, mutation: Mutations::DeleteResource
   end
 end

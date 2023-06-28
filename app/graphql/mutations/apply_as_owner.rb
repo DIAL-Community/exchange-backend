@@ -80,6 +80,15 @@ module Mutations
       end
 
       if candidate_role.save!
+        AdminMailer
+          .with(user: {
+            email: candidate_role.email,
+            dataset_id: candidate_role.dataset_id,
+            organization_id: candidate_role.organization_id,
+            product_id: candidate_role.product_id
+          })
+          .notify_user_request
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
           candidate_role:,

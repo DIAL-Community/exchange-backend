@@ -113,7 +113,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       expect(result['data']['createUseCase']['useCase'])
         .to(be(nil))
       expect(result['data']['createUseCase']['errors'])
-        .to(eq(['Must be admin or content editor to create an use case']))
+        .to(eq(['Must be admin or content editor to create a use case']))
     end
   end
 
@@ -128,7 +128,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       expect(result['data']['createUseCase']['useCase'])
         .to(be(nil))
       expect(result['data']['createUseCase']['errors'])
-        .to(eq(['Must be admin or content editor to create an use case']))
+        .to(eq(['Must be admin or content editor to create a use case']))
     end
   end
 end
