@@ -1703,6 +1703,7 @@ type Query {
     services: [String!] = []
     subSectors: [String!] = []
   ): OrganizationConnection!
+  paginatedBuildingBlocks(categoryTypes: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
   paginatedDatasets(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1782,6 +1783,7 @@ type Query {
     tags: [String!] = []
     useCases: [String!] = []
   ): ProductConnection!
+  paginatedProductsRedux(licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Product!]!
   paginatedProjects(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1809,6 +1811,9 @@ type Query {
     tags: [String!] = []
   ): ProjectConnection!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
+  paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeProduct(licenseTypes: [String!] = [], origins: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
+  paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
@@ -2483,7 +2488,6 @@ type Query {
   tag(slug: String!): Tag
   tags(search: String = ""): [Tag!]!
   useCase(slug: String!): UseCase
-  useCasePaginationAttributes(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   useCaseStep(slug: String!): UseCaseStep
   useCaseSteps(slug: String!): [UseCaseStep!]!
   useCases(mature: Boolean = false, search: String = ""): [UseCase!]!

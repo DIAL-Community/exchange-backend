@@ -51,9 +51,6 @@ module Types
     field :search_use_cases, resolver: Queries::SearchUseCasesQuery
     field :use_cases_for_sector, resolver: Queries::UseCasesForSectorQuery
 
-    field :paginated_use_cases, resolver: Queries::PaginatedUseCasesQuery
-    field :use_case_pagination_attributes, resolver: Queries::UseCasePaginationAttributesQuery
-
     field :use_cases_steps, resolver: Queries::UseCasesStepsQuery
     field :use_case_steps, resolver: Queries::UseCaseStepsQuery
     field :use_case_step, resolver: Queries::UseCaseStepQuery
@@ -149,5 +146,14 @@ module Types
     field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery
     field :search_resources, resolver: Queries::SearchResourcesQuery
+
+    field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
+    field :pagination_attribute_use_case, resolver: Paginated::PaginationAttributeUseCase
+
+    field :paginated_products_redux, resolver: Paginated::PaginatedProducts
+    field :pagination_attribute_product, resolver: Paginated::PaginationAttributeProduct
+
+    field :paginated_building_blocks, resolver: Paginated::PaginatedBuildingBlocks
+    field :pagination_attribute_building_block, resolver: Paginated::PaginationAttributeBuildingBlock
   end
 end
