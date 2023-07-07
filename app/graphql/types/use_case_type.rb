@@ -34,6 +34,13 @@ module Types
 
       html_fragment = Nokogiri::HTML.fragment(use_case_description.description)
       html_fragment.search('.//table').remove
+
+      paragraph_nodes = html_fragment.search('p')
+      paragraph_nodes.each { |node| node.remove_attribute('style') }
+
+      anchor_nodes = html_fragment.search('a')
+      anchor_nodes.each { |node| node.replace(node.content) }
+
       html_fragment
     end
 
