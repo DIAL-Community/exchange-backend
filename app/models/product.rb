@@ -102,10 +102,8 @@ class Product < ApplicationRecord
   def image_file
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/products/#{slug}.png"
-    elsif product_type == 'dataset'
-      '/assets/products/dataset_placeholder.png'
     else
-      '/assets/products/prod_placeholder.png'
+      '/assets/products/product_placeholder.svg'
     end
   end
 
