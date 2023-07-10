@@ -134,5 +134,8 @@ module Types
 
     field :create_resource, mutation: Mutations::CreateResource
     field :delete_resource, mutation: Mutations::DeleteResource
+
+    field :add_bookmark, mutation: Mutations::AddBookmark
+    field :remove_bookmark, mutation: Mutations::RemoveBookmark
   end
 end

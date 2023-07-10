@@ -155,5 +155,7 @@ module Types
 
     field :paginated_building_blocks, resolver: Paginated::PaginatedBuildingBlocks
     field :pagination_attribute_building_block, resolver: Paginated::PaginationAttributeBuildingBlock
+
+    field :bookmark, resolver: Queries::BookmarkQuery
   end
 end

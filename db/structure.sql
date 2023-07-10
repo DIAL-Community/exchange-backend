@@ -3825,7 +3825,8 @@ CREATE TABLE public.users (
     user_products bigint[] DEFAULT '{}'::bigint[],
     receive_admin_emails boolean DEFAULT false,
     username character varying,
-    user_datasets bigint[] DEFAULT '{}'::bigint[]
+    user_datasets bigint[] DEFAULT '{}'::bigint[],
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -7928,6 +7929,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230605203819'),
 ('20230605203844'),
 ('20230612203109'),
-('20230613201202');
+('20230613201202'),
+('20230710193223');
 
 
