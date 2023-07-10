@@ -60,7 +60,7 @@ module Paginated
 
       building_blocks = building_blocks.where(category: category_types) unless category_types.empty?
 
-      { total_count: building_blocks.count }
+      { total_count: building_blocks.distinct.count }
     end
   end
 end

@@ -62,7 +62,7 @@ module Paginated
       building_blocks = building_blocks.where(category: category_types) unless category_types.empty?
 
       offset_params = offset_attributes.to_h
-      building_blocks.limit(offset_params[:limit]).offset(offset_params[:offset])
+      building_blocks.distinct.limit(offset_params[:limit]).offset(offset_params[:offset])
     end
   end
 end
