@@ -29,3 +29,4 @@ rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet
 rake data_processors:process_exported_json_files
 rake markdown_sync:use_case_definition
+rake opportunities_sync:sync_leverist
