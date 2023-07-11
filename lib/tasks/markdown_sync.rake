@@ -196,6 +196,7 @@ namespace :markdown_sync do
     use_case_step_workflows = []
     workflow_nodes = current_node.at_css('+ ul').css('li')
     workflow_nodes.each do |workflow_node|
+      next if workflow_node.at_css('strong').nil?
       workflow_names = workflow_node.at_css('strong').content.strip.split('/')
       workflow_names.each do |workflow_name|
         workflow = Workflow.find_by(name: workflow_name)
