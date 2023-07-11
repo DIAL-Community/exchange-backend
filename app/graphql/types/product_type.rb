@@ -56,6 +56,12 @@ module Types
     field :sustainable_development_goals_mapping_status, String,
       method: :sustainable_development_goals_mapping_status
 
+    field :sdgs, [Types::SustainableDevelopmentGoalType], null: true
+    field :sdgs_mapping_status, String, null: true, method: :sustainable_development_goals_mapping_status
+    def sdgs
+      object.sustainable_development_goals&.order(:number)
+    end
+
     field :interoperates_with, [Types::ProductType], null: true
     field :includes, [Types::ProductType], null: true
 
