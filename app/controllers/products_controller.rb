@@ -6,7 +6,7 @@ class ProductsController < ApplicationController
 
   def owner_search
     product = Product.find_by(slug: params[:product])
-    owner = User.joins(:products).find_by(products: { id: product.id }) if product&.id
+    owner = User.where(":product_id = ANY(user_products)", product_id: product&.id) if product&.id
 
     verified_captcha = Recaptcha.verify_via_api_call(
       params[:captcha],
