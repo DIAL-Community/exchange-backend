@@ -17,7 +17,7 @@ module Queries
     type Types::CountryType, null: true
 
     def resolve(slug:)
-      Country.find_by(slug: slug)
+      Country.find_by(slug:)
     end
   end
 

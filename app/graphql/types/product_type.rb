@@ -28,8 +28,6 @@ module Types
     field :is_launchable, Boolean, null: true
     field :product_type, String, null: false
 
-    field :maturity_score, GraphQL::Types::JSON, null: true
-
     field :main_repository, Types::ProductRepositoryType, null: true
 
     field :product_descriptions, [Types::ProductDescriptionType], null: true
@@ -60,13 +58,18 @@ module Types
 
     field :interoperates_with, [Types::ProductType], null: true
     field :includes, [Types::ProductType], null: true
+
+    field :overall_maturity_score, Float, null: true
     field :maturity_score_details, GraphQL::Types::JSON, null: true
+
     field :manual_update, Boolean, null: false
 
     field :commercial_product, Boolean, null: false
     field :pricing_model, String, null: true
     field :pricing_details, String, null: true
     field :hosting_model, String, null: true
+
+    field :is_linked_with_dpi, Boolean, null: false, method: :is_linked_with_dpi
 
     field :playbooks, [Types::PlaybookType], null: true
   end

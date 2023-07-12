@@ -1170,8 +1170,8 @@
     ]
   },
   {
-    "name":"DIAL Catalog of Digital Solutions",
-    "website":"https://solutions.dial.community",
+    "name":"Digital Impact Exchange",
+    "website":"https://exchange.dial.global",
     "organizations": [{"name":"Digital Impact Alliance","website":"www.digitalimpactalliance.org", "org_type":"owner"}],
     "license": "AGPL-3.0",
     "repositoryURL": "https://gitlab.com/dial/osc/eng/t4d-online-catalog/product-registry",

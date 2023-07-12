@@ -1,27 +1,27 @@
 # DIAL Catalog of Digital Solutions
 
-The Catalog of Digital Solutions is an interactive online resource to support donors, 
+The Catalog of Digital Solutions is an interactive online resource to support donors,
 governments, and procurers in the development and implementation of digital strategies.​
-The catalog aggregates data from a variety of sources (including the Digital Public 
-Goods Alliance, WHO, Digital Square and the DIAL Open Source Center) and allows the 
+The catalog aggregates data from a variety of sources (including the Digital Public
+Goods Alliance, WHO, Digital Square and the DIAL Open Source Center) and allows the
 user to identify and evaluate digital tools that may be applicable for their use cases
-or projects. 
+or projects.
 
 The catalog supports the [SDG Digital Investment Framework](https://digitalimpactalliance.org/research/sdg-digital-investment-framework/) developed by DIAL and ITU.
 
 ## Repositories
 
 Note that this repository contains the code for the back-end/API for the Catalog. The front-end
-code for the Catalog can be referenced at: 
+code for the Catalog can be referenced at:
 https://gitlab.com/dial/online-catalog/catalog-front/-/tree/development
 
 ## Documentation
 
 Complete documentation is available (including detailed installation and configuration
-instructions) at 
-[https://docs.osc.dial.community/projects/product-registry/en/latest/](https://docs.osc.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
+instructions) at
+[https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
 
-Please also reference the [Wiki page for the Catalog](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
+Please also reference the [Wiki page for the Catalog](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
 
 ## Development environment setup
 Development environment can be either semi-containerized using Docker or non-containerized. Containerized environment is faster to set up, hence it is a recommended approach.
@@ -53,7 +53,7 @@ gem install <package> -v <package version> --source 'https://rubygems.org/' --us
 ```
 
 ### **Step 3** - Set environment variables
-First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
+First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
@@ -96,7 +96,7 @@ You can ask repository's maintainers for a database dump file.
 
 If you **do have a dump file** follow these instructions:
 1. Move the `registry.dump` (rename the file if its name is different) database dump file to `/db/backups` directory
-2. Execute the following command in the terminal: 
+2. Execute the following command in the terminal:
     ```sh
     rails db:restore
     ```
@@ -169,7 +169,6 @@ Once the development environment has been set up and run once, fewer steps are r
 * `Bundler` - install by executing the following command in a terminal: ```gem install bundler:2```
 * `Rails` (version 5.2) - once Ruby is installed, you can install Rails using the following command in a terminal: ```gem install rails```
 * `PostgreSQL` (version 12 or higher) - see [PostgreSQL Download](https://www.postgresql.org/download/) for download and installation instructions.
-* `Redis` - see [Getting Started with Redis](https://redis.io/docs/getting-started/) for download and installation instructions.
 
 ### **Step 2** - Install the dependencies specified in Gemfile
 Execute the following command in a terminal:
@@ -184,7 +183,7 @@ gem install <package> -v <package version> --source 'https://rubygems.org/' --us
 ```
 
 ### **Step 3** - Set environment variables
-First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
+First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
@@ -214,7 +213,7 @@ create user abc with password '123';
 alter user abc with superuser;
 ```
 #### **Troubleshooting**
-If you are unable to connect to the postgres database, please ensure that the configuration in the `pg_hba.conf` file is correct. 
+If you are unable to connect to the postgres database, please ensure that the configuration in the `pg_hba.conf` file is correct.
 You can find the file in the PostgreSQL installation directory (MacOSX: `/Library/PostgreSQL/<POSTGRESQL VERSION>/data`, Ubuntu: `/etc/postgresql/<POSTGRESQL VERSION>/main`). Ensure that the `METHOD` column for all connections is set to `'trust'`. By default, it is set to `'md5'`.
 
 ### **Step 5** - Create or restore database from database dump file
@@ -222,7 +221,7 @@ You can ask project's maintainers for a database dump file.
 
 If you **do have** a dump file follow these instructions:
 1. Move the `registry.dump` (rename the file if its name is different) database dump file to `/db/backups` directory
-2. Execute the following command in the terminal: 
+2. Execute the following command in the terminal:
     ```sh
     rails db:restore
     ```
@@ -249,13 +248,6 @@ rails db:migrate
 ```sh
 rails db:restore RAILS_ENV=test
 ```
-
-### **Step 7** - Start Redis store
-To start Redis store, open a new terminal and execute the following command:
-```sh
-redis-server --requirepass <REDIS_PASSWORD>
-```
-where `REDIS_PASSWORD` is the value of the `REDIS_PASSWORD` environment variable.
 
 ### **Step 8** - Start Puma web server
 Puma web server comes bundled with Rails. Execute the following command in the terminal:
@@ -298,7 +290,7 @@ where `POSTGRES_USER` and `POSTGRES_DB` are environment variables set is `setEnv
 In order to create database dump file from your current database content, execute the following command:
 ```sh
 rails db:backup
-``` 
+```
 The dump file will be stored saved in `db/backups` directory.
 
 ### Create GraphQL schema dump
@@ -364,7 +356,7 @@ The following ```find_by``` will return ```nil``` if the slug record is not in t
 # From products_query.rb
 class ProductQuery < Queries::BaseQuery
   argument :slug, String, required: true
-  
+
   type Types::ProductType, null: true
 
   def resolve(slug:)
@@ -427,7 +419,7 @@ class OrganizationsQuery < Queries::BaseQuery
   argument :search, String, required: false, default_value: ''
 
   type [Types::OrganizationType], null: false
-  
+
   def resolve(search:)
   ...
   end
@@ -458,14 +450,14 @@ With this configuration, the front-end will receive the following data:
 
 ---
 ## Copyright Information
-Copyright © 2023 Digital Impact Alliance. This program is free software: you can 
-redistribute it and/or modify it under the terms of the GNU Affero General 
-Public License as published by the Free Software Foundation, either version 3 
+Copyright © 2023 Digital Impact Alliance. This program is free software: you can
+redistribute it and/or modify it under the terms of the GNU Affero General
+Public License as published by the Free Software Foundation, either version 3
 of the License, or any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY 
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
-You should have received a copy of the GNU Affero General Public License along 
+You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/>.

@@ -23,11 +23,11 @@ module Mutations
     field :dataset, Types::DatasetType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, aliases:, website:, visualization_url:, geographic_coverage:,
+    def resolve(name:, slug:, aliases:, website:, visualization_url: nil, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
-      dataset = Dataset.find_by(slug: slug)
+      dataset = Dataset.find_by(slug:)
       if dataset.nil?
-        dataset = Dataset.new(name: name)
+        dataset = Dataset.new(name:)
         dataset.slug = slug_em(name)
 
         if Dataset.where(slug: slug_em(name)).count.positive?
@@ -40,7 +40,7 @@ module Mutations
       unless an_admin || a_dataset_owner(dataset.id)
         return {
           dataset: nil,
-          errors: ['Must be admin or dataset owner to create an dataset']
+          errors: ['Must be admin or dataset owner to create a dataset']
         }
       end
 
@@ -85,7 +85,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          dataset: dataset,
+          dataset:,
           errors: []
         }
       else

@@ -2,14 +2,14 @@
 
 module Mutations
   class UpdateProjectSectors < Mutations::BaseMutation
-    argument :sectors_slugs, [String], required: true
+    argument :sector_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
-    def resolve(sectors_slugs:, slug:)
-      project = Project.find_by(slug: slug)
+    def resolve(sector_slugs:, slug:)
+      project = Project.find_by(slug:)
 
       unless an_admin || org_owner_check_for_project(project) ||
         product_owner_check_for_project(project)
@@ -20,8 +20,8 @@ module Mutations
       end
 
       project.sectors = []
-      if !sectors_slugs.nil? && !sectors_slugs.empty?
-        sectors_slugs.each do |sector_slug|
+      if !sector_slugs.nil? && !sector_slugs.empty?
+        sector_slugs.each do |sector_slug|
           current_sector = Sector.where("slug in (?)", sector_slug)
           project.sectors << current_sector unless current_sector.nil?
         end
@@ -30,7 +30,7 @@ module Mutations
       if project.save
         # Successful creation, return the created object with no errors
         {
-          project: project,
+          project:,
           errors: []
         }
       else

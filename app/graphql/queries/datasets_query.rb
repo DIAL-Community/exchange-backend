@@ -21,7 +21,7 @@ module Queries
     type Types::DatasetType, null: true
 
     def resolve(slug:)
-      Dataset.find_by(slug: slug)
+      Dataset.find_by(slug:)
     end
   end
 
@@ -132,13 +132,13 @@ module Queries
   def wizard_datasets(sector, tags, sort_hint, offset_params = {})
     sector_id = Sector.find_by(name: sector)
     unless sector_id.nil?
-      sector_datasets = DatasetSector.where(sector_id: sector_id).map(&:dataset_id)
+      sector_datasets = DatasetSector.where(sector_id:).map(&:dataset_id)
     end
 
     unless tags.nil?
       tag_datasets = []
       tags.each do |tag|
-        tag_datasets += Dataset.where('LOWER(:tag) = ANY(LOWER(datasets.tags::text)::text[])', tag: tag).map(&:id)
+        tag_datasets += Dataset.where('LOWER(:tag) = ANY(LOWER(datasets.tags::text)::text[])', tag:).map(&:id)
       end
     end
 

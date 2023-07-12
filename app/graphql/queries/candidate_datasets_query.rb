@@ -6,7 +6,7 @@ module Queries
     type [Types::CandidateDatasetType], null: false
 
     def resolve(search:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return [] unless an_admin
 
       candidate_datasets = CandidateDataset.order(:name)
       candidate_datasets = candidate_datasets.name_contains(search) unless search.blank?
@@ -21,7 +21,7 @@ module Queries
     type Types::CandidateDatasetType.connection_type, null: false
 
     def resolve(search:)
-      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return unless an_admin
 
       candidate_datasets = CandidateDataset.order(rejected: :desc).order(:slug)
       candidate_datasets = candidate_datasets.name_contains(search) unless search.blank?

@@ -6,14 +6,14 @@ module Mutations
   class UpdateOrganizationCountry < Mutations::BaseMutation
     include Modules::Slugger
 
-    argument :countries_slugs, [String], required: true
+    argument :country_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(countries_slugs:, slug:)
-      organization = Organization.find_by(slug: slug)
+    def resolve(country_slugs:, slug:)
+      organization = Organization.find_by(slug:)
 
       unless an_admin || an_org_owner(organization.id)
         return {
@@ -23,8 +23,8 @@ module Mutations
       end
 
       organization.countries = []
-      if !countries_slugs.nil? && !countries_slugs.empty?
-        countries_slugs.each do |country_slug|
+      if !country_slugs.nil? && !country_slugs.empty?
+        country_slugs.each do |country_slug|
           current_country = Country.find_by(slug: country_slug)
           organization.countries << current_country
         end
@@ -33,7 +33,7 @@ module Mutations
       if organization.save
         # Successful creation, return the created object with no errors
         {
-          organization: organization,
+          organization:,
           errors: []
         }
       else

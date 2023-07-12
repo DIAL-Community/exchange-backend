@@ -17,9 +17,9 @@ module Queries
     type Types::PlaybookType, null: true
 
     def resolve(slug:)
-      playbook = Playbook.find_by(slug: slug)
+      playbook = Playbook.find_by(slug:)
 
-      return nil if playbook.draft == true && !(an_admin || a_content_editor)
+      return nil if playbook&.draft == true && !(an_admin || a_content_editor)
 
       playbook
     end
@@ -113,7 +113,7 @@ module Queries
     unless tags.nil?
       tag_playbooks = []
       tags.each do |tag|
-        tag_playbooks += Playbook.where('LOWER(:tag) = ANY(LOWER(tags::text)::text[])', tag: tag).map(&:id)
+        tag_playbooks += Playbook.where('LOWER(:tag) = ANY(LOWER(tags::text)::text[])', tag:).map(&:id)
       end
     end
 

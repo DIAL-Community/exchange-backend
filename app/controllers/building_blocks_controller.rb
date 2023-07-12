@@ -26,7 +26,7 @@ class BuildingBlocksController < ApplicationController
     results = {
       url: request.original_url,
       count: building_blocks.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)
@@ -138,7 +138,7 @@ class BuildingBlocksController < ApplicationController
     results = {
       url: request.original_url,
       count: building_blocks.count,
-      page_size: page_size
+      page_size:
     }
 
     uri = URI.parse(request.original_url)

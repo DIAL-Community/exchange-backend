@@ -142,10 +142,16 @@ class Product < ApplicationRecord
     projects.limit(num_projects[:first])
   end
 
+  def overall_maturity_score
+    return nil if maturity_score.nil?
+
+    maturity_score['overallScore'].is_a?(Numeric) ? maturity_score['overallScore'].to_f : nil
+  end
+
   def maturity_score_details
-    maturity_scores = calculate_maturity_scores(id)[:rubric_scores].first
-    maturity_scores = maturity_scores[:category_scores] unless maturity_scores.nil?
-    maturity_scores
+    return [] if maturity_score.nil?
+
+    maturity_score['rubricCategories']
   end
 
   # overridden
@@ -274,7 +280,15 @@ class Product < ApplicationRecord
   end
 
   def playbooks
-    plays = Play.joins(:products).where(products: { id: id })
+    plays = Play.joins(:products).where(products: { id: })
     Playbook.joins(:plays).where(plays: { id: plays.ids }, draft: false).uniq
+  end
+
+  # rubocop:disable Naming/PredicateName
+  def is_linked_with_dpi
+    building_blocks.each do |building_block|
+      return true if building_block.category == BuildingBlock.category_types[:DPI]
+    end
+    false
   end
 end

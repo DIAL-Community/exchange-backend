@@ -21,7 +21,7 @@ module Queries
 
     def resolve(play_slug:, slug:)
       play = Play.find_by(slug: play_slug)
-      play_move = PlayMove.find_by(slug: slug, play_id: play.id) unless play.nil?
+      play_move = PlayMove.find_by(slug:, play_id: play.id) unless play.nil?
       play_move
     end
   end

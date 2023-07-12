@@ -7,12 +7,12 @@ RSpec.describe(Mutations::UpdateProductSdgs, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProductSdgs (
-        $sdgsSlugs: [String!]!
+        $sdgSlugs: [String!]!
         $slug: String!
         $mappingStatus: String!
         ) {
           updateProductSdgs (
-            sdgsSlugs: $sdgsSlugs
+            sdgSlugs: $sdgSlugs
             slug: $slug
             mappingStatus: $mappingStatus
           ) {
@@ -37,7 +37,7 @@ RSpec.describe(Mutations::UpdateProductSdgs, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgsSlugs: ['sdg_2', 'sdg_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { sdgSlugs: ['sdg_2', 'sdg_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do
@@ -57,7 +57,7 @@ RSpec.describe(Mutations::UpdateProductSdgs, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgsSlugs: ['sdg_2', 'sdg_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { sdgSlugs: ['sdg_2', 'sdg_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do

@@ -24,7 +24,7 @@ module Mutations
       end
 
       slug = slug_em(spreadsheet_data['name'])
-      existing_data = DialSpreadsheetData.find_by(slug: slug, spreadsheet_type: spreadsheet_type)
+      existing_data = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
 
       case assoc
       when 'productPricing'

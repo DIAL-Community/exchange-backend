@@ -17,7 +17,7 @@ module Queries
     type Types::TagType, null: true
 
     def resolve(slug:)
-      Tag.find_by(slug: slug)
+      Tag.find_by(slug:)
     end
   end
 

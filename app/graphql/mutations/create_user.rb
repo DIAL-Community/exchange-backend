@@ -20,12 +20,12 @@ module Mutations
         }
       end
 
-      user = User.find_by(email: email)
+      user = User.find_by(email:)
       if user.nil?
         password = random_password
-        user = User.new(email: email,
+        user = User.new(email:,
                         created_at: Time.now,
-                        password: password,
+                        password:,
                         password_confirmation: password)
 
         send_email_with_password(username, email, password)
@@ -56,8 +56,8 @@ module Mutations
 
       if user.save
         {
-          user: user,
-          errors: nil
+          user:,
+          errors: []
         }
       else
         {
@@ -77,13 +77,15 @@ module Mutations
       chars.sort_by { rand }.join[0...10]
     end
 
-    def send_email_with_password(username, email, password)
+    def send_email_with_password(username, email, _password)
       email_subject = 'Password for your account'
 
-      email_body = "Hi #{username}! <br />Your account have been created.<br />Password: #{password}"
+      email_body = "Hi #{username}! <br />Your account have been created.<br />"
 
-      AdminMailer.send_mail_from_client('notifier@solutions.dial.community',
-        email, email_subject, email_body, "text/html").deliver_now
+      AdminMailer.send_mail_from_client(
+        'notifier@exchange.dial.global',
+        email, email_subject, email_body, "text/html"
+      ).deliver_now
     end
   end
 end

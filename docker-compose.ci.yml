@@ -38,14 +38,4 @@ services:
   ports:
     - 3002:3002
   command: yarn test
- redis:
-  image: redis
-  command: "--requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}"
-  environment:
-    - REDIS_PORT=${REDIS_PORT}
-  ports:
-    - "${REDIS_PORT}:${REDIS_PORT}"
-  expose:
-    - "${REDIS_PORT}"
-  restart: always
- 
+

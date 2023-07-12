@@ -10,8 +10,7 @@ module Mutations
     argument :slug, String, required: true
     argument :cover, ApolloUploadServer::Upload, required: false
     argument :author, String, required: false
-    argument :tags, GraphQL::Types::JSON, required: false, default_value: []
-    argument :plays, GraphQL::Types::JSON, required: false, default_value: []
+    argument :tags, [String], required: false, default_value: []
     argument :overview, String, required: true
     argument :audience, String, required: false, default_value: ''
     argument :outcomes, String, required: false, default_value: ''
@@ -20,7 +19,7 @@ module Mutations
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, plays:, cover: nil, draft:)
+    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
       unless an_admin || a_content_editor
         return {
           playbook: nil,
@@ -28,9 +27,9 @@ module Mutations
         }
       end
 
-      playbook = Playbook.find_by(slug: slug)
+      playbook = Playbook.find_by(slug:)
       if playbook.nil?
-        playbook = Playbook.new(name: name)
+        playbook = Playbook.new(name:)
         playbook.slug = slug_em(name)
 
         if Playbook.where(slug: slug_em(name)).count.positive?
@@ -68,25 +67,10 @@ module Mutations
           playbook.auditable_image_changed(cover.original_filename)
         end
 
-        index = 0
-        playbook.plays = []
-        plays.each do |play|
-          curr_play = Play.find(play['id'])
-          next if curr_play.nil?
-
-          playbook.plays << curr_play
-          playbook_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: curr_play.id)
-          playbook_play.order = index
-
-          assign_auditable_user(playbook_play)
-          playbook_play.save
-          index += 1
-        end
-
         assign_auditable_user(playbook)
         playbook.save
 
-        playbook_desc = PlaybookDescription.find_by(playbook: playbook, locale: I18n.locale)
+        playbook_desc = PlaybookDescription.find_by(playbook:, locale: I18n.locale)
         playbook_desc = PlaybookDescription.new if playbook_desc.nil?
         playbook_desc.playbook = playbook
         playbook_desc.locale = I18n.locale
@@ -103,7 +87,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          playbook: playbook,
+          playbook:,
           errors: []
         }
       else

@@ -2,14 +2,14 @@
 
 module Mutations
   class UpdateUseCaseSdgTargets < Mutations::BaseMutation
-    argument :sdg_targets_ids, [Integer], required: true
+    argument :sdg_target_ids, [Integer], required: true
     argument :slug, String, required: true
 
     field :use_case, Types::UseCaseType, null: true
     field :errors, [String], null: true
 
-    def resolve(sdg_targets_ids:, slug:)
-      use_case = UseCase.find_by(slug: slug)
+    def resolve(sdg_target_ids:, slug:)
+      use_case = UseCase.find_by(slug:)
 
       unless an_admin || a_content_editor
         return {
@@ -19,9 +19,9 @@ module Mutations
       end
 
       use_case.sdg_targets = []
-      if !sdg_targets_ids.nil? && !sdg_targets_ids.empty?
-        sdg_targets_ids.each do |id|
-          current_sdg_target = SdgTarget.find_by(id: id)
+      if !sdg_target_ids.nil? && !sdg_target_ids.empty?
+        sdg_target_ids.each do |id|
+          current_sdg_target = SdgTarget.find_by(id:)
           use_case.sdg_targets << current_sdg_target unless current_sdg_target.nil?
         end
       end
@@ -29,7 +29,7 @@ module Mutations
       if use_case.save
         # Successful creation, return the created object with no errors
         {
-          use_case: use_case,
+          use_case:,
           errors: []
         }
       else

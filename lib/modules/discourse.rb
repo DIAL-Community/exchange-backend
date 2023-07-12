@@ -20,7 +20,7 @@ module Modules
       request.body = { 'category' => category, 'tags' => [obj_type, object.slug, 'products'],
                        'title' => "Discussion on #{object.name}",
                        'raw' => "This forum is for open discussion on " \
-                                "[#{object.name}](https://solutions.dial.community/products/#{object.slug})" }
+                                "[#{object.name}](https://exchange.dial.global/products/#{object.slug})" }
                      .to_json
 
       response = http.request(request)

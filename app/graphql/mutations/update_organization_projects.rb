@@ -2,25 +2,25 @@
 
 module Mutations
   class UpdateOrganizationProjects < Mutations::BaseMutation
-    argument :projects_slugs, [String], required: true
+    argument :project_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(projects_slugs:, slug:)
-      unless an_admin
+    def resolve(project_slugs:, slug:)
+      organization = Organization.find_by(slug:)
+
+      unless an_admin || an_org_owner(organization.id)
         return {
           organization: nil,
           errors: ['Must be admin to update an organization']
         }
       end
 
-      organization = Organization.find_by(slug: slug)
-
       organization.projects = []
-      if !projects_slugs.nil? && !projects_slugs.empty?
-        projects_slugs.each do |project_slug|
+      if !project_slugs.nil? && !project_slugs.empty?
+        project_slugs.each do |project_slug|
           current_project = Project.find_by(slug: project_slug)
           unless current_project.nil?
             organization.projects << current_project
@@ -31,7 +31,7 @@ module Mutations
       if organization.save
         # Successful creation, return the created object with no errors
         {
-          organization: organization,
+          organization:,
           errors: []
         }
       else

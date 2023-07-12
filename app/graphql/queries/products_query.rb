@@ -21,11 +21,11 @@ module Queries
     type Types::ProductType, null: true
 
     def resolve(slug:)
-      Product.find_by(slug: slug)
+      Product.find_by(slug:)
     end
   end
 
-  def filter_building_blocks(sdgs, use_cases, workflows, building_blocks)
+  def filter_building_blocks(sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi)
     filtered = false
 
     use_case_ids = []
@@ -66,14 +66,25 @@ module Queries
         building_block_ids.concat(BuildingBlock.where(name: filtered_bbs).map(&:id))
       end
     end
+
+    if is_linked_with_dpi
+      filtered = true
+      dpi_building_block = BuildingBlock.category_types[:DPI]
+      dpi_building_blocks = BuildingBlock.where(category: dpi_building_block)
+      unless building_block_ids.empty?
+        dpi_building_blocks = dpi_building_blocks.where(id: building_block_ids)
+      end
+      building_block_ids = dpi_building_blocks.map(&:id)
+    end
+
     [filtered, building_block_ids]
   end
 
   # rubocop:disable Metrics/ParameterLists
   def filter_products(
-    search, origins, sectors, sub_sectors, countries, organizations, sdgs, tags, endorsers,
+    search, origins, sectors, countries, organizations, sdgs, tags, endorsers,
     use_cases, workflows, building_blocks, is_endorsed, product_deployable, product_types,
-    sort_hint, license_types, _offset_params = {}
+    sort_hint, license_types, is_linked_with_dpi, _offset_params = {}
   )
     products = Product.all
     if !search.nil? && !search.to_s.strip.empty?
@@ -81,10 +92,16 @@ module Queries
       desc_products = products.joins(:product_descriptions)
                               .where('LOWER(description) like LOWER(?)', "%#{search}%")
       alias_products = products.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
-      products = products.where(id: (name_products + desc_products + alias_products).uniq)
+      by_sectors = Product.joins(:sectors)
+                          .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
+                          .ids
+
+      products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
     end
 
-    filtered, filtered_building_blocks = filter_building_blocks(sdgs, use_cases, workflows, building_blocks)
+    filtered, filtered_building_blocks = filter_building_blocks(
+      sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi
+    )
     if filtered
       if filtered_building_blocks.empty?
         # Filter is active, but all the filters are resulting in empty building block array.
@@ -132,25 +149,6 @@ module Queries
 
       # Add the id to the accepted sector list
       filtered_sectors << sector.id
-      # Skip if the parent sector id is empty
-      next if sector.parent_sector_id.nil?
-
-      # Iterate over the child sector and match on the subsector if available
-      child_sectors = Sector.where(parent_sector_id: sector.id)
-      unless sub_sectors.empty?
-        child_sectors = child_sectors.select do |child_sector|
-          sub_sector_match = false
-          sub_sectors.each do |sub_sector|
-            # Keepn on skipping if we found a match already
-            next if sub_sector_match
-
-            # Try to find a match if we can.
-            sub_sector_match = child_sector.name == "#{sector.name}:#{sub_sector}"
-          end
-          sub_sector_match
-        end
-      end
-      filtered_sectors += child_sectors.map(&:id)
     end
     unless filtered_sectors.empty?
       products = products.joins(:sectors)
@@ -203,27 +201,39 @@ module Queries
   end
   # rubocop:enable Metrics/ParameterLists
 
-  def wizard_products(sectors, countries, tags, building_blocks, use_cases, commercial_product,
-    sort_hint, offset_params = {})
-    sector_products = Product.joins(:sectors).where(sectors: { name: sectors, locale: I18n.locale }).map(&:id)
+  def wizard_products(
+    sectors, countries, tags, building_blocks, use_cases, commercial_product,
+    sort_hint, offset_params = {}
+  )
+    sector_products = Product.joins(:sectors)
+                             .where(sectors: { name: sectors, locale: I18n.locale })
+                             .map(&:id)
 
     project_list = get_project_list(sector_products, countries, tags, sort_hint).map(&:id).uniq
 
     bbs = BuildingBlock.where(name: building_blocks)
-    product_bb = ProductBuildingBlock.where(building_block_id: bbs).map(&:product_id)
-    product_project = ProjectsProduct.where(project_id: project_list).map(&:product_id)
+    product_bb = ProductBuildingBlock.where(building_block_id: bbs)
+                                     .map(&:product_id)
+    product_project = ProjectsProduct.where(project_id: project_list)
+                                     .map(&:product_id)
     unless tags.nil?
       tag_products = []
       tags.each do |tag|
-        tag_products += Product.where('LOWER(:tag) = ANY(LOWER(products.tags::text)::text[])', tag: tag).map(&:id)
+        tag_products += Product.where('LOWER(:tag) = ANY(LOWER(products.tags::text)::text[])', tag:)
+                               .map(&:id)
       end
     end
 
-    use_case_steps = UseCaseStep.joins(:use_case).where(use_case: { name: use_cases }).map(&:id)
-    product_use_case_steps = UseCaseStepsProducts.where(use_case_step_id: use_case_steps).map(&:product_id)
+    use_case_steps = UseCaseStep.joins(:use_case)
+                                .where(use_case: { name: use_cases })
+                                .map(&:id)
+    product_use_case_steps = UseCaseStepsProducts.where(use_case_step_id: use_case_steps)
+                                                 .map(&:product_id)
 
-    filter_matching_products(product_bb, product_project, sector_products, tag_products, product_use_case_steps,
-                             commercial_product, sort_hint, offset_params).uniq
+    filter_matching_products(
+      product_bb, product_project, sector_products, tag_products, product_use_case_steps,
+      commercial_product, sort_hint, offset_params
+    ).uniq
   end
 
   class SearchProductsQuery < Queries::BaseQuery
@@ -233,7 +243,6 @@ module Queries
     argument :search, String, required: false, default_value: ''
     argument :origins, [String], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
-    argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :organizations, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
@@ -246,19 +255,20 @@ module Queries
     argument :is_endorsed, Boolean, required: false, default_value: false
     argument :product_deployable, Boolean, required: false, default_value: false
     argument :license_types, [String], required: false, default_value: []
+    argument :is_linked_with_dpi, Boolean, required: false, default_value: false
 
     argument :product_sort_hint, String, required: false, default_value: 'name'
     type Types::ProductType.connection_type, null: false
 
     def resolve(
-      search:, origins:, sectors:, sub_sectors:, countries:, organizations:, sdgs:, tags:, endorsers:,
+      search:, origins:, sectors:, countries:, organizations:, sdgs:, tags:, endorsers:,
       use_cases:, workflows:, building_blocks:, is_endorsed:, product_deployable:, product_types:,
-      product_sort_hint:, license_types:
+      product_sort_hint:, license_types:, is_linked_with_dpi:
     )
       products = filter_products(
-        search, origins, sectors, sub_sectors, countries, organizations, sdgs, tags, endorsers,
+        search, origins, sectors, countries, organizations, sdgs, tags, endorsers,
         use_cases, workflows, building_blocks, is_endorsed, product_deployable, product_types,
-        product_sort_hint, license_types
+        product_sort_hint, license_types, is_linked_with_dpi
       )
       products.uniq
     end
@@ -279,10 +289,14 @@ module Queries
 
     type Types::ProductType.connection_type, null: false
 
-    def resolve(sectors:, countries:, tags:, building_blocks:, use_cases:, commercial_product:,
-      product_sort_hint:, offset_attributes:)
-      wizard_products(sectors, countries, tags, building_blocks, use_cases, commercial_product,
-                      product_sort_hint, offset_attributes)
+    def resolve(
+      sectors:, countries:, tags:, building_blocks:, use_cases:, commercial_product:,
+      product_sort_hint:, offset_attributes:
+    )
+      wizard_products(
+        sectors, countries, tags, building_blocks, use_cases, commercial_product,
+        product_sort_hint, offset_attributes
+      )
     end
   end
 
@@ -302,8 +316,9 @@ module Queries
     type [Types::ProductRepositoryType], null: false
 
     def resolve(slug:)
-      product = Product.find_by(slug: slug)
-      ProductRepository.where(product_id: product.id, deleted: false).order(main_repository: :desc, name: :asc)
+      product = Product.find_by(slug:)
+      ProductRepository.where(product_id: product.id, deleted: false)
+                       .order(main_repository: :desc, name: :asc)
     end
   end
 
@@ -312,7 +327,7 @@ module Queries
     type Types::ProductRepositoryType, null: true
 
     def resolve(slug:)
-      ProductRepository.find_by(slug: slug)
+      ProductRepository.find_by(slug:)
     end
   end
 
@@ -320,7 +335,8 @@ module Queries
     type [Types::ProductType], null: false
 
     def resolve
-      product_ids = context[:current_user].user_products.map(&:to_s) unless context[:current_user].nil?
+      product_ids = context[:current_user].user_products.map(&:to_s) \
+        unless context[:current_user].nil?
       owned_products = Product.where('id in (?)', product_ids)
       owned_products
     end

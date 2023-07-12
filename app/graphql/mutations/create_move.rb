@@ -16,7 +16,7 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(play_slug:, move_slug:, name:, description:, resources:)
-      unless an_admin
+      unless an_admin || a_content_editor
         return {
           move: nil,
           errors: ['Not allowed to create a move.']
@@ -31,9 +31,9 @@ module Mutations
         }
       end
 
-      play_move = PlayMove.find_by(play: play, slug: move_slug)
+      play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
-        play_move = PlayMove.new(name: name)
+        play_move = PlayMove.new(name:)
         play_move.slug = slug_em(name)
 
         if PlayMove.where(slug: play_move.slug).count.positive?
@@ -56,7 +56,7 @@ module Mutations
       end
 
       play_move.play = play
-      play_move.order = play.play_moves.count
+      play_move.move_order = play.play_moves.count
       play_move.resources = resources.reject { |resource| resource['name'].blank? || resource['url'].blank? }
 
       successful_operation = false
@@ -94,7 +94,7 @@ module Mutations
     end
   end
 
-  class CreateResource < Mutations::BaseMutation
+  class CreateMoveResource < Mutations::BaseMutation
     require 'modules/slugger'
 
     include Modules::Slugger
@@ -115,18 +115,18 @@ module Mutations
       play = Play.find_by(slug: play_slug)
       return { move: nil, errors: ['Unable to find play.'] } if play.nil?
 
-      play_move = PlayMove.find_by(play: play, slug: move_slug)
+      play_move = PlayMove.find_by(play:, slug: move_slug)
       return { move: nil, errors: ['Unable to find move.'] } if play_move.nil?
 
       if index >= play_move.resources.count
         # The index is higher or equal than the current count of the resource.
         # Append the new resource to the move.
-        play_move.resources << {
+        play_move.resources << ({
           i: play_move.resources.count,
-          name: name,
-          description: description,
-          url: url
-        }
+          name:,
+          description:,
+          url:
+        })
       else
         # The index is less length of the resources
         play_move.resources.each_with_index do |resource, i|
@@ -145,77 +145,6 @@ module Mutations
       else
         # Failed save, return the errors to the client
         { move: nil, errors: ['Unable to save updated move data.'] }
-      end
-    end
-  end
-
-  class UpdateMoveOrder < Mutations::BaseMutation
-    argument :play_slug, String, required: true
-    argument :move_slug, String, required: true
-    argument :operation, String, required: true
-    argument :distance, Integer, required: false
-
-    field :move, Types::MoveType, null: true
-    field :errors, [String], null: false
-
-    def resolve(play_slug:, move_slug:, operation:, distance: 0)
-      unless an_admin
-        return {
-          move: nil,
-          errors: ['Not allowed to update a play.']
-        }
-      end
-
-      play = Play.find_by(slug: play_slug)
-      if play.nil?
-        return {
-          move: nil,
-          errors: 'Unable to find play record.'
-        }
-      end
-
-      move = PlayMove.find_by(slug: move_slug, play: play)
-      if move.nil?
-        return {
-          move: nil,
-          errors: 'Unable to find move record.'
-        }
-      end
-
-      successful_operation = false
-      case operation
-      when 'UNASSIGN'
-        # We're deleting the play because the order -1
-        deleted = play.play_moves.delete(move)
-        successful_operation = true unless deleted.nil?
-      else
-        # Reordering actually trigger swap order with adjacent play.
-        play_move = PlayMove.find_by(play: play, slug: move_slug)
-        play_move_index = play.play_moves.index(play_move)
-        # Find adjacent play
-        swapped_play_move = play.play_moves[play_move_index + distance]
-        # Swap the order
-        temp_order = play_move.order
-        play_move.order = swapped_play_move.order
-        swapped_play_move.order = temp_order
-        # Save both playbook_play
-        ActiveRecord::Base.transaction do
-          play_move.save
-          swapped_play_move.save
-          successful_operation = true
-        end
-      end
-
-      if successful_operation
-        {
-          move: move,
-          errors: []
-        }
-      else
-        {
-          move: nil,
-          errors: move.errors.full_messages
-        }
       end
     end
   end

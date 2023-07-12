@@ -7,5 +7,6 @@ module Types
     field :slug, String, null: false
     field :email, String, null: true
     field :title, String, null: true
+    field :main_contact, Boolean, null: true
   end
 end

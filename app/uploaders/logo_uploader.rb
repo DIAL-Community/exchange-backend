@@ -20,7 +20,7 @@ class LogoUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    Rails.root.join('public', 'assets', "#{model.class.to_s.underscore}s")
+    Rails.root.join('public', 'assets', model.class.to_s.underscore.pluralize)
   end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
@@ -80,11 +80,16 @@ class LogoUploader < CarrierWave::Uploader::Base
     "#{model.slug}.png"
   end
 
-  def send_notification(file)
+  def send_notification(_file)
+    filename = @file_name
+    if filename.nil?
+      filename = file.original_filename
+    end
+
     LogoUploadMailer
       .with(user: @current_user,
-            filename: file.original_filename,
-            name: model.name,
+            filename: @file_name,
+            name: filename,
             type: model.class.to_s.downcase)
       .notify_upload
       .deliver_later

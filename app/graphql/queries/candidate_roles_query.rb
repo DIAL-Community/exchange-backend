@@ -7,12 +7,12 @@ module Queries
     type [Types::CandidateRoleType], null: false
 
     def resolve(product_id:, organization_id:)
-      return [] if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return [] unless an_admin
 
       candidate_roles = CandidateRole
-      candidate_roles = candidate_roles.where(product_id: product_id) unless product_id.nil?
+      candidate_roles = candidate_roles.where(product_id:) unless product_id.nil?
 
-      candidate_roles = candidate_roles.where(organization_id: organization_id) unless organization_id.nil?
+      candidate_roles = candidate_roles.where(organization_id:) unless organization_id.nil?
       candidate_roles
     end
   end
@@ -36,7 +36,7 @@ module Queries
         candidate_roles = candidate_roles.where(organization_id: organization_id.to_i)
       end
 
-      candidate_roles = candidate_roles.where(email: email).order(updated_at: :desc) unless email.nil?
+      candidate_roles = candidate_roles.where(email:).order(updated_at: :desc) unless email.nil?
       candidate_roles.first
     end
   end
@@ -48,7 +48,7 @@ module Queries
     type Types::CandidateRoleType.connection_type, null: false
 
     def resolve(search:)
-      return if context[:current_user].nil? || !context[:current_user].roles.include?('admin')
+      return unless an_admin
 
       candidate_roles = CandidateRole.order(rejected: :desc).order(:email)
       candidate_roles = candidate_roles.email_contains(search) unless search.blank?

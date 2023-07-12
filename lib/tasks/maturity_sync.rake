@@ -174,7 +174,7 @@ namespace :maturity_sync do
 
   task :update_maturity_scores, [:path] => :environment do |_, _params|
     Product.all.each do |product|
-      puts "UPDATING SCORES FOR: #{product.name}"
+      puts "Updating score for: #{product.name}."
       calculate_maturity_scores(product.id)
       calculate_product_indicators(product.id)
     end

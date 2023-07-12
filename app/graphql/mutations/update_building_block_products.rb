@@ -2,14 +2,14 @@
 
 module Mutations
   class UpdateBuildingBlockProducts < Mutations::BaseMutation
-    argument :products_slugs, [String], required: true
+    argument :product_slugs, [String], required: true
     argument :mapping_status, String, required: true
     argument :slug, String, required: true
 
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(products_slugs:, slug:, mapping_status:)
+    def resolve(product_slugs:, slug:, mapping_status:)
       unless an_admin || a_content_editor
         return {
           building_block: nil,
@@ -17,10 +17,10 @@ module Mutations
         }
       end
 
-      building_block = BuildingBlock.find_by(slug: slug)
+      building_block = BuildingBlock.find_by(slug:)
 
       building_block.products = []
-      products_slugs&.each do |product_slug|
+      product_slugs&.each do |product_slug|
         current_product = Product.find_by(slug: product_slug)
         building_block.products << current_product unless current_product.nil?
         # For every product assign the mapping status
@@ -34,7 +34,7 @@ module Mutations
       if building_block.save
         # Successful creation, return the created object with no errors
         {
-          building_block: building_block,
+          building_block:,
           errors: []
         }
       else

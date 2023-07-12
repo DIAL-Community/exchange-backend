@@ -12,7 +12,7 @@ module Modules
       unless tags.nil?
         tag_projects = []
         tags.each do |tag|
-          tag_projects += Project.where(':tag = ANY(projects.tags)', tag: tag).map(&:id)
+          tag_projects += Project.where(':tag = ANY(projects.tags)', tag:).map(&:id)
         end
       end
 
@@ -110,7 +110,7 @@ module Modules
       product_list = product_list.offset(offset_params[:offset]) unless offset_params.empty?
 
       unless commercial_product.nil?
-        product_list = product_list.where(commercial_product: commercial_product)
+        product_list = product_list.where(commercial_product:)
       end
 
       product_list.where(id: sector_tag_products).limit(20)

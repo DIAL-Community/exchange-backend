@@ -11,22 +11,23 @@ module Mutations
     argument :sector_slug, String, required: true
     argument :maturity, String, required: true
     argument :description, String, required: true
+    argument :markdown_url, String, required: false
     argument :image_file, ApolloUploadServer::Upload, required: false
 
     field :use_case, Types::UseCaseType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, sector_slug:, maturity:, description:, image_file: nil)
+    def resolve(name:, slug:, sector_slug:, maturity:, description:, markdown_url: nil, image_file: nil)
       unless an_admin || a_content_editor
         return {
           use_case: nil,
-          errors: ['Must be admin or content editor to create an use case']
+          errors: ['Must be admin or content editor to create a use case']
         }
       end
 
-      use_case = UseCase.find_by(slug: slug)
+      use_case = UseCase.find_by(slug:)
       if use_case.nil?
-        use_case = UseCase.new(name: name)
+        use_case = UseCase.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -42,6 +43,7 @@ module Mutations
       # allow user to rename use case but don't re-slug it
       use_case.name = name
       use_case.maturity = maturity
+      use_case.markdown_url = markdown_url
 
       sector = Sector.find_by(slug: sector_slug)
       use_case.sector = sector unless sector.nil?
@@ -76,7 +78,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          use_case: use_case,
+          use_case:,
           errors: []
         }
       else

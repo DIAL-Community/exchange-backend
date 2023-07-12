@@ -1,4 +1,5 @@
 AllCops:
+  TargetRubyVersion: 3.2.2
   Exclude:
     - 'db/schema.rb'
     - 'vendor/**/*'
@@ -455,9 +456,7 @@ Layout/SpaceInsideStringInterpolation:
   - no_space
 
 Style/SymbolProc:
-  IgnoredMethods:
-  - respond_to
-  - define_method
+  Enabled: true
 
 Style/TernaryParentheses:
   EnforcedStyle: require_no_parentheses

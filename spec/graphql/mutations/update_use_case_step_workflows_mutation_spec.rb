@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateUseCaseStepWorkflows (
-        $workflowsSlugs: [String!]!
+        $workflowSlugs: [String!]!
         $slug: String!
         ) {
           updateUseCaseStepWorkflows (
-            workflowsSlugs: $workflowsSlugs
+            workflowSlugs: $workflowSlugs
             slug: $slug
           ) {
             useCaseStep {
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -77,14 +77,14 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
         .to(eq(nil))
       expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq(['Must be admin or content editor to update an use case step']))
+        .to(eq(['Must be admin or content editor to update a use case step']))
     end
   end
 
@@ -96,14 +96,14 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { workflowsSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
+      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
         .to(eq(nil))
       expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq(['Must be admin or content editor to update an use case step']))
+        .to(eq(['Must be admin or content editor to update a use case step']))
     end
   end
 end

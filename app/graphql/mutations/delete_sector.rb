@@ -11,16 +11,16 @@ module Mutations
       unless an_admin
         return {
           sector: nil,
-          errors: ['Must be admin to delete an sector.']
+          errors: ['Must be admin to delete a sector.']
         }
       end
 
-      sector = Sector.find_by(id: id)
+      sector = Sector.find_by(id:)
       assign_auditable_user(sector)
       if sector.destroy
         # Successful deletion, return the nil sector with no errors
         {
-          sector: sector,
+          sector:,
           errors: []
         }
       else

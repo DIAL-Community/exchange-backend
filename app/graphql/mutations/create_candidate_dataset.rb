@@ -22,18 +22,18 @@ module Mutations
       unless !context[:current_user].nil?
         return {
           candidate_dataset: nil,
-          errors: ['Must be logged in to create an candidate dataset']
+          errors: ['Must be logged in to create a candidate dataset']
         }
       end
 
-      candidate_dataset = CandidateDataset.find_by(slug: slug)
+      candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
-        candidate_dataset = CandidateDataset.new(name: name,
-                                                 data_url: data_url,
-                                                 data_visualization_url: data_visualization_url,
-                                                 data_type: data_type,
-                                                 submitter_email: submitter_email,
-                                                 description: description)
+        candidate_dataset = CandidateDataset.new(name:,
+                                                 data_url:,
+                                                 data_visualization_url:,
+                                                 data_type:,
+                                                 submitter_email:,
+                                                 description:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -52,9 +52,13 @@ module Mutations
       end
 
       if candidate_dataset.save! && captcha_verification(captcha)
+        AdminMailer
+          .with(candidate_name: candidate_dataset.name)
+          .notify_new_candidate_dataset
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
-          candidate_dataset: candidate_dataset,
+          candidate_dataset:,
           errors: []
         }
       else

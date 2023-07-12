@@ -17,16 +17,16 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, origin_id:, parent_sector_id:, is_displayable:, locale:)
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           sector: nil,
-          errors: ['Must be admin or content editor to create an sector']
+          errors: ['Must be admin or content editor to create a sector']
         }
       end
 
-      sector = Sector.find_by(slug: slug)
+      sector = Sector.find_by(slug:)
       if sector.nil?
-        sector = Sector.new(name: name, slug: slug_em(name))
+        sector = Sector.new(name:, slug: slug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Sector.slug_simple_starts_with(sector.slug).order(slug: :desc).first
@@ -60,7 +60,7 @@ module Mutations
       if sector.save
         # Successful creation, return the created object with no errors
         {
-          sector: sector,
+          sector:,
           errors: []
         }
       else

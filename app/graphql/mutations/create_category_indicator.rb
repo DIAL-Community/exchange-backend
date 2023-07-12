@@ -28,10 +28,10 @@ module Mutations
         }
       end
 
-      category_indicator = CategoryIndicator.find_by(slug: slug)
+      category_indicator = CategoryIndicator.find_by(slug:)
 
       if category_indicator.nil?
-        category_indicator = CategoryIndicator.new(name: name)
+        category_indicator = CategoryIndicator.new(name:)
         slug = slug_em(name)
 
         first_duplicate = CategoryIndicator.slug_simple_starts_with(slug_em(name))
@@ -74,7 +74,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          category_indicator: category_indicator,
+          category_indicator:,
           errors: []
         }
       else

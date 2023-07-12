@@ -28,7 +28,7 @@ module Modules
         # TODO: Need to swap get with the output of the URL above.
         code = gets
         credentials = authorizer.get_and_store_credentials_from_code(
-          user_id: user_id, code: code, base_url: OOB_URI
+          user_id:, code:, base_url: OOB_URI
         )
       end
       credentials

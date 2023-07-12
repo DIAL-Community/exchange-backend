@@ -20,7 +20,7 @@ module Mutations
         }
       end
 
-      candidate_dataset = CandidateDataset.find_by(slug: slug)
+      candidate_dataset = CandidateDataset.find_by(slug:)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_dataset)
@@ -34,9 +34,14 @@ module Mutations
       end
 
       if successful_operation
+        AdminMailer
+          .with(rejected: action == 'REJECT', user_email: candidate_dataset.submitter_email)
+          .notify_candidate_dataset_approval
+          .deliver_now
+
         # Successful creation, return the created object with no errors
         {
-          candidate_dataset: candidate_dataset,
+          candidate_dataset:,
           errors: []
         }
       else

@@ -11,17 +11,17 @@ module Mutations
       unless an_admin
         return {
           playbook: nil,
-          errors: ['Must be admin to delete an playbook.']
+          errors: ['Must be admin to delete a playbook.']
         }
       end
 
-      playbook = Playbook.find_by(id: id)
+      playbook = Playbook.find_by(id:)
       assign_auditable_user(playbook)
 
       if playbook.destroy
         # Successful deletion, return the nil playbook with no errors
         {
-          playbook: playbook,
+          playbook:,
           errors: []
         }
       else

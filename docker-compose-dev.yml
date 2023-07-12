@@ -4,13 +4,6 @@ version: "3.7"
 # Requires an .env file in the CWD with the variables used in this file.
 
 services:
-  redis:
-    image: redis
-    command: "--requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}"
-    environment:
-      - REDIS_PORT=${REDIS_PORT}
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}
   db:
     image: postgres:12
     environment:

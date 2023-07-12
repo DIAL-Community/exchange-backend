@@ -18,19 +18,18 @@ RSpec.describe(Mutations::DeleteCountry, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
     create(:country, id: 1000, name: 'Some Country', slug: 'some_country')
-    expect_any_instance_of(Mutations::DeleteCountry).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { id: '1000' },
+      variables: { id: '1000' }
     )
 
     aggregate_failures do
-      expect(result['data']['deleteCountry']['country'])
-        .to(eq({ 'id' => '1000' }))
-      expect(result['data']['deleteCountry']['errors'])
-        .to(eq([]))
+      expect(result['data']['deleteCountry']['country']).to(eq({ 'id' => '1000' }))
+      expect(result['data']['deleteCountry']['errors']).to(eq([]))
     end
   end
 
@@ -39,14 +38,12 @@ RSpec.describe(Mutations::DeleteCountry, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { id: '1000' },
+      variables: { id: '1000' }
     )
 
     aggregate_failures do
-      expect(result['data']['deleteCountry']['country'])
-        .to(be(nil))
-      expect(result['data']['deleteCountry']['errors'])
-        .to(eq(["Must be admin to delete a country."]))
+      expect(result['data']['deleteCountry']['country']).to(be(nil))
+      expect(result['data']['deleteCountry']['errors']).to(eq(["Must be admin to delete a country."]))
     end
   end
 end

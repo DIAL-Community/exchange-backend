@@ -2,13 +2,13 @@
 
 module Mutations
   class UpdateUseCaseStepDatasets < Mutations::BaseMutation
-    argument :datasets_slugs, [String], required: true
+    argument :dataset_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :use_case_step, Types::UseCaseStepType, null: true
     field :errors, [String], null: true
 
-    def resolve(datasets_slugs:, slug:)
+    def resolve(dataset_slugs:, slug:)
       unless an_admin || a_content_editor
         return {
           use_case_step: nil,
@@ -16,11 +16,11 @@ module Mutations
         }
       end
 
-      use_case_step = UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug:)
 
       use_case_step.datasets = []
-      if !datasets_slugs.nil? && !datasets_slugs.empty?
-        datasets_slugs.each do |dataset_slug|
+      if !dataset_slugs.nil? && !dataset_slugs.empty?
+        dataset_slugs.each do |dataset_slug|
           current_dataset = Dataset.find_by(slug: dataset_slug)
           use_case_step.datasets << current_dataset unless current_dataset.nil?
         end
@@ -29,7 +29,7 @@ module Mutations
       if use_case_step.save
         # Successful creation, return the created object with no errors
         {
-          use_case_step: use_case_step,
+          use_case_step:,
           errors: []
         }
       else

@@ -2,13 +2,13 @@
 
 module Mutations
   class UpdateBuildingBlockWorkflows < Mutations::BaseMutation
-    argument :workflows_slugs, [String], required: true
+    argument :workflow_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(workflows_slugs:, slug:)
+    def resolve(workflow_slugs:, slug:)
       unless an_admin || a_content_editor
         return {
           building_block: nil,
@@ -16,11 +16,11 @@ module Mutations
         }
       end
 
-      building_block = BuildingBlock.find_by(slug: slug)
+      building_block = BuildingBlock.find_by(slug:)
 
       building_block.workflows = []
-      if !workflows_slugs.nil? && !workflows_slugs.empty?
-        workflows_slugs.each do |workflow_slug|
+      if !workflow_slugs.nil? && !workflow_slugs.empty?
+        workflow_slugs.each do |workflow_slug|
           current_workflow = Workflow.find_by(slug: workflow_slug)
           building_block.workflows << current_workflow unless current_workflow.nil?
         end
@@ -29,7 +29,7 @@ module Mutations
       if building_block.save
         # Successful creation, return the created object with no errors
         {
-          building_block: building_block,
+          building_block:,
           errors: []
         }
       else

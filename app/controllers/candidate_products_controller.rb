@@ -54,6 +54,11 @@ class CandidateProductsController < ApplicationController
           end
         end
 
+        AdminMailer
+          .with(rejected: false, user_email: @candidate_product.submitter_email)
+          .notify_candidate_product_approval
+          .deliver_now
+
         format.html { redirect_to(product_url(product), notice: 'Candidate promoted to product.') }
         format.json { render(json: { message: 'Candidate product approved.' }, status: :ok) }
       else
@@ -70,6 +75,12 @@ class CandidateProductsController < ApplicationController
       # Can only approve new submission.
       if @candidate_product.rejected.nil? &&
          @candidate_product.update(rejected: true, rejected_date: Time.now, rejected_by_id: current_user.id)
+
+        AdminMailer
+          .with(rejected: true, user_email: @candidate_product.submitter_email)
+          .notify_candidate_product_approval
+          .deliver_now
+
         format.html { redirect_to(candidate_products_url, notice: 'Candidate declined.') }
         format.json { render(json: { message: 'Candidate product declined.' }, status: :ok) }
       else

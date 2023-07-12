@@ -69,6 +69,11 @@ module Types
     field :organizations, resolver: Queries::OrganizationsQuery
     field :organization, resolver: Queries::OrganizationQuery
     field :search_organizations, resolver: Queries::SearchOrganizationsQuery
+    field :search_storefronts, resolver: Queries::SearchStorefrontsQuery
+
+    field :opportunities, resolver: Queries::OpportunitiesQuery
+    field :opportunity, resolver: Queries::OpportunityQuery
+    field :search_opportunities, resolver: Queries::SearchOpportunitiesQuery
 
     field :aggregators, resolver: Queries::AggregatorsQuery
     field :aggregator, resolver: Queries::AggregatorQuery
@@ -137,5 +142,9 @@ module Types
 
     field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
+
+    field :resources, resolver: Queries::ResourcesQuery
+    field :resource, resolver: Queries::ResourceQuery
+    field :search_resources, resolver: Queries::SearchResourcesQuery
   end
 end

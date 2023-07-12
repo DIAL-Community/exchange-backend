@@ -13,7 +13,6 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :step_number, Integer, null: false
-    field :markdown_url, String, null: true
 
     field :use_case_step_descriptions, [Types::UseCaseStepDescriptionType], null: true
     field :use_case_step_description, Types::UseCaseStepDescriptionType, null: true,

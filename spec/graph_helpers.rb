@@ -12,14 +12,16 @@ module GraphHelpers
   def execute_graphql(query, **kwargs)
     RegistrySchema.execute(
       query,
-      { context: { controller: controller } }.merge(kwargs)
+      context: { controller: },
+      variables: kwargs[:variables]
     )
   end
 
   def execute_graphql_as_user(user, query, **kwargs)
     RegistrySchema.execute(
       query,
-      { context: { controller: controller, current_user: user } }.merge(kwargs)
+      context: { controller:, current_user: user },
+      variables: kwargs[:variables]
     )
   end
 end

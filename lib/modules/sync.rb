@@ -771,7 +771,7 @@ module Modules
     def export_products(source)
       # session = ActionDispatch::Integration::Session.new(Rails.application)
       # session.get "/productlist?source="+source
-      server_uri = URI.parse("https://solutions.dial.community/productlist?source=#{source}")
+      server_uri = URI.parse("https://exchange.dial.global/productlist?source=#{source}")
 
       response = Net::HTTP.get(server_uri)
       prod_list = JSON.parse(response)

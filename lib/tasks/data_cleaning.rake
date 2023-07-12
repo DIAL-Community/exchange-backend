@@ -212,43 +212,43 @@ namespace :data do
   end
 
   task descriptions_to_json: :environment do
-    server_uri = URI.parse('https://solutions.dial.community/use_cases.json')
+    server_uri = URI.parse('https://exchange.dial.global/use_cases.json')
     response = Net::HTTP.get(server_uri)
     use_case_list = JSON.parse(response)
     json_out = uc_to_json(use_case_list)
     File.write('export/use_cases.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/workflows.json')
+    server_uri = URI.parse('https://exchange.dial.global/workflows.json')
     response = Net::HTTP.get(server_uri)
     workflow_list = JSON.parse(response)
     json_out = wf_to_json(workflow_list)
     File.write('export/workflows.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/building_blocks.json')
+    server_uri = URI.parse('https://exchange.dial.global/building_blocks.json')
     response = Net::HTTP.get(server_uri)
     bb_list = JSON.parse(response)
     json_out = bb_to_json(bb_list)
     File.write('export/building_blocks.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/organizations.json?without_paging=true')
+    server_uri = URI.parse('https://exchange.dial.global/organizations.json?without_paging=true')
     response = Net::HTTP.get(server_uri)
     org_list = JSON.parse(response)
     json_out = org_to_json(org_list)
     File.write('export/organizations.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/products.json?without_paging=true')
+    server_uri = URI.parse('https://exchange.dial.global/products.json?without_paging=true')
     response = Net::HTTP.get(server_uri)
     prod_list = JSON.parse(response)
     json_out = prod_to_json(prod_list)
     File.write('export/products.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/projects.json?without_paging=true')
+    server_uri = URI.parse('https://exchange.dial.global/projects.json?without_paging=true')
     response = Net::HTTP.get(server_uri)
     prod_list = JSON.parse(response)
     json_out = proj_to_json(prod_list)
     File.write('export/projects.json', json_out.to_json)
 
-    server_uri = URI.parse('https://solutions.dial.community/sectors.json?without_paging=true')
+    server_uri = URI.parse('https://exchange.dial.global/sectors.json?without_paging=true')
     response = Net::HTTP.get(server_uri)
     prod_list = JSON.parse(response)
     json_out = sector_to_json(prod_list)
@@ -460,7 +460,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !product.nil? && !new_sector.nil? && !product.sectors.include?(new_sector)
 
@@ -477,7 +477,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !project.nil? && !new_sector.nil? && !project.sectors.include?(new_sector)
 
@@ -494,7 +494,7 @@ namespace :data do
       next if sector.nil?
 
       %w[es pt sw].each do |locale|
-        new_sector = Sector.find_by(slug: sector.slug, locale: locale)
+        new_sector = Sector.find_by(slug: sector.slug, locale:)
 
         next unless !org.nil? && !new_sector.nil? && !org.sectors.include?(new_sector)
 

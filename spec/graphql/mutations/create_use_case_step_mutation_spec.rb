@@ -12,7 +12,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         $description: String
         $stepNumber: Int!
         $useCaseId: Int!
-        $markdownUrl: String
         ) {
         createUseCaseStep(
           name: $name
@@ -20,7 +19,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
           description: $description
           stepNumber: $stepNumber
           useCaseId: $useCaseId
-          markdownUrl: $markdownUrl
         ) {
             useCaseStep
             {
@@ -29,7 +27,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
               useCaseStepDescription {
                 description
               }
-              markdownUrl
               stepNumber
               useCase {
                 id
@@ -61,7 +58,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "slug" => "some_name",
-          "markdownUrl" => nil,
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -91,7 +87,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "slug" => "some_name",
-          "markdownUrl" => nil,
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -107,7 +102,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", markdownUrl: 'UC-E-USCT-001.md', stepNumber: 5, useCaseId: 3 },
+      variables: { name: "Some name", slug: "", stepNumber: 5, useCaseId: 3 },
     )
 
     aggregate_failures do
@@ -115,7 +110,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "slug" => "some_name",
-          "markdownUrl" => "UC-E-USCT-001.md",
           "stepNumber" => 5,
           "useCase" => { "id" => "3" },
           "useCaseStepDescription" => nil
@@ -146,7 +140,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         .to(eq({
           "name" => "Some new name",
           "slug" => "some_name",
-          "markdownUrl" => nil,
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -177,7 +170,6 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "slug" => "some_name_dup0",
-          "markdownUrl" => nil,
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -200,7 +192,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(be(nil))
       expect(result['data']['createUseCaseStep']['errors'])
-        .to(eq(['Must be admin or content editor to create an use case step']))
+        .to(eq(['Must be admin or content editor to create a use case step']))
     end
   end
 
@@ -214,7 +206,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(be(nil))
       expect(result['data']['createUseCaseStep']['errors'])
-        .to(eq(['Must be admin or content editor to create an use case step']))
+        .to(eq(['Must be admin or content editor to create a use case step']))
     end
   end
 end

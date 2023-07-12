@@ -15,7 +15,7 @@ module Mutations
         }
       end
 
-      rubric_category = RubricCategory.find_by(id: id)
+      rubric_category = RubricCategory.find_by(id:)
       assign_auditable_user(rubric_category)
 
       if rubric_category.destroy
@@ -27,7 +27,7 @@ module Mutations
       else
         # Failed delete, return the errors to the client
         {
-          rubric_category: rubric_category,
+          rubric_category:,
           errors: rubric_category.errors.full_messages
         }
       end

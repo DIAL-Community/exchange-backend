@@ -34,9 +34,19 @@ module Mutations
       end
 
       if successful_operation
+        AdminMailer
+          .with(
+            email: candidate_role.email,
+            rejected: candidate_role.rejected,
+            dataset_id: candidate_role.dataset_id,
+            organization_id: candidate_role.organization_id,
+            product_id: candidate_role.product_id
+          )
+          .notify_owner_approval
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
-          candidate_role: candidate_role,
+          candidate_role:,
           errors: []
         }
       else
@@ -55,7 +65,7 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        user.roles += candidate_role.roles unless user.roles.include?(candidate_role.roles)
+        user.roles |= candidate_role.roles
 
         user.organization_id = candidate_role.organization_id unless candidate_role.organization_id.nil?
 

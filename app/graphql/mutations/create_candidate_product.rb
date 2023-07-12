@@ -19,7 +19,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
-      candidate_product = CandidateProduct.find_by(slug: slug)
+      candidate_product = CandidateProduct.find_by(slug:)
       if !candidate_product.nil? && !candidate_product.rejected.nil?
         return {
           candidate_product: nil,
@@ -49,9 +49,13 @@ module Mutations
       candidate_product.commercial_product = commercial_product
 
       if candidate_product.save && captcha_verification(captcha)
+        AdminMailer
+          .with(candidate_name: candidate_product.name)
+          .notify_new_candidate_product
+          .deliver_now
         # Successful creation, return the created object with no errors
         {
-          candidate_product: candidate_product,
+          candidate_product:,
           errors: []
         }
       else

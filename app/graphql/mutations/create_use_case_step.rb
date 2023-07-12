@@ -11,22 +11,21 @@ module Mutations
     argument :description, String, required: false, default_value: nil
     argument :step_number, Integer, required: true
     argument :use_case_id, Integer, required: true
-    argument :markdown_url, String, required: false, default_value: nil
 
     field :use_case_step, Types::UseCaseStepType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, step_number:, use_case_id:, markdown_url:)
+    def resolve(name:, slug:, description:, step_number:, use_case_id:)
       unless an_admin || a_content_editor
         return {
           use_case_step: nil,
-          errors: ['Must be admin or content editor to create an use case step']
+          errors: ['Must be admin or content editor to create a use case step']
         }
       end
 
-      use_case_step = UseCaseStep.find_by(slug: slug)
+      use_case_step = UseCaseStep.find_by(slug:)
       if use_case_step.nil?
-        use_case_step = UseCaseStep.new(name: name)
+        use_case_step = UseCaseStep.new(name:)
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
@@ -42,14 +41,13 @@ module Mutations
       use_case_step.name = name
       use_case_step.use_case_id = use_case_id
       use_case_step.step_number = step_number
-      use_case_step.markdown_url = markdown_url
 
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(use_case_step)
         use_case_step.save
 
-        if !description.blank? && markdown_url.blank?
+        unless description.blank?
           use_case_step_desc = UseCaseStepDescription.find_by(id: use_case_step.id, locale: I18n.locale)
           use_case_step_desc = UseCaseStepDescription.new if use_case_step_desc.nil?
           use_case_step_desc.description = description
@@ -66,7 +64,7 @@ module Mutations
       if successful_operation
         # Successful creation, return the created object with no errors
         {
-          use_case_step: use_case_step,
+          use_case_step:,
           errors: []
         }
       else

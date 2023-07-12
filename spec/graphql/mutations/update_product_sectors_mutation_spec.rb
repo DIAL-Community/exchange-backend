@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateProductSectors, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProductSectors (
-        $sectorsSlugs: [String!]!
+        $sectorSlugs: [String!]!
         $slug: String!
         ) {
           updateProductSectors (
-            sectorsSlugs: $sectorsSlugs
+            sectorSlugs: $sectorSlugs
             slug: $slug
           ) {
             product {
@@ -34,7 +34,7 @@ RSpec.describe(Mutations::UpdateProductSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -52,7 +52,7 @@ RSpec.describe(Mutations::UpdateProductSectors, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sectorsSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
+      variables: { sectorSlugs: ['sec_2', 'sec_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

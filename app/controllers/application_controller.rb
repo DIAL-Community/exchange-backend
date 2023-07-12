@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faraday'
+require 'base64'
 require 'modules/slugger'
 
 class ApplicationController < ActionController::Base
@@ -89,8 +91,11 @@ class ApplicationController < ActionController::Base
 
     email_body = "Issue Reported by #{params[:name]}(#{params[:email]}) \n\n" \
                  "Issue Type: #{params[:issue_type]}\n\n#{params[:issue]}"
-    AdminMailer.send_mail_from_client('notifier@solutions.dial.community', 'issues@solutions.dial.community',
-                                      'User Reported Issue ', email_body).deliver_now
+    AdminMailer.send_mail_from_client(
+      'notifier@exchange.dial.global',
+      'issues@exchange.dial.global',
+      'User Reported Issue ', email_body
+    ).deliver_now
 
     respond_to do |format|
       format.json { render(json: { email: 'Issue' }, status: :ok) }
@@ -101,49 +106,127 @@ class ApplicationController < ActionController::Base
     auth_email = ENV['JIRA_EMAIL']
     auth_token = ENV['JIRA_TOKEN']
 
-    jira_uri = URI.parse("https://govstack-global.atlassian.net/rest/api/3/issue")
-    http = Net::HTTP.new(jira_uri.host, jira_uri.port)
-    http.use_ssl = true
+    # Project list in JIRA. Adding this for reference.
+    _project_keys = [
+      ['bb-information-mediation', 'IM'],
+      ['bb-consent', 'CON'],
+      ['bb-digital-registries', 'DR'],
+      ['bb-identity', 'ID'],
+      ['bb-messaging', 'MSG'],
+      ['bb-payments', 'PAY'],
+      ['bb-registration', 'REG'],
+      ['bb-scheduler', 'SKD'],
+      ['bb-workflow', 'WF'],
+      ['bb-ux', 'UX'],
+      ['bb-esignature', 'SIG'],
+      ['bb-emarketplace', 'MKT'],
+      ['bb-cms', 'CMS'],
+      ['bb-cloud-infrastructure-hosting', 'INF'],
+      ['govstack-country-engagement-playbook', 'GSCIJ'],
+      ['use-cases', 'PRD'],
+      ['sandbox', 'SND'],
+      ['default-value', 'TECH']
+    ]
 
-    request = Net::HTTP::Post.new(jira_uri.path)
-    request['Content-Type'] = 'application/json'
-    request['Accept'] = 'application/json'
-    request['Authorization'] = "Basic " + Base64.strict_encode64(auth_email + ":" + auth_token)
-    request.body = {
-      'fields': {
-        'project': {
-          'key': params[:project_key]
+    connection = Faraday.new(
+      url: 'https://govstack-global.atlassian.net',
+      headers: {
+        'Content-Type' => 'application/json',
+        'Accept' => 'application/json',
+        'Authorization' => "Basic #{Base64.strict_encode64(auth_email + ':' + auth_token)}"
+      }
+    )
+
+    email_address = Base64.decode64(params[:encoded_email])
+
+    start_at = 0
+    max_results = 20
+
+    bot_account = nil
+    user_account = nil
+
+    searching_bot = true
+    searching_user = true
+    while searching_user || searching_bot
+      response = connection.get('/rest/api/3/users/search') do |request|
+        request.params['startAt'] = start_at
+        request.params['maxResults'] = max_results
+      end
+      user_list = JSON.parse(response.body)
+      user_list.each do |current_user|
+        next if current_user['active'].to_s == 'false'
+
+        if current_user['emailAddress'] == email_address
+          puts "Searching email: #{email_address}, resolving: #{current_user['accountId']}."
+          user_account = current_user
+          searching_user = false
+        end
+
+        if current_user['emailAddress'] == auth_email
+          puts "Searching auth email: #{auth_email}, resolving: #{current_user['accountId']}."
+          bot_account = current_user
+          searching_bot = false
+        end
+
+        next unless user_account.nil? && current_user['displayName'] == params[:name]
+
+        puts "Searching name: #{params[:name]}, resolving: #{current_user['accountId']}."
+        user_account = current_user
+        searching_user = false
+      end
+
+      if user_list.count < max_results
+        searching_bot = false
+        searching_user = false
+      else
+        start_at += user_list.count
+      end
+    end
+
+    if user_account.nil?
+      puts "Not finding user with email: #{email_address} or name: #{params[:name]}."
+      unless bot_account.nil?
+        puts "Defaulting reporter to bot account."
+      end
+    end
+
+    request_body = {
+      fields: {
+        project: {
+          key: params[:project_key]
         },
-        'issuetype': {
-          'id': 10002
+        issuetype: {
+          id: 10002
         },
-        'summary': 'Feedback on specifications, submitted by ' + params[:name] \
-            + ' (' + params[:encoded_email] + ')',
-        'description': {
-          'type': 'doc',
-          'version': 1,
-          'content': [
-            {
-              'type': 'paragraph',
-              'content': [
-                {
-                  'text': params[:name] + ' submitted the following feedback for page: ' \
+        summary: 'Feedback on specifications, submitted by ' + params[:name] + ' (' + params[:encoded_email] + ')',
+        description: {
+          type: 'doc',
+          version: 1,
+          content: [{
+            type: 'paragraph',
+            content: [{
+              text: params[:name] + ' submitted the following feedback for page: ' \
                       + params[:issue_page] + '. ' + params[:issue],
-                  'type': 'text'
-                }
-              ]
-            }
-          ]
+              type: 'text'
+            }]
+          }]
         }
       }
     }
-                   .to_json
 
-    response = http.request(request)
+    response = connection.post('/rest/api/3/issue') do |request|
+      unless user_account.nil?
+        request_body[:fields][:reporter] = { accountId: user_account['accountId'] }
+      end
+      if user_account.nil? && !bot_account.nil?
+        request_body[:fields][:reporter] = { accountId: bot_account['accountId'] }
+      end
+      request.body = request_body.to_json
+    end
+
     response_json = JSON.parse(response.body)
-
     respond_to do |format|
-      format.json { render(json: { data: response_json }, status: :ok) }
+      format.json { render(json: { data: response_json }, status: response.status) }
     end
   end
 

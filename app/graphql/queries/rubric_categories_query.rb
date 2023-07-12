@@ -18,7 +18,7 @@ module Queries
     type Types::RubricCategoryType, null: true
 
     def resolve(slug:)
-      rubric_category = RubricCategory.find_by(slug: slug) if an_admin
+      rubric_category = RubricCategory.find_by(slug:) if an_admin
       rubric_category
     end
   end
