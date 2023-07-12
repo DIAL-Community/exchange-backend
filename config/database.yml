@@ -35,6 +35,10 @@ development:
     <<: *default
     host: localhost
     database: <%= ENV["GOVSTACK_DATABASE_NAME"] %>
+  primary_gdpir:
+    <<: *default
+    host: localhost
+    database: <%= ENV["GDPIR_DATABASE_NAME"] %>
 
 test:
   primary:
@@ -44,6 +48,12 @@ test:
     username: <%= ENV["TEST_DATABASE_USER"] %>
     password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
   primary_govstack:
+    <<: *default
+    host: localhost
+    database: <%= ENV["TEST_DATABASE_NAME"] %>
+    username: <%= ENV["TEST_DATABASE_USER"] %>
+    password: <%= ENV["TEST_DATABASE_PASSWORD"] %>
+  primary_gdpir:
     <<: *default
     host: localhost
     database: <%= ENV["TEST_DATABASE_NAME"] %>
@@ -61,6 +71,11 @@ production:
     host: <%= ENV["DATABASE_HOST"] %>
     port: <%= ENV["DATABASE_PORT"] %>
     database: <%= ENV["GOVSTACK_DATABASE_NAME"] %>
+  primary_gdpir:
+    <<: *default
+    host: <%= ENV["DATABASE_HOST"] %>
+    port: <%= ENV["DATABASE_PORT"] %>
+    database: <%= ENV["GDPIR_DATABASE_NAME"] %>
 
 sync-production:
   <<: *default

@@ -5,7 +5,8 @@ class ApplicationRecord < ActiveRecord::Base
 
   connects_to shards: {
     default: { writing: :primary, reading: :primary },
-    govstack: { writing: :primary_govstack, reading: :primary_govstack }
+    govstack: { writing: :primary_govstack, reading: :primary_govstack },
+    gdpir: { writing: :primary_gdpir, reading: :primary_gdpir }
   }
 
   attr_accessor :association_source

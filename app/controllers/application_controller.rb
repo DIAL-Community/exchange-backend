@@ -247,6 +247,9 @@ class ApplicationController < ActionController::Base
     if !request.headers.nil? && !request.headers['Origin'].nil? && request.headers['Origin'].include?('govstack')
       shard = :govstack
     end
+    if !request.headers.nil? && !request.headers['Origin'].nil? && request.headers['Origin'].include?('gdpir')
+      shard = :gdpir
+    end
 
     ActiveRecord::Base.connected_to(shard:, role: :writing) do
       yield
