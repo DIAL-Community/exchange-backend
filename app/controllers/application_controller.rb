@@ -248,7 +248,7 @@ class ApplicationController < ActionController::Base
       shard = :govstack
     end
 
-    ActiveRecord::Base.connected_to(shard: shard, role: :writing) do
+    ActiveRecord::Base.connected_to(shard:, role: :writing) do
       yield
     end
   end
