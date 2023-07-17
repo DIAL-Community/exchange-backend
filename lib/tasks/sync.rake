@@ -98,7 +98,7 @@ namespace :sync do
     istack_file = File.read('utils/indiastack.json')
     istack_data = JSON.parse(istack_file)
     istack_data.each do |product|
-      prod = sync_json_product(product, 'indiastack')
+      sync_json_product(product, 'indiastack')
     end
     send_notification
   end
