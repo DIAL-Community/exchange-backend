@@ -95,10 +95,20 @@ namespace :sync do
   task :indiastack_products, [] => :environment do
     puts 'Starting pulling data from IndiaStack ...'
 
-    istack_file = File.read('utils/indiastack.json')
-    istack_data = JSON.parse(istack_file)
-    istack_data.each do |product|
-      sync_json_product(product, 'indiastack')
+    ActiveRecord::Base.connected_to(shard: :gdpir, role: :writing) do
+      istack_file = File.read('utils/indiastack.json')
+      istack_data = JSON.parse(istack_file)
+      istack_data.each do |product|
+        sync_json_product(product, 'indiastack')
+      end
+    end
+
+    ActiveRecord::Base.connected_to(shard: :default, role: :writing) do
+      istack_file = File.read('utils/indiastack.json')
+      istack_data = JSON.parse(istack_file)
+      istack_data.each do |product|
+        sync_json_product(product, 'indiastack')
+      end
     end
     send_notification
   end
