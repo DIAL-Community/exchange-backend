@@ -21,7 +21,7 @@ Complete documentation is available (including detailed installation and configu
 instructions) at
 [https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
 
-Please also reference the [Wiki page for the Catalog](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
+Please also reference the [Wiki page for the Catalog](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
 
 ## Development environment setup
 Development environment can be either semi-containerized using Docker or non-containerized. Containerized environment is faster to set up, hence it is a recommended approach.
@@ -53,7 +53,7 @@ gem install <package> -v <package version> --source 'https://rubygems.org/' --us
 ```
 
 ### **Step 3** - Set environment variables
-First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
+First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
@@ -183,7 +183,7 @@ gem install <package> -v <package version> --source 'https://rubygems.org/' --us
 ```
 
 ### **Step 3** - Set environment variables
-First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://solutions-catalog.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
+First, create a **setEnv.sh** file. Then, log in and request access to [Confluence Onboarding Page](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/pages/196575233/New+Developer+Onboarding). On this page find a sample **setEnv.sh** file. Finally, copy the contents of the sample **setEnv.sh** file and paste it into your new file.
 
 Now, in your terminal session, run the **setEnv.sh** script to set environment variables by executing the following command:
 
