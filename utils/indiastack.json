@@ -1,0 +1,141 @@
+[
+  {
+    "name":"Aadhaar",
+    "website":"https://uidai.gov.in/",
+    "organizations": [{"name":"Unique Identification Authority of India (UIDAI)","website":"https://uidai.gov.in/", "org_type":"owner"}],
+    "description": "Aadhaar is the world's largest Digital Identity programme. Aadhaar provides presence-less foundational identity layer to India Stack. On top of this, various layers and user-cases get built",
+    "SDGs":[
+      1,9,16
+    ]
+  },
+  {
+    "name":"Unified Payment Interface",
+    "aliases": ["UPI"],
+    "website":"https://www.npci.org.in/",
+    "organizations": [{"name":"National Payments Corporation of India (NPCI)","website":"https://www.npci.org.in/", "org_type":"owner"}],
+    "description": "UPI is an open and interoperable digital payment platform that integrates multiple bank accounts into a single mobile application. It provides cash-less layer to India Stack",
+    "SDGs":[
+      1,9,16
+    ]
+  },
+  {
+    "name":"CO-WIN",
+    "website":"https://nha.gov.in/",
+    "organizations": [{"name":"National Health Authority of India (UIDAI)","website":"https://nha.gov.in/", "org_type":"owner"}],
+    "description": "CO-WIN is a transparent system that allows tracking of each dose of vaccine supplied to vaccination facilities and records the fulfilment of demand at a granular level.",
+    "SDGs":[
+      3
+    ]
+  },
+  {
+    "name":"DigiLocker",
+    "website":"https://www.digilocker.gov.in/",
+    "organizations": [{"name":"Digital India Corporation (DIC)","website":"https://dic.gov.in/", "org_type":"owner"},
+          {"name":"Ministry of Electronics & IT (MeitY)","website":"https://www.meity.gov.in/", "org_type":"owner"}],
+    "description": "DigiLocker is a platform for issuance and verification of documents & certificates digitally",
+    "SDGs":[
+      4,9,16
+    ]
+  },
+  {
+    "name":"Aarogya Setu",
+    "website":"https://aarogyasetu.gov.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"}],
+    "description": "World's leading contact tracing app to check and prevent covid outbreak, Aarogya Setu helps in predicting likelihood of spread of disease and possible hotspots. Digital health assessment provides updates on the user’s current health status",
+    "SDGs":[
+      3
+    ]
+  },
+  {
+    "name":"DIKSHA",
+    "website":"https://diksha.gov.in/",
+    "organizations": [{"name":"Ministry of Education (MoE), GoI","website":"https://www.education.gov.in/", "org_type":"owner"}],
+    "description": "DIGITAL INFRASTRUCTURE FOR KNOWLEDGE SHARING (DIKSHA) offers engaging learning material, relevant to the prescribed school curriculum, to teachers, students, and parents.",
+    "SDGs":[
+      4
+    ]
+  },
+  {
+    "name":"UMANG",
+    "website":"https://web.umang.gov.in/",
+    "organizations": [{"name":"Ministry of Electronics & IT (MeitY)","website":"https://www.meity.gov.in/", "org_type":"owner"}],
+    "description": "A single platform for all Indian Citizens to access pan India e-Gov services ranging from Central to Local Government bodies",
+    "SDGs":[
+      9,16
+    ]
+  },
+  {
+    "name":"eSanjeevani",
+    "website":"https://esanjeevani.mohfw.gov.in/",
+    "organizations": [{"name":"Ministry of Ayush","website":"https://www.ayush.gov.in/", "org_type":"owner"},
+          {"name":"Ministry of Electronics & IT (MeitY)","website":"https://www.meity.gov.in/", "org_type":"owner"}],
+    "description": "eSanjeevani - National Telemedicine Service of India is a step towards digital health equity to achieve Universal Health Coverage (UHC). eSanjeevani facilitates quick and easy access to doctors and medical specialists from your smartphones.",
+    "SDGs":[
+      3
+    ]
+  },
+  {
+    "name":"Government eMarketplace (GeM)",
+    "website":"https://gem.gov.in/",
+    "organizations": [{"name":"Ministry of Electronics & IT (MeitY)","website":"https://www.meity.gov.in/", "org_type":"owner"}],
+    "description": "An e-marketplace for public procurement of common use goods and services. It is end-to-end automated solution for government buying, right from order to fulfilment.",
+    "SDGs":[
+      9,16
+    ]
+  },
+  {
+    "name":"API Setu",
+    "website":"https://apisetu.gov.in/",
+    "organizations": [{"name":"Digital India","website":"https://digitalindia.gov.in/", "org_type":"owner"}],
+    "description": "An API platform to enable swift, transparent, safe, and reliable information sharing across applications and to promote innovation by linking systems and data.",
+    "SDGs":[
+      9,16
+    ]
+  },
+  {
+    "name":"E-Office",
+    "website":"https://eoffice.gov.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"}],
+    "description": "A complete digital work place solution for Government offices, E-Office Assists departments in informed and quicker decision making and less paper office.",
+    "SDGs":[
+      9,16
+    ]
+  },
+  {
+    "name":"E-Hospital",
+    "website":"https://ehospital.gov.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"}],
+    "description": "E-Hospital is a one-stop solution that connects patients, hospitals, and doctors on a single digital platform. It is based on based on the global healthcare standards like HL7, SNOMED-CT, ICD10 and LOINC, and Meta Data and Data Standards (MDDS) published by Government of India.",
+    "SDGs":[
+      3
+    ]
+  },
+  {
+    "name":"E-Courts",
+    "website":"https://ecourts.gov.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"},
+      {"name":"Digital India Corporation (DIC)","website":"https://dic.gov.in/", "org_type":"owner"}],
+    "description": "Transforming the Indian Judiciary by making use of ICT, E-Courts provides optimum automation of judicial and administrative processes. It is the backbone of Interoperable Criminal Justice System (ICJS).",
+    "SDGs":[
+      9,16
+    ]
+  },
+  {
+    "name":"Poshan Tracker",
+    "website":"https://www.poshantracker.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"}],
+    "description": "Poshan Tracker is an =important tool for women & child development and last mile delivery of nutritional services. It provides real-time monitoring and tracking of beneficiaries and duty bearers, and links with Education and Health Programmes for proactive service delivery.",
+    "SDGs":[
+      3
+    ]
+  },
+  {
+    "name":"National Non-Communicable Diseases (NCD) Platform",
+    "website":"https://ncd.mohfw.gov.in/",
+    "organizations": [{"name":"National Informatics Center","website":"https://www.nic.in/", "org_type":"owner"}],
+    "description": "The NCD Platform enables examination, diagnosis, and management of non-communicable disease viz. hypertension, diabetes, oral, breast, and cervical cancers.",
+    "SDGs":[
+      3
+    ]
+  }
+]
