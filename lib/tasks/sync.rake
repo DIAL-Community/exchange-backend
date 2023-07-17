@@ -86,8 +86,19 @@ namespace :sync do
     osc_data.each do |product|
       next if search_in_ignorelist(product, ignore_list)
 
-      prod = sync_osc_product(product)
+      prod = sync_json_product(product, 'dial')
       update_repository_data(product, prod)
+    end
+    send_notification
+  end
+
+  task :indiastack_products, [] => :environment do
+    puts 'Starting pulling data from IndiaStack ...'
+
+    istack_file = File.read('utils/indiastack.json')
+    istack_data = JSON.parse(istack_file)
+    istack_data.each do |product|
+      sync_json_product(product, 'indiastack')
     end
     send_notification
   end
