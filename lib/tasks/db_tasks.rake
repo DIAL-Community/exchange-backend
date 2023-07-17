@@ -85,10 +85,10 @@ namespace :db do
 
   def with_config
     yield Rails.application.class.module_parent_name.underscore,
-      ActiveRecord::Base.connection_config[:host],
-      ActiveRecord::Base.connection_config[:database],
-      ActiveRecord::Base.connection_config[:username],
-      ActiveRecord::Base.connection_config[:password],
-      ActiveRecord::Base.connection_config[:port]
+      ActiveRecord::Base.connection_db_config.configuration_hash[:host],
+      ActiveRecord::Base.connection_db_config.configuration_hash[:database],
+      ActiveRecord::Base.connection_db_config.configuration_hash[:username],
+      ActiveRecord::Base.connection_db_config.configuration_hash[:password],
+      ActiveRecord::Base.connection_db_config.configuration_hash[:port]
   end
 end
