@@ -304,7 +304,7 @@ module Modules
       existing_product
     end
 
-    def sync_osc_product(product)
+    def sync_json_product(product, origin)
       puts "Syncing #{product['name']} ..."
       name_aliases = [product['name']]
       product['aliases']&.each do |name_alias|
@@ -352,8 +352,16 @@ module Modules
         end
       end
 
-      osc_origin = Origin.find_by(slug: 'dial')
-      sync_product.origins.push(osc_origin) unless sync_product.origins.exists?(id: osc_origin.id)
+      json_origin = Origin.find_by(slug: origin)
+      if json_origin.nil?
+        # Create the origin
+        json_origin = Origin.new
+        json_origin.name = origin.upcase
+        json_origin.slug = origin
+        json_origin.description = origin.titleize
+        json_origin.save!
+      end
+      sync_product.origins.push(json_origin) unless sync_product.origins.exists?(id: json_origin.id)
 
       sync_product.save
       if is_new || !sync_product.manual_update

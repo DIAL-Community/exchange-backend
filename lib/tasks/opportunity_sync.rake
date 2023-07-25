@@ -11,7 +11,7 @@ namespace :opportunities_sync do
   task sync_leverist: :environment do
     # page_query = ''
     page_query = '?industries=JZmYlQ31enoN'
-    base_leverist_url = 'https://app.leverist.de/api/opportunities'
+    base_leverist_url = 'https://api.leverist.de/frontend/opportunities'
 
     leverist_sector_file = File.read('utils/leverist_sector.json')
     leverist_sector_mapping = JSON.parse(leverist_sector_file)
