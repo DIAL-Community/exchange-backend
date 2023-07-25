@@ -51,7 +51,7 @@ module Mutations
         '/ui/v1/products',
         '/ui/v1/use-cases'
       ]
-      acceptable_url_parts.index { |x| x.include?(current_url) }
+      acceptable_url_parts.index { |x| current_url.include?(x) }
     end
   end
 end
