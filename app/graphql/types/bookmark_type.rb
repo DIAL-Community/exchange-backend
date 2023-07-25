@@ -18,5 +18,10 @@ module Types
     def bookmarked_building_blocks
       BuildingBlock.where(id: object.saved_building_blocks)
     end
+
+    field :bookmarked_urls, [String], null: true
+    def bookmarked_urls
+      object.saved_urls
+    end
   end
 end

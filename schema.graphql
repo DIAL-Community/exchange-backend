@@ -41,6 +41,7 @@ type ApproveRejectCandidateRolePayload {
 type Bookmark {
   bookmarkedBuildingBlocks: [BuildingBlock!]
   bookmarkedProducts: [Product!]
+  bookmarkedUrls: [String!]
   bookmarkedUseCases: [UseCase!]
   id: ID!
 }
