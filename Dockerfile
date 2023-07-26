@@ -21,7 +21,11 @@ ENV BUNDLER_VERSION 2.4.10
 COPY Gemfile /tmp/Gemfile
 COPY Gemfile.lock /tmp/Gemfile.lock
 
-RUN gem install bundler && bundle install --jobs 10 --retry 5
+RUN gem install bundler
+
+RUN bundle install --jobs 10 --retry 5 'rswag-api'
+RUN bundle install --jobs 10 --retry 5 'rswag-ui'
+RUN bundle install --jobs 10 --retry 5
 
 RUN mkdir /t4d
 WORKDIR /t4d
