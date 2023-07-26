@@ -104,11 +104,6 @@ gem 'simple_token_authentication', '~> 1.0'
 # Use Mailgun API to send confirmation emails
 gem 'mailgun-ruby'
 
-# Throttling, blocking, etc.
-gem 'rack-attack'
-
-gem 'google-cloud-translate'
-
 # Uploading images through GraphQL using v2 multi part request spec.
 # https://github.com/jetruby/apollo_upload_server-ruby
 gem 'apollo_upload_server', '2.1'

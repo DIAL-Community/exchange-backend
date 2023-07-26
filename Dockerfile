@@ -26,6 +26,9 @@ RUN gem install bundler
 RUN gem install rswag-api -v 2.9.0
 RUN gem install rswag-specs -v 2.9.0
 RUN gem install rswag-ui -v 2.9.0
+RUN gem install google-api-client -v 0.53.0
+RUN gem install simple_token_authentication -v 1.18.1
+
 RUN bundle install --jobs 10 --retry 5
 
 RUN mkdir /t4d
