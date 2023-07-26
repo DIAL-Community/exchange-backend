@@ -23,9 +23,9 @@ COPY Gemfile.lock /tmp/Gemfile.lock
 
 RUN gem install bundler
 
-RUN gem install rswag-api v 2.9.0
-RUN gem install rswag-specs v 2.9.0
-RUN gem install rswag-ui v 2.9.0
+RUN gem install rswag-api -v 2.9.0
+RUN gem install rswag-specs -v 2.9.0
+RUN gem install rswag-ui -v 2.9.0
 RUN bundle install --jobs 10 --retry 5
 
 RUN mkdir /t4d
