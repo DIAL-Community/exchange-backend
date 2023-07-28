@@ -28,12 +28,19 @@ module Mutations
       is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
       has_storefront: nil, description:, image_file: nil, hero_file: nil
     )
-      organization = Organization.find_by(slug:)
-      unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
-        return {
-          organization: nil,
-          errors: ['Must be admin or organization owner to create an organization']
-        }
+
+      # temporary special case for storefronts - want to allow any logged in user to create one
+      # Look for an existing org before creating a new one
+      if has_storefront
+        organization = Organization.first_duplicate([name], slug)
+      else
+        organization = Organization.find_by(slug:)
+        unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
+          return {
+            organization: nil,
+            errors: ['Must be admin or organization owner to create an organization']
+          }
+        end
       end
 
       if organization.nil?
