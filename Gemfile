@@ -10,8 +10,8 @@ end
 gem 'actionpack-page_caching'
 gem 'will_paginate'
 
-gem 'google-api-client'
 gem 'spreadsheet'
+gem 'google-apis-sheets_v4'
 
 gem 'addressable'
 gem 'pundit'
