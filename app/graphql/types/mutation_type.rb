@@ -24,6 +24,7 @@ module Types
     field :create_move_resource, mutation: Mutations::CreateMoveResource
 
     field :create_user, mutation: Mutations::CreateUser
+    field :delete_user, mutation: Mutations::DeleteUser
 
     field :create_spreadsheet_data, mutation: Mutations::CreateSpreadsheetData
     field :delete_spreadsheet_data, mutation: Mutations::DeleteSpreadsheetData
