@@ -3,15 +3,90 @@
 module Paginated
   class PaginatedProducts < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :origins, [String], required: false, default_value: []
+    argument :use_cases, [String], required: false, default_value: []
+    argument :building_blocks, [String], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
     argument :license_types, [String], required: false, default_value: []
+    argument :workflows, [String], required: false, default_value: []
+    argument :sdgs, [String], required: false, default_value: []
+    argument :origins, [String], required: false, default_value: []
+    argument :is_linked_with_dpi, Boolean, required: false, default_value: false
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::ProductType], null: false
 
-    def resolve(search:, origins:, sectors:, tags:, license_types:, offset_attributes:)
+    def filter_building_blocks(sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi)
+      filtered = false
+
+      use_case_ids = []
+      filtered_sdgs = sdgs.reject { |x| x.nil? || x.empty? }
+      unless filtered_sdgs.empty?
+        filtered = true
+        sdg_numbers = SustainableDevelopmentGoal.where(id: filtered_sdgs)
+                                                .select(:number)
+        sdg_use_cases = UseCase.joins(:sdg_targets)
+                               .where(sdg_targets: { sdg_number: sdg_numbers.map(&:to_i) })
+        use_case_ids.concat(sdg_use_cases.ids)
+      end
+
+      workflow_ids = []
+      filtered_use_cases = use_case_ids.concat(use_cases.reject { |x| x.nil? || x.empty? })
+      unless filtered_use_cases.empty?
+        filtered = true
+        use_case_workflows = Workflow.joins(:use_case_steps)
+                                     .where(use_case_steps: { use_case_id: filtered_use_cases.map(&:to_i) })
+        workflow_ids.concat(use_case_workflows.ids)
+      end
+
+      building_block_ids = []
+      filtered_workflows = workflow_ids.concat(workflows.reject { |x| x.nil? || x.empty? })
+      unless filtered_workflows.empty?
+        filtered = true
+        workflow_building_blocks = BuildingBlock.joins(:workflows)
+                                                .where(workflows: { id: filtered_workflows.map(&:to_i) })
+        building_block_ids.concat(workflow_building_blocks.ids)
+      end
+
+      filtered_bbs = building_blocks.reject { |x| x.nil? || x.empty? }
+      unless filtered_bbs.empty?
+        filtered = true
+        building_block_ids.concat(filtered_bbs.map(&:to_i))
+      end
+
+      if is_linked_with_dpi
+        filtered = true
+        dpi_building_block = BuildingBlock.category_types[:DPI]
+        dpi_building_blocks = BuildingBlock.where(category: dpi_building_block)
+        unless building_block_ids.empty?
+          dpi_building_blocks = dpi_building_blocks.where(id: building_block_ids)
+        end
+        building_block_ids = dpi_building_blocks.map(&:id)
+      end
+
+      [filtered, building_block_ids]
+    end
+
+    def resolve(
+      search:, use_cases:, building_blocks:, sectors:, tags:,
+      license_types:, workflows:, sdgs:, origins:, is_linked_with_dpi:,
+      offset_attributes:
+    )
       products = Product.order(:name)
+
+      filtered, filtered_building_blocks = filter_building_blocks(
+        sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi
+      )
+      if filtered
+        if filtered_building_blocks.empty?
+          # Filter is active, but all the filters are resulting in empty building block array.
+          # All bb is filtered out, return no product.
+          return []
+        else
+          products = products.joins(:building_blocks)
+                             .where(building_blocks: { id: filtered_building_blocks })
+        end
+      end
+
       if !search.nil? && !search.to_s.strip.empty?
         name_products = products.name_contains(search)
         desc_products = products.joins(:product_descriptions)
@@ -30,18 +105,7 @@ module Paginated
                            .where(origins: { id: filtered_origins })
       end
 
-      filtered_sectors = []
-      user_sectors = sectors.reject { |x| x.nil? || x.empty? }
-      user_sectors.each do |user_sector|
-        if user_sector.scan(/\D/).empty?
-          sector = Sector.find_by(id: user_sector)
-        else
-          sector = Sector.find_by(name: user_sector)
-        end
-        next if sector.nil?
-
-        filtered_sectors << sector.id
-      end
+      filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }
       unless filtered_sectors.empty?
         products = products.joins(:sectors)
                            .where(sectors: { id: filtered_sectors })
@@ -62,7 +126,7 @@ module Paginated
       end
 
       offset_params = offset_attributes.to_h
-      products.limit(offset_params[:limit]).offset(offset_params[:offset])
+      products.limit(offset_params[:limit]).offset(offset_params[:offset]).distinct
     end
   end
 end

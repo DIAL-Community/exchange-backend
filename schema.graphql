@@ -1813,7 +1813,7 @@ type Query {
     tags: [String!] = []
     useCases: [String!] = []
   ): ProductConnection!
-  paginatedProductsRedux(licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Product!]!
+  paginatedProductsRedux(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1842,7 +1842,7 @@ type Query {
   ): ProjectConnection!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
-  paginationAttributeProduct(licenseTypes: [String!] = [], origins: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
+  paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
