@@ -1759,6 +1759,7 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): DatasetConnection!
+  paginatedOrganizations(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = []): [Organization!]!
   paginatedPlaybooks(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1842,6 +1843,7 @@ type Query {
   ): ProjectConnection!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeOrganization(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   play(slug: String!): Play
