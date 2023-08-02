@@ -163,5 +163,6 @@ module Types
     field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset
 
     field :bookmark, resolver: Queries::BookmarkQuery
+    field :owners, resolver: Queries::OwnersQuery
   end
 end

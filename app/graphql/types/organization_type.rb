@@ -32,6 +32,11 @@ module Types
     field :when_endorsed, GraphQL::Types::ISO8601Date, null: true
     field :endorser_level, String, null: true
 
+    field :have_owner, Boolean, null: false
+    def have_owner
+      !User.find_by('? = organization_id', object&.id).nil?
+    end
+
     field :organization_descriptions, [Types::OrganizationDescriptionType], null: true
 
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized

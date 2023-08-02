@@ -2,8 +2,9 @@
 
 module Queries
   class CandidateRolesQuery < Queries::BaseQuery
-    argument :product_id, String, required: true
-    argument :organization_id, String, required: true
+    argument :product_id, String, required: false, default_value: nil
+    argument :organization_id, String, required: false, default_value: nil
+    argument :dataset_id, String, required: false, default_value: nil
     type [Types::CandidateRoleType], null: false
 
     def resolve(product_id:, organization_id:)
@@ -18,9 +19,9 @@ module Queries
   end
 
   class CandidateRoleQuery < Queries::BaseQuery
-    argument :product_id, String, required: true
-    argument :organization_id, String, required: true
-    argument :dataset_id, String, required: true
+    argument :product_id, String, required: false, default_value: nil
+    argument :organization_id, String, required: false, default_value: nil
+    argument :dataset_id, String, required: false, default_value: nil
     argument :email, String, required: true
 
     type Types::CandidateRoleType, null: true
@@ -42,8 +43,6 @@ module Queries
   end
 
   class SearchCandidateRolesQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
     argument :search, String, required: true
     type Types::CandidateRoleType.connection_type, null: false
 

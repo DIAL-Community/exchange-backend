@@ -1221,6 +1221,7 @@ type Organization {
   countries: [Country!]
   endorserLevel: String
   hasStorefront: Boolean
+  haveOwner: Boolean!
   heroFile: String
   id: ID!
   imageFile: String
@@ -1508,6 +1509,7 @@ type Product {
   commercialProduct: Boolean!
   currentProjects(first: Int): [Project!]
   endorsers: [Endorser!]
+  haveOwner: Boolean!
   hostingModel: String
   id: ID!
   imageFile: String!
@@ -1678,8 +1680,8 @@ type Query {
   candidateOrganizations(search: String = ""): [CandidateOrganization!]!
   candidateProduct(slug: String!): CandidateProduct
   candidateProducts(search: String = ""): [CandidateProduct!]!
-  candidateRole(datasetId: String!, email: String!, organizationId: String!, productId: String!): CandidateRole
-  candidateRoles(organizationId: String!, productId: String!): [CandidateRole!]!
+  candidateRole(datasetId: String = null, email: String!, organizationId: String = null, productId: String = null): CandidateRole
+  candidateRoles(datasetId: String = null, organizationId: String = null, productId: String = null): [CandidateRole!]!
   capabilities(aggregatorIds: [Int!] = [], capabilities: [String!] = [], countryIds: [Int!] = [], search: String = "", services: [String!] = []): [Capability!]!
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
@@ -1707,6 +1709,7 @@ type Query {
   origins(search: String!): [Origin!]!
   ownedDatasets: [Dataset!]!
   ownedProducts: [Product!]!
+  owners(captcha: String!, slug: String!, type: String!): [User!]!
   pageContents(handbookPageId: ID!, locale: String = "en"): PageContent!
   paginatedAggregators(
     """
