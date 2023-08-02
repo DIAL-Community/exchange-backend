@@ -637,6 +637,8 @@ type Dataset {
   name: String!
   organizations: [Organization!]
   origins: [Origin!]
+  sdgs: [SustainableDevelopmentGoal!]
+  sdgsMappingStatus: String
   sectors: [Sector!]
   slug: String!
   sustainableDevelopmentGoalMapping: String
@@ -1759,6 +1761,7 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): DatasetConnection!
+  paginatedDatasetsRedux(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = []): [Dataset!]!
   paginatedOrganizations(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = []): [Organization!]!
   paginatedPlaybooks(
     """
@@ -1843,6 +1846,7 @@ type Query {
   ): ProjectConnection!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeDataset(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
