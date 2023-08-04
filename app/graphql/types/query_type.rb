@@ -162,6 +162,24 @@ module Types
     field :paginated_datasets_redux, resolver: Paginated::PaginatedDatasets
     field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset
 
+    field :paginated_candidate_organizations, resolver: Paginated::PaginatedCandidateOrganizations
+    field :pagination_attribute_candidate_organization, resolver: Paginated::PaginationAttributeCandidateOrganization
+
+    field :paginated_candidate_products, resolver: Paginated::PaginatedCandidateProducts
+    field :pagination_attribute_candidate_product, resolver: Paginated::PaginationAttributeCandidateProduct
+
+    field :paginated_countries, resolver: Paginated::PaginatedCountries
+    field :pagination_attribute_country, resolver: Paginated::PaginationAttributeCountry
+
+    field :paginated_sectors, resolver: Paginated::PaginatedSectors
+    field :pagination_attribute_sector, resolver: Paginated::PaginationAttributeSector
+
+    field :paginated_tags, resolver: Paginated::PaginatedTags
+    field :pagination_attribute_tag, resolver: Paginated::PaginationAttributeTag
+
+    field :paginated_workflows, resolver: Paginated::PaginatedWorkflows
+    field :pagination_attribute_workflow, resolver: Paginated::PaginationAttributeWorkflow
+
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
   end

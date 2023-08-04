@@ -1739,6 +1739,9 @@ type Query {
     subSectors: [String!] = []
   ): OrganizationConnection!
   paginatedBuildingBlocks(categoryTypes: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
+  paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
+  paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
+  paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
   paginatedDatasets(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1847,12 +1850,21 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): ProjectConnection!
+  paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
+  paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
+  paginatedWorkflows(offsetAttributes: OffsetAttributes!, search: String = ""): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
+  paginationAttributeCandidateProduct(search: String = ""): PaginationAttributes!
+  paginationAttributeCountry(search: String = ""): PaginationAttributes!
   paginationAttributeDataset(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeSector(search: String = ""): PaginationAttributes!
+  paginationAttributeTag(search: String = ""): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
+  paginationAttributeWorkflow(search: String = ""): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
