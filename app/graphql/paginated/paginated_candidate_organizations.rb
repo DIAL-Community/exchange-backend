@@ -7,6 +7,8 @@ module Paginated
     type [Types::CandidateOrganizationType], null: false
 
     def resolve(search:, offset_attributes:)
+      return [] unless an_admin
+
       candidate_organizations = CandidateOrganization.order(:name)
       unless search.blank?
         name_filter = candidate_organizations.name_contains(search)

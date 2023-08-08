@@ -7,6 +7,8 @@ module Paginated
     type [Types::CandidateProductType], null: false
 
     def resolve(search:, offset_attributes:)
+      return [] unless an_admin
+
       candidate_products = CandidateProduct.order(:name)
       unless search.blank?
         name_filter = candidate_products.name_contains(search)

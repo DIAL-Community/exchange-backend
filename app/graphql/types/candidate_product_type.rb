@@ -13,5 +13,10 @@ module Types
     field :commercial_product, Boolean, null: false
 
     field :rejected, Boolean, null: true
+    field :rejected_date, GraphQL::Types::ISO8601Date, null: true
+    field :rejected_by, String, null: true
+
+    field :approved_date, GraphQL::Types::ISO8601Date, null: true
+    field :approved_by, String, null: true
   end
 end

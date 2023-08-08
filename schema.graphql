@@ -152,10 +152,15 @@ type CandidateDatasetEdge {
 }
 
 type CandidateOrganization {
+  approvedBy: String
+  approvedDate: ISO8601Date
+  contact: Contact!
   description: String
   id: ID!
   name: String
   rejected: Boolean
+  rejectedBy: String
+  rejectedDate: ISO8601Date
   slug: String!
   website: String
 }
@@ -197,11 +202,15 @@ type CandidateOrganizationEdge {
 }
 
 type CandidateProduct {
+  approvedBy: String
+  approvedDate: ISO8601Date
   commercialProduct: Boolean!
   description: String
   id: ID!
   name: String!
   rejected: Boolean
+  rejectedBy: String
+  rejectedDate: ISO8601Date
   repository: String!
   slug: String!
   submitterEmail: String!
