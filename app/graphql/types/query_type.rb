@@ -168,6 +168,12 @@ module Types
     field :paginated_candidate_products, resolver: Paginated::PaginatedCandidateProducts
     field :pagination_attribute_candidate_product, resolver: Paginated::PaginationAttributeCandidateProduct
 
+    field :paginated_candidate_roles, resolver: Paginated::PaginatedCandidateRoles
+    field :pagination_attribute_candidate_role, resolver: Paginated::PaginationAttributeCandidateRole
+
+    field :paginated_candidate_datasets, resolver: Paginated::PaginatedCandidateDatasets
+    field :pagination_attribute_candidate_dataset, resolver: Paginated::PaginationAttributeCandidateDataset
+
     field :paginated_countries, resolver: Paginated::PaginatedCountries
     field :pagination_attribute_country, resolver: Paginated::PaginationAttributeCountry
 

@@ -104,6 +104,8 @@ type BuildingBlockEdge {
 }
 
 type CandidateDataset {
+  approvedBy: String
+  approvedDate: ISO8601Date
   dataType: String!
   dataUrl: String!
   dataVisualizationUrl: String
@@ -111,6 +113,8 @@ type CandidateDataset {
   id: ID!
   name: String!
   rejected: Boolean
+  rejectedBy: String
+  rejectedDate: ISO8601Date
   slug: String!
   submitterEmail: String!
 }
@@ -254,6 +258,8 @@ type CandidateProductEdge {
 }
 
 type CandidateRole {
+  approvedBy: String
+  approvedDate: ISO8601Date
   dataset: Dataset
   datasetId: String
   description: String
@@ -264,6 +270,8 @@ type CandidateRole {
   product: Product
   productId: String
   rejected: Boolean
+  rejectedBy: String
+  rejectedDate: ISO8601Date
   roles: [String!]
 }
 
@@ -1748,8 +1756,10 @@ type Query {
     subSectors: [String!] = []
   ): OrganizationConnection!
   paginatedBuildingBlocks(categoryTypes: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
+  paginatedCandidateDatasets(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateDataset!]!
   paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
   paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
+  paginatedCandidateRoles(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateRole!]!
   paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
   paginatedDatasets(
     """
@@ -1864,8 +1874,10 @@ type Query {
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, search: String = ""): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateProduct(search: String = ""): PaginationAttributes!
+  paginationAttributeCandidateRole(search: String = ""): PaginationAttributes!
   paginationAttributeCountry(search: String = ""): PaginationAttributes!
   paginationAttributeDataset(search: String = "", sectors: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(search: String = "", sectors: [String!] = []): PaginationAttributes!

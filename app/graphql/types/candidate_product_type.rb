@@ -18,5 +18,23 @@ module Types
 
     field :approved_date, GraphQL::Types::ISO8601Date, null: true
     field :approved_by, String, null: true
+
+    def rejected_by
+      an_admin = context[:current_user]&.roles&.include?('admin')
+      if an_admin
+        approver = User.find(object.approved_by_id)
+        approved_by = approver&.email
+      end
+      approved_by
+    end
+
+    def approved_by
+      an_admin = context[:current_user]&.roles&.include?('admin')
+      if an_admin
+        approver = User.find(object.approved_by_id)
+        rejected_by = approver&.email
+      end
+      rejected_by
+    end
   end
 end

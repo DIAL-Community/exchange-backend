@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 module Paginated
-  class PaginatedCandidateProducts < Queries::BaseQuery
+  class PaginatedCandidateDatasets < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
-    type [Types::CandidateProductType], null: false
+    type [Types::CandidateDatasetType], null: false
 
     def resolve(search:, offset_attributes:)
       return [] unless an_admin
 
-      candidate_products = CandidateProduct.order(:name)
+      candidate_products = CandidateDataset.order(:name)
       unless search.blank?
         name_filter = candidate_products.name_contains(search)
         description_filter = candidate_products.where('LOWER(description) like LOWER(?)', "%#{search}%")
