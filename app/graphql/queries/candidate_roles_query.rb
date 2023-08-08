@@ -19,15 +19,19 @@ module Queries
   end
 
   class CandidateRoleQuery < Queries::BaseQuery
+    argument :id, ID, required: false, default_value: nil
+    argument :email, String, required: false, default_value: nil
     argument :product_id, String, required: false, default_value: nil
     argument :organization_id, String, required: false, default_value: nil
     argument :dataset_id, String, required: false, default_value: nil
-    argument :email, String, required: true
 
     type Types::CandidateRoleType, null: true
 
-    def resolve(product_id:, organization_id:, dataset_id:, email:)
+    def resolve(id:, email:, product_id:, organization_id:, dataset_id:)
       return nil if context[:current_user].nil?
+
+      candidate_role = CandidateRole.find(id)
+      return candidate_role unless candidate_role.nil?
 
       candidate_roles = CandidateRole
       candidate_roles = candidate_roles.where(product_id: product_id.to_i) if !product_id.nil? && !product_id.blank?

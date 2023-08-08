@@ -1697,7 +1697,7 @@ type Query {
   candidateOrganizations(search: String = ""): [CandidateOrganization!]!
   candidateProduct(slug: String!): CandidateProduct
   candidateProducts(search: String = ""): [CandidateProduct!]!
-  candidateRole(datasetId: String = null, email: String!, organizationId: String = null, productId: String = null): CandidateRole
+  candidateRole(datasetId: String = null, email: String = null, id: ID = null, organizationId: String = null, productId: String = null): CandidateRole
   candidateRoles(datasetId: String = null, organizationId: String = null, productId: String = null): [CandidateRole!]!
   capabilities(aggregatorIds: [Int!] = [], capabilities: [String!] = [], countryIds: [Int!] = [], search: String = "", services: [String!] = []): [Capability!]!
   capabilityOnly(search: String = ""): [Capability!]!
