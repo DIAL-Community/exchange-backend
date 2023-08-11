@@ -162,6 +162,9 @@ module Types
     field :paginated_datasets_redux, resolver: Paginated::PaginatedDatasets
     field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset
 
+    field :paginated_projects_redux, resolver: Paginated::PaginatedProjects
+    field :pagination_attribute_project, resolver: Paginated::PaginationAttributeProject
+
     field :paginated_candidate_organizations, resolver: Paginated::PaginatedCandidateOrganizations
     field :pagination_attribute_candidate_organization, resolver: Paginated::PaginationAttributeCandidateOrganization
 
