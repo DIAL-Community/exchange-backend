@@ -3369,14 +3369,15 @@ type Wizard {
 }
 
 type Workflow {
-  buildingBlocks: [BuildingBlock!]
+  buildingBlocks: [BuildingBlock!]!
   id: ID!
   imageFile: String!
   name: String!
   slug: String!
-  useCaseSteps: [UseCaseStep!]
+  useCaseSteps: [UseCaseStep!]!
+  useCases: [UseCase!]!
   workflowDescription: WorkflowDescription
-  workflowDescriptions: [WorkflowDescription!]
+  workflowDescriptions: [WorkflowDescription!]!
 }
 
 """
