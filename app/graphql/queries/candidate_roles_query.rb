@@ -30,8 +30,10 @@ module Queries
     def resolve(id:, email:, product_id:, organization_id:, dataset_id:)
       return nil if context[:current_user].nil?
 
-      candidate_role = CandidateRole.find(id)
-      return candidate_role unless candidate_role.nil?
+      unless id.nil?
+        candidate_role = CandidateRole.find(id)
+        return candidate_role unless candidate_role.nil?
+      end
 
       candidate_roles = CandidateRole
       candidate_roles = candidate_roles.where(product_id: product_id.to_i) if !product_id.nil? && !product_id.blank?

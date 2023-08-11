@@ -2000,36 +2000,6 @@ CREATE TABLE public.organizations_sectors (
 
 
 --
--- Name: organizations_states; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.organizations_states (
-    id bigint NOT NULL,
-    organization_id bigint NOT NULL,
-    region_id bigint NOT NULL
-);
-
-
---
--- Name: organizations_states_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.organizations_states_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_states_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.organizations_states_id_seq OWNED BY public.organizations_states.id;
-
-
---
 -- Name: origins; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4249,13 +4219,6 @@ ALTER TABLE ONLY public.organizations_resources ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: organizations_states id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states ALTER COLUMN id SET DEFAULT nextval('public.organizations_states_id_seq'::regclass);
-
-
---
 -- Name: origins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4992,14 +4955,6 @@ ALTER TABLE ONLY public.organizations_products
 
 ALTER TABLE ONLY public.organizations_resources
     ADD CONSTRAINT organizations_resources_pkey PRIMARY KEY (id);
-
-
---
--- Name: organizations_states organizations_states_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT organizations_states_pkey PRIMARY KEY (id);
 
 
 --
@@ -5953,20 +5908,6 @@ CREATE UNIQUE INDEX index_organizations_products_on_product_id_and_organization_
 
 
 --
--- Name: index_organizations_states_on_organization_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_states_on_organization_id ON public.organizations_states USING btree (organization_id);
-
-
---
--- Name: index_organizations_states_on_region_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_states_on_region_id ON public.organizations_states USING btree (region_id);
-
-
---
 -- Name: index_origins_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6608,14 +6549,6 @@ ALTER TABLE ONLY public.districts
 
 
 --
--- Name: organizations_states fk_rails_059564ad33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT fk_rails_059564ad33 FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
-
-
---
 -- Name: offices fk_rails_0722c0e4f7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7173,14 +7106,6 @@ ALTER TABLE ONLY public.aggregator_capabilities
 
 ALTER TABLE ONLY public.opportunities_building_blocks
     ADD CONSTRAINT fk_rails_bd7e32857c FOREIGN KEY (building_block_id) REFERENCES public.building_blocks(id);
-
-
---
--- Name: organizations_states fk_rails_bea3577035; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT fk_rails_bea3577035 FOREIGN KEY (region_id) REFERENCES public.regions(id);
 
 
 --
@@ -7930,6 +7855,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230605203844'),
 ('20230612203109'),
 ('20230613201202'),
-('20230710193223');
+('20230710193223'),
+('20230811182920');
 
 

@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require 'modules/slugger'
+require 'modules/geocode'
 
 module Mutations
   class UpdateOrganizationOffices < Mutations::BaseMutation
     include Modules::Slugger
+    include Modules::Geocode
 
     argument :offices, [GraphQL::Types::JSON], required: true
     argument :slug, String, required: true
@@ -51,50 +53,25 @@ module Mutations
 
     def create_new_office(office, office_slug)
       name_string = office['cityName'] + ", " + office['regionName'] + ", " + office['countryCode']
-      new_office = Office.new(name: name_string)
-      new_office.latitude = office['latitude']
-      new_office.longitude = office['longitude']
-      new_office.city = office['cityName']
+      new_office = Office.new(name: name_string, slug: office_slug)
 
-      country = Country.find_by(code_longer: office['countryCode'])
+      city = find_city(
+        office['cityName'],
+        office['regionName'],
+        office['countryCode'],
+        Rails.application.secrets.google_api_key
+      )
 
-      region = Region.find_by(name: office['regionName'])
-      if region.nil?
-        region = create_new_region(office, country)
-        region.save
-      end
+      region = Region.find(city.region_id)
+      country = Country.find(region.country_id)
 
       new_office.country_id = country.id
       new_office.region_id = region.id
 
-      new_office.slug = office_slug
-
-      # Check if we need to add _dup to the slug.
-      first_duplicate = Office.slug_simple_starts_with(office_slug).order(slug: :desc).first
-      if !first_duplicate.nil?
-        new_office.slug = office_slug + generate_offset(first_duplicate)
-      else
-        new_office.slug = office_slug
-      end
+      new_office.city = city.name
+      new_office.latitude = city.latitude
+      new_office.longitude = city.longitude
       new_office
-    end
-
-    def create_new_region(office, country)
-      region = Region.new(name: office['regionName'])
-      region.latitude = office['latitude']
-      region.longitude = office['longitude']
-      region.country_id = country.id
-
-      region_slug = slug_em(office['regionName'])
-
-      # Check if we need to add _dup to the slug.
-      first_duplicate = Region.slug_simple_starts_with(region_slug).order(slug: :desc).first
-      if !first_duplicate.nil?
-        region.slug = region_slug + generate_offset(first_duplicate)
-      else
-        region.slug = region_slug
-      end
-      region
     end
   end
 end
