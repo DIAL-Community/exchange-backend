@@ -34,7 +34,7 @@ module Paginated
       filtered_origins = origins.reject { |x| x.nil? || x.empty? }
       projects = projects.where(origin_id: filtered_origins) unless filtered_origins.empty?
 
-      filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }    
+      filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }
       unless filtered_sectors.empty?
         projects = projects.left_joins(:sectors, :products)
                            .where(sectors: { id: filtered_sectors })
