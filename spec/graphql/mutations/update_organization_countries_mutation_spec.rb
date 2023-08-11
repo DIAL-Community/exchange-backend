@@ -3,11 +3,11 @@
 require 'graph_helpers'
 require 'rails_helper'
 
-RSpec.describe(Mutations::UpdateOrganizationCountry, type: :graphql) do
+RSpec.describe(Mutations::UpdateOrganizationCountries, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation($countrySlugs: [String!]!, $slug: String!) {
-        updateOrganizationCountry(
+        updateOrganizationCountries(
           countrySlugs: $countrySlugs
           slug: $slug
         ) {
@@ -28,7 +28,7 @@ RSpec.describe(Mutations::UpdateOrganizationCountry, type: :graphql) do
     second = create(:country, slug: 'second_country', name: 'Second Country')
 
     organization = create(:organization, name: 'Graph Organization', slug: 'graph_organization')
-    expect_any_instance_of(Mutations::UpdateOrganizationCountry).to(receive(:an_admin).and_return(true))
+    expect_any_instance_of(Mutations::UpdateOrganizationCountries).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
@@ -36,7 +36,7 @@ RSpec.describe(Mutations::UpdateOrganizationCountry, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateOrganizationCountry']['organization'])
+      expect(result['data']['updateOrganizationCountries']['organization'])
         .to(eq({ "countries" => [{ "slug" => first.slug }, { "slug" => second.slug }], "slug" => organization.slug }))
     end
   end

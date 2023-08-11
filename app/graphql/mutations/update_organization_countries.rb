@@ -3,7 +3,7 @@
 require 'modules/slugger'
 
 module Mutations
-  class UpdateOrganizationCountry < Mutations::BaseMutation
+  class UpdateOrganizationCountries < Mutations::BaseMutation
     include Modules::Slugger
 
     argument :country_slugs, [String], required: true
