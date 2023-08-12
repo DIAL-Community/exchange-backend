@@ -77,6 +77,7 @@ module Types
     field :update_dataset_tags, mutation: Mutations::UpdateDatasetTags
 
     field :create_project, mutation: Mutations::CreateProject
+    field :delete_project, mutation: Mutations::DeleteProject
 
     field :update_project_organizations, mutation: Mutations::UpdateProjectOrganizations
     field :update_project_products, mutation: Mutations::UpdateProjectProducts
