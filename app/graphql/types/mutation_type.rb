@@ -114,6 +114,12 @@ module Types
     field :create_country, mutation: Mutations::CreateCountry
     field :delete_country, mutation: Mutations::DeleteCountry
 
+    field :create_contact, mutation: Mutations::CreateContact
+    field :delete_contact, mutation: Mutations::DeleteContact
+
+    field :create_city, mutation: Mutations::CreateCity
+    field :delete_city, mutation: Mutations::DeleteCity
+
     field :create_tag, mutation: Mutations::CreateTag
     field :delete_tag, mutation: Mutations::DeleteTag
 

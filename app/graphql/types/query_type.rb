@@ -189,6 +189,19 @@ module Types
     field :paginated_workflows, resolver: Paginated::PaginatedWorkflows
     field :pagination_attribute_workflow, resolver: Paginated::PaginationAttributeWorkflow
 
+    field :paginated_cities, resolver: Paginated::PaginatedCities
+    field :pagination_attribute_city, resolver: Paginated::PaginationAttributeCity
+    field :cities, resolver: Queries::CitiesQuery
+    field :city, resolver: Queries::CityQuery
+
+    field :paginated_contacts, resolver: Paginated::PaginatedContacts
+    field :pagination_attribute_contact, resolver: Paginated::PaginationAttributeContact
+    field :contacts, resolver: Queries::ContactsQuery
+    field :contact, resolver: Queries::ContactQuery
+
+    field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
+    field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
+
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
   end
