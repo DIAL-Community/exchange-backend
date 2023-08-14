@@ -4,7 +4,7 @@ module Paginated
   class PaginatedContacts < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
-    type [Types::DatasetType], null: false
+    type [Types::ContactType], null: false
 
     def resolve(search:, offset_attributes:)
       contacts = Contact.order(:name)

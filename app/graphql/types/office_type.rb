@@ -11,5 +11,11 @@ module Types
     field :organization_id, Integer, null: false
     field :country, Types::CountryType, null: false, method: :office_country
     field :region, String, null: false, method: :office_region
+
+    field :city_data, Types::CityType, null: true
+
+    def city_data
+      City.find_by(name: object.city)
+    end
   end
 end

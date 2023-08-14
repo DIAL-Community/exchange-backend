@@ -347,6 +347,8 @@ type City {
   latitude: String!
   longitude: String!
   name: String!
+  organizations: [Organization!]!
+  region: Region
   slug: String!
 }
 
@@ -366,12 +368,13 @@ type Comment {
 }
 
 type Contact {
-  email: String
+  email: String!
   id: ID!
   mainContact: Boolean
   name: String!
+  organizations: [Organization!]!
   slug: String!
-  title: String
+  title: String!
 }
 
 type Count {
@@ -1200,6 +1203,7 @@ type Mutation {
 
 type Office {
   city: String!
+  cityData: City
   country: Country!
   id: ID!
   latitude: String!
@@ -1820,7 +1824,7 @@ type Query {
   paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
   paginatedCandidateRoles(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateRole!]!
   paginatedCities(offsetAttributes: OffsetAttributes!, search: String = ""): [City!]!
-  paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Dataset!]!
+  paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Contact!]!
   paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
   paginatedDatasets(
     """
@@ -2640,6 +2644,15 @@ type Query {
   wizard(buildingBlocks: [String!], sdgs: [String!], sectors: [String!] = [], useCase: String): Wizard!
   workflow(slug: String!): Workflow
   workflows(search: String = ""): [Workflow!]!
+}
+
+type Region {
+  country: Country!
+  id: ID!
+  latitude: String!
+  longitude: String!
+  name: String!
+  slug: String!
 }
 
 """
