@@ -7,7 +7,6 @@ stages:
   - build
   - lint
   - test
-  - staging
 
 variables:
   BUNDLE_PATH: vendor/bundle
@@ -68,15 +67,3 @@ test_rails:
     - RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load db:migrate
   script:
     - RAILS_ENV=test bundle exec rspec spec --format documentation
-
-build_docker:
-  image: docker:20.10.16
-  stage: staging
-  services:
-    - docker:20.10.16-dind
-  variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
