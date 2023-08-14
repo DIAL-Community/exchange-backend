@@ -5,8 +5,8 @@ module Types
     field :id, ID, null: false
     field :slug, String, null: false
     field :name, String, null: false
-    field :data_url, String, null: false
-    field :data_visualization_url, String, null: true
+    field :website, String, null: false
+    field :visualization_url, String, null: true
     field :description, String, null: false
 
     field :rejected, Boolean, null: true

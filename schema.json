@@ -849,38 +849,6 @@
               "deprecationReason": null
             },
             {
-              "name": "dataUrl",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "dataVisualizationUrl",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "description",
               "description": null,
               "args": [
@@ -996,6 +964,38 @@
             },
             {
               "name": "submitterEmail",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "visualizationUrl",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "website",
               "description": null,
               "args": [
 
@@ -9160,7 +9160,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "dataUrl",
+                  "name": "website",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -9176,7 +9176,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "dataVisualizationUrl",
+                  "name": "visualizationUrl",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -9188,7 +9188,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "dataType",
+                  "name": "datasetType",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",

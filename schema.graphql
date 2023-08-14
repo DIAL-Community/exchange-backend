@@ -107,8 +107,6 @@ type CandidateDataset {
   approvedBy: String
   approvedDate: ISO8601Date
   dataType: String!
-  dataUrl: String!
-  dataVisualizationUrl: String
   description: String!
   id: ID!
   name: String!
@@ -117,6 +115,8 @@ type CandidateDataset {
   rejectedDate: ISO8601Date
   slug: String!
   submitterEmail: String!
+  visualizationUrl: String
+  website: String!
 }
 
 """
@@ -1101,7 +1101,7 @@ type Mutation {
   autoSavePlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createBuildingBlock(category: String, description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
-  createCandidateDataset(captcha: String!, dataType: String!, dataUrl: String!, dataVisualizationUrl: String, description: String!, name: String!, slug: String!, submitterEmail: String!): CreateCandidateDatasetPayload
+  createCandidateDataset(captcha: String!, datasetType: String!, description: String!, name: String!, slug: String!, submitterEmail: String!, visualizationUrl: String, website: String!): CreateCandidateDatasetPayload
   createCandidateOrganization(captcha: String!, description: String!, email: String!, name: String!, organizationName: String!, title: String!, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String!, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload

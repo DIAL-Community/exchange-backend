@@ -503,9 +503,8 @@ CREATE TABLE public.candidate_datasets (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    data_url character varying NOT NULL,
-    data_visualization_url character varying,
-    data_type character varying NOT NULL,
+    visualization_url character varying,
+    dataset_type character varying NOT NULL,
     submitter_email character varying NOT NULL,
     description character varying NOT NULL,
     rejected boolean,
@@ -514,7 +513,8 @@ CREATE TABLE public.candidate_datasets (
     approved_date timestamp without time zone,
     approved_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    website character varying
 );
 
 
@@ -7856,6 +7856,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230612203109'),
 ('20230613201202'),
 ('20230710193223'),
-('20230811182920');
+('20230811182920'),
+('20230814213722');
 
 

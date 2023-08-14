@@ -8,9 +8,9 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
-    argument :data_url, String, required: true
-    argument :data_visualization_url, String, required: false
-    argument :data_type, String, required: true
+    argument :website, String, required: true
+    argument :visualization_url, String, required: false
+    argument :dataset_type, String, required: true
     argument :submitter_email, String, required: true
     argument :description, String, required: true
     argument :captcha, String, required: true
@@ -18,7 +18,7 @@ module Mutations
     field :candidate_dataset, Types::CandidateDatasetType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, data_url:, data_visualization_url:, data_type:, submitter_email:, description:, captcha:)
+    def resolve(name:, slug:, website:, visualization_url:, dataset_type:, submitter_email:, description:, captcha:)
       unless !context[:current_user].nil?
         return {
           candidate_dataset: nil,
@@ -28,12 +28,14 @@ module Mutations
 
       candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
-        candidate_dataset = CandidateDataset.new(name:,
-                                                 data_url:,
-                                                 data_visualization_url:,
-                                                 data_type:,
-                                                 submitter_email:,
-                                                 description:)
+        candidate_dataset = CandidateDataset.new(
+          name:,
+          website:,
+          visualization_url:,
+          dataset_type:,
+          submitter_email:,
+          description:
+        )
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
