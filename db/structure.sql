@@ -117,7 +117,10 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'BUILDING_BLOCK',
     'PLAYBOOK',
     'ORGANIZATION',
-    'OPPORTUNITY'
+    'OPPORTUNITY',
+    'CANDIDATE_OPEN_DATA',
+    'CANDIDATE_ORGANIZATION',
+    'CANDIDATE_PRODUCT'
 );
 
 
@@ -503,7 +506,6 @@ CREATE TABLE public.candidate_datasets (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    website character varying NOT NULL,
     visualization_url character varying,
     dataset_type character varying NOT NULL,
     submitter_email character varying NOT NULL,
@@ -514,7 +516,8 @@ CREATE TABLE public.candidate_datasets (
     approved_date timestamp without time zone,
     approved_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    website character varying
 );
 
 
@@ -7857,6 +7860,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230613201202'),
 ('20230710193223'),
 ('20230811182920'),
-('20230814213722');
+('20230814213722'),
+('20230815093725');
 
 

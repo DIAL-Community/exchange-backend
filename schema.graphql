@@ -107,6 +107,7 @@ type CandidateDataset {
   approvedBy: String
   approvedDate: ISO8601Date
   dataType: String!
+  datasetType: String!
   description: String!
   id: ID!
   name: String!
@@ -1751,6 +1752,7 @@ type Query {
   bookmark(id: ID!): Bookmark
   buildingBlock(slug: String!): BuildingBlock
   buildingBlocks(search: String = ""): [BuildingBlock!]!
+  candidateDataset(slug: String!): CandidateDataset
   candidateDatasets(search: String = ""): [CandidateDataset!]!
   candidateOrganization(slug: String!): CandidateOrganization
   candidateOrganizations(search: String = ""): [CandidateOrganization!]!

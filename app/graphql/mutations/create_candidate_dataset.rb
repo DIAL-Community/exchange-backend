@@ -28,30 +28,23 @@ module Mutations
 
       candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
-        candidate_dataset = CandidateDataset.new(
-          name:,
-          website:,
-          visualization_url:,
-          dataset_type:,
-          submitter_email:,
-          description:
-        )
         slug = slug_em(name)
+        candidate_dataset = CandidateDataset.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = CandidateDataset.slug_simple_starts_with(slug_em(name))
+        first_duplicate = CandidateDataset.slug_simple_starts_with(slug)
                                           .order(slug: :desc).first
-        if !first_duplicate.nil?
+        unless first_duplicate.nil?
           candidate_dataset.slug = slug + generate_offset(first_duplicate)
-        else
-          candidate_dataset.slug = slug
         end
-      else
-        return {
-          candidate_dataset: nil,
-          errors: ['Candidate dataset already created']
-        }
       end
+
+      candidate_dataset.name = name
+      candidate_dataset.website = website
+      candidate_dataset.visualization_url = visualization_url
+      candidate_dataset.dataset_type = dataset_type.upcase
+      candidate_dataset.submitter_email = submitter_email
+      candidate_dataset.description = description
 
       if candidate_dataset.save! && captcha_verification(captcha)
         AdminMailer

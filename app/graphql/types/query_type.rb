@@ -114,6 +114,7 @@ module Types
     field :search_candidate_roles, resolver: Queries::SearchCandidateRolesQuery
 
     field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
+    field :candidate_dataset, resolver: Queries::CandidateDatasetQuery
     field :search_candidate_datasets, resolver: Queries::SearchCandidateDatasetsQuery
     field :owned_datasets, resolver: Queries::OwnedDatasetsQuery
 

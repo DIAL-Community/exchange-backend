@@ -6,6 +6,7 @@ module Types
     field :slug, String, null: false
     field :name, String, null: false
     field :website, String, null: false
+    field :dataset_type, String, null: false
     field :visualization_url, String, null: true
     field :description, String, null: false
 

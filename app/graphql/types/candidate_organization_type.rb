@@ -5,7 +5,6 @@ module Types
     field :id, ID, null: false
     field :slug, String, null: false
     field :name, String, null: true
-
     field :website, String, null: true
     field :description, String, null: true
 
