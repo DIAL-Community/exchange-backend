@@ -374,7 +374,7 @@ type Contact {
   name: String!
   organizations: [Organization!]!
   slug: String!
-  title: String!
+  title: String
 }
 
 type Count {

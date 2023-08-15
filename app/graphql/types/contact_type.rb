@@ -6,7 +6,7 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :email, String, null: false
-    field :title, String, null: false
+    field :title, String, null: true
     field :main_contact, Boolean, null: true
 
     field :organizations, [Types::OrganizationType], null: false

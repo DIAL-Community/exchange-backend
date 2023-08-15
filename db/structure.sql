@@ -503,6 +503,7 @@ CREATE TABLE public.candidate_datasets (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
+    website character varying NOT NULL,
     visualization_url character varying,
     dataset_type character varying NOT NULL,
     submitter_email character varying NOT NULL,
@@ -513,8 +514,7 @@ CREATE TABLE public.candidate_datasets (
     approved_date timestamp without time zone,
     approved_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    website character varying
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
