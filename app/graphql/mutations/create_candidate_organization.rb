@@ -21,8 +21,8 @@ module Mutations
     def resolve(slug:, organization_name:, website:, description:, name:, email:, title:, captcha:)
       unless !context[:current_user].nil?
         return {
-          candidate_dataset: nil,
-          errors: ['Must be logged in to create a candidate organization']
+          candidate_organization: nil,
+          errors: ['Must be logged in to create / edit a candidate organization']
         }
       end
 
@@ -39,6 +39,11 @@ module Mutations
         end
 
         candidate_organization = CandidateOrganization.new(candidate_params)
+      elsif !candidate_organization.nil? && !candidate_organization.rejected.nil?
+        return {
+          candidate_organization: nil,
+          errors: ['Attempting to edit rejected or approved candidate organization.']
+        }
       end
 
       candidate_organization.name = organization_name

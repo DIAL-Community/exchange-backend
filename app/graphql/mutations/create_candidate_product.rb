@@ -9,7 +9,7 @@ module Mutations
     argument :slug, String, required: false, default_value: ''
     argument :name, String, required: true
     argument :website, String, required: true
-    argument :repository, String, required: true
+    argument :repository, String, required: false
     argument :description, String, required: true
     argument :submitter_email, String, required: true
     argument :commercial_product, Boolean, required: false, default_value: false
@@ -19,6 +19,13 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
+      unless !context[:current_user].nil?
+        return {
+          candidate_dataset: nil,
+          errors: ['Must be logged in to create / edit a candidate product']
+        }
+      end
+
       candidate_product = CandidateProduct.find_by(slug:)
       if !candidate_product.nil? && !candidate_product.rejected.nil?
         return {
