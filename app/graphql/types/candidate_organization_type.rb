@@ -8,6 +8,8 @@ module Types
     field :website, String, null: true
     field :description, String, null: true
 
+    field :contacts, [Types::ContactType], null: false
+
     field :rejected, Boolean, null: true
     field :rejected_date, GraphQL::Types::ISO8601Date, null: true
     field :rejected_by, String, null: true
