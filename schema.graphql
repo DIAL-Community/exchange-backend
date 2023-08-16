@@ -106,6 +106,7 @@ type BuildingBlockEdge {
 type CandidateDataset {
   approvedBy: String
   approvedDate: ISO8601Date
+  createdAt: ISO8601Date
   dataType: String!
   datasetType: String!
   description: String!
@@ -161,6 +162,7 @@ type CandidateOrganization {
   approvedDate: ISO8601Date
   contact: Contact!
   contacts: [Contact!]!
+  createdAt: ISO8601Date
   description: String
   id: ID!
   name: String
@@ -211,6 +213,7 @@ type CandidateProduct {
   approvedBy: String
   approvedDate: ISO8601Date
   commercialProduct: Boolean!
+  createdAt: ISO8601Date
   description: String
   id: ID!
   name: String!
@@ -262,6 +265,7 @@ type CandidateProductEdge {
 type CandidateRole {
   approvedBy: String
   approvedDate: ISO8601Date
+  createdAt: ISO8601Date
   dataset: Dataset
   datasetId: String
   description: String

@@ -10,6 +10,8 @@ module Types
     field :organization_id, String, null: true
     field :dataset_id, String, null: true
 
+    field :created_at, GraphQL::Types::ISO8601Date, null: true
+
     field :product, Types::ProductType, null: true, method: :candidate_role_product
     field :organization, Types::OrganizationType, null: true, method: :candidate_role_organization
     field :dataset, Types::DatasetType, null: true, method: :candidate_role_dataset

@@ -10,6 +10,8 @@ module Types
     field :visualization_url, String, null: true
     field :description, String, null: false
 
+    field :created_at, GraphQL::Types::ISO8601Date, null: true
+
     field :rejected, Boolean, null: true
     field :rejected_date, GraphQL::Types::ISO8601Date, null: true
     field :rejected_by, String, null: true

@@ -37,7 +37,7 @@ module Mutations
         unless first_duplicate.nil?
           candidate_dataset.slug = slug + generate_offset(first_duplicate)
         end
-      elsif !candidate_organization.nil? && !candidate_organization.rejected.nil?
+      elsif !candidate_dataset.nil? && !candidate_dataset.rejected.nil?
         return {
           candidate_dataset: nil,
           errors: ['Attempting to edit rejected or approved candidate dataset.']

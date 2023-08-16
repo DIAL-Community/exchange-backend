@@ -9,7 +9,9 @@ module Paginated
     def resolve(search:, offset_attributes:)
       return [] unless an_admin
 
-      candidate_organizations = CandidateOrganization.order(:name)
+      candidate_organizations = CandidateOrganization.order(:rejected)
+                                                     .order(created_at: :desc)
+                                                     .order(:name)
       unless search.blank?
         name_filter = candidate_organizations.name_contains(search)
         description_filter = candidate_organizations.where('LOWER(description) like LOWER(?)', "%#{search}%")

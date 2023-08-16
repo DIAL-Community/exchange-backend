@@ -7,6 +7,8 @@ module Types
     field :name, String, null: true
     field :website, String, null: true
     field :description, String, null: true
+    
+    field :created_at, GraphQL::Types::ISO8601Date, null: true
 
     field :contacts, [Types::ContactType], null: false
 
