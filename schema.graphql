@@ -2774,12 +2774,17 @@ type RubricCategoryEdge {
 }
 
 type Sector {
+  datasets: [Dataset!]!
   id: ID!
   isDisplayable: Boolean
   locale: String
   name: String!
+  organizations: [Organization!]!
+  origin: Origin!
   originId: Int
   parentSectorId: ID
+  products: [Product!]!
+  projects: [Project!]!
   slug: String!
   subSectors: [Sector!]
 }
