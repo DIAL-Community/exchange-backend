@@ -37,13 +37,16 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "some description" },
+      variables: { name: "Some name", slug: "some_name", description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createProduct']['product'])
-        .to(eq({ "name" => "Some name", "productDescription" => { "description" => "some description" },
-                 "slug" => "some_name" }))
+        .to(eq({
+          "name" => "Some name",
+          "productDescription" => { "description" => "some description" },
+          "slug" => "some_name"
+        }))
       expect(result['data']['createProduct']['errors'])
         .to(eq([]))
     end
@@ -52,7 +55,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "some description" },
+      variables: { name: "Some name", slug: "some_name", description: "some description" }
     )
 
     aggregate_failures do

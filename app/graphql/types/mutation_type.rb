@@ -41,6 +41,7 @@ module Types
     field :update_opportunity_organizations, mutation: Mutations::UpdateOpportunityOrganizations
     field :update_opportunity_sectors, mutation: Mutations::UpdateOpportunitySectors
     field :update_opportunity_use_cases, mutation: Mutations::UpdateOpportunityUseCases
+    field :update_opportunity_tags, mutation: Mutations::UpdateOpportunityTags
 
     field :create_organization, mutation: Mutations::CreateOrganization
     field :delete_organization, mutation: Mutations::DeleteOrganization

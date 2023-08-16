@@ -39,7 +39,7 @@ module Types
       method: :current_sustainable_development_goal_mapping
 
     field :sdgs, [Types::SustainableDevelopmentGoalType], null: true
-    field :sdgs_mapping_status, String, null: true, method: :current_sustainable_development_goal_mapping
+    field :sdgs_mapping, String, null: true, method: :current_sustainable_development_goal_mapping
     def sdgs
       object.sustainable_development_goals&.order(:number)
     end
