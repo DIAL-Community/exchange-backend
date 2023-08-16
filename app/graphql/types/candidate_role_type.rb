@@ -25,20 +25,20 @@ module Types
 
     def rejected_by
       an_admin = context[:current_user]&.roles&.include?('admin')
-      if an_admin
-        approver = User.find(object.approved_by_id)
-        approved_by = approver&.email
+      if an_admin && !object.rejected_by_id.nil?
+        rejecting_user = User.find_by(id: object.rejected_by_id)
+        rejected_by = rejecting_user&.email
       end
-      approved_by
+      rejected_by
     end
 
     def approved_by
       an_admin = context[:current_user]&.roles&.include?('admin')
-      if an_admin
-        approver = User.find(object.approved_by_id)
-        rejected_by = approver&.email
+      if an_admin && !object.approved_by_id.nil?
+        approving_user = User.find_by(id: object.approved_by_id)
+        approved_by = approving_user&.email
       end
-      rejected_by
+      approved_by
     end
   end
 end

@@ -9,7 +9,7 @@ module Paginated
     def resolve(search:, offset_attributes:)
       return [] unless an_admin
 
-      candidate_products = CandidateRole.order(:rejected)
+      candidate_products = CandidateRole.order(rejected: :desc)
                                         .order(created_at: :desc)
                                         .order(:email)
       unless search.blank?
