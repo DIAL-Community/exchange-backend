@@ -13,17 +13,7 @@ module Paginated
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::ProjectType], null: false
 
-    def resolve(
-      search:,
-      countries:,
-      products:,
-      organizations:,
-      sectors:,
-      tags:,
-      sdgs:,
-      origins:,
-      offset_attributes:
-    )
+    def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:, offset_attributes:)
       projects = Project.all
       if !search.nil? && !search.to_s.strip.empty?
         name_projects = projects.name_contains(search)

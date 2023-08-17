@@ -1859,9 +1859,9 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): DatasetConnection!
-  paginatedDatasetsRedux(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = []): [Dataset!]!
+  paginatedDatasetsRedux(datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
   paginatedOpportunities(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], tags: [String!] = []): [Opportunity!]!
-  paginatedOrganizations(offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = []): [Organization!]!
+  paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
   paginatedPlaybooks(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1947,7 +1947,7 @@ type Query {
   paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
-  paginatedWorkflows(offsetAttributes: OffsetAttributes!, search: String = ""): [Workflow!]!
+  paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
@@ -1956,15 +1956,15 @@ type Query {
   paginationAttributeCity(search: String = ""): PaginationAttributes!
   paginationAttributeContact(search: String = ""): PaginationAttributes!
   paginationAttributeCountry(search: String = ""): PaginationAttributes!
-  paginationAttributeDataset(search: String = "", sectors: [String!] = []): PaginationAttributes!
+  paginationAttributeDataset(datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeOpportunity(search: String = "", sectors: [String!] = []): PaginationAttributes!
-  paginationAttributeOrganization(search: String = "", sectors: [String!] = []): PaginationAttributes!
+  paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeSector(search: String = ""): PaginationAttributes!
   paginationAttributeTag(search: String = ""): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
-  paginationAttributeWorkflow(search: String = ""): PaginationAttributes!
+  paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!

@@ -13,16 +13,7 @@ module Paginated
 
     type Attributes::PaginationAttributes, null: false
 
-    def resolve(
-      search:,
-      countries:,
-      products:,
-      organizations:,
-      sectors:,
-      tags:,
-      sdgs:,
-      origins:
-    )
+    def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:)
       projects = Project.all
       if !search.nil? && !search.to_s.strip.empty?
         name_projects = projects.name_contains(search)
