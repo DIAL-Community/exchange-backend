@@ -1,18 +1,22 @@
 # frozen_string_literal: true
 
 require 'modules/slugger'
+require 'modules/geocode'
 
 module Mutations
   class CreateCity < Mutations::BaseMutation
     include Modules::Slugger
+    include Modules::Geocode
 
-    argument :slug, String, required: true
-    argument :name, String, required: true
+    argument :slug, String, required: false
+    argument :city_name, String, required: true
+    argument :region_name, String, required: true
+    argument :country_name, String, required: true
 
     field :city, Types::CityType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:)
+    def resolve(city_name:, region_name:, country_name:, slug:)
       unless an_admin
         return {
           city: nil,
@@ -20,19 +24,35 @@ module Mutations
         }
       end
 
+      country = Country.find_by(name: country_name)
+
+      return {
+        city: nil,
+        errors: ['Unable to resolve country name.']
+      } if country.nil?
+
+      region = Region.find_by(name: region_name)
+      region = find_region(
+        region_name,
+        country.code,
+        Rails.application.secrets.google_api_key
+      ) if region.nil?
+
+      return {
+        city: nil,
+        errors: ['Unable to resolve region name.']
+      } if region.nil?
+
       city = City.find_by(slug:)
-      city = City.find_by(name:) if city.nil?
-      city = City.new(name:, slug: slug_em(name)) if city.nil?
+      city = City.find_by(name: city_name) if city.nil?
+      city = find_city(
+        city_name,
+        region.name,
+        country.code,
+        Rails.application.secrets.google_api_key
+      ) if city.nil?
 
-      successful_operation = false
-      ActiveRecord::Base.transaction do
-        city.name = name
-        assign_auditable_user(city)
-        city.save
-
-        successful_operation = true
-      end
-
+      successful_operation = !city.nil?
       if successful_operation
         # Successful creation, return the created object with no errors
         {

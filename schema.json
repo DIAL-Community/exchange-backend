@@ -9747,6 +9747,18 @@
                   "name": "slug",
                   "description": null,
                   "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "cityName",
+                  "description": null,
+                  "type": {
                     "kind": "NON_NULL",
                     "name": null,
                     "ofType": {
@@ -9760,7 +9772,23 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "name",
+                  "name": "regionName",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "countryName",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
