@@ -203,6 +203,9 @@ module Types
     field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
     field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
 
+    field :paginated_resources, resolver: Paginated::PaginatedResources
+    field :pagination_attribute_resource, resolver: Paginated::PaginationAttributeResource
+
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
   end

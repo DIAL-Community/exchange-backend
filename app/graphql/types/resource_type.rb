@@ -14,5 +14,7 @@ module Types
 
     field :show_in_exchange, Boolean, null: false
     field :show_in_wizard, Boolean, null: false
+
+    field :organizations, [Types::OrganizationType], null: true
   end
 end
