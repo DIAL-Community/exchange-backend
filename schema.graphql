@@ -1887,6 +1887,7 @@ type Query {
     sectors: [String!] = []
     tags: [String!] = []
   ): PlaybookConnection!
+  paginatedPlaybooksRedux(offsetAttributes: OffsetAttributes!, search: String = "", tags: [String!] = []): [Playbook!]!
   paginatedProducts(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1960,6 +1961,7 @@ type Query {
   paginationAttributeDataset(datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
+  paginationAttributePlaybook(search: String = "", tags: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeResource(search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false): PaginationAttributes!

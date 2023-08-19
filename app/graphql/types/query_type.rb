@@ -206,6 +206,9 @@ module Types
     field :paginated_resources, resolver: Paginated::PaginatedResources
     field :pagination_attribute_resource, resolver: Paginated::PaginationAttributeResource
 
+    field :paginated_playbooks_redux, resolver: Paginated::PaginatedPlaybooks
+    field :pagination_attribute_playbook, resolver: Paginated::PaginationAttributePlaybook
+
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
   end
