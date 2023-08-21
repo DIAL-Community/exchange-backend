@@ -1560,6 +1560,7 @@ type PlaybookDescription {
   outcomes: String!
   overview: String!
   playbookId: Int
+  sanitizedOverview: String!
 }
 
 """
@@ -1972,7 +1973,7 @@ type Query {
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
-  plays(search: String = ""): [Play!]!
+  plays(playbookSlug: String = "", search: String = ""): [Play!]!
   product(slug: String!): Product
   productRepositories(slug: String!): [ProductRepository!]!
   productRepository(slug: String!): ProductRepository

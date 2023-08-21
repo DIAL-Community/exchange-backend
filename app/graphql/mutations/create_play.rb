@@ -84,10 +84,9 @@ module Mutations
           max_order = max_order.nil? ? 0 : (max_order + 1)
 
           assigned_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: play.id)
-          assigned_play = PlaybookPlay.new if assigned_play.nil?
+          assigned_play = PlaybookPlay.new(play_order: max_order) if assigned_play.nil?
           assigned_play.play = play
           assigned_play.playbook = playbook
-          assigned_play.play_order = max_order
 
           assign_auditable_user(assigned_play)
           assigned_play.save
