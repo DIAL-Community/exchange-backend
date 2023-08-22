@@ -159,6 +159,8 @@ module Types
 
     field :paginated_organizations, resolver: Paginated::PaginatedOrganizations
     field :pagination_attribute_organization, resolver: Paginated::PaginationAttributeOrganization
+    field :paginated_storefronts, resolver: Paginated::PaginatedStorefronts
+    field :pagination_attribute_storefront, resolver: Paginated::PaginationAttributeStorefront
 
     field :paginated_datasets_redux, resolver: Paginated::PaginatedDatasets
     field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset

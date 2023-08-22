@@ -47,9 +47,13 @@ module Mutations
 
     def validate_url(current_url)
       acceptable_url_parts = [
-        '/ui/v1/building-blocks',
-        '/ui/v1/products',
-        '/ui/v1/use-cases'
+        '/building-blocks',
+        '/products',
+        '/use-cases',
+        '/storefronts',
+        '/opportunities',
+        '/workflows',
+        '/organizations'
       ]
       acceptable_url_parts.index { |x| current_url.include?(x) }
     end

@@ -1948,6 +1948,7 @@ type Query {
   paginatedProjectsRedux(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedResources(offsetAttributes: OffsetAttributes!, search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false): [Resource!]!
   paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
+  paginatedStorefronts(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], specialties: [String!] = []): [Organization!]!
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
@@ -1967,6 +1968,7 @@ type Query {
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeResource(search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false): PaginationAttributes!
   paginationAttributeSector(search: String = ""): PaginationAttributes!
+  paginationAttributeStorefront(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], search: String = "", sectors: [String!] = [], specialties: [String!] = []): PaginationAttributes!
   paginationAttributeTag(search: String = ""): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
