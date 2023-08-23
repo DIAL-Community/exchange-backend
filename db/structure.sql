@@ -3268,6 +3268,42 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
+-- Name: starred_data; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.starred_data (
+    id bigint NOT NULL,
+    starred_object_type character varying NOT NULL,
+    starred_object_value bigint NOT NULL,
+    source_object_type character varying NOT NULL,
+    source_object_value bigint NOT NULL,
+    starred_by bigint NOT NULL,
+    starred_date timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: starred_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.starred_data_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: starred_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.starred_data_id_seq OWNED BY public.starred_data.id;
+
+
+--
 -- Name: stylesheets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4473,6 +4509,13 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
+-- Name: starred_data id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_data ALTER COLUMN id SET DEFAULT nextval('public.starred_data_id_seq'::regclass);
+
+
+--
 -- Name: stylesheets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5252,6 +5295,14 @@ ALTER TABLE ONLY public.sessions
 
 ALTER TABLE ONLY public.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: starred_data starred_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_data
+    ADD CONSTRAINT starred_data_pkey PRIMARY KEY (id);
 
 
 --
@@ -6173,6 +6224,13 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree 
 --
 
 CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_starred_entity_record; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_starred_entity_record ON public.starred_data USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
 
 
 --
@@ -7868,6 +7926,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230811182920'),
 ('20230814213722'),
 ('20230815093725'),
-('20230816123325');
+('20230816123325'),
+('20230822215103');
 
 
