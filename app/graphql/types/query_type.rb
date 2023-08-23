@@ -213,5 +213,8 @@ module Types
 
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
+
+    field :starred_objects, resolver: Queries::StarredObjectsQuery
+    field :starred_object, resolver: Queries::StarredObjectQuery
   end
 end

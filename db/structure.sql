@@ -3268,16 +3268,16 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
--- Name: starred_data; Type: TABLE; Schema: public; Owner: -
+-- Name: starred_objects; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.starred_data (
+CREATE TABLE public.starred_objects (
     id bigint NOT NULL,
     starred_object_type character varying NOT NULL,
-    starred_object_value bigint NOT NULL,
+    starred_object_value character varying NOT NULL,
     source_object_type character varying NOT NULL,
-    source_object_value bigint NOT NULL,
-    starred_by bigint NOT NULL,
+    source_object_value character varying NOT NULL,
+    starred_by_id bigint,
     starred_date timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
@@ -3285,10 +3285,10 @@ CREATE TABLE public.starred_data (
 
 
 --
--- Name: starred_data_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: starred_objects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.starred_data_id_seq
+CREATE SEQUENCE public.starred_objects_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3297,10 +3297,10 @@ CREATE SEQUENCE public.starred_data_id_seq
 
 
 --
--- Name: starred_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: starred_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.starred_data_id_seq OWNED BY public.starred_data.id;
+ALTER SEQUENCE public.starred_objects_id_seq OWNED BY public.starred_objects.id;
 
 
 --
@@ -4509,10 +4509,10 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
--- Name: starred_data id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: starred_objects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.starred_data ALTER COLUMN id SET DEFAULT nextval('public.starred_data_id_seq'::regclass);
+ALTER TABLE ONLY public.starred_objects ALTER COLUMN id SET DEFAULT nextval('public.starred_objects_id_seq'::regclass);
 
 
 --
@@ -5298,11 +5298,11 @@ ALTER TABLE ONLY public.settings
 
 
 --
--- Name: starred_data starred_data_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.starred_data
-    ADD CONSTRAINT starred_data_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.starred_objects
+    ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
 
 
 --
@@ -6227,10 +6227,17 @@ CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (update
 
 
 --
--- Name: index_starred_entity_record; Type: INDEX; Schema: public; Owner: -
+-- Name: index_starred_object_record; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_starred_entity_record ON public.starred_data USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
+CREATE UNIQUE INDEX index_starred_object_record ON public.starred_objects USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
+
+
+--
+-- Name: index_starred_objects_on_starred_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_starred_objects_on_starred_by_id ON public.starred_objects USING btree (starred_by_id);
 
 
 --
@@ -7301,6 +7308,14 @@ ALTER TABLE ONLY public.page_contents
 
 ALTER TABLE ONLY public.principle_descriptions
     ADD CONSTRAINT fk_rails_f1497d5d96 FOREIGN KEY (digital_principle_id) REFERENCES public.digital_principles(id);
+
+
+--
+-- Name: starred_objects fk_rails_f18f95cc1b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_objects
+    ADD CONSTRAINT fk_rails_f18f95cc1b FOREIGN KEY (starred_by_id) REFERENCES public.users(id);
 
 
 --

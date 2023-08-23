@@ -25,17 +25,29 @@ module Types
       !User.find_by('? = organization_id', object&.id).nil?
     end
 
-    field :organization_descriptions, [Types::OrganizationDescriptionType], null: true
+    field :organization_descriptions, [Types::OrganizationDescriptionType], null: false
 
-    field :sectors, [Types::SectorType], null: true, method: :sectors_localized
+    field :sectors, [Types::SectorType], null: false, method: :sectors_localized
     field :organization_description, Types::OrganizationDescriptionType, null: true,
                                                                          method: :organization_description_localized
 
-    field :countries, [Types::CountryType], null: true, method: :organization_countries_ordered
-    field :offices, [Types::OfficeType], null: true
+    field :countries, [Types::CountryType], null: false, method: :organization_countries_ordered
+    field :offices, [Types::OfficeType], null: false
+
     field :projects, [Types::ProjectType], null: false
+    field :starred_projects, [Types::ProjectType], null: false
+    def starred_projects
+      starred_objects = StarredObject.where(
+        starred_object_type: StarredObject.object_type_names[:PROJECT],
+        source_object_type: StarredObject.object_type_names[:ORGANIZATION],
+        source_object_value: object.id
+      )
+
+      Project.where(id: starred_objects.select(:starred_object_value))
+    end
+
     field :products, [Types::ProductType], null: false
-    field :contacts, [Types::ContactType], null: true
+    field :contacts, [Types::ContactType], null: false
 
     def contacts
       an_admin = context[:current_user]&.roles&.include?('admin')
@@ -74,7 +86,7 @@ module Types
       BuildingBlock.where(id: object.building_blocks)
     end
 
-    field :resources, [Types::ResourceType], null: true
+    field :resources, [Types::ResourceType], null: false
     field :aliases, GraphQL::Types::JSON, null: true
 
     field :hero_file, String, null: true

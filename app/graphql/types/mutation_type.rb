@@ -146,5 +146,8 @@ module Types
 
     field :add_bookmark, mutation: Mutations::AddBookmark
     field :remove_bookmark, mutation: Mutations::RemoveBookmark
+
+    field :create_starred_object, mutation: Mutations::CreateStarredObject
+    field :remove_starred_object, mutation: Mutations::RemoveStarredObject
   end
 end
