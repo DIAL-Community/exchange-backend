@@ -99,7 +99,7 @@ class Organization < ApplicationRecord
   end
 
   def sectors_localized
-    sectors.where('locale = ?', I18n.locale)
+    sectors.where('locale = ?', I18n.locale).order(:name)
   end
 
   def organization_description_localized

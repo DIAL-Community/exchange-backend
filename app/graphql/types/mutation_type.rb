@@ -84,6 +84,7 @@ module Types
     field :update_project_products, mutation: Mutations::UpdateProjectProducts
     field :update_project_sectors, mutation: Mutations::UpdateProjectSectors
     field :update_project_countries, mutation: Mutations::UpdateProjectCountries
+    field :update_project_sdgs, mutation: Mutations::UpdateProjectSdgs
     field :update_project_tags, mutation: Mutations::UpdateProjectTags
 
     field :create_use_case, mutation: Mutations::CreateUseCase
