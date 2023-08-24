@@ -1992,7 +1992,7 @@ type Query {
   plays(playbookSlug: String = "", search: String = ""): [Play!]!
   product(slug: String!): Product
   productRepositories(slug: String!): [ProductRepository!]!
-  productRepository(slug: String!): ProductRepository
+  productRepository(productSlug: String = "", slug: String!): ProductRepository
   products(search: String = ""): [Product!]!
   project(slug: String!): Project
   projects(search: String = ""): [Project!]!

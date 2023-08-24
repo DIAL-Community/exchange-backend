@@ -316,17 +316,31 @@ module Queries
 
     def resolve(slug:)
       product = Product.find_by(slug:)
-      ProductRepository.where(product_id: product.id, deleted: false)
-                       .order(main_repository: :desc, name: :asc)
+
+      product_repositories = []
+      unless product.nil?
+        product_repositories = ProductRepository.where(product_id: product.id, deleted: false)
+                                                .order(main_repository: :desc, name: :asc)
+      end
+      product_repositories
     end
   end
 
   class ProductRepositoryQuery < Queries::BaseQuery
     argument :slug, String, required: true
+    argument :product_slug, String, required: false, default_value: ''
     type Types::ProductRepositoryType, null: true
 
-    def resolve(slug:)
-      ProductRepository.find_by(slug:)
+    def resolve(slug:, product_slug:)
+      product_repository = ProductRepository.where(slug:)
+      unless product_slug.nil?
+        product = Product.find_by(slug: product_slug)
+        product_repository = product_repository.where(
+          product_id: product.id,
+          deleted: false
+        ) unless product.nil?
+      end
+      product_repository.first
     end
   end
 
