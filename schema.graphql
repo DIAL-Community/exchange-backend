@@ -1785,7 +1785,7 @@ type Query {
   capabilities(aggregatorIds: [Int!] = [], capabilities: [String!] = [], countryIds: [Int!] = [], search: String = "", services: [String!] = []): [Capability!]!
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
-  categoryIndicators(search: String = ""): [CategoryIndicator!]
+  categoryIndicators(search: String = ""): [CategoryIndicator!]!
   cities(search: String = ""): [City!]!
   city(slug: String!): City
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
@@ -1999,29 +1999,8 @@ type Query {
   projects(search: String = ""): [Project!]!
   resource(slug: String!): Resource
   resources(search: String = ""): [Resource!]!
-  rubricCategories(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String
-  ): RubricCategoryConnection!
-  rubricCategory(slug: String!): RubricCategory
+  rubricCategories(search: String): [RubricCategory!]!
+  rubricCategory(slug: String!): RubricCategory!
   sdg(slug: String!): SustainableDevelopmentGoal
   sdgTargets(search: String = ""): [SustainableDevelopmentGoalTarget!]!
   sdgs(search: String = ""): [SustainableDevelopmentGoal!]!
@@ -2763,47 +2742,11 @@ type RubricCategory {
   weight: Float!
 }
 
-"""
-The connection type for RubricCategory.
-"""
-type RubricCategoryConnection {
-  """
-  A list of edges.
-  """
-  edges: [RubricCategoryEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [RubricCategory]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type RubricCategoryDescription {
   description: String!
   id: ID!
   locale: String!
   rubricCategoryId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type RubricCategoryEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: RubricCategory
 }
 
 type Sector {

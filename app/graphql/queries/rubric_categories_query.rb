@@ -4,7 +4,7 @@ module Queries
   class RubricCategoriesQuery < Queries::BaseQuery
     include ActionView::Helpers::TextHelper
     argument :search, String, required: false
-    type Types::RubricCategoryType.connection_type, null: false
+    type [Types::RubricCategoryType], null: false
 
     def resolve(search:)
       rubric_categories = []
@@ -15,7 +15,7 @@ module Queries
 
   class RubricCategoryQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    type Types::RubricCategoryType, null: true
+    type Types::RubricCategoryType, null: false
 
     def resolve(slug:)
       rubric_category = RubricCategory.find_by(slug:) if an_admin

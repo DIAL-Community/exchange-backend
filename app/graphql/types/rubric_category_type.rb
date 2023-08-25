@@ -16,7 +16,7 @@ module Types
 
     field :rubric_category_descriptions, [Types::RubricCategoryDescriptionType], null: true
     field :rubric_category_description, Types::RubricCategoryDescriptionType, null: true,
-                                                               method: :rubric_category_description_localized
+      method: :rubric_category_description_localized
 
     field :category_indicators, [Types::CategoryIndicatorType], null: true
   end

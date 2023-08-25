@@ -3,7 +3,7 @@
 module Queries
   class CategoryIndicatorsQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    type [Types::CategoryIndicatorType], null: true
+    type [Types::CategoryIndicatorType], null: false
 
     def resolve(search:)
       category_indicators = []
