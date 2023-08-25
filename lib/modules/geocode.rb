@@ -23,7 +23,7 @@ module Modules
         country_param: country.id
       ) unless country.nil?
 
-      puts "Region pre-geocoding: #{region.to_yaml}."
+      puts "Region pre-geocoding: #{region.inspect}."
       if region.nil?
         region = Region.new
         region.country_id = country.id unless country.nil?
@@ -48,7 +48,7 @@ module Modules
         region.aliases << region_name
         puts("Region saved: #{region.name}.") if !region.name.nil? && region.save!
       end
-      puts "Region: #{region.to_yaml}."
+      puts "Region: #{region.inspect}."
       region
     end
 
@@ -70,7 +70,7 @@ module Modules
         )
       end
 
-      puts "City pre-geocoding: #{city.to_yaml}."
+      puts "City pre-geocoding: #{city.inspect}."
       if city.nil?
         city = City.new
 
@@ -99,7 +99,7 @@ module Modules
         city.aliases << city_name
         puts("City saved: #{city.name}.") if !city.name.nil? && city.save!
       end
-      puts "Returned city data: #{city.to_yaml}."
+      puts "Returned city data: #{city.inspect}."
       city
     end
 

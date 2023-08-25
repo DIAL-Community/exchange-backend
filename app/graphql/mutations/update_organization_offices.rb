@@ -26,12 +26,18 @@ module Mutations
 
       organization.offices = []
       offices&.each do |office|
-        slug_string = "#{organization.name} #{office['cityName']} #{office['regionName']} #{office['countryCode']}"
-        office_slug = slug_em(slug_string)
-        current_office = Office.find_by(slug: office_slug)
+        office_params = generate_office_params(office)
+        current_office = Office.find_by(
+          organization_id: organization.id,
+          city: office_params[:city],
+          region_id: office_params[:region_id],
+          country_id: office_params[:country_id]
+        )
         if current_office.nil?
-          current_office = create_new_office(office, office_slug)
+          current_office = Office.new(office_params)
           current_office.organization_id = organization.id
+        else
+          current_office.update(office_params)
         end
         organization.offices << current_office
       end
@@ -51,10 +57,7 @@ module Mutations
       end
     end
 
-    def create_new_office(office, office_slug)
-      name_string = office['cityName'] + ", " + office['regionName'] + ", " + office['countryCode']
-      new_office = Office.new(name: name_string, slug: office_slug)
-
+    def generate_office_params(office)
       city = find_city(
         office['cityName'],
         office['regionName'],
@@ -62,16 +65,25 @@ module Mutations
         Rails.application.secrets.google_api_key
       )
 
-      region = Region.find(city.region_id)
-      country = Country.find(region.country_id)
+      puts "City: #{city.inspect}."
 
-      new_office.country_id = country.id
-      new_office.region_id = region.id
+      region = city.region
+      country = region.country
 
-      new_office.city = city.name
-      new_office.latitude = city.latitude
-      new_office.longitude = city.longitude
-      new_office
+      name_string = "#{city.name}, #{region.name}, #{country.code}"
+      office_params = {
+        name: name_string,
+        slug: slug_em(name_string),
+
+        region_id: region.id,
+        country_id: country.id,
+
+        city: city.name,
+        latitude: city.latitude,
+        longitude: city.longitude
+
+      }
+      office_params
     end
   end
 end

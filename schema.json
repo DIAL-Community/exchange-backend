@@ -15941,7 +15941,7 @@
               "deprecationReason": null
             },
             {
-              "name": "organizationId",
+              "name": "organization",
               "description": null,
               "args": [
 
@@ -15950,8 +15950,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
+                  "kind": "OBJECT",
+                  "name": "Organization",
                   "ofType": null
                 }
               },
@@ -15968,8 +15968,8 @@
                 "kind": "NON_NULL",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
+                  "kind": "OBJECT",
+                  "name": "Region",
                   "ofType": null
                 }
               },

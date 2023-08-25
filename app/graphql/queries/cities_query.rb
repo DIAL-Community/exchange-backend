@@ -6,8 +6,6 @@ module Queries
     type [Types::CityType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
-
       cities = City.order(:name)
       cities = cities.name_contains(search) unless search.blank?
       cities
@@ -19,8 +17,6 @@ module Queries
     type Types::CityType, null: true
 
     def resolve(slug:)
-      return nil unless an_admin
-
       City.find_by(slug:)
     end
   end

@@ -1228,8 +1228,8 @@ type Office {
   latitude: String!
   longitude: String!
   name: String!
-  organizationId: Int!
-  region: String!
+  organization: Organization!
+  region: Region!
   slug: String!
 }
 
