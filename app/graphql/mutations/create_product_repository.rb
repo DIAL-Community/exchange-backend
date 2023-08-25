@@ -33,7 +33,8 @@ module Mutations
         product_repositories = ProductRepository.where(slug: product_repository.slug)
         unless product_repositories.empty?
           first_duplicate = ProductRepository.slug_simple_starts_with(product_repository.slug)
-                                             .order(slug: :desc).first
+                                             .order(slug: :desc)
+                                             .first
           product_repository.slug += generate_offset(first_duplicate).to_s
         end
       end

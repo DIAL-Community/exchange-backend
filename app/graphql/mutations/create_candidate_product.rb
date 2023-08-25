@@ -39,8 +39,9 @@ module Mutations
         # Generate slug for the candidate product.
         slug = slug_em(name)
         # Check if we need to add _dup to the slug.
-        first_duplicate = CandidateProduct.slug_simple_starts_with(candidate_product.slug)
-                                          .order(slug: :desc).first
+        first_duplicate = CandidateProduct.slug_simple_starts_with(slug)
+                                          .order(slug: :desc)
+                                          .first
         if !first_duplicate.nil?
           candidate_product.slug = slug + generate_offset(first_duplicate)
         else

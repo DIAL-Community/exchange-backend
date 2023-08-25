@@ -52,9 +52,11 @@ module Mutations
       contact = Contact.new(name:, email:, title:)
       contact.slug = slug_em(name)
 
-      if Contact.where(slug: slug_em(name)).count.positive?
+      if Contact.where(slug: contact.slug).count.positive?
         # Check if we need to add _dup to the slug.
-        first_duplicate = Contact.slug_simple_starts_with(slug_em(name)).order(slug: :desc).first
+        first_duplicate = Contact.slug_simple_starts_with(contact.slug)
+                                 .order(slug: :desc)
+                                 .first
         contact.slug = contact.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
       end
 

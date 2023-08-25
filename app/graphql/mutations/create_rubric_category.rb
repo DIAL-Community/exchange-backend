@@ -28,8 +28,9 @@ module Mutations
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = RubricCategory.slug_simple_starts_with(slug_em(name))
-                                        .order(slug: :desc).first
+        first_duplicate = RubricCategory.slug_simple_starts_with(slug)
+                                        .order(slug: :desc)
+                                        .first
         if !first_duplicate.nil?
           rubric_category.slug = slug + generate_offset(first_duplicate)
         else

@@ -62,10 +62,11 @@ namespace :opportunities_sync do
       opportunity = Opportunity.new(name: opportunity_structure['title'])
       opportunity.slug = slug_em(opportunity_structure['title'])
 
-      if Opportunity.where(slug: slug_em(opportunity.name)).count.positive?
+      if Opportunity.where(slug: opportunity.slug).count.positive?
         # Check if we need to add _dup to the slug.
-        first_duplicate = Opportunity.slug_simple_starts_with(slug_em(opportunity.name))
-                                     .order(slug: :desc).first
+        first_duplicate = Opportunity.slug_simple_starts_with(opportunity.slug)
+                                     .order(slug: :desc)
+                                     .first
         opportunity.slug += generate_offset(first_duplicate)
       end
     end
@@ -211,7 +212,8 @@ namespace :opportunities_sync do
           candidate_organizations = CandidateOrganization.where(slug: candidate_params[:slug])
           unless candidate_organizations.empty?
             first_duplicate = CandidateOrganization.slug_simple_starts_with(candidate_params[:slug])
-                                                   .order(slug: :desc).first
+                                                   .order(slug: :desc)
+                                                   .first
             candidate_params[:slug] = candidate_params[:slug] + generate_offset(first_duplicate).to_s
           end
           candidate_organization = CandidateOrganization.new(candidate_params)
