@@ -51,7 +51,7 @@ module Mutations
       end
 
       if dbop_success
-        # Successful creation, return the created object with no errors
+        # Successful creation, return the deleted object with no errors
         {
           dial_spreadsheet_data: existing_data,
           errors: []

@@ -18,7 +18,7 @@ module Mutations
       dataset = Dataset.find_by(id:)
       assign_auditable_user(dataset)
       if dataset.destroy
-        # Successful deletion, return the nil dataset with no errors
+        # Successful deletion, return the deleted dataset with no errors
         {
           dataset:,
           errors: []

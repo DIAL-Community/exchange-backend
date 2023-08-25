@@ -129,9 +129,9 @@ class Product < ApplicationRecord
   end
 
   def main_repository
-    main_repository = product_repositories.find_by(main_repository: true)
+    main_repository = product_repositories.find_by(main_repository: true, deleted: false)
     if main_repository.nil?
-      main_repository = product_repositories.first
+      main_repository = product_repositories.where(deleted: false).first
     end
     main_repository
   end

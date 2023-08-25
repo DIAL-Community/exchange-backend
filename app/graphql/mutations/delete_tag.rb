@@ -45,7 +45,7 @@ module Mutations
       end
 
       if successful_operation
-        # Successful deletion, return the nil tag with no errors
+        # Successful deletion, return the deleted tag with no errors
         {
           tag:,
           errors: []

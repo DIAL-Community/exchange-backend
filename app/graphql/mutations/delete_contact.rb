@@ -31,7 +31,7 @@ module Mutations
       end
 
       if successful_operation
-        # Successful deletion, return the nil contact with no errors
+        # Successful deletion, return the deleted contact with no errors
         {
           contact:,
           errors: []

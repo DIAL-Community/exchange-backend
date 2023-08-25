@@ -17,7 +17,7 @@ module Mutations
 
       user = User.find_by(id:)
       if user.destroy
-        # Successful deletion, return the nil user with no errors
+        # Successful deletion, return the deleted user with no errors
         {
           user:,
           errors: []

@@ -18,7 +18,7 @@ module Mutations
       sector = Sector.find_by(id:)
       assign_auditable_user(sector)
       if sector.destroy
-        # Successful deletion, return the nil sector with no errors
+        # Successful deletion, return the deleted sector with no errors
         {
           sector:,
           errors: []

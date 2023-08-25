@@ -23,7 +23,7 @@ module Mutations
       assign_auditable_user(category_indicator)
 
       if category_indicator.destroy
-        # Successful deletetion, return the nil category indicator with no errors
+        # Successful deletion, return the deleted category indicator with no errors
         {
           category_indicator: nil,
           rubric_category_slug: rubric_category.slug,

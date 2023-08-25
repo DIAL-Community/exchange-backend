@@ -30,7 +30,6 @@ module Types
     field :delete_spreadsheet_data, mutation: Mutations::DeleteSpreadsheetData
 
     field :create_product_repository, mutation: Mutations::CreateProductRepository
-    field :update_product_repository, mutation: Mutations::UpdateProductRepository
     field :delete_product_repository, mutation: Mutations::DeleteProductRepository
 
     field :create_opportunity, mutation: Mutations::CreateOpportunity

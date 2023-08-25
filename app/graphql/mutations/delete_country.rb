@@ -24,7 +24,7 @@ module Mutations
       end
 
       if country.destroy
-        # Successful deletion, return the nil country with no errors
+        # Successful deletion, return the deleted country with no errors
         {
           country:,
           errors: []

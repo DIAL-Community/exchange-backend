@@ -18,7 +18,7 @@ module Mutations
       project = Project.find_by(id:)
       assign_auditable_user(project)
       if project.destroy
-        # Successful deletion, return the nil dataset with no errors
+        # Successful deletion, return the deleted dataset with no errors
         {
           project:,
           errors: []

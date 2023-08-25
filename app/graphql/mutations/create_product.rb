@@ -61,6 +61,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(product)
+        product.manual_update = true
         product.save
 
         unless image_file.nil?

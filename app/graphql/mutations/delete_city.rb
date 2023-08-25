@@ -31,7 +31,7 @@ module Mutations
       end
 
       if successful_operation
-        # Successful deletion, return the nil city with no errors
+        # Successful deletion, return the deleted city with no errors
         {
           city:,
           errors: []

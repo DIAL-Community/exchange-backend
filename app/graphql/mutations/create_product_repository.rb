@@ -6,55 +6,7 @@ module Mutations
   class CreateProductRepository < Mutations::BaseMutation
     include Modules::Slugger
 
-    argument :slug, String, required: true
-    argument :name, String, required: true
-    argument :absolute_url, String, required: true
-    argument :description, String, required: true
-    argument :main_repository, Boolean, required: true
-
-    field :slug, String, null: true
-
-    def resolve(slug:, name:, absolute_url:, description:, main_repository:)
-      repository_params = {
-        name:,
-        absolute_url:,
-        description:,
-        main_repository:
-      }
-      repository_params[:slug] = slug_em(repository_params[:name])
-
-      product_repositorys = ProductRepository.where(slug: repository_params[:slug])
-      unless product_repositorys.empty?
-        first_duplicate = ProductRepository.slug_simple_starts_with(repository_params[:slug])
-                                           .order(slug: :desc).first
-        repository_params[:slug] = repository_params[:slug] + generate_offset(first_duplicate).to_s
-      end
-
-      response = { slug: nil }
-      current_user = context[:current_user]
-      current_product = Product.find_by(slug:)
-      if (current_user.user_products.include?(current_product.id) &&
-        current_user.roles.include?(User.user_roles[:product_user])) ||
-         current_user.roles.include?(User.user_roles[:admin]) ||
-         current_user.roles.include?(User.user_roles[:content_editor]) ||
-         current_user.roles.include?(User.user_roles[:content_writer])
-
-        repository_params[:updated_by] = current_user[:id]
-        repository_params[:updated_at] = Time.now
-
-        product_repository = ProductRepository.new(repository_params)
-        product_repository.product = current_product
-
-        if product_repository.save && product_repository.product.update({ manual_update: true })
-          response[:slug] = product_repository.slug
-        end
-      end
-      response
-    end
-  end
-
-  class UpdateProductRepository < Mutations::BaseMutation
-    include Modules::Slugger
+    argument :product_slug, String, required: true
 
     argument :slug, String, required: true
     argument :name, String, required: true
@@ -62,62 +14,64 @@ module Mutations
     argument :description, String, required: true
     argument :main_repository, Boolean, required: true
 
-    field :slug, String, null: true
+    field :product_repository, Types::ProductRepositoryType, null: true
+    field :errors, [String], null: true
 
-    def resolve(name:, slug:, absolute_url:, description:, main_repository:)
-      repository_params = {
-        name:,
-        absolute_url:,
-        description:,
-        main_repository:
-      }
+    def resolve(slug:, product_slug:, name:, absolute_url:, description:, main_repository:)
+      product = Product.find_by(slug: product_slug)
+      if product.nil? || (!a_product_owner(product.id) && !an_admin)
+        return {
+          product_repository: nil,
+          errors: ['Unable to create product repository object.']
+        }
+      end
 
-      response = { slug: nil }
-      current_user = context[:current_user]
       product_repository = ProductRepository.find_by(slug:)
-      if (current_user.user_products.include?(product_repository.product.id) &&
-        current_user.roles.include?(User.user_roles[:product_user])) ||
-         current_user.roles.include?(User.user_roles[:admin]) ||
-         current_user.roles.include?(User.user_roles[:content_editor]) ||
-         current_user.roles.include?(User.user_roles[:content_writer])
+      if product_repository.nil?
+        product_repository = ProductRepository.new(slug: slug_em(name))
 
-        repository_params[:updated_by] = current_user[:id]
-        repository_params[:updated_at] = Time.now
-
-        if product_repository.update!(repository_params) && product_repository.product.update!({ manual_update: true })
-          response[:slug] = product_repository.slug
+        product_repositories = ProductRepository.where(slug: product_repository.slug)
+        unless product_repositories.empty?
+          first_duplicate = ProductRepository.slug_simple_starts_with(product_repository.slug)
+                                             .order(slug: :desc).first
+          product_repository.slug += generate_offset(first_duplicate).to_s
         end
       end
-      response
-    end
-  end
 
-  class DeleteProductRepository < Mutations::BaseMutation
-    include Modules::Slugger
+      product_repository.name = name
+      product_repository.absolute_url = absolute_url
+      product_repository.description = description
+      product_repository.main_repository = main_repository
 
-    argument :slug, String, required: true
+      product_repository.product = product
 
-    field :slug, String, null: true
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        assign_auditable_user(product_repository)
+        product_repository.save
 
-    def resolve(slug:)
-      repository_params = {}
+        product = product_repository.product
 
-      response = { slug: nil }
-      current_user = context[:current_user]
-      product_repository = ProductRepository.find_by(slug:)
-      if (current_user.user_products.include?(product_repository.product.id) &&
-        current_user.roles.include?(User.user_roles[:product_user])) ||
-         current_user.roles.include?(User.user_roles[:admin]) ||
-         current_user.roles.include?(User.user_roles[:content_editor]) ||
-         current_user.roles.include?(User.user_roles[:content_writer])
+        product.manual_update = true
+        assign_auditable_user(product)
+        product.save
 
-        repository_params[:deleted] = true
-        repository_params[:deleted_by] = current_user.id
-        repository_params[:deleted_at] = Time.now
-
-        response[:slug] = product_repository.slug if product_repository.update!(repository_params)
+        successful_operation = true
       end
-      response
+
+      if successful_operation
+        # Successful deletion, return the saved product_repository with no errors
+        {
+          product_repository:,
+          errors: []
+        }
+      else
+        # Failed saving, return the errors to the client
+        {
+          product_repository: nil,
+          errors: product_repository.errors.full_messages
+        }
+      end
     end
   end
 end

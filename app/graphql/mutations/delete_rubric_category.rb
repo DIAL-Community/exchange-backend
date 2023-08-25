@@ -19,7 +19,7 @@ module Mutations
       assign_auditable_user(rubric_category)
 
       if rubric_category.destroy
-        # Successful deletetion, return the nil rubric category with no errors
+        # Successful deletion, return the deleted rubric category with no errors
         {
           rubric_category: nil,
           errors: []
