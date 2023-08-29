@@ -37,22 +37,28 @@ module Mutations
 
       if entity == 'PRODUCT'
         role = 'product_user'
-        candidate_role = CandidateRole.find_by(email: context[:current_user].email,
-                                               roles: [role],
-                                               product_id: entity_id,
-                                               rejected: nil)
+        candidate_role = CandidateRole.find_by(
+          email: context[:current_user].email,
+          roles: [role],
+          product_id: entity_id,
+          rejected: nil
+        )
       elsif entity == 'ORGANIZATION'
         role = 'org_user'
-        candidate_role = CandidateRole.find_by(email: context[:current_user].email,
-                                               roles: [role],
-                                               organization_id: entity_id,
-                                               rejected: nil)
+        candidate_role = CandidateRole.find_by(
+          email: context[:current_user].email,
+          roles: [role],
+          organization_id: entity_id,
+          rejected: nil
+        )
       elsif entity == 'DATASET'
         role = 'dataset_user'
-        candidate_role = CandidateRole.find_by(email: context[:current_user].email,
-                                               roles: [role],
-                                               dataset_id: entity_id,
-                                               rejected: nil)
+        candidate_role = CandidateRole.find_by(
+          email: context[:current_user].email,
+          roles: [role],
+          dataset_id: entity_id,
+          rejected: nil
+        )
       else
         return {
           candidate_role: nil,
@@ -60,10 +66,12 @@ module Mutations
         }
       end
 
+      description = "#{entity.titlecase} ownership requested from the new UX."
       if candidate_role.nil?
-        candidate_role = CandidateRole.new(email: context[:current_user].email,
-                                           roles: [role],
-                                           description: "#{entity.titlecase} ownership requested from the new UX.")
+        candidate_role = CandidateRole.new(
+          email: context[:current_user].email,
+          roles: [role]
+        )
       else
         return {
           candidate_role: nil,
@@ -73,11 +81,18 @@ module Mutations
 
       if entity == 'PRODUCT'
         candidate_role.product_id = entity_id
+        entity = Product.find(entity_id)
+        description += " Product: '#{entity.name}'."
       elsif entity == 'ORGANIZATION'
         candidate_role.organization_id = entity_id
+        entity = Organization.find(entity_id)
+        description += " Organization: '#{entity.name}'."
       elsif entity == 'DATASET'
         candidate_role.dataset_id = entity_id
+        entity = Dataset.find(entity_id)
+        description += " Dataset: '#{entity.name}'."
       end
+      candidate_role.description = description
 
       if candidate_role.save!
         AdminMailer

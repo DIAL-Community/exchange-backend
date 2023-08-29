@@ -36,7 +36,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name" },
+      variables: { name: "Some name", slug: "some_name" }
     )
 
     aggregate_failures do
@@ -51,7 +51,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name" },
+      variables: { name: "Some new name", slug: "some_name" }
     )
 
     aggregate_failures do
@@ -66,7 +66,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name" },
+      variables: { name: "Some new name", slug: "some_name" }
     )
 
     aggregate_failures do
@@ -78,7 +78,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name" },
+      variables: { name: "Some name", slug: "some_name" }
     )
 
     aggregate_failures do

@@ -67,13 +67,15 @@ module Mutations
       candidate_dataset.approved_by_id = context[:current_user].id
 
       dataset = Dataset.new(name: candidate_dataset.name,
-                            website: candidate_dataset.data_url,
-                            visualization_url: candidate_dataset.data_visualization_url,
-                            dataset_type: candidate_dataset.data_type)
+                            website: candidate_dataset.website,
+                            visualization_url: candidate_dataset.visualization_url,
+                            dataset_type: candidate_dataset.dataset_type)
 
       slug = slug_em(candidate_dataset.name)
       # Check if we need to add _dup to the slug.
-      first_duplicate = Dataset.slug_simple_starts_with(slug).order(slug: :desc).first
+      first_duplicate = Dataset.slug_simple_starts_with(slug)
+                               .order(slug: :desc)
+                               .first
       if !first_duplicate.nil?
         dataset.slug = slug + generate_offset(first_duplicate)
       else

@@ -6,18 +6,11 @@ require 'rails_helper'
 RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
   let(:query) do
     <<~GQL
-      query RubricCategories (
-        $search: String
-      ) {
-        rubricCategories (
-          search: $search
-        ) {
-          nodes {
+      query RubricCategories ($search: String) {
+        rubricCategories (search: $search) {
           name
           slug
           weight
-          }
-          totalCount
         }
       }
     GQL
@@ -45,9 +38,12 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['rubricCategories']['nodes']).to(eq([{ "name" => "Some Rubric Category",
-                                                                   "slug" => "some_rubric_category",
-                                                                   "weight" => 0.75 }]))
+      expect(result['data']['rubricCategories'])
+        .to(eq([{
+          "name" => "Some Rubric Category",
+          "slug" => "some_rubric_category",
+          "weight" => 0.75
+        }]))
     end
   end
 
@@ -61,7 +57,7 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['rubricCategories']['nodes']).to(eq([]))
+      expect(result['data']['rubricCategories']).to(eq([]))
     end
   end
 
@@ -75,9 +71,12 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['rubricCategory']).to(eq({ "name" => "Some Rubric Category",
-                                                       "slug" => "some_rubric_category",
-                                                       "weight" => 0.75 }))
+      expect(result['data']['rubricCategory'])
+        .to(eq({
+          "name" => "Some Rubric Category",
+          "slug" => "some_rubric_category",
+          "weight" => 0.75
+        }))
     end
   end
 
@@ -91,7 +90,7 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['rubricCategory']).to(eq(nil))
+      expect(result['data']).to(eq(nil))
     end
   end
 end

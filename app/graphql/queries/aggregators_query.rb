@@ -117,7 +117,7 @@ module Queries
     argument :sub_sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :services, [String], required: false, default_value: []
-    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :offset_attributes, Attributes::OffsetAttributes, required: true
 
     type Types::OrganizationType.connection_type, null: false
 

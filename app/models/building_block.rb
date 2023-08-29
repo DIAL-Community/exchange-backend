@@ -60,10 +60,10 @@ class BuildingBlock < ApplicationRecord
   end
 
   def image_file
-    if File.exist?(File.join('public', 'assets', 'building_blocks', "#{slug}.png"))
-      "/assets/building_blocks/#{slug}.png"
+    if File.exist?(File.join('public', 'assets', 'building_blocks', "#{slug}.svg"))
+      "/assets/building_blocks/#{slug}.svg"
     else
-      '/assets/building_blocks/bb_placeholder.png'
+      '/assets/building_blocks/building_block_placeholder.svg'
     end
   end
 

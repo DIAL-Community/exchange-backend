@@ -18,7 +18,7 @@ module Mutations
       product = Product.find_by(id:)
       assign_auditable_user(product)
       if product.destroy
-        # Successful deletion, return the nil product with no errors
+        # Successful deletion, return the deleted product with no errors
         {
           product:,
           errors: []

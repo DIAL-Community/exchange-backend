@@ -28,7 +28,9 @@ module Mutations
         slug = slug_em(name)
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = Workflow.slug_simple_starts_with(slug).order(slug: :desc).first
+        first_duplicate = Workflow.slug_simple_starts_with(slug)
+                                  .order(slug: :desc)
+                                  .first
         if !first_duplicate.nil?
           workflow.slug = slug + generate_offset(first_duplicate)
         else

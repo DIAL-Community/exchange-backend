@@ -38,14 +38,16 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", weight: 0.75,
-                   description: "some description" },
+      variables: { name: "Some name", slug: "", weight: 0.75, description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createRubricCategory']['rubricCategory'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "weight" => 0.75,
-                 "rubricCategoryDescription" => { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name", "weight" => 0.75,
+          "rubricCategoryDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createRubricCategory']['errors'])
         .to(eq([]))
     end
@@ -57,14 +59,16 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", weight: 0.6,
-                   description: "some description" },
+      variables: { name: "Some new name", slug: "some_name", weight: 0.6, description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createRubricCategory']['rubricCategory'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name", "weight" => 0.6,
-                 "rubricCategoryDescription" => { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Some new name",
+          "slug" => "some_name", "weight" => 0.6,
+          "rubricCategoryDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createRubricCategory']['errors'])
         .to(eq([]))
     end
@@ -75,8 +79,7 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", weight: 0.75,
-                   description: "some description" },
+      variables: { name: "Some name", slug: "", weight: 0.75, description: "some description" }
     )
 
     aggregate_failures do
@@ -90,8 +93,7 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", weight: 0.75,
-                   description: "some description" },
+      variables: { name: "Some name", slug: "", weight: 0.75, description: "some description" }
     )
 
     aggregate_failures do

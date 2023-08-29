@@ -18,7 +18,7 @@ module Mutations
       resource = Resource.find_by(id:)
       assign_auditable_user(resource)
       if resource.destroy
-        # Successful deletion, return the nil resource with no errors
+        # Successful deletion, return the deleted resource with no errors
         {
           resource:,
           errors: []

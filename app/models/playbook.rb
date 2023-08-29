@@ -53,7 +53,7 @@ class Playbook < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'playbooks', "#{slug}.png"))
       "/assets/playbooks/#{slug}.png"
     else
-      '/assets/playbooks/playbook_placeholder.png'
+      '/assets/playbooks/playbook_placeholder.svg'
     end
   end
 end

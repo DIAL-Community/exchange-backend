@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProductTags (
-        $tags: [String!]!
+        $tagNames: [String!]!
         $slug: String!
         ) {
           updateProductTags (
-            tags: $tags
+            tagNames: $tagNames
             slug: $slug
           ) {
             product {
@@ -25,12 +25,14 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
+    create(:tag, name: 'tag_2')
+    create(:tag, name: 'tag_3')
     create(:product, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
     expect_any_instance_of(Mutations::UpdateProductTags).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' }
     )
 
     aggregate_failures do
@@ -46,7 +48,7 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

@@ -49,7 +49,9 @@ module Mutations
         resource = Resource.new(name:, slug: slug_em(name))
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = Resource.slug_simple_starts_with(resource.slug).order(slug: :desc).first
+        first_duplicate = Resource.slug_simple_starts_with(resource.slug)
+                                  .order(slug: :desc)
+                                  .first
         unless first_duplicate.nil?
           resource.slug += generate_offset(first_duplicate)
         end

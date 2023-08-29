@@ -9,8 +9,8 @@ class Play < ApplicationRecord
   has_and_belongs_to_many :products, join_table: :plays_products
   has_and_belongs_to_many :building_blocks, join_table: :plays_building_blocks
 
-  scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
-  scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
+  scope :name_contains, ->(name) { where('LOWER(plays.name) like LOWER(?)', "%#{name}%") }
+  scope :slug_starts_with, ->(slug) { where('LOWER(plays.slug) like LOWER(?)', "#{slug}\\_%") }
 
   def to_param
     slug

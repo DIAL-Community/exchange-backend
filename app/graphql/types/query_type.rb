@@ -114,6 +114,7 @@ module Types
     field :search_candidate_roles, resolver: Queries::SearchCandidateRolesQuery
 
     field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
+    field :candidate_dataset, resolver: Queries::CandidateDatasetQuery
     field :search_candidate_datasets, resolver: Queries::SearchCandidateDatasetsQuery
     field :owned_datasets, resolver: Queries::OwnedDatasetsQuery
 
@@ -146,5 +147,74 @@ module Types
     field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery
     field :search_resources, resolver: Queries::SearchResourcesQuery
+
+    field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
+    field :pagination_attribute_use_case, resolver: Paginated::PaginationAttributeUseCase
+
+    field :paginated_products_redux, resolver: Paginated::PaginatedProducts
+    field :pagination_attribute_product, resolver: Paginated::PaginationAttributeProduct
+
+    field :paginated_building_blocks, resolver: Paginated::PaginatedBuildingBlocks
+    field :pagination_attribute_building_block, resolver: Paginated::PaginationAttributeBuildingBlock
+
+    field :paginated_organizations, resolver: Paginated::PaginatedOrganizations
+    field :pagination_attribute_organization, resolver: Paginated::PaginationAttributeOrganization
+    field :paginated_storefronts, resolver: Paginated::PaginatedStorefronts
+    field :pagination_attribute_storefront, resolver: Paginated::PaginationAttributeStorefront
+
+    field :paginated_datasets_redux, resolver: Paginated::PaginatedDatasets
+    field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset
+
+    field :paginated_projects_redux, resolver: Paginated::PaginatedProjects
+    field :pagination_attribute_project, resolver: Paginated::PaginationAttributeProject
+
+    field :paginated_candidate_organizations, resolver: Paginated::PaginatedCandidateOrganizations
+    field :pagination_attribute_candidate_organization, resolver: Paginated::PaginationAttributeCandidateOrganization
+
+    field :paginated_candidate_products, resolver: Paginated::PaginatedCandidateProducts
+    field :pagination_attribute_candidate_product, resolver: Paginated::PaginationAttributeCandidateProduct
+
+    field :paginated_candidate_roles, resolver: Paginated::PaginatedCandidateRoles
+    field :pagination_attribute_candidate_role, resolver: Paginated::PaginationAttributeCandidateRole
+
+    field :paginated_candidate_datasets, resolver: Paginated::PaginatedCandidateDatasets
+    field :pagination_attribute_candidate_dataset, resolver: Paginated::PaginationAttributeCandidateDataset
+
+    field :paginated_countries, resolver: Paginated::PaginatedCountries
+    field :pagination_attribute_country, resolver: Paginated::PaginationAttributeCountry
+
+    field :paginated_sectors, resolver: Paginated::PaginatedSectors
+    field :pagination_attribute_sector, resolver: Paginated::PaginationAttributeSector
+
+    field :paginated_tags, resolver: Paginated::PaginatedTags
+    field :pagination_attribute_tag, resolver: Paginated::PaginationAttributeTag
+
+    field :paginated_workflows, resolver: Paginated::PaginatedWorkflows
+    field :pagination_attribute_workflow, resolver: Paginated::PaginationAttributeWorkflow
+
+    field :paginated_cities, resolver: Paginated::PaginatedCities
+    field :pagination_attribute_city, resolver: Paginated::PaginationAttributeCity
+    field :cities, resolver: Queries::CitiesQuery
+    field :city, resolver: Queries::CityQuery
+
+    field :paginated_contacts, resolver: Paginated::PaginatedContacts
+    field :pagination_attribute_contact, resolver: Paginated::PaginationAttributeContact
+    field :contacts, resolver: Queries::ContactsQuery
+    field :contact, resolver: Queries::ContactQuery
+
+    field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
+    field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
+
+    field :paginated_resources, resolver: Paginated::PaginatedResources
+    field :pagination_attribute_resource, resolver: Paginated::PaginationAttributeResource
+
+    field :paginated_playbooks_redux, resolver: Paginated::PaginatedPlaybooks
+    field :pagination_attribute_playbook, resolver: Paginated::PaginationAttributePlaybook
+
+    field :bookmark, resolver: Queries::BookmarkQuery
+    field :owners, resolver: Queries::OwnersQuery
+
+    field :starred_objects, resolver: Queries::StarredObjectsQuery
+    field :starred_object, resolver: Queries::StarredObjectQuery
   end
 end

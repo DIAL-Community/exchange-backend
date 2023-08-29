@@ -22,19 +22,26 @@ module Types
     field :website, String, null: true
     field :aliases, GraphQL::Types::JSON, null: true
     field :tags, GraphQL::Types::JSON, null: true
+
+    # TODO: Deprecate this field after migration to the new UI
     field :owner, String, null: true
+    field :is_launchable, Boolean, null: true
+
+    field :have_owner, Boolean, null: false
+    def have_owner
+      !User.find_by('? = ANY(user_products)', object&.id).nil?
+    end
+
     field :languages, GraphQL::Types::JSON, null: true
 
-    field :is_launchable, Boolean, null: true
     field :product_type, String, null: false
 
     field :main_repository, Types::ProductRepositoryType, null: true
+    field :sectors, [Types::SectorType], null: true, method: :sectors_localized
 
     field :product_descriptions, [Types::ProductDescriptionType], null: true
-
-    field :sectors, [Types::SectorType], null: true, method: :sectors_localized
     field :product_description, Types::ProductDescriptionType, null: true,
-                                                               method: :product_description_localized
+      method: :product_description_localized
 
     field :origins, [Types::OriginType], null: true
     field :endorsers, [Types::EndorserType], null: true
@@ -55,6 +62,12 @@ module Types
     field :sustainable_development_goals, [Types::SustainableDevelopmentGoalType], null: true
     field :sustainable_development_goals_mapping_status, String,
       method: :sustainable_development_goals_mapping_status
+
+    field :sdgs, [Types::SustainableDevelopmentGoalType], null: true
+    field :sdgs_mapping_status, String, null: true, method: :sustainable_development_goals_mapping_status
+    def sdgs
+      object.sustainable_development_goals&.order(:number)
+    end
 
     field :interoperates_with, [Types::ProductType], null: true
     field :includes, [Types::ProductType], null: true

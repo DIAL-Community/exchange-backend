@@ -5,9 +5,9 @@ FactoryBot.define do
   factory :candidate_dataset do
     sequence(:name)
     sequence(:slug)
-    sequence(:data_url)
-    sequence(:data_visualization_url)
-    sequence(:data_type)
+    sequence(:website)
+    sequence(:visualization_url)
+    sequence(:dataset_type)
     sequence(:submitter_email)
     sequence(:description)
   end

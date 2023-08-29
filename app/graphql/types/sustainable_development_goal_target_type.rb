@@ -9,6 +9,11 @@ module Types
     field :image_file, String, null: true
 
     field :use_cases, [Types::UseCaseType], null: true
+
     field :sustainable_development_goal, Types::SustainableDevelopmentGoalType, null: false
+    field :sdg, Types::SustainableDevelopmentGoalType, null: false
+    def sdg
+      object.sustainable_development_goal
+    end
   end
 end

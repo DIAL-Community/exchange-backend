@@ -51,17 +51,30 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { "name": "Test Name", "slug": "", "indicatorType": "scale", "weight": 0.2,
-                   "rubricCategorySlug": "test_category", "dataSource": "Digital Square", "scriptName": "name.sh",
-                   "description": "some description" },
+      variables: {
+        "name": "Test Name",
+        "slug": "",
+        "indicatorType": "scale",
+        "weight": 0.2,
+        "rubricCategorySlug": "test_category",
+        "dataSource": "Digital Square",
+        "scriptName": "name.sh",
+        "description": "some description"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
-        .to(eq({ "name" => "Test Name", "slug" => "test_name", "indicatorType" => "scale",
-                 "weight" => 0.2, "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,
-                 "dataSource" => "Digital Square", "scriptName" => "name.sh", "categoryIndicatorDescription" =>
-                   { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Test Name",
+          "slug" => "test_name",
+          "indicatorType" => "scale",
+          "weight" => 0.2,
+          "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,
+          "dataSource" => "Digital Square",
+          "scriptName" => "name.sh",
+          "categoryIndicatorDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createCategoryIndicator']['errors'])
         .to(eq([]))
     end
@@ -73,17 +86,30 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { "name": "Test Name", "slug": "", "indicatorType": "scale", "weight": 0.2,
-                   "rubricCategorySlug": "test_category", "dataSource": "Digital Square", "scriptName": "name.sh",
-                   "description": "some description" },
+      variables: {
+        "name": "Test Name",
+        "slug": "",
+        "indicatorType": "scale",
+        "weight": 0.2,
+        "rubricCategorySlug": "test_category",
+        "dataSource": "Digital Square",
+        "scriptName": "name.sh",
+        "description": "some description"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
-        .to(eq({ "name" => "Test Name", "slug" => "test_name", "indicatorType" => "scale",
-                 "weight" => 0.2, "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,
-                 "dataSource" => "Digital Square", "scriptName" => "name.sh", "categoryIndicatorDescription" =>
-                   { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Test Name",
+          "slug" => "test_name",
+          "indicatorType" => "scale",
+          "weight" => 0.2,
+          "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,
+          "dataSource" => "Digital Square",
+          "scriptName" => "name.sh",
+          "categoryIndicatorDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createCategoryIndicator']['errors'])
         .to(eq([]))
     end
@@ -95,9 +121,16 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { "name": "Test Name", "slug": "", "indicatorType": "scale", "weight": 0.2,
-                   "rubricCategorySlug": "test_category", "dataSource": "Digital Square", "scriptName": "name.sh",
-                   "description": "some description" },
+      variables: {
+        "name": "Test Name",
+        "slug": "",
+        "indicatorType": "scale",
+        "weight": 0.2,
+        "rubricCategorySlug": "test_category",
+        "dataSource": "Digital Square",
+        "scriptName": "name.sh",
+        "description": "some description"
+      }
     )
 
     aggregate_failures do
@@ -113,9 +146,16 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { "name": "Test Name", "slug": "", "indicatorType": "scale", "weight": 0.2,
-                   "rubricCategorySlug": "test_category", "dataSource": "Digital Square", "scriptName": "name.sh",
-                   "description": "some description" },
+      variables: {
+        "name": "Test Name",
+        "slug": "",
+        "indicatorType": "scale",
+        "weight": 0.2,
+        "rubricCategorySlug": "test_category",
+        "dataSource": "Digital Square",
+        "scriptName": "name.sh",
+        "description": "some description"
+      }
     )
 
     aggregate_failures do

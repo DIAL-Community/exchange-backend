@@ -40,10 +40,11 @@ module Mutations
         project = Project.new(name:)
         project.slug = slug_em(name)
 
-        if Project.where(slug: slug_em(name)).count.positive?
+        if Project.where(slug: project.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Project.slug_simple_starts_with(slug_em(name))
-                                   .order(slug: :desc).first
+          first_duplicate = Project.slug_simple_starts_with(project.slug)
+                                   .order(slug: :desc)
+                                   .first
           project.slug = project.slug + generate_offset(first_duplicate)
         end
       end
