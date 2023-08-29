@@ -70,7 +70,7 @@ module Paginated
       search:, use_cases:, building_blocks:, sectors:, tags:,
       license_types:, workflows:, sdgs:, origins:, is_linked_with_dpi:
     )
-      products = Product.order(:name)
+      products = Product.order(:name).distinct
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi

@@ -71,7 +71,7 @@ module Paginated
       license_types:, workflows:, sdgs:, origins:, is_linked_with_dpi:,
       offset_attributes:
     )
-      products = Product.order(:name)
+      products = Product.order(:name).distinct
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi

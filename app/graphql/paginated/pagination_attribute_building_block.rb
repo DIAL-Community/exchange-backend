@@ -12,7 +12,7 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, show_mature:)
-      building_blocks = BuildingBlock.order(:name)
+      building_blocks = BuildingBlock.order(:name).distinct
       unless search.blank?
         name_bbs = building_blocks.name_contains(search)
         desc_bbs = building_blocks.joins(:building_block_descriptions)

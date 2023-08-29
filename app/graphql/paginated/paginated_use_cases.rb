@@ -10,7 +10,7 @@ module Paginated
     type [Types::UseCaseType], null: false
 
     def resolve(search:, sdgs:, show_beta:, gov_stack_only:, offset_attributes:)
-      use_cases = UseCase.order(:name)
+      use_cases = UseCase.order(:name).distinct
       unless search.blank?
         name_filter = use_cases.name_contains(search)
         desc_filter = use_cases.left_joins(:use_case_descriptions)
@@ -28,8 +28,6 @@ module Paginated
 
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
       use_cases = use_cases.where.not(markdown_url: nil) if gov_stack_only
-
-      use_cases = use_cases.distinct
 
       offset_params = offset_attributes.to_h
       use_cases.limit(offset_params[:limit]).offset(offset_params[:offset])

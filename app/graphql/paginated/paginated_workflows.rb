@@ -11,7 +11,7 @@ module Paginated
     def resolve(search:, sdgs:, use_cases:, offset_attributes:)
       workflows = Workflow.order(:name)
       unless search.blank?
-        name_filter = Workflow.name_contains(search)
+        name_filter = Workflow.name_contains(search).distinct
         description_filter = Workflow.joins(:workflow_descriptions)
                                      .where('LOWER(workflow_descriptions.description) like LOWER(?)', "%#{search}%")
         workflows = workflows.where(id: (name_filter.ids + description_filter.ids).uniq)
