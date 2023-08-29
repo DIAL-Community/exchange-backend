@@ -28,6 +28,8 @@ module Paginated
 
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
       use_cases = use_cases.where.not(markdown_url: nil) if gov_stack_only
+
+      use_cases = use_cases.distinct
       { total_count: use_cases.count }
     end
   end
