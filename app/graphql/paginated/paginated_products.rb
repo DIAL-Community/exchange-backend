@@ -25,7 +25,7 @@ module Paginated
         sdg_numbers = SustainableDevelopmentGoal.where(id: filtered_sdgs)
                                                 .select(:number)
         sdg_use_cases = UseCase.joins(:sdg_targets)
-                               .where(sdg_targets: { sdg_number: sdg_numbers.map(&:to_i) })
+                               .where(sdg_targets: { sdg_number: sdg_numbers })
         use_case_ids.concat(sdg_use_cases.ids)
       end
 
@@ -114,8 +114,8 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         products = products.where(
-          "tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          "products.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "products.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
         )
       end
 

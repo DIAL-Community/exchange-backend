@@ -22,8 +22,8 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         playbooks = playbooks.where(
-          "tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          "playbooks.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "playbooks.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
         )
       end
 

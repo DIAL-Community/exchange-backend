@@ -40,8 +40,8 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         datasets = datasets.where(
-          "tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          "datasets.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "datasets.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
         )
       end
 

@@ -70,8 +70,8 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         opportunities = opportunities.where(
-          "tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          "opportunities.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "opportunities.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
         )
       end
 

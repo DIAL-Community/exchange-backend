@@ -61,8 +61,8 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         projects = projects.where(
-          "tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          "projects.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "projects.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
         )
       end
 
