@@ -73,10 +73,6 @@ class ApplicationController < ActionController::Base
                             .slice(/_dup\d+$/)
                             .delete('^0-9')
                             .to_i + 1
-      logger.info("Slug dupes: #{first_duplicate.slug
-                                                .slice(/_dup\d+$/)
-                                                .delete('^0-9')
-                                                .to_i}")
     end
     "_dup#{size}"
   end

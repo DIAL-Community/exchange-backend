@@ -10,5 +10,8 @@ module Types
     field :latitude, String, null: false
     field :longitude, String, null: false
     field :aliases, [String], null: false
+
+    field :projects, [Types::ProjectType], null: true
+    field :organizations, [Types::OrganizationType], null: true
   end
 end

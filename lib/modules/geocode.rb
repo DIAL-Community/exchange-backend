@@ -5,20 +5,25 @@ module Modules
     def find_country(country_code_or_name, _google_auth_key)
       return if country_code_or_name.blank?
 
-      puts "Processing country: #{country_code_or_name}."
-      country = Country.find_by('name = ? OR code = ? OR ? = ANY(aliases)',
-                                country_code_or_name, country_code_or_name, country_code_or_name)
-
-      country
+      puts "Processing country data: #{country_code_or_name}."
+      Country.find_by(
+        'name = :param OR code = :param OR code_longer = :param OR :param = ANY(aliases)',
+        param: country_code_or_name
+      )
     end
 
     def find_region(region_name, country_code, google_auth_key)
       return if region_name.blank?
 
-      puts "Processing region: #{region_name}."
+      puts "Processing region data: #{region_name}."
       country = find_country(country_code, google_auth_key)
-      region = Region.find_by('(name = ? OR ? = ANY(aliases)) AND country_id = ?',
-                              region_name, region_name, country.id) unless country.nil?
+      region = Region.find_by(
+        '(name = :region_param OR :region_param = ANY(aliases)) AND country_id = :country_param',
+        region_param: region_name,
+        country_param: country.id
+      ) unless country.nil?
+
+      puts "Region pre-geocoding: #{region.inspect}."
       if region.nil?
         region = Region.new
         region.country_id = country.id unless country.nil?
@@ -41,22 +46,31 @@ module Modules
         end
 
         region.aliases << region_name
-        puts("Region saved: #{region.name}.") if !region.name.nil? && region.save
+        puts("Region saved: #{region.name}.") if !region.name.nil? && region.save!
       end
+      puts "Region: #{region.inspect}."
       region
     end
 
     def find_city(city_name, region_name, country_code, google_auth_key)
-      puts "Processing city: #{city_name}."
+      puts "Processing city data: #{city_name}."
 
       # Need to do this because Ramallah doesn't have region or country.
       region = find_region(region_name, country_code, google_auth_key)
       if region.nil?
-        city = City.find_by('(name = ? OR ? = ANY(aliases))', city_name, city_name)
+        city = City.find_by(
+          '(name = :city_param OR :city_param = ANY(aliases))',
+          city_param: city_name,
+        )
       else
-        city = City.find_by('(name = ? OR ? = ANY(aliases)) AND region_id = ?', city_name, city_name, region.id)
+        city = City.find_by(
+          '(name = :city_param OR :city_param = ANY(aliases)) AND region_id = :region_param',
+          city_param: city_name,
+          region_param: region.id
+        )
       end
 
+      puts "City pre-geocoding: #{city.inspect}."
       if city.nil?
         city = City.new
 
@@ -83,8 +97,9 @@ module Modules
         end
 
         city.aliases << city_name
-        puts("City saved: #{city.name}.") if !city.name.nil? && city.save
+        puts("City saved: #{city.name}.") if !city.name.nil? && city.save!
       end
+      puts "Returned city data: #{city.inspect}."
       city
     end
 

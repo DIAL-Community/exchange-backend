@@ -34,8 +34,9 @@ module Mutations
         category_indicator = CategoryIndicator.new(name:)
         slug = slug_em(name)
 
-        first_duplicate = CategoryIndicator.slug_simple_starts_with(slug_em(name))
-                                           .order(slug: :desc).first
+        first_duplicate = CategoryIndicator.slug_simple_starts_with(slug)
+                                           .order(slug: :desc)
+                                           .first
         if !first_duplicate.nil?
           category_indicator.slug = slug + generate_offset(first_duplicate)
         else

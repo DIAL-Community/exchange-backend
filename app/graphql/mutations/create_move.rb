@@ -38,7 +38,9 @@ module Mutations
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = PlayMove.slug_simple_starts_with(play_move.slug).order(slug: :desc).first
+          first_duplicate = PlayMove.slug_simple_starts_with(play_move.slug)
+                                    .order(slug: :desc)
+                                    .first
           play_move.slug = play_move.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
       end
@@ -50,7 +52,9 @@ module Mutations
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = PlayMove.slug_simple_starts_with(play_move.slug).order(slug: :desc).first
+          first_duplicate = PlayMove.slug_simple_starts_with(play_move.slug)
+                                    .order(slug: :desc)
+                                    .first
           play_move.slug = play_move.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
       end

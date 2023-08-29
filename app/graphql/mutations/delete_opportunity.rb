@@ -18,7 +18,7 @@ module Mutations
       assign_auditable_user(opportunity)
 
       if opportunity.destroy
-        # Successful deletetion, return the nil opportunity with no errors
+        # Successful deletion, return the deleted opportunity with no errors
         {
           opportunity:,
           errors: []

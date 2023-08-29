@@ -9,6 +9,13 @@ module Types
     field :audience, String, null: false
     field :outcomes, String, null: false
     field :cover, String, null: true
+
+    field :sanitized_overview, String, null: false
+    def sanitized_overview
+      overview_html = Nokogiri::HTML.fragment(object.overview)
+      overview_html.css('a').each { |node| node.replace(node.children) }
+      overview_html.to_html
+    end
   end
 
   class PlaybookPlayType < Types::BaseObject

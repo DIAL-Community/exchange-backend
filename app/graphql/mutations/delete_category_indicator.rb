@@ -5,7 +5,6 @@ module Mutations
     argument :id, ID, required: true
 
     field :category_indicator, Types::CategoryIndicatorType, null: true
-    field :rubric_category_slug, String, null: true
     field :errors, [String], null: true
 
     def resolve(id:)
@@ -19,21 +18,17 @@ module Mutations
         }
       end
 
-      rubric_category = RubricCategory.find_by(id: category_indicator.rubric_category_id)
       assign_auditable_user(category_indicator)
-
       if category_indicator.destroy
-        # Successful deletetion, return the nil category indicator with no errors
+        # Successful deletion, return the deleted category indicator with no errors
         {
           category_indicator: nil,
-          rubric_category_slug: rubric_category.slug,
           errors: []
         }
       else
         # Failed delete, return the errors to the client
         {
           category_indicator:,
-          rubric_category_slug: rubric_category.slug,
           errors: category_indicator.errors.full_messages
         }
       end

@@ -32,7 +32,9 @@ module Mutations
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Play.slug_simple_starts_with(play.slug).order(slug: :desc).first
+          first_duplicate = Play.slug_simple_starts_with(play.slug)
+                                .order(slug: :desc)
+                                .first
           play.slug = play.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
       end
@@ -44,7 +46,9 @@ module Mutations
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Play.slug_simple_starts_with(play.slug).order(slug: :desc).first
+          first_duplicate = Play.slug_simple_starts_with(play.slug)
+                                .order(slug: :desc)
+                                .first
           play.slug = play.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
       end
@@ -84,10 +88,9 @@ module Mutations
           max_order = max_order.nil? ? 0 : (max_order + 1)
 
           assigned_play = PlaybookPlay.find_by(playbook_id: playbook.id, play_id: play.id)
-          assigned_play = PlaybookPlay.new if assigned_play.nil?
+          assigned_play = PlaybookPlay.new(play_order: max_order) if assigned_play.nil?
           assigned_play.play = play
           assigned_play.playbook = playbook
-          assigned_play.play_order = max_order
 
           assign_auditable_user(assigned_play)
           assigned_play.save
@@ -141,7 +144,9 @@ module Mutations
       assign_auditable_user(duplicate_play)
 
       # Update the slug to the new slug value ($slug + '_dupX').
-      first_duplicate = Play.slug_simple_starts_with(base_play.slug).order(slug: :desc).first
+      first_duplicate = Play.slug_simple_starts_with(base_play.slug)
+                            .order(slug: :desc)
+                            .first
       duplicate_play.slug = duplicate_play.slug + generate_offset(first_duplicate)
 
       if duplicate_play.save

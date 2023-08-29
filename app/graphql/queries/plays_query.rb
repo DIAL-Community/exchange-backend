@@ -3,11 +3,18 @@
 module Queries
   class PlaysQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
+    argument :playbook_slug, String, required: false, default_value: ''
     type [Types::PlayType], null: false
 
-    def resolve(search:)
-      plays = Play.all.order(:name)
+    def resolve(search:, playbook_slug:)
+      plays = Play.all
+      unless playbook_slug.blank?
+        plays = plays.joins(:playbooks)
+                     .where(playbooks: { slug: playbook_slug })
+                     .order('playbook_plays.play_order')
+      end
       plays = plays.name_contains(search) unless search.blank?
+      plays = plays.order(:name)
       plays
     end
   end

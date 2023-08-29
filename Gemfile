@@ -10,8 +10,8 @@ end
 gem 'actionpack-page_caching'
 gem 'will_paginate'
 
-gem 'google-api-client'
 gem 'spreadsheet'
+gem 'google-apis-sheets_v4'
 
 gem 'addressable'
 gem 'pundit'
@@ -64,6 +64,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'combine_pdf'
 gem 'pdfkit'
 
+gem 'google-cloud-translate'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
@@ -103,11 +105,6 @@ gem 'simple_token_authentication', '~> 1.0'
 
 # Use Mailgun API to send confirmation emails
 gem 'mailgun-ruby'
-
-# Throttling, blocking, etc.
-gem 'rack-attack'
-
-gem 'google-cloud-translate'
 
 # Uploading images through GraphQL using v2 multi part request spec.
 # https://github.com/jetruby/apollo_upload_server-ruby

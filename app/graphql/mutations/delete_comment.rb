@@ -21,7 +21,7 @@ module Mutations
       comment_children&.destroy_all
 
       if comment.destroy
-        # Successful deletetion, return the nil comment with no errors
+        # Successful deletion, return the deleted comment with no errors
         {
           comment: nil,
           errors: []

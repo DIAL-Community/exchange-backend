@@ -177,7 +177,7 @@ module Queries
     argument :sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
-    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :offset_attributes, Attributes::OffsetAttributes, required: true
 
     argument :project_sort_hint, String, required: false, default_value: 'name'
     type Types::ProjectType.connection_type, null: false

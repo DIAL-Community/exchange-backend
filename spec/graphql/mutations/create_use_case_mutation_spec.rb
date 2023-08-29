@@ -44,15 +44,18 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA",
-                   description: "some description" },
+      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA", description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCase']['useCase'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "sector" => { "slug" => "sec_1" },
-                 "maturity" => "BETA",
-                 "useCaseDescription" => { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "sector" => { "slug" => "sec_1" },
+          "maturity" => "BETA",
+          "useCaseDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createUseCase']['errors'])
         .to(eq([]))
     end

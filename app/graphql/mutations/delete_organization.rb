@@ -18,7 +18,7 @@ module Mutations
       assign_auditable_user(organization)
 
       if organization.destroy
-        # Successful deletetion, return the nil organization with no errors
+        # Successful deletion, return the deleted organization with no errors
         {
           organization:,
           errors: []

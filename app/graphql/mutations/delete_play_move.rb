@@ -21,7 +21,7 @@ module Mutations
       assign_auditable_user(play_move)
 
       if play_move.destroy
-        # Successful deletion, return the nil playbook with no errors
+        # Successful deletion, return the deleted playbook with no errors
         {
           play:,
           errors: []

@@ -38,10 +38,11 @@ module Mutations
         product = Product.new(name:)
         product.slug = slug_em(name)
 
-        if Product.where(slug: slug_em(name)).count.positive?
+        if Product.where(slug: product.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Product.slug_simple_starts_with(slug_em(name))
-                                   .order(slug: :desc).first
+          first_duplicate = Product.slug_simple_starts_with(product.slug)
+                                   .order(slug: :desc)
+                                   .first
           product.slug = product.slug + generate_offset(first_duplicate)
         end
       end
@@ -61,6 +62,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(product)
+        product.manual_update = true
         product.save
 
         unless image_file.nil?

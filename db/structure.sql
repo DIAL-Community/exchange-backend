@@ -117,7 +117,16 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'BUILDING_BLOCK',
     'PLAYBOOK',
     'ORGANIZATION',
-    'OPPORTUNITY'
+    'OPPORTUNITY',
+    'CANDIDATE_OPEN_DATA',
+    'CANDIDATE_ORGANIZATION',
+    'CANDIDATE_PRODUCT',
+    'CANDIDATE_ROLE',
+    'TAG',
+    'SECTOR',
+    'COUNTRY',
+    'CITY',
+    'CONTACT'
 );
 
 
@@ -503,9 +512,8 @@ CREATE TABLE public.candidate_datasets (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    data_url character varying NOT NULL,
-    data_visualization_url character varying,
-    data_type character varying NOT NULL,
+    visualization_url character varying,
+    dataset_type character varying NOT NULL,
     submitter_email character varying NOT NULL,
     description character varying NOT NULL,
     rejected boolean,
@@ -514,7 +522,8 @@ CREATE TABLE public.candidate_datasets (
     approved_date timestamp without time zone,
     approved_by_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    website character varying
 );
 
 
@@ -2000,36 +2009,6 @@ CREATE TABLE public.organizations_sectors (
 
 
 --
--- Name: organizations_states; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.organizations_states (
-    id bigint NOT NULL,
-    organization_id bigint NOT NULL,
-    region_id bigint NOT NULL
-);
-
-
---
--- Name: organizations_states_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.organizations_states_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_states_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.organizations_states_id_seq OWNED BY public.organizations_states.id;
-
-
---
 -- Name: origins; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3289,6 +3268,42 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
+-- Name: starred_objects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.starred_objects (
+    id bigint NOT NULL,
+    starred_object_type character varying NOT NULL,
+    starred_object_value character varying NOT NULL,
+    source_object_type character varying NOT NULL,
+    source_object_value character varying NOT NULL,
+    starred_by_id bigint,
+    starred_date timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.starred_objects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.starred_objects_id_seq OWNED BY public.starred_objects.id;
+
+
+--
 -- Name: stylesheets; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3825,7 +3840,8 @@ CREATE TABLE public.users (
     user_products bigint[] DEFAULT '{}'::bigint[],
     receive_admin_emails boolean DEFAULT false,
     username character varying,
-    user_datasets bigint[] DEFAULT '{}'::bigint[]
+    user_datasets bigint[] DEFAULT '{}'::bigint[],
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -4248,13 +4264,6 @@ ALTER TABLE ONLY public.organizations_resources ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: organizations_states id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states ALTER COLUMN id SET DEFAULT nextval('public.organizations_states_id_seq'::regclass);
-
-
---
 -- Name: origins id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4497,6 +4506,13 @@ ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.ses
 --
 
 ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.settings_id_seq'::regclass);
+
+
+--
+-- Name: starred_objects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_objects ALTER COLUMN id SET DEFAULT nextval('public.starred_objects_id_seq'::regclass);
 
 
 --
@@ -4994,14 +5010,6 @@ ALTER TABLE ONLY public.organizations_resources
 
 
 --
--- Name: organizations_states organizations_states_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT organizations_states_pkey PRIMARY KEY (id);
-
-
---
 -- Name: origins origins_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5287,6 +5295,14 @@ ALTER TABLE ONLY public.sessions
 
 ALTER TABLE ONLY public.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_objects
+    ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
 
 
 --
@@ -5952,20 +5968,6 @@ CREATE UNIQUE INDEX index_organizations_products_on_product_id_and_organization_
 
 
 --
--- Name: index_organizations_states_on_organization_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_states_on_organization_id ON public.organizations_states USING btree (organization_id);
-
-
---
--- Name: index_organizations_states_on_region_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_states_on_region_id ON public.organizations_states USING btree (region_id);
-
-
---
 -- Name: index_origins_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6222,6 +6224,20 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON public.sessions USING btree 
 --
 
 CREATE INDEX index_sessions_on_updated_at ON public.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_starred_object_record; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_starred_object_record ON public.starred_objects USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
+
+
+--
+-- Name: index_starred_objects_on_starred_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_starred_objects_on_starred_by_id ON public.starred_objects USING btree (starred_by_id);
 
 
 --
@@ -6604,14 +6620,6 @@ ALTER TABLE ONLY public.plays_subplays
 
 ALTER TABLE ONLY public.districts
     ADD CONSTRAINT fk_rails_002fc30497 FOREIGN KEY (region_id) REFERENCES public.regions(id);
-
-
---
--- Name: organizations_states fk_rails_059564ad33; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT fk_rails_059564ad33 FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
 
 
 --
@@ -7175,14 +7183,6 @@ ALTER TABLE ONLY public.opportunities_building_blocks
 
 
 --
--- Name: organizations_states fk_rails_bea3577035; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_states
-    ADD CONSTRAINT fk_rails_bea3577035 FOREIGN KEY (region_id) REFERENCES public.regions(id);
-
-
---
 -- Name: product_descriptions fk_rails_c0bc9f9c8a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7308,6 +7308,14 @@ ALTER TABLE ONLY public.page_contents
 
 ALTER TABLE ONLY public.principle_descriptions
     ADD CONSTRAINT fk_rails_f1497d5d96 FOREIGN KEY (digital_principle_id) REFERENCES public.digital_principles(id);
+
+
+--
+-- Name: starred_objects fk_rails_f18f95cc1b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.starred_objects
+    ADD CONSTRAINT fk_rails_f18f95cc1b FOREIGN KEY (starred_by_id) REFERENCES public.users(id);
 
 
 --
@@ -7928,6 +7936,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230605203819'),
 ('20230605203844'),
 ('20230612203109'),
-('20230613201202');
+('20230613201202'),
+('20230710193223'),
+('20230811182920'),
+('20230814213722'),
+('20230815093725'),
+('20230816123325'),
+('20230822215103');
 
 

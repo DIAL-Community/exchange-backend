@@ -7,11 +7,11 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation UpdateProjectTags (
-        $tags: [String!]!
+        $tagNames: [String!]!
         $slug: String!
         ) {
           updateProjectTags (
-            tags: $tags
+            tagNames: $tagNames
             slug: $slug
           ) {
             project {
@@ -25,12 +25,14 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
+    create(:tag, name: 'tag_2')
+    create(:tag, name: 'tag_3')
     create(:project, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
     expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -42,13 +44,15 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
   end
 
   it 'is successful - user is logged in as product owner' do
+    create(:tag, name: 'tag_2')
+    create(:tag, name: 'tag_3')
     create(:project, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
     expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:product_owner_check_for_project)
       .and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -60,12 +64,14 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
   end
 
   it 'is successful - user is logged in as organization owner' do
+    create(:tag, name: 'tag_2')
+    create(:tag, name: 'tag_3')
     create(:project, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
     expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:org_owner_check_for_project).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
     )
 
     aggregate_failures do
@@ -81,7 +87,7 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { tags: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
     )
 
     aggregate_failures do

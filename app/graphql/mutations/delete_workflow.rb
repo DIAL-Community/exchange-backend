@@ -18,7 +18,7 @@ module Mutations
       workflow = Workflow.find_by(id:)
       assign_auditable_user(workflow)
       if workflow.destroy
-        # Successful deletion, return the nil workflow with no errors
+        # Successful deletion, return the deleted workflow with no errors
         {
           workflow:,
           errors: []
