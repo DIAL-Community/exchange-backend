@@ -171,4 +171,32 @@ class AdminMailer < ApplicationMailer
       body: "User '#{params[:email]}' has requested elevated role 'Content Editor'. " + default_text
     )
   end
+
+  def send_feedback_email
+    mail_to = ''
+    if params[:email_token] != ENV['EMAIL_TOKEN']
+      return respond_to { |format| format.json { render(json: {}, status: :unauthorized) } }
+    end
+
+    email_body = "Issue Reported by #{params[:name]}(#{params[:email]}) \n\n" \
+                 "Issue Type: #{params[:issue_type]}\n\n#{params[:issue]}"
+    AdminMailer.send_mail_from_client(
+      'notifier@exchange.dial.global',
+      'issues@exchange.dial.global',
+      'User Reported Issue ', email_body
+    ).deliver_now
+
+    User.where(receive_admin_emails: true).each do |user|
+      next unless user.roles.include?('admin')
+
+      mail_to += "#{user.email}; "
+    end
+
+    mail(
+      from: 'notifier@exchange.dial.global',
+      to: mail_to,
+      subject: 'User Reported Issue ',
+      body: email_body + default_text
+    )
+  end
 end

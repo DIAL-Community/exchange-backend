@@ -78,17 +78,10 @@ class ApplicationController < ActionController::Base
   end
 
   def send_email
-    if params[:email_token] != ENV['EMAIL_TOKEN']
-      return respond_to { |format| format.json { render(json: {}, status: :unauthorized) } }
-    end
-
-    email_body = "Issue Reported by #{params[:name]}(#{params[:email]}) \n\n" \
-                 "Issue Type: #{params[:issue_type]}\n\n#{params[:issue]}"
-    AdminMailer.send_mail_from_client(
-      'notifier@exchange.dial.global',
-      'issues@exchange.dial.global',
-      'User Reported Issue ', email_body
-    ).deliver_now
+    AdminMailer
+      .with(name: params[:name], email: params[:email], issue_type: params[:issue_type], issue: params[:issue])
+      .send_feedback_email
+      .deliver_now
 
     respond_to do |format|
       format.json { render(json: { email: 'Issue' }, status: :ok) }
