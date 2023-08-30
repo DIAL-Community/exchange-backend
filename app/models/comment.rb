@@ -18,6 +18,6 @@ class Comment < ApplicationRecord
   end
 
   def avatar_url
-    "https://ui-avatars.com/api/name=" + author['username'] + "&background=random"
+    "https://ui-avatars.com/api/name=" + author['username'] + "&background=2e3192&color=fff&format=svg"
   end
 end

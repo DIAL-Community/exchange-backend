@@ -14,11 +14,20 @@ module Types
     field :slug, String, null: false
     field :image_file, String, null: false
 
-    field :workflow_descriptions, [Types::WorkflowDescriptionType], null: true
+    field :workflow_descriptions, [Types::WorkflowDescriptionType], null: false
     field :workflow_description, Types::WorkflowDescriptionType, null: true,
                                                                  method: :workflow_description_localized
 
-    field :use_case_steps, [Types::UseCaseStepType], null: true
-    field :building_blocks, [Types::BuildingBlockType], null: true
+    field :use_cases, [Types::UseCaseType], null: false
+    field :use_case_steps, [Types::UseCaseStepType], null: false
+    field :building_blocks, [Types::BuildingBlockType], null: false
+
+    def use_cases
+      workflow_use_cases = []
+      object.use_case_steps.each do |use_case_step|
+        workflow_use_cases << use_case_step.use_case
+      end
+      workflow_use_cases.uniq.sort_by(&:name)
+    end
   end
 end

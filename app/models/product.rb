@@ -102,10 +102,8 @@ class Product < ApplicationRecord
   def image_file
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/products/#{slug}.png"
-    elsif product_type == 'dataset'
-      '/assets/products/dataset_placeholder.png'
     else
-      '/assets/products/prod_placeholder.png'
+      '/assets/products/product_placeholder.svg'
     end
   end
 
@@ -131,9 +129,9 @@ class Product < ApplicationRecord
   end
 
   def main_repository
-    main_repository = product_repositories.find_by(main_repository: true)
+    main_repository = product_repositories.find_by(main_repository: true, deleted: false)
     if main_repository.nil?
-      main_repository = product_repositories.first
+      main_repository = product_repositories.where(deleted: false).first
     end
     main_repository
   end

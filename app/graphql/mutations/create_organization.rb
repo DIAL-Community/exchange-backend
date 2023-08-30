@@ -47,10 +47,11 @@ module Mutations
         organization = Organization.new(name:)
         organization.slug = slug_em(name)
 
-        if Organization.where(slug: slug_em(name)).count.positive?
+        if Organization.where(slug: organization.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Organization.slug_simple_starts_with(slug_em(name))
-                                        .order(slug: :desc).first
+          first_duplicate = Organization.slug_simple_starts_with(organization.slug)
+                                        .order(slug: :desc)
+                                        .first
           organization.slug = organization.slug + generate_offset(first_duplicate)
         end
       end

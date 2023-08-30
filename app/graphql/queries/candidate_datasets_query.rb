@@ -14,6 +14,17 @@ module Queries
     end
   end
 
+  class CandidateDatasetQuery < Queries::BaseQuery
+    argument :slug, String, required: true
+    type Types::CandidateDatasetType, null: true
+
+    def resolve(slug:)
+      return nil unless an_admin
+
+      CandidateDataset.find_by(slug:)
+    end
+  end
+
   class SearchCandidateDatasetsQuery < Queries::BaseQuery
     include ActionView::Helpers::TextHelper
 

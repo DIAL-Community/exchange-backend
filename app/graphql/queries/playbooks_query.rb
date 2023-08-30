@@ -97,7 +97,7 @@ module Queries
 
     argument :sectors, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
-    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :offset_attributes, Attributes::OffsetAttributes, required: true
     argument :playbook_sort_hint, String, required: false, default_value: 'name'
 
     type Types::PlaybookType.connection_type, null: false

@@ -9,9 +9,9 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       mutation CreateCandidateDataset(
         $name: String!
         $slug: String!
-        $dataUrl: String!
-        $dataVisualizationUrl: String
-        $dataType: String!
+        $website: String!
+        $visualizationUrl: String
+        $datasetType: String!
         $submitterEmail: String!
         $description: String!
         $captcha: String!
@@ -19,9 +19,9 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
         createCandidateDataset (
           name: $name
           slug: $slug
-          dataUrl: $dataUrl
-          dataVisualizationUrl: $dataVisualizationUrl
-          dataType: $dataType
+          website: $website
+          visualizationUrl: $visualizationUrl
+          datasetType: $datasetType
           submitterEmail: $submitterEmail
           description: $description
           captcha: $captcha
@@ -29,8 +29,8 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
           candidateDataset {
             name
             slug
-            dataUrl
-            dataVisualizationUrl
+            website
+            visualizationUrl
             description
           }
           errors
@@ -51,9 +51,9 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       variables: {
         name: 'Some Name',
         slug: '',
-        dataUrl: 'some.url',
-        dataType: 'dataset',
-        dataVisualizationUrl: '',
+        website: 'some.url',
+        visualizationUrl: '',
+        datasetType: 'dataset',
         submitterEmail: 'some@email.com',
         description: 'Some description',
         captcha: ''
@@ -63,8 +63,8 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
     aggregate_failures do
       expect(result['data']['createCandidateDataset']['candidateDataset'])
         .to(eq({
-          "dataUrl" => "some.url",
-          "dataVisualizationUrl" => "",
+          "website" => "some.url",
+          "visualizationUrl" => "",
           "description" => "Some description",
           "name" => "Some Name",
           "slug" => "some_name"
@@ -84,9 +84,9 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       variables: {
         name: 'Some Name',
         slug: '',
-        dataUrl: 'some.url',
-        dataType: 'dataset',
-        dataVisualizationUrl: '',
+        website: 'some.url',
+        visualizationUrl: '',
+        datasetType: 'dataset',
         submitterEmail: 'some@email.com',
         description: 'Some description',
         captcha: ''
@@ -105,9 +105,9 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       variables: {
         name: 'Some Name',
         slug: '',
-        dataUrl: 'some.url',
-        dataType: 'dataset',
-        dataVisualizationUrl: '',
+        website: 'some.url',
+        visualizationUrl: '',
+        datasetType: 'dataset',
         submitterEmail: 'some@email.com',
         description: 'Some description',
         captcha: ''
@@ -118,7 +118,7 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       expect(result['data']['createCandidateDataset']['candidateDataset'])
         .to(be(nil))
       expect(result['data']['createCandidateDataset']['errors'])
-        .to(eq(['Must be logged in to create a candidate dataset']))
+        .to(eq(['Must be logged in to create / edit a candidate dataset']))
     end
   end
 end

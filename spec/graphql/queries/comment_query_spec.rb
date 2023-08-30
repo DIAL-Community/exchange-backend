@@ -35,11 +35,14 @@ RSpec.describe(Queries::CommentsQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['comments']).to(eq([{ "avatarUrl" => "https://ui-avatars.com/api/name=username&background=random",
-                                                  "comId" => "be01ea21-a13a-4d97-8218-250c2ab9ef40",
-                                                  "fullName" => "username",
-                                                  "text" => "Some comment",
-                                                  "userId" => "1" }]))
+      expect(result['data']['comments'])
+        .to(eq([{
+          "avatarUrl" => "https://ui-avatars.com/api/name=username&background=2e3192&color=fff&format=svg",
+          "comId" => "be01ea21-a13a-4d97-8218-250c2ab9ef40",
+          "fullName" => "username",
+          "text" => "Some comment",
+          "userId" => "1"
+        }]))
     end
   end
 

@@ -23,6 +23,11 @@ module Types
                                                                method: :project_description_localized
 
     field :origin, Types::OriginType, null: true
+    field :sustainable_development_goals, [Types::SustainableDevelopmentGoalType], null: true
+    field :sdgs, [Types::SustainableDevelopmentGoalType], null: true
+    def sdgs
+      object.sustainable_development_goals&.order(:number)
+    end
 
     field :organizations, [Types::OrganizationType], null: true
     field :products, [Types::ProductType], null: true

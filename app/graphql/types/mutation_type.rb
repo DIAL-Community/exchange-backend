@@ -30,7 +30,6 @@ module Types
     field :delete_spreadsheet_data, mutation: Mutations::DeleteSpreadsheetData
 
     field :create_product_repository, mutation: Mutations::CreateProductRepository
-    field :update_product_repository, mutation: Mutations::UpdateProductRepository
     field :delete_product_repository, mutation: Mutations::DeleteProductRepository
 
     field :create_opportunity, mutation: Mutations::CreateOpportunity
@@ -41,11 +40,12 @@ module Types
     field :update_opportunity_organizations, mutation: Mutations::UpdateOpportunityOrganizations
     field :update_opportunity_sectors, mutation: Mutations::UpdateOpportunitySectors
     field :update_opportunity_use_cases, mutation: Mutations::UpdateOpportunityUseCases
+    field :update_opportunity_tags, mutation: Mutations::UpdateOpportunityTags
 
     field :create_organization, mutation: Mutations::CreateOrganization
     field :delete_organization, mutation: Mutations::DeleteOrganization
 
-    field :update_organization_country, mutation: Mutations::UpdateOrganizationCountry
+    field :update_organization_countries, mutation: Mutations::UpdateOrganizationCountries
     field :update_organization_contacts, mutation: Mutations::UpdateOrganizationContacts
     field :update_organization_products, mutation: Mutations::UpdateOrganizationProducts
     field :update_organization_sectors, mutation: Mutations::UpdateOrganizationSectors
@@ -77,11 +77,13 @@ module Types
     field :update_dataset_tags, mutation: Mutations::UpdateDatasetTags
 
     field :create_project, mutation: Mutations::CreateProject
+    field :delete_project, mutation: Mutations::DeleteProject
 
     field :update_project_organizations, mutation: Mutations::UpdateProjectOrganizations
     field :update_project_products, mutation: Mutations::UpdateProjectProducts
     field :update_project_sectors, mutation: Mutations::UpdateProjectSectors
     field :update_project_countries, mutation: Mutations::UpdateProjectCountries
+    field :update_project_sdgs, mutation: Mutations::UpdateProjectSdgs
     field :update_project_tags, mutation: Mutations::UpdateProjectTags
 
     field :create_use_case, mutation: Mutations::CreateUseCase
@@ -113,6 +115,12 @@ module Types
     field :create_country, mutation: Mutations::CreateCountry
     field :delete_country, mutation: Mutations::DeleteCountry
 
+    field :create_contact, mutation: Mutations::CreateContact
+    field :delete_contact, mutation: Mutations::DeleteContact
+
+    field :create_city, mutation: Mutations::CreateCity
+    field :delete_city, mutation: Mutations::DeleteCity
+
     field :create_tag, mutation: Mutations::CreateTag
     field :delete_tag, mutation: Mutations::DeleteTag
 
@@ -135,5 +143,11 @@ module Types
 
     field :create_resource, mutation: Mutations::CreateResource
     field :delete_resource, mutation: Mutations::DeleteResource
+
+    field :add_bookmark, mutation: Mutations::AddBookmark
+    field :remove_bookmark, mutation: Mutations::RemoveBookmark
+
+    field :create_starred_object, mutation: Mutations::CreateStarredObject
+    field :remove_starred_object, mutation: Mutations::RemoveStarredObject
   end
 end

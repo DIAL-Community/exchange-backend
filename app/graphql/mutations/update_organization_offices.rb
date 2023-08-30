@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require 'modules/slugger'
+require 'modules/geocode'
 
 module Mutations
   class UpdateOrganizationOffices < Mutations::BaseMutation
     include Modules::Slugger
+    include Modules::Geocode
 
     argument :offices, [GraphQL::Types::JSON], required: true
     argument :slug, String, required: true
@@ -24,12 +26,18 @@ module Mutations
 
       organization.offices = []
       offices&.each do |office|
-        slug_string = "#{organization.name} #{office['cityName']} #{office['regionName']} #{office['countryCode']}"
-        office_slug = slug_em(slug_string)
-        current_office = Office.find_by(slug: office_slug)
+        office_params = generate_office_params(office)
+        current_office = Office.find_by(
+          organization_id: organization.id,
+          city: office_params[:city],
+          region_id: office_params[:region_id],
+          country_id: office_params[:country_id]
+        )
         if current_office.nil?
-          current_office = create_new_office(office, office_slug)
+          current_office = Office.new(office_params)
           current_office.organization_id = organization.id
+        else
+          current_office.update(office_params)
         end
         organization.offices << current_office
       end
@@ -49,52 +57,33 @@ module Mutations
       end
     end
 
-    def create_new_office(office, office_slug)
-      name_string = office['cityName'] + ", " + office['regionName'] + ", " + office['countryCode']
-      new_office = Office.new(name: name_string)
-      new_office.latitude = office['latitude']
-      new_office.longitude = office['longitude']
-      new_office.city = office['cityName']
+    def generate_office_params(office)
+      city = find_city(
+        office['cityName'],
+        office['regionName'],
+        office['countryCode'],
+        Rails.application.secrets.google_api_key
+      )
 
-      country = Country.find_by(code_longer: office['countryCode'])
+      puts "City: #{city.inspect}."
 
-      region = Region.find_by(name: office['regionName'])
-      if region.nil?
-        region = create_new_region(office, country)
-        region.save
-      end
+      region = city.region
+      country = region.country
 
-      new_office.country_id = country.id
-      new_office.region_id = region.id
+      name_string = "#{city.name}, #{region.name}, #{country.code}"
+      office_params = {
+        name: name_string,
+        slug: slug_em(name_string),
 
-      new_office.slug = office_slug
+        region_id: region.id,
+        country_id: country.id,
 
-      # Check if we need to add _dup to the slug.
-      first_duplicate = Office.slug_simple_starts_with(office_slug).order(slug: :desc).first
-      if !first_duplicate.nil?
-        new_office.slug = office_slug + generate_offset(first_duplicate)
-      else
-        new_office.slug = office_slug
-      end
-      new_office
-    end
+        city: city.name,
+        latitude: city.latitude,
+        longitude: city.longitude
 
-    def create_new_region(office, country)
-      region = Region.new(name: office['regionName'])
-      region.latitude = office['latitude']
-      region.longitude = office['longitude']
-      region.country_id = country.id
-
-      region_slug = slug_em(office['regionName'])
-
-      # Check if we need to add _dup to the slug.
-      first_duplicate = Region.slug_simple_starts_with(region_slug).order(slug: :desc).first
-      if !first_duplicate.nil?
-        region.slug = region_slug + generate_offset(first_duplicate)
-      else
-        region.slug = region_slug
-      end
-      region
+      }
+      office_params
     end
   end
 end

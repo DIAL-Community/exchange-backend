@@ -38,13 +38,16 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description" },
+      variables: { name: "Some name", slug: "", description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createProject']['project'])
-        .to(eq({ "name" => "Some name", "projectDescription" => { "description" => "some description" },
-                 "slug" => "some_name" }))
+        .to(eq({
+          "name" => "Some name",
+          "projectDescription" => { "description" => "some description" },
+          "slug" => "some_name"
+        }))
       expect(result['data']['createProject']['errors'])
         .to(eq([]))
     end
@@ -57,13 +60,16 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", description: "some description" },
+      variables: { name: "Some new name", slug: "some_name", description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createProject']['project'])
-        .to(eq({ "name" => "Some new name", "projectDescription" => { "description" => "some description" },
-                 "slug" => "some_name" }))
+        .to(eq({
+          "name" => "Some new name",
+          "projectDescription" => { "description" => "some description" },
+          "slug" => "some_name"
+        }))
     end
   end
 

@@ -6,20 +6,14 @@ require 'rails_helper'
 RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
   let(:mutation) do
     <<~GQL
-      mutation DeleteCategoryIndicator (
-        $id: ID!
-        ) {
-        deleteCategoryIndicator(
-          id: $id
-        ) {
-            categoryIndicator
-            {
-              id
-            }
-            rubricCategorySlug
-            errors
+      mutation DeleteCategoryIndicator ($id: ID!) {
+        deleteCategoryIndicator(id: $id) {
+          categoryIndicator {
+            id
           }
+          errors
         }
+      }
     GQL
   end
 

@@ -9,13 +9,12 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
       mutation ApproveRejectCandidateDataset (
         $slug: String!
         $action: String!
-        ) {
+      ) {
         approveRejectCandidateDataset (
           slug: $slug
           action: $action
         ) {
-            candidateDataset
-            {
+            candidateDataset {
               rejected
             }
             errors

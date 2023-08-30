@@ -312,7 +312,7 @@ dpga_origin.id, dpga_list)
       description = extract_description(response.body)
       next if description.nil?
 
-      product_description = ProductDescription.find_by(product_id: generated_product.id, locale: I18n.locale)
+      product_description = ProductDescription.find_by(product_id: product.id, locale: I18n.locale)
       product_description = ProductDescription.new if product_description.nil?
       product_description.product_id = product.id
       product_description.locale = I18n.locale

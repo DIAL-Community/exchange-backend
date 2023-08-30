@@ -35,7 +35,9 @@ module Mutations
         record = DialSpreadsheetData.new(slug:)
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = DialSpreadsheetData.slug_simple_starts_with(record.slug).order(slug: :desc).first
+        first_duplicate = DialSpreadsheetData.slug_simple_starts_with(record.slug)
+                                             .order(slug: :desc)
+                                             .first
         unless first_duplicate.nil?
           record.slug = record.slug + generate_offset(first_duplicate)
         end

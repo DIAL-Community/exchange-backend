@@ -18,7 +18,7 @@ class Workflow < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'workflows', "#{slug}.svg"))
       "/assets/workflows/#{slug}.svg"
     else
-      '/assets/workflows/workflow_placeholder.png'
+      '/assets/workflows/workflow_placeholder.svg'
     end
   end
 

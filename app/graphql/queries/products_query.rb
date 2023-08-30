@@ -275,7 +275,6 @@ module Queries
   end
 
   class PaginatedProductsQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
     include Queries
 
     argument :sectors, [String], required: false, default_value: []
@@ -283,7 +282,7 @@ module Queries
     argument :tags, [String], required: false, default_value: []
     argument :building_blocks, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
-    argument :offset_attributes, Types::OffsetAttributeInput, required: true
+    argument :offset_attributes, Attributes::OffsetAttributes, required: true
     argument :commercial_product, Boolean, required: false
     argument :product_sort_hint, String, required: false, default_value: 'name'
 
@@ -317,17 +316,31 @@ module Queries
 
     def resolve(slug:)
       product = Product.find_by(slug:)
-      ProductRepository.where(product_id: product.id, deleted: false)
-                       .order(main_repository: :desc, name: :asc)
+
+      product_repositories = []
+      unless product.nil?
+        product_repositories = ProductRepository.where(product_id: product.id, deleted: false)
+                                                .order(main_repository: :desc, name: :asc)
+      end
+      product_repositories
     end
   end
 
   class ProductRepositoryQuery < Queries::BaseQuery
     argument :slug, String, required: true
+    argument :product_slug, String, required: false, default_value: ''
     type Types::ProductRepositoryType, null: true
 
-    def resolve(slug:)
-      ProductRepository.find_by(slug:)
+    def resolve(slug:, product_slug:)
+      product_repository = ProductRepository.where(slug:)
+      unless product_slug.nil?
+        product = Product.find_by(slug: product_slug)
+        product_repository = product_repository.where(
+          product_id: product.id,
+          deleted: false
+        ) unless product.nil?
+      end
+      product_repository.first
     end
   end
 

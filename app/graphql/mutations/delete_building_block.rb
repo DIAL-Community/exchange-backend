@@ -18,7 +18,7 @@ module Mutations
       building_block = BuildingBlock.find_by(id:)
       assign_auditable_user(building_block)
       if building_block.destroy
-        # Successful deletion, return the nil building_block with no errors
+        # Successful deletion, return the deleted building_block with no errors
         {
           building_block:,
           errors: []

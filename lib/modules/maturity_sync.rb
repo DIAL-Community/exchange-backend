@@ -197,68 +197,71 @@ module Modules
     end
 
     def graph_ql_statistics(owner, repo)
-      '{'\
-      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
-      '    commitsOnMasterBranch: object(expression: "master") {'\
-      '      ... on Commit {'\
-      '        history {'\
-      '           totalCount'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '    commitsOnMainBranch: object(expression: "main") {'\
-      '      ... on Commit {'\
-      '        history {'\
-      '           totalCount'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '    stargazers {'\
-      '      totalCount'\
-      '    },'\
-      '    watchers {'\
-      '      totalCount'\
-      '    },'\
-      '    forkCount,'\
-      '    isFork,'\
-      '    createdAt,'\
-      '    updatedAt,'\
-      '    pushedAt,'\
-      '    closedPullRequestCount: pullRequests(states: CLOSED) {'\
-      '      totalCount'\
-      '    },'\
-      '    openPullRequestCount: pullRequests(states: OPEN) {'\
-      '      totalCount'\
-      '    },'\
-      '    mergedPullRequestCount: pullRequests(states: MERGED) {'\
-      '      totalCount'\
-      '    },'\
-      '    closedIssues: issues(states: CLOSED) {'\
-      '      totalCount'\
-      '    },'\
-      '    openIssues: issues(states: OPEN) {'\
-      '      totalCount'\
-      '    },'\
-      '    releases(last: 1) {'\
-      '      totalCount,'\
-      '      edges {'\
-      '        node {'\
-      '          name,'\
-      '          createdAt,'\
-      '          description,'\
-      '          url,'\
-      '          releaseAssets (last: 1) {'\
-      '            edges {'\
-      '              node {'\
-      '                downloadCount'\
-      '              }'\
-      '            }'\
-      '          }'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '  }'\
-      '}'\
+      <<~STATISTIC_GQL
+        {
+          repository(name: "#{repo}", owner: "#{owner}") {
+            commitsOnMasterBranch: object(expression: "master") {
+              ... on Commit {
+                history {
+                  totalCount
+                }
+              }
+            }
+            commitsOnMainBranch: object(expression: "main") {
+              ... on Commit {
+                history {
+                  totalCount
+                }
+              }
+            }
+            stargazers {
+              totalCount
+            },
+            watchers {
+              totalCount
+            },
+            forkCount,
+            isFork,
+            createdAt,
+            updatedAt,
+            pushedAt,
+            closedPullRequestCount: pullRequests(states: CLOSED) {
+              totalCount
+            },
+            openPullRequestCount: pullRequests(states: OPEN) {
+              totalCount
+            },
+            mergedPullRequestCount: pullRequests(states: MERGED) {
+              totalCount
+            },
+            closedIssues: issues(states: CLOSED) {
+              totalCount
+            },
+            openIssues: issues(states: OPEN) {
+              totalCount
+            },
+            releases(last: 1) {
+              totalCount,
+              edges {
+                node {
+                  name,
+                  tagName,
+                  createdAt,
+                  description,
+                  url,
+                  releaseAssets(last: 1) {
+                    edges {
+                      node {
+                        downloadCount
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      STATISTIC_GQL
     end
 
     def sync_license_information(product_repository)
@@ -448,21 +451,23 @@ module Modules
     end
 
     def graph_ql_languages(owner, repo)
-      '{'\
-      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
-      '    languages(first: 20, orderBy: {field: SIZE, direction: DESC}) {'\
-      '      totalCount'\
-      '      totalSize'\
-      '      edges {'\
-      '        size'\
-      '        node {'\
-      '          name'\
-      '          color'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '  }'\
-      '}'\
+      <<~LANGUAGE_GQL
+        {
+          repository(name: "#{repo}", owner: "#{owner}") {
+            languages(first: 20, orderBy: {field: SIZE, direction: DESC}) {
+              totalCount
+              totalSize
+              edges {
+                size
+                node {
+                  name
+                  color
+                }
+              }
+            }
+          }
+        }
+      LANGUAGE_GQL
     end
 
     def sync_containerized_indicator(product)
@@ -562,17 +567,19 @@ module Modules
     end
 
     def graph_ql_file_list(owner, repo)
-      '{'\
-      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
-      '    object(expression: "HEAD:") {'\
-      '      ... on Tree {'\
-      '        entries {'\
-      '          name'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '  }'\
-      '}'\
+      <<~FILE_LIST_GQL
+        {
+          repository(name: "#{repo}", owner: "#{owner}") {
+            object(expression: "HEAD:") {
+              ... on Tree {
+                entries {
+                  name
+                }
+              }
+            }
+          }
+        }
+      FILE_LIST_GQL
     end
 
     def read_languages_file
@@ -620,21 +627,23 @@ module Modules
     end
 
     def graph_ql_file_contents(owner, repo)
-      '{'\
-      '  repository(name: "' + repo + '", owner: "' + owner + '") {'\
-      '    object(expression: "master:src/data/") {'\
-      '      ... on Tree {'\
-      '        entries {'\
-      '          object {'\
-      '          ... on Blob {'\
-      '            text'\
-      '           }'\
-      '          }'\
-      '        }'\
-      '      }'\
-      '    }'\
-      '  }'\
-      '}'\
+      <<~FILE_CONTENT_GQL
+        {
+          repository(name: "#{repo}", owner: "#{owner}") {
+            object(expression: "master:src/data/") {
+              ... on Tree {
+                entries {
+                  object {
+                    ...on Blob {
+                      text
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      FILE_CONTENT_GQL
     end
 
     def sum_languages(product_languages)

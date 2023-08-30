@@ -40,10 +40,11 @@ module Mutations
         opportunity = Opportunity.new(name:)
         opportunity.slug = slug_em(name)
 
-        if Opportunity.where(slug: slug_em(name)).count.positive?
+        if Opportunity.where(slug: opportunity.slug).count.positive?
           # Check if we need to add _dup to the slug.
-          first_duplicate = Opportunity.slug_simple_starts_with(slug_em(name))
-                                       .order(slug: :desc).first
+          first_duplicate = Opportunity.slug_simple_starts_with(opportunity.slug)
+                                       .order(slug: :desc)
+                                       .first
           opportunity.slug = opportunity.slug + generate_offset(first_duplicate)
         end
       end
