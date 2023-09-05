@@ -1965,6 +1965,7 @@ type Query {
   paginatedStorefronts(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], specialties: [String!] = []): [Organization!]!
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
+  paginatedUsers(offsetAttributes: OffsetAttributes!, search: String = ""): [User!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
@@ -1985,6 +1986,7 @@ type Query {
   paginationAttributeStorefront(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], search: String = "", sectors: [String!] = [], specialties: [String!] = []): PaginationAttributes!
   paginationAttributeTag(search: String = ""): PaginationAttributes!
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
+  paginationAttributeUser(search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook

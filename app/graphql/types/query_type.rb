@@ -211,6 +211,9 @@ module Types
     field :paginated_playbooks_redux, resolver: Paginated::PaginatedPlaybooks
     field :pagination_attribute_playbook, resolver: Paginated::PaginationAttributePlaybook
 
+    field :paginated_users, resolver: Paginated::PaginatedUsers
+    field :pagination_attribute_user, resolver: Paginated::PaginationAttributeUser
+
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
 
