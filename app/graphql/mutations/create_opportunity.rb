@@ -16,8 +16,9 @@ module Mutations
 
     argument :opportunity_type, String, required: true
     argument :opportunity_status, String, required: true
+    argument :opportunity_origin, String, required: true
 
-    argument :opening_date, GraphQL::Types::ISO8601Date, required: true
+    argument :opening_date, GraphQL::Types::ISO8601Date, required: false
     argument :closing_date, GraphQL::Types::ISO8601Date, required: true
     argument :image_file, ApolloUploadServer::Upload, required: false
 
@@ -26,7 +27,8 @@ module Mutations
 
     def resolve(
       name:, slug:, web_address:, description:, contact_name:, contact_email:,
-      opportunity_type:, opportunity_status:, opening_date:, closing_date:, image_file: nil
+      opportunity_type:, opportunity_status:, opportunity_origin:,
+      opening_date:, closing_date:, image_file: nil
     )
       opportunity = Opportunity.find_by(slug:)
       unless an_admin
@@ -63,7 +65,7 @@ module Mutations
       opportunity.opening_date = opening_date
       opportunity.closing_date = closing_date
 
-      opportunity.origin = Origin.find_by(name: 'Manually Entered')
+      opportunity.origin = Origin.find_by(slug: opportunity_origin)
 
       successful_operation = false
       ActiveRecord::Base.transaction do
