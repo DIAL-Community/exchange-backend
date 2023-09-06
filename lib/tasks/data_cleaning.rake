@@ -4,23 +4,177 @@ require 'modules/update_desc'
 require 'modules/discourse'
 require 'modules/connection_switch'
 require 'modules/data_cleaning'
+require 'modules/url_sanitizer'
 require 'csv'
+
 include Modules::UpdateDesc
 include Modules::Discourse
 include Modules::ConnectionSwitch
 include Modules::DataCleaning
+include Modules::UrlSanitizer
 
 namespace :data do
   desc 'Data related rake tasks.'
-  task clean_website: :environment do
+
+  task remove_http_protocol: :environment do
+    puts "Processing building block records."
+    BuildingBlock.all.each do |building_block|
+      next if building_block.spec_url.blank?
+
+      original_spec_url = building_block.spec_url
+      building_block.spec_url = cleanup_url(building_block.spec_url)
+      if building_block.save
+        puts "  Spec url updated: #{original_spec_url} -> #{building_block.spec_url}."
+      end
+    end
+
+    puts "Processing candidate dataset records."
+    CandidateDataset.all.each do |candidate_dataset|
+      next if candidate_dataset.website.blank? && candidate_dataset.visualization_url.blank?
+
+      original_website = candidate_dataset.website
+      candidate_dataset.website = cleanup_url(candidate_dataset.website)
+
+      original_visualization_url = candidate_dataset.visualization_url
+      candidate_dataset.visualization_url = cleanup_url(candidate_dataset.visualization_url)
+      if candidate_dataset.save
+        puts "  Website updated: #{original_website} -> #{candidate_dataset.website}."
+        puts "  Visualization url updated: #{original_visualization_url} -> #{candidate_dataset.visualization_url}."
+      end
+    end
+
+    puts "Processing candidate organization records."
+    CandidateOrganization.all.each do |candidate_organization|
+      next if candidate_organization.website.blank?
+
+      original_website = candidate_organization.website
+      candidate_organization.website = cleanup_url(candidate_organization.website)
+      if candidate_organization.save
+        puts "  Website updated: #{original_website} -> #{candidate_organization.website}."
+      end
+    end
+
+    puts "Processing candidate product records."
+    CandidateProduct.all.each do |candidate_product|
+      next if candidate_product.website.blank? && candidate_product.repository.blank?
+
+      original_website = candidate_product.website
+      candidate_product.website = cleanup_url(candidate_product.website)
+
+      original_repository = candidate_product.repository
+      candidate_product.repository = cleanup_url(candidate_product.repository)
+      if candidate_product.save
+        puts "  Website updated: #{original_website} -> #{candidate_product.website}."
+        puts "  Repository url updated: #{original_repository} -> #{candidate_product.repository}."
+      end
+    end
+
+    puts "Processing dataset records."
+    Dataset.all.each do |dataset|
+      next if dataset.website.blank? && dataset.visualization_url.blank?
+
+      original_website = dataset.website
+      dataset.website = cleanup_url(dataset.website)
+
+      original_visualization_url = dataset.visualization_url
+      dataset.visualization_url = cleanup_url(dataset.visualization_url)
+      if dataset.save
+        puts "  Website updated: #{original_website} -> #{dataset.website}."
+        puts "  Visualization url updated: #{original_visualization_url} -> #{dataset.visualization_url}."
+      end
+    end
+
+    puts "Processing opportunity records."
+    Opportunity.all.each do |opportunity|
+      next if opportunity.web_address.blank?
+
+      original_web_address = opportunity.web_address
+      opportunity.web_address = cleanup_url(opportunity.web_address)
+      if opportunity.save
+        puts "  Opportunity web address updated: #{original_web_address} -> #{opportunity.web_address}."
+      end
+    end
+
+    puts "Processing organization records."
     Organization.all.each do |organization|
-      previous_website = organization.website
-      organization.website = organization.website
-                                         .strip
-                                         .sub(/^https?:\/\//i, '')
-                                         .sub(/^https?\/\/:/i, '')
-                                         .sub(/\/$/, '')
-      puts "Website changed: #{previous_website} -> #{organization.website}" if organization.save
+      next if organization.website.blank? && organization.hero_url.blank?
+
+      original_website = organization.website
+      organization.website = cleanup_url(organization.website)
+
+      unless organization.hero_url.blank?
+        organization.hero_url = cleanup_url(organization.hero_url)
+      end
+
+      if organization.save
+        puts "  Website updated: #{original_website} -> #{organization.website}."
+      end
+    end
+
+    puts "Processing move resource records."
+    PlayMove.all.each do |play_move|
+      play_move.resources.each do |resource|
+        resource['url'] = cleanup_url(resource['url'])
+      end
+
+      if play_move.save
+        puts "  Updating resources for move '#{play_move.name}'."
+      end
+    end
+
+    puts "Processing product records."
+    Product.all.each do |product|
+      next if product.website.blank?
+
+      original_website = product.website
+      product.website = cleanup_url(product.website)
+      if product.save
+        puts "  Website updated: #{original_website} -> #{product.website}."
+      end
+    end
+
+    puts "Processing product repository records."
+    ProductRepository.all.each do |product_repository|
+      next if product_repository.absolute_url.blank?
+
+      original_absolute_url = product_repository.absolute_url
+      product_repository.absolute_url = cleanup_url(product_repository.absolute_url)
+      if product_repository.save
+        puts "  Repository url updated: #{original_absolute_url} -> #{product_repository.absolute_url}."
+      end
+    end
+
+    puts "Processing project records."
+    Project.all.each do |project|
+      next if project.project_url.blank?
+
+      original_project_url = project.project_url
+      project.project_url = cleanup_url(project.project_url)
+      if project.save
+        puts "  Project url updated: #{original_project_url} -> #{project.project_url}."
+      end
+    end
+
+    puts "Processing resource records."
+    Resource.all.each do |resource|
+      next if resource.link.blank?
+
+      original_link = resource.link
+      resource.link = cleanup_url(resource.link)
+      if resource.save
+        puts "  Resource link updated: #{original_link} -> #{resource.link}."
+      end
+    end
+
+    puts "Processing use case records."
+    UseCase.all.each do |use_case|
+      next if use_case.markdown_url.blank?
+
+      original_markdown_url = use_case.markdown_url
+      use_case.markdown_url = cleanup_url(use_case.markdown_url)
+      if use_case.save
+        puts "  Use case markdown updated: #{original_markdown_url} -> #{use_case.markdown_url}."
+      end
     end
   end
 
