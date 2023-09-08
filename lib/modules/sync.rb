@@ -434,7 +434,7 @@ module Modules
 
       # This section is used for Digi Square and OSC sync
       unless json_data['repositoryUrl'].nil?
-        product_repository = ProductRepository.find_by(slug: slug_em("#{product_name} Repository"))
+        product_repository = ProductRepository.find_by(absolute_url: cleanup_url(json_data['repositoryUrl'].to_s))
         product_repository = ProductRepository.new if product_repository.nil?
 
         repository_name = [product_name, 'Repository'].join(' ')
@@ -463,15 +463,12 @@ module Modules
           repository_name_prefix = 'Main' if index <= 0
           repository_name_prefix = 'Secondary' if index > 0
 
-          repository_name = "#{product_name} #{repository_name_prefix}"
-          product_repository = ProductRepository.find_by(name: repository_name)
-          product_repository = ProductRepository.find_by(slug: slug_em(repository_name)) if product_repository.nil?
-          repository_name = "#{product_name} #{repository_name_prefix} Repository"
-          product_repository = ProductRepository.find_by(name: repository_name) if product_repository.nil?
-          product_repository = ProductRepository.find_by(slug: slug_em(repository_name)) if product_repository.nil?
-          repository_name = "#{product_name} Repository"
-          product_repository = ProductRepository.find_by(name: repository_name) if product_repository.nil?
-          product_repository = ProductRepository.find_by(slug: slug_em(repository_name)) if product_repository.nil?
+          product_repository = ProductRepository.find_by(
+            absolute_url: cleanup_url(repository_url.to_s.strip)
+          )
+          product_repository = ProductRepository.find_by(
+            absolute_url: repository_url.to_s.strip
+          ) if product_repository.nil?
 
           product_repository = ProductRepository.new if product_repository.nil?
 
@@ -480,7 +477,7 @@ module Modules
           repository_attrs = {
             name: repository_name,
             slug: slug_em(repository_name),
-            absolute_url: cleanup_url(repository_url.to_s),
+            absolute_url: cleanup_url(repository_url.to_s.strip),
             description: "Code repository of #{product_name}.",
             main_repository: true
           }

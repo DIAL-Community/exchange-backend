@@ -15,9 +15,7 @@ rake maturity_sync:update_language_data
 rake maturity_sync:update_products_languages
 rake maturity_sync:update_api_docs_indicators
 rake sync:fetch_website_data
-
 rake endorsers:sync_form_response
-
 rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet
 rake data_processors:process_exported_json_files
