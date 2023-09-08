@@ -461,7 +461,7 @@ module Modules
         repository_urls = current_repository['url'].to_s.split(',')
         repository_urls.each_with_index do |repository_url, index|
           repository_name_prefix = 'Main' if index <= 0
-          repository_name_prefix = 'Secondary' if index > 0
+          repository_name_prefix = 'Other' if index > 0
 
           product_repository = ProductRepository.find_by(
             absolute_url: cleanup_url(repository_url.to_s.strip)
