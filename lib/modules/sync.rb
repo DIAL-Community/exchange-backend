@@ -425,6 +425,32 @@ module Modules
       skipping_entry
     end
 
+    def repository_counter_text(index)
+      counter_texts = [
+        'first',
+        'second',
+        'third',
+        'fourth',
+        'fifth',
+        'sixth',
+        'seventh',
+        'eighth',
+        'ninth',
+        'tenth',
+        'eleventh',
+        'twelfth',
+        'thirteenth',
+        'fourteenth',
+        'fifteenth',
+        'sixteenth',
+        'seventeenth',
+        'eighteenth',
+        'nineteenth',
+        'twentieth'
+      ]
+      counter_texts[index]
+    end
+
     def sync_repository_data(json_data)
       product_name = json_data['name']
       existing_product = Product.first_duplicate(product_name, slug_em(product_name))
@@ -460,9 +486,6 @@ module Modules
       repositories&.each do |current_repository|
         repository_urls = current_repository['url'].to_s.split(',')
         repository_urls.each_with_index do |repository_url, index|
-          repository_name_prefix = 'Main' if index <= 0
-          repository_name_prefix = 'Other' if index > 0
-
           product_repository = ProductRepository.find_by(
             absolute_url: cleanup_url(repository_url.to_s.strip)
           )
@@ -472,13 +495,13 @@ module Modules
 
           product_repository = ProductRepository.new if product_repository.nil?
 
-          repository_name = [product_name, repository_name_prefix, 'Repository'].join(' ')
-          puts "  Creating repository for: #{repository_name} "
+          repository_name = [product_name, repository_counter_text(index), 'Repository'].join(' ')
+          puts "  Creating repository for: '#{repository_name.titlecase}'."
           repository_attrs = {
-            name: repository_name,
+            name: repository_name.titlecase,
             slug: slug_em(repository_name),
             absolute_url: cleanup_url(repository_url.to_s.strip),
-            description: "Code repository of #{product_name}.",
+            description: "#{repository_counter_text(index).titlecase} code repository of #{product_name}.",
             main_repository: true
           }
           repository_attrs[:product] = existing_product
@@ -765,7 +788,7 @@ module Modules
         yaml_descriptions['products'].each do |yaml_description|
           if existing_product.slug == yaml_description['slug']
             product_description.description = yaml_description['description']
-            puts "  Assigning description from yml for: #{existing_product.slug}"
+            puts "  Assigning description from yml for: #{existing_product.slug}."
           end
         end
         product_description.description = '' if product_description.description.nil?
@@ -782,7 +805,7 @@ module Modules
       return if product_repository.absolute_url.include?('gitlab')
       return if product_repository.absolute_url.include?('AsTeR')
 
-      puts "Processing: #{product_repository.absolute_url}"
+      puts "Processing: #{product_repository.absolute_url}."
       command = "./cloc-git.sh #{product_repository.absolute_url}"
       stdout, = Open3.capture3(command)
 
@@ -828,11 +851,11 @@ module Modules
         publicgoods_name = product['publicgoods_name']
         if publicgoods_name.nil?
           publicgoods_name = product['name']
-          puts "NEW PRODUCT: #{publicgoods_name}"
+          puts "New Product: #{publicgoods_name}."
         end
         product.except!('aliases') if product['aliases'].nil?
         product.except!('publicgoods_name')
-        puts "SECTOR LIST: #{product['sectors']}"
+        puts "Sector List: #{product['sectors']}."
         product['name'] = publicgoods_name
         json_string = JSON.pretty_generate(product)
         regex = /(?<content>"(?:[^\\"]|\\.)+")|(?<open>\{)\s+(?<close>\})|(?<open>\[)\s+(?<close>\])/m
