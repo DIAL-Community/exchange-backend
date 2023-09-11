@@ -945,6 +945,7 @@ type DialSpreadsheetData {
 }
 
 type DigitalPrinciple {
+  id: ID!
   name: String!
   phase: String!
   slug: String!
@@ -2653,7 +2654,7 @@ type Query {
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdgs: [String!], sectors: [String!] = [], useCase: String): Wizard!
+  wizard: Wizard!
   workflow(slug: String!): Workflow
   workflows(search: String = ""): [Workflow!]!
 }
@@ -3450,15 +3451,9 @@ type UserEdge {
 }
 
 type Wizard {
-  buildingBlocks: [BuildingBlock!]
-  datasets: [Dataset!]
-  digitalPrinciples: [DigitalPrinciple!]
-  organizations: [Organization!]
-  playbooks: [Playbook!]
-  products: [Product!]
-  projects: [Project!]
-  resources: [Resource!]
-  useCases: [UseCase!]
+  digitalPrinciples: [DigitalPrinciple!]!
+  playbooks: [Playbook!]!
+  resources: [Resource!]!
 }
 
 type Workflow {
