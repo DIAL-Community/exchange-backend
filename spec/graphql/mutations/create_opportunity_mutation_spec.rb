@@ -13,10 +13,11 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
         $description: String!
         $contactName: String!
         $contactEmail: String!
-        $openingDate: ISO8601Date!
+        $openingDate: ISO8601Date
         $closingDate: ISO8601Date!
         $opportunityType: String!
         $opportunityStatus: String!
+        $opportunityOrigin: String!
       ) {
         createOpportunity(
           slug: $slug
@@ -29,6 +30,7 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
           closingDate: $closingDate
           opportunityType: $opportunityType
           opportunityStatus: $opportunityStatus
+          opportunityOrigin: $opportunityOrigin
         ) {
             opportunity {
               slug
@@ -57,7 +59,8 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
         openingDate: "2023-01-01",
         closingDate: "2023-03-03",
         opportunityType: 'BID',
-        opportunityStatus: 'OPEN'
+        opportunityStatus: 'OPEN',
+        opportunityOrigin: 'giz'
       }
     )
 

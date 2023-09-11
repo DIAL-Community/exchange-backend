@@ -945,6 +945,7 @@ type DialSpreadsheetData {
 }
 
 type DigitalPrinciple {
+  id: ID!
   name: String!
   phase: String!
   slug: String!
@@ -1127,7 +1128,7 @@ type Mutation {
   createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
-  createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
+  createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date, opportunityOrigin: String!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
@@ -2653,7 +2654,7 @@ type Query {
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdgs: [String!], sectors: [String!] = [], useCase: String): Wizard!
+  wizard: Wizard!
   workflow(slug: String!): Workflow
   workflows(search: String = ""): [Workflow!]!
 }
@@ -3450,15 +3451,9 @@ type UserEdge {
 }
 
 type Wizard {
-  buildingBlocks: [BuildingBlock!]
-  datasets: [Dataset!]
-  digitalPrinciples: [DigitalPrinciple!]
-  organizations: [Organization!]
-  playbooks: [Playbook!]
-  products: [Product!]
-  projects: [Project!]
-  resources: [Resource!]
-  useCases: [UseCase!]
+  digitalPrinciples: [DigitalPrinciple!]!
+  playbooks: [Playbook!]!
+  resources: [Resource!]!
 }
 
 type Workflow {
