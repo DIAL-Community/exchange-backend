@@ -138,20 +138,31 @@ class OrganizationsController < ApplicationController
       results['previous_page'] = CGI.escape(uri.to_s)
     end
 
+    current_user = User.find_by(
+      email: request.headers['X-User-Email'],
+      authentication_token: request.headers['X-User-Token']
+    )
+
+    privileged_user = !current_user.nil? && (
+      current_user.roles.include?('admin') ||
+      current_user.roles.include?('principle')
+    )
+
     results['results'] = organizations.paginate(page: current_page, per_page: page_size)
                                       .order(:slug)
 
     uri.fragment = uri.query = nil
     respond_to do |format|
       format.csv do
-        render(csv: results['results'].to_csv, filename: 'csv-organizations')
+        render(csv: results['results'].to_csv({ privileged_user: }), filename: 'csv-organizations')
       end
       format.json do
         render(json: results.to_json(
           Organization.serialization_options
                       .merge({
                         collection_path: uri.to_s,
-                        include_relationships: true
+                        include_relationships: true,
+                        privileged_user:
                       })
         ))
       end
