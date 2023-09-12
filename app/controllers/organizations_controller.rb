@@ -11,11 +11,13 @@ class OrganizationsController < ApplicationController
     record = Organization.find_by(slug: params[:id])
     return render(json: {}, status: :not_found) if record.nil?
 
-    render(json: record.as_json(Organization.serialization_options
-                                            .merge({
-                                              item_path: request.original_url,
-                                              include_relationships: true
-                                            })))
+    render(json: record.as_json(
+      Organization.serialization_options
+                  .merge({
+                    item_path: request.original_url,
+                    include_relationships: true
+                  })
+    ))
   end
 
   def simple_search
@@ -65,11 +67,13 @@ class OrganizationsController < ApplicationController
         render(csv: results['results'].to_csv, filename: 'csv-organizations')
       end
       format.json do
-        render(json: results.to_json(Organization.serialization_options
-                                                 .merge({
-                                                   collection_path: uri.to_s,
-                                                   include_relationships: true
-                                                 })))
+        render(json: results.to_json(
+          Organization.serialization_options
+                      .merge({
+                        collection_path: uri.to_s,
+                        include_relationships: true
+                      })
+        ))
       end
     end
   end
@@ -143,11 +147,13 @@ class OrganizationsController < ApplicationController
         render(csv: results['results'].to_csv, filename: 'csv-organizations')
       end
       format.json do
-        render(json: results.to_json(Organization.serialization_options
-                                                 .merge({
-                                                   collection_path: uri.to_s,
-                                                   include_relationships: true
-                                                 })))
+        render(json: results.to_json(
+          Organization.serialization_options
+                      .merge({
+                        collection_path: uri.to_s,
+                        include_relationships: true
+                      })
+        ))
       end
     end
   end
