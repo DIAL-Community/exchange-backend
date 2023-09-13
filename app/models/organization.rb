@@ -125,8 +125,11 @@ class Organization < ApplicationRecord
     find_by('name = ? OR slug = ? OR ? = ANY(aliases)', name, slug, name)
   end
 
-  def self.to_csv
+  def self.to_csv(options = {})
     attributes = %w[id name slug aliases when_endorsed website is_endorser is_mni countries offices sectors]
+    if options[:privileged_user].present? && options[:privileged_user]
+      attributes.push('contacts')
+    end
 
     CSV.generate(headers: true) do |csv|
       csv << attributes
@@ -135,16 +138,37 @@ class Organization < ApplicationRecord
         countries = o.countries
                      .map(&:name)
                      .join('; ')
+
         offices = o.offices
-                   .map(&:city)
+                   .map(&:name)
                    .join('; ')
 
         sectors = o.sectors_localized
                    .map(&:name)
                    .join('; ')
 
-        csv << [o.id, o.name, o.slug, o.aliases, o.when_endorsed, o.website, o.is_endorser, o.is_mni, countries,
-                offices, sectors]
+        contacts = o.contacts
+                    .map { |c| "#{c.name}|#{c.email}" }
+                    .join('; ')
+
+        csv_row = [
+          o.id,
+          o.name,
+          o.slug,
+          o.aliases,
+          o.when_endorsed,
+          o.website,
+          o.is_endorser,
+          o.is_mni,
+          countries,
+          offices,
+          sectors
+        ]
+        if options[:privileged_user].present? && options[:privileged_user]
+          csv_row.push(contacts)
+        end
+
+        csv << csv_row
       end
     end
   end
@@ -173,6 +197,9 @@ class Organization < ApplicationRecord
       json['countries'] = countries.as_json({ only: %i[name slug code], api_path: api_path(options) })
       json['offices'] = offices.as_json({ only: %i[name slug city], api_path: api_path(options) })
       json['products'] = products.as_json({ only: %i[name slug website], api_path: api_path(options) })
+      if options[:privileged_user].present? && options[:privileged_user]
+        json['contacts'] = contacts.as_json({ only: %i[name email title], api_path: api_path(options) })
+      end
     end
     json['self_url'] = self_url(options) if options[:collection_path].present? || options[:api_path].present?
     json['collection_url'] = collection_url(options) if options[:item_path].present?
