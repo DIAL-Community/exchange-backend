@@ -162,6 +162,7 @@ type CandidateOrganization {
   approvedDate: ISO8601Date
   contact: Contact!
   contacts: [Contact!]!
+  createStorefront: Boolean!
   createdAt: ISO8601Date
   description: String
   id: ID!
@@ -1118,7 +1119,7 @@ type Mutation {
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createBuildingBlock(category: String, description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, datasetType: String!, description: String!, name: String!, slug: String!, submitterEmail: String!, visualizationUrl: String, website: String!): CreateCandidateDatasetPayload
-  createCandidateOrganization(captcha: String!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
+  createCandidateOrganization(captcha: String!, createStorefront: Boolean!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload
   createCity(cityName: String!, countryName: String!, regionName: String!, slug: String): CreateCityPayload
