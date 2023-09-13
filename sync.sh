@@ -1,12 +1,6 @@
 #!/bin/bash
 set -e
 
-cd /candidates
-git pull
-
-cd /products
-git pull
-
 cd /product-evaluation-rubric
 git pull
 
@@ -20,11 +14,8 @@ rake maturity_sync:update_code_review_indicators
 rake maturity_sync:update_language_data
 rake maturity_sync:update_products_languages
 rake maturity_sync:update_api_docs_indicators
-rake maturity_sync:sync_data['/product-evaluation-rubric']
 rake sync:fetch_website_data
-
 rake endorsers:sync_form_response
-
 rake data_processors:process_product_spreadsheet
 rake data_processors:process_dataset_spreadsheet
 rake data_processors:process_exported_json_files
