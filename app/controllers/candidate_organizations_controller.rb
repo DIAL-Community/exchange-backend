@@ -17,6 +17,7 @@ class CandidateOrganizationsController < ApplicationController
     organization = Organization.new
     organization.name = @candidate_organization.name
     organization.website = @candidate_organization.website
+    organization.has_storefront = @candidate_organization.create_storefront == true
 
     organization.slug = @candidate_organization.slug
 

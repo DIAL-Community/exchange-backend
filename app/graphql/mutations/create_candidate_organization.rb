@@ -10,6 +10,7 @@ module Mutations
     argument :website, String, required: true
     argument :description, String, required: true
     argument :organization_name, String, required: true
+    argument :create_storefront, Boolean, required: true
     argument :name, String, required: true
     argument :email, String, required: true
     argument :title, String, required: false
@@ -18,7 +19,7 @@ module Mutations
     field :candidate_organization, Types::CandidateOrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, organization_name:, website:, description:, name:, email:, title:, captcha:)
+    def resolve(slug:, organization_name:, create_storefront:, website:, description:, name:, email:, title:, captcha:)
       unless !context[:current_user].nil?
         return {
           candidate_organization: nil,
@@ -50,6 +51,7 @@ module Mutations
       candidate_organization.name = organization_name
       candidate_organization.website = website
       candidate_organization.description = description
+      candidate_organization.create_storefront = create_storefront
 
       unless name.blank? && email.blank?
         contact_params = { name:, email:, title: }

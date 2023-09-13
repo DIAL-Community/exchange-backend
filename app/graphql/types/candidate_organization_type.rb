@@ -7,6 +7,7 @@ module Types
     field :name, String, null: true
     field :website, String, null: true
     field :description, String, null: true
+    field :create_storefront, Boolean, null: false
 
     field :created_at, GraphQL::Types::ISO8601Date, null: true
 
