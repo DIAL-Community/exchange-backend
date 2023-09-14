@@ -30,7 +30,7 @@ namespace :sync do
 
   desc 'Sync the database with the public goods lists.'
   task :public_goods, [:path] => :environment do
-    puts 'Pulling data from digital public goods repository ...'
+    puts 'Pulling data from DPGA.'
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     dpg_uri = URI.parse('https://api.digitalpublicgoods.net/dpgs/')
@@ -40,9 +40,9 @@ namespace :sync do
       next if search_in_ignorelist(entry, ignore_list)
 
       sync_public_dataset(entry)
-
-      prod = sync_public_product(entry)
-      update_repository_data(entry, prod)
+      sync_public_product(entry)
+      sync_repository_data(entry)
+      puts "--------"
     end
 
     dpg_uri = URI.parse('https://api.digitalpublicgoods.net/nominees/')
@@ -52,16 +52,16 @@ namespace :sync do
       next if search_in_ignorelist(entry, ignore_list)
 
       sync_public_dataset(entry)
-
-      prod = sync_public_product(entry)
-      update_repository_data(entry, prod)
+      sync_public_product(entry)
+      sync_repository_data(entry)
+      puts "--------"
     end
-    puts 'Digital public good data synced ...'
+    puts 'DPGA data synced.'
     send_notification
   end
 
   task :digi_square_digital_good, [:path] => :environment do
-    puts 'Pulling Digital Square Global Goods ...'
+    puts 'Parsing data from Digital Square Global Goods.'
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     digisquare_maturity = JSON.parse(File.read('config/digisquare_maturity_data.json'))
@@ -69,16 +69,15 @@ namespace :sync do
     digisquare_products['products'].each do |digi_product|
       next if search_in_ignorelist(digi_product, ignore_list)
 
-      prod = sync_digisquare_product(digi_product, digisquare_maturity)
-      update_repository_data(digi_product, prod)
+      sync_digisquare_product(digi_product, digisquare_maturity)
+      sync_repository_data(digi_product)
     end
-
-    puts 'Digital square data synced.'
+    puts 'Digital Square Global Goods data synced.'
     send_notification
   end
 
   task :osc_digital_good_local, [] => :environment do
-    puts 'Starting pulling data from open source center ...'
+    puts 'Pulling data from Open Source Center.'
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     osc_file = File.read('utils/digital_global_goods.json')
@@ -86,9 +85,10 @@ namespace :sync do
     osc_data.each do |product|
       next if search_in_ignorelist(product, ignore_list)
 
-      prod = sync_json_product(product, 'dial')
-      update_repository_data(product, prod)
+      sync_json_product(product)
+      sync_repository_data(product)
     end
+    puts 'Open Source Center data synced.'
     send_notification
   end
 
@@ -140,8 +140,12 @@ namespace :sync do
 
     puts "Current DPGA products: " + dpga_list.to_s
 
-    remove_products = Product.all.joins(:products_origins).where('origin_id=? and product_id not in (?)',
-dpga_origin.id, dpga_list)
+    remove_products = Product.joins(:products_origins)
+                             .where(
+                               'origin_id=? and product_id not in (?)',
+                               dpga_origin.id,
+                               dpga_list
+                             )
     puts "Products to be removed: " + remove_products.map(&:name).to_s
 
     remove_products.each do |prod|
@@ -166,7 +170,7 @@ dpga_origin.id, dpga_list)
         elsif org_products.count > 1
           curr_org_product = org_products.where(product_id: blacklist_product.id).first
           unless curr_org_product.nil?
-            puts "Deleting org product relationship: #{curr_org_product.inspect}."
+            puts "Deleting organization product relationship: #{curr_org_product.inspect}."
             delete_statement = "delete from organizations_products where product_id=#{blacklist_product.id}"
             ActiveRecord::Base.connection.execute(delete_statement)
           end
@@ -425,13 +429,13 @@ dpga_origin.id, dpga_list)
     Dir.entries('./export').select { |item| item.include?('.json') }.each do |entry|
       product_file = entry
 
-      curr_prod = Product.where(slug: entry.chomp('.json').gsub('-', '_')).first
-      if curr_prod.nil?
+      current_product = Product.where(slug: entry.chomp('.json').gsub('-', '_')).first
+      if current_product.nil?
         alias_name = entry.chomp('.json').gsub('-', ' ').downcase
         puts "Alias: #{alias_name}"
-        curr_prod = Product.find_by('? = ANY(LOWER(aliases::text)::text[])', alias_name)
+        current_product = Product.find_by('? = ANY(LOWER(aliases::text)::text[])', alias_name)
       end
-      curr_prod['aliases']&.each do |prod_alias|
+      current_product['aliases']&.each do |prod_alias|
         alias_file = "#{prod_alias.downcase.gsub(' ', '-')}.json"
         product_file = alias_file if File.exist?("#{params[:path]}/#{alias_file}")
       end
@@ -461,7 +465,7 @@ dpga_origin.id, dpga_list)
     end
 
     # Get credentials for Toolkit
-    uri = URI('https://digitalportfolio.toolkit-digitalisierung.de/en/wp-json/giz/v1/users/login/')
+    uri = URI('https://digitalportfolio.bmz-digital.global/en/wp-json/giz/v1/users/login/')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
@@ -472,7 +476,7 @@ dpga_origin.id, dpga_list)
     cookies = response.header['Set-Cookie']
 
     # Download German and English versions of projects list
-    uri = URI('https://digitalportfolio.toolkit-digitalisierung.de/en/projects/export/')
+    uri = URI('https://digitalportfolio.bmz-digital.global/en/projects/export/')
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -481,9 +485,10 @@ dpga_origin.id, dpga_list)
     request['Cookie'] = cookies
     english_response = http.request(request)
 
+    puts "Parsing english csv file."
     english_csv = CSV.parse(english_response.body, headers: true)
 
-    uri = URI('https://digitalportfolio.toolkit-digitalisierung.de/projects/export/')
+    uri = URI('https://digitalportfolio.bmz-digital.global/projects/export/')
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
@@ -491,6 +496,7 @@ dpga_origin.id, dpga_list)
     request['Cookie'] = cookies
     german_response = http.request(request)
 
+    puts "Parsing german csv file."
     german_csv = CSV.parse(german_response.body, headers: true)
 
     english_csv.each_with_index do |english_project, index|
@@ -510,22 +516,22 @@ dpga_origin.id, dpga_list)
       puts 'Digital health atlas as origin is created.' if dha_origin.save
     end
 
-    structure_uri = URI.parse('https://digitalatlas.who.int/api/projects/structure/')
+    structure_uri = URI.parse('https://digitalhealthatlas.org/api/projects/structure/')
     structure_response = Net::HTTP.get(structure_uri)
     structure_data = JSON.parse(structure_response)
-    products_data = structure_data['technology_platforms']
+    product_data = structure_data['technology_platforms']
 
-    projects_uri = URI.parse('https://digitalatlas.who.int/api/search/?page=1&type=list&page_size=1000')
+    projects_uri = URI.parse('https://digitalhealthatlas.org/api/search/?page=1&type=list&page_size=1000')
     projects_response = Net::HTTP.get(projects_uri)
     dha_data = JSON.parse(projects_response)
 
-    country_uri = URI.parse('https://digitalatlas.who.int/api/landing-country/')
+    country_uri = URI.parse('https://digitalhealthatlas.org/api/landing-country/')
     country_response = Net::HTTP.get(country_uri)
     country_data = JSON.parse(country_response)
 
-    org_uri = URI.parse('https://digitalatlas.who.int/api/organisations/')
-    org_response = Net::HTTP.get(org_uri)
-    org_data = JSON.parse(org_response)
+    organization_uri = URI.parse('https://digitalhealthatlas.org/api/organisations/')
+    organization_response = Net::HTTP.get(organization_uri)
+    organization_data = JSON.parse(organization_response)
 
     dha_data['results']['projects'].each do |project|
       project_name = project['name']
@@ -585,13 +591,13 @@ dpga_origin.id, dpga_list)
         project_description.save!
       end
 
-      project['platforms'].each do |platform|
-        product = products_data.select { |p| p['id'] == platform['id'] }[0]
+      project['software']&.each do |platform|
+        product = product_data.select { |p| p['id'] == platform }.first
         next if product.nil?
 
         product_name = product['name']
-        slug = slug_em(product_name)
-        product = Product.first_duplicate(product_name, slug)
+        product_slug = slug_em(product_name)
+        product = Product.first_duplicate(product_name, product_slug)
         next if product.nil?
 
         existing_project.products << product unless existing_project.products.include?(product)
@@ -600,43 +606,51 @@ dpga_origin.id, dpga_list)
       project_url = "https://digitalhealthatlas.org/#{I18n.locale}/-/projects/#{project['id']}/published"
       existing_project.project_url = project_url
 
-      puts "Project #{existing_project.name} saved!" if existing_project.save!
+      puts "Project '#{existing_project.name}' saved." if existing_project.save!
 
-      org_id = project['organisation']
-      org_name = org_data.select { |org| org['id'] == org_id }[0]['name']
-      org = Organization.name_contains(org_name)
+      organization_id = project['organisation']
+      organization_name = organization_data.select { |o| o['id'] == organization_id }.first
+      organizations = Organization.name_contains(organization_name['name']) unless organization_name.nil?
 
-      if !org.empty? && !existing_project.organizations.include?(org[0])
-        proj_org = ProjectsOrganization.new
-        proj_org.org_type = 'owner'
-        proj_org.project_id = existing_project.id
-        proj_org.organization_id = org[0].id
-        proj_org.save!
+      if !organizations.nil? && !organizations.empty? && !existing_project.organizations.include?(organizations.first)
+        project_organization = ProjectsOrganization.new
+        project_organization.org_type = 'owner'
+        project_organization.project_id = existing_project.id
+        project_organization.organization_id = organizations.first.id
+        if project_organization.save
+          puts "  Added organization '#{organizations.first.name}'."
+        end
       end
 
       project['donors']&.each do |donor|
-        donor_name = org_data.select { |o| o['id'] == donor }[0]['name']
-        donor_org = Organization.name_contains(donor_name)
+        donor_name = organization_data.select { |o| o['id'] == donor }.first
+        donor_organizations = Organization.name_contains(donor_name) unless donor_name.nil?
 
-        next unless !donor_org.empty? && !existing_project.organizations.include?(donor_org[0])
+        next if donor_organizations.nil? || donor_organizations.empty? ||
+          existing_project.organizations.include?(donor_organizations.first)
 
-        proj_org = ProjectsOrganization.new
-        proj_org.org_type = 'funder'
-        proj_org.project_id = existing_project.id
-        proj_org.organization_id = donor_org[0].id
-        proj_org.save!
+        project_organization = ProjectsOrganization.new
+        project_organization.org_type = 'funder'
+        project_organization.project_id = existing_project.id
+        project_organization.organization_id = donor_organizations.first.id
+        if project_organization.save
+          puts "  Added donor organization '#{donor_organizations.first.name}'."
+        end
       end
 
       project['implementing_partners']&.each do |implementer|
-        implementer_org = Organization.name_contains(implementer)
+        implementer_organizations = Organization.name_contains(implementer)
 
-        next unless !implementer_org.empty? && !existing_project.organizations.include?(implementer_org[0])
+        next if implementer_organizations.empty? ||
+          existing_project.organizations.include?(implementer_organizations.first)
 
-        proj_org = ProjectsOrganization.new
-        proj_org.org_type = 'implementer'
-        proj_org.project_id = existing_project.id
-        proj_org.organization_id = implementer_org[0].id
-        proj_org.save!
+        project_organization = ProjectsOrganization.new
+        project_organization.org_type = 'implementer'
+        project_organization.project_id = existing_project.id
+        project_organization.organization_id = implementer_organizations.first.id
+        if project_organization.save
+          puts "  Added implementer organization '#{implementer_organizations.first.name}'."
+        end
       end
     end
   end
@@ -645,15 +659,15 @@ dpga_origin.id, dpga_list)
     structure_uri = URI.parse('https://qa.whomaps.pulilab.com/api/projects/structure/')
     structure_response = Net::HTTP.get(structure_uri)
     structure_data = JSON.parse(structure_response)
-    products_data = structure_data['technology_platforms']
+    product_data = structure_data['technology_platforms']
 
     country_uri = URI.parse('https://qa.whomaps.pulilab.com/api/landing-country/')
     country_response = Net::HTTP.get(country_uri)
     country_data = JSON.parse(country_response)
 
-    org_uri = URI.parse('https://qa.whomaps.pulilab.com/api/organisations/')
-    org_response = Net::HTTP.get(org_uri)
-    org_data = JSON.parse(org_response)
+    organization_uri = URI.parse('https://qa.whomaps.pulilab.com/api/organisations/')
+    organization_response = Net::HTTP.get(organization_uri)
+    organization_data = JSON.parse(organization_response)
 
     project_url = URI.parse('https://qa.whomaps.pulilab.com/api/projects/external/publish/')
 
@@ -664,10 +678,10 @@ dpga_origin.id, dpga_list)
 
       # Find the org
       unless mm_row[4].nil?
-        mm_org = org_data.find { |org| org['name'].downcase.delete(' ') == mm_row[4].downcase.delete(' ') }
-        unless mm_org.nil?
-          mm_org_name = mm_org['name']
+        mm_organization = organization_data.find do |org|
+          org['name'].downcase.delete(' ') == mm_row[4].downcase.delete(' ')
         end
+        mm_organization_name = mm_org['name'] unless mm_organization.nil?
       end
 
       # Find products
@@ -675,20 +689,26 @@ dpga_origin.id, dpga_list)
       unless mm_row[2].nil?
         mm_products = mm_row[2].split(',')
         mm_products.each do |mm_product|
-          curr_prod = products_data.find { |prod| prod['name'].downcase.delete(' ') == mm_product.downcase.delete(' ') }
-          mm_platforms << { 'id': curr_prod['id'] } unless curr_prod.nil?
+          current_product = product_data.find do |prod|
+            prod['name'].downcase.delete(' ') == mm_product.downcase.delete(' ')
+          end
+          mm_platforms << { 'id': current_product['id'] } unless current_product.nil?
         end
       end
 
-      params = { 'project': { 'name': "Map & Match - #{mm_row[1]}",
-                              'organization': mm_org_name,
-                              'country': mm_country,
-                              'contact_name': mm_row[9],
-                              'contact_email': mm_row[10],
-                              'implementation_overview': mm_row[3],
-                              'platforms': mm_platforms,
-                              'start_date': mm_row[12],
-                              'health_focus_areas': mm_row[6] == 'yes' ? [{ 'id': 20 }] : [] } }
+      params = {
+        'project': {
+          'name': "Map & Match - #{mm_row[1]}",
+          'organization': mm_organization_name,
+          'country': mm_country,
+          'contact_name': mm_row[9],
+          'contact_email': mm_row[10],
+          'implementation_overview': mm_row[3],
+          'platforms': mm_platforms,
+          'start_date': mm_row[12],
+          'health_focus_areas': mm_row[6] == 'yes' ? [{ 'id': 20 }] : []
+        }
+      }
       headers = {
         'Authorization' => "Bearer ENV['DHA_TOKEN']",
         'Content-Type' => 'application/json'

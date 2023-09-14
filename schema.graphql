@@ -162,6 +162,7 @@ type CandidateOrganization {
   approvedDate: ISO8601Date
   contact: Contact!
   contacts: [Contact!]!
+  createStorefront: Boolean!
   createdAt: ISO8601Date
   description: String
   id: ID!
@@ -945,6 +946,7 @@ type DialSpreadsheetData {
 }
 
 type DigitalPrinciple {
+  id: ID!
   name: String!
   phase: String!
   slug: String!
@@ -1117,7 +1119,7 @@ type Mutation {
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createBuildingBlock(category: String, description: String!, imageFile: Upload, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, datasetType: String!, description: String!, name: String!, slug: String!, submitterEmail: String!, visualizationUrl: String, website: String!): CreateCandidateDatasetPayload
-  createCandidateOrganization(captcha: String!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
+  createCandidateOrganization(captcha: String!, createStorefront: Boolean!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload
   createCity(cityName: String!, countryName: String!, regionName: String!, slug: String): CreateCityPayload
@@ -1127,7 +1129,7 @@ type Mutation {
   createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
   createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
-  createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
+  createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, imageFile: Upload, name: String!, openingDate: ISO8601Date, opportunityOrigin: String!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
@@ -2653,7 +2655,7 @@ type Query {
   userEmailCheck(email: String!): Boolean
   userRoles: JSON
   users(search: String = ""): [User!]!
-  wizard(buildingBlocks: [String!], sdgs: [String!], sectors: [String!] = [], useCase: String): Wizard!
+  wizard: Wizard!
   workflow(slug: String!): Workflow
   workflows(search: String = ""): [Workflow!]!
 }
@@ -3450,15 +3452,9 @@ type UserEdge {
 }
 
 type Wizard {
-  buildingBlocks: [BuildingBlock!]
-  datasets: [Dataset!]
-  digitalPrinciples: [DigitalPrinciple!]
-  organizations: [Organization!]
-  playbooks: [Playbook!]
-  products: [Product!]
-  projects: [Project!]
-  resources: [Resource!]
-  useCases: [UseCase!]
+  digitalPrinciples: [DigitalPrinciple!]!
+  playbooks: [Playbook!]!
+  resources: [Resource!]!
 }
 
 type Workflow {

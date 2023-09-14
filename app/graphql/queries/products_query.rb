@@ -320,7 +320,7 @@ module Queries
       product_repositories = []
       unless product.nil?
         product_repositories = ProductRepository.where(product_id: product.id, deleted: false)
-                                                .order(main_repository: :desc, name: :asc)
+                                                .order(main_repository: :desc)
       end
       product_repositories
     end
