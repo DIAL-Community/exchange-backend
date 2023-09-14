@@ -33,7 +33,6 @@ module Types
 
     field :sectors, resolver: Queries::SectorsQuery
     field :sector, resolver: Queries::SectorQuery
-    field :sectors_with_subs, resolver: Queries::SectorsWithSubsQuery
 
     field :origins, resolver: Queries::OriginsQuery
 
@@ -124,7 +123,7 @@ module Types
     field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
     field :pagination_attribute_use_case, resolver: Paginated::PaginationAttributeUseCase
 
-    field :paginated_products_redux, resolver: Paginated::PaginatedProducts
+    field :paginated_products, resolver: Paginated::PaginatedProducts
     field :pagination_attribute_product, resolver: Paginated::PaginationAttributeProduct
 
     field :paginated_building_blocks, resolver: Paginated::PaginatedBuildingBlocks
@@ -135,10 +134,10 @@ module Types
     field :paginated_storefronts, resolver: Paginated::PaginatedStorefronts
     field :pagination_attribute_storefront, resolver: Paginated::PaginationAttributeStorefront
 
-    field :paginated_datasets_redux, resolver: Paginated::PaginatedDatasets
+    field :paginated_datasets, resolver: Paginated::PaginatedDatasets
     field :pagination_attribute_dataset, resolver: Paginated::PaginationAttributeDataset
 
-    field :paginated_projects_redux, resolver: Paginated::PaginatedProjects
+    field :paginated_projects, resolver: Paginated::PaginatedProjects
     field :pagination_attribute_project, resolver: Paginated::PaginationAttributeProject
 
     field :paginated_candidate_organizations, resolver: Paginated::PaginatedCandidateOrganizations
@@ -181,7 +180,7 @@ module Types
     field :paginated_resources, resolver: Paginated::PaginatedResources
     field :pagination_attribute_resource, resolver: Paginated::PaginationAttributeResource
 
-    field :paginated_playbooks_redux, resolver: Paginated::PaginatedPlaybooks
+    field :paginated_playbooks, resolver: Paginated::PaginatedPlaybooks
     field :pagination_attribute_playbook, resolver: Paginated::PaginationAttributePlaybook
 
     field :paginated_users, resolver: Paginated::PaginatedUsers

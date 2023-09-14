@@ -21,13 +21,4 @@ module Queries
       Sector.find_by(slug:)
     end
   end
-
-  class SectorsWithSubsQuery < Queries::BaseQuery
-    argument :locale, String, required: false, default_value: 'en'
-    type [Types::SectorType], null: false
-
-    def resolve(locale:)
-      Sector.where(parent_sector_id: nil, is_displayable: true, locale:).order(:name)
-    end
-  end
 end
