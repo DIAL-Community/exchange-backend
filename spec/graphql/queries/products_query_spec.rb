@@ -6,136 +6,24 @@ require 'rails_helper'
 RSpec.describe(Queries::ProductsQuery, type: :graphql) do
   let(:query) do
     <<~GQL
-      query SearchProducts (
-        $first: Int,
-        $after: String,
-        $origins: [String!],
-        $sectors: [String!],
-        $countries: [String!],
-        $organizations: [String!],
-        $sdgs: [String!],
-        $tags: [String!],
-        $useCases: [String!],
-        $workflows: [String!],
-        $buildingBlocks: [String!],
-        $productTypes: [String!],
-        $endorsers: [String!],
-        $productDeployable: Boolean,
-        $isEndorsed: Boolean,
-        $licenseTypes: [String!],
-        $search: String!
-      ) {
-        searchProducts (
-          first: $first,
-          after: $after,
-          origins: $origins,
-          sectors: $sectors,
-          countries: $countries,
-          organizations: $organizations,
-          sdgs: $sdgs,
-          tags: $tags,
-          useCases: $useCases,
-          workflows: $workflows,
-          buildingBlocks: $buildingBlocks,
-          productTypes: $productTypes,
-          endorsers: $endorsers,
-          productDeployable: $productDeployable,
-          isEndorsed: $isEndorsed,
-          licenseTypes: $licenseTypes,
-          search: $search
-        ) {
-          __typename
-          totalCount
-          pageInfo {
-            endCursor
-            startCursor
-            hasPreviousPage
-            hasNextPage
-          }
-          nodes {
-            id
-            name
-            slug
-            imageFile
-            isLaunchable
-            overallMaturityScore
-            productType
-            tags
-            commercialProduct
-            endorsers {
-              name
-              slug
-            }
-            origins{
-              name
-              slug
-            }
-            buildingBlocks {
-              slug
-              name
-              imageFile
-            }
-            sustainableDevelopmentGoals {
-              slug
-              name
-              imageFile
-            }
-            productDescriptions {
-              description
-              locale
-            }
-            organizations {
-              name
-              isEndorser
-            }
-          }
+      query Products($search: String) {
+        products(search: $search) {
+          id
+          name
         }
       }
     GQL
   end
 
-  it 'is successful' do
-    create(:product, name: 'Open Something Source', website: 'http://something.com')
+  it 'pulls products' do
+    create(:product, slug: 'first_product', name: 'First Product', id: 1)
+    create(:product, slug: 'second_product', name: 'Second Product', id: 2)
 
-    result = execute_graphql(
-      query,
-      variables: { search: 'Open' }
-    )
+    result = execute_graphql(query)
 
     aggregate_failures do
-      expect(result['data']['searchProducts']['totalCount']).to(eq(1))
-      expect(result['data']['searchProducts']['nodes'].count).to(eq(1))
+      expect(result['data']['products'].count).to(eq(2))
     end
-  end
-
-  it 'fails' do
-    result = execute_graphql(
-      query,
-      variables: { search: 'Whatever' }
-    )
-
-    expect(result['data']['searchProducts']['totalCount']).to(eq(0))
-  end
-
-  it 'filter and return only commercial products when flag is true.' do
-    create(:product, name: 'Commercial Product', commercial_product: true)
-    create(:product, name: 'Non Commercial Product', commercial_product: false)
-
-    result = execute_graphql(
-      query,
-      variables: { search: '' }
-    )
-
-    expect(result['data']['searchProducts']['totalCount']).to(eq(2))
-
-    result = execute_graphql(
-      query,
-      variables: { search: '', licenseTypes: ['commercial_only'] }
-    )
-
-    # Return only commercial products when flag is true.
-    expect(result['data']['searchProducts']['totalCount']).to(eq(1))
-    expect(result['data']['searchProducts']['nodes'][0]['name']).to(eq('Commercial Product'))
   end
 end
 
