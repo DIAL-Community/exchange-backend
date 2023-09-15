@@ -76,4 +76,32 @@ module Queries
       owned_products
     end
   end
+
+  class CompareProductsQuery < Queries::BaseQuery
+    argument :slugs, [String], required: true
+
+    type GraphQL::Types::JSON, null: false
+
+    def resolve(slugs:)
+      compared_products = []
+      Product.where(slug: slugs).each do |product|
+        current_product = {}
+        current_product['ui.sector.label'] =
+          product.sectors
+                 .filter { |sector| sector.locale == I18n.locale }
+                 .sort(&:name)
+                 .map(&:name)
+        current_product['ui.buildingBlock.label'] =
+          product.building_blocks
+                 .sort(&:name)
+                 .map(&:name)
+        current_product['ui.sdg.label'] =
+          product.sustainable_development_goals
+                 .sort_by(&:number)
+                 .map { |sdg| "#{sdg.number}. #{sdg.name}" }
+        compared_products << current_product
+      end
+      compared_products
+    end
+  end
 end

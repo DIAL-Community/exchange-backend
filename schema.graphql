@@ -1383,6 +1383,7 @@ type Query {
   cities(search: String = ""): [City!]!
   city(slug: String!): City
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
+  compareProducts(slugs: [String!]!): JSON!
   contact(slug: String!): Contact
   contacts(search: String = ""): [Contact!]!
   countComments(commentObjectId: Int!, commentObjectType: String!): Int!
