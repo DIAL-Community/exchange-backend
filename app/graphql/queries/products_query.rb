@@ -117,9 +117,6 @@ module Queries
         products << current_product
       end
       compared_products['products'] = products
-
-
-
       compared_products
     end
   end
