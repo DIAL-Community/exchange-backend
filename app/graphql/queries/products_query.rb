@@ -83,24 +83,43 @@ module Queries
     type GraphQL::Types::JSON, null: false
 
     def resolve(slugs:)
-      compared_products = []
+      compared_products = {}
+
+      products = []
       Product.where(slug: slugs).each do |product|
         current_product = {}
         current_product['ui.sector.label'] =
           product.sectors
-                 .filter { |sector| sector.locale == I18n.locale }
-                 .sort(&:name)
+                 .where(locale: I18n.locale)
+                 .sort_by(&:name)
                  .map(&:name)
+
         current_product['ui.buildingBlock.label'] =
           product.building_blocks
-                 .sort(&:name)
+                 .sort_by(&:name)
                  .map(&:name)
+
         current_product['ui.sdg.label'] =
           product.sustainable_development_goals
                  .sort_by(&:number)
                  .map { |sdg| "#{sdg.number}. #{sdg.name}" }
-        compared_products << current_product
+
+        current_product['ui.product.project.count'] = product.projects.count
+
+        if product.commercial_product
+          current_product['product.license'] = 'Commercial'
+        elsif !product.main_repository.nil?
+          current_product['product.license'] = product.main_repository.license
+        else
+          current_product['product.license'] = 'N/A'
+        end
+
+        products << current_product
       end
+      compared_products['products'] = products
+
+
+
       compared_products
     end
   end
