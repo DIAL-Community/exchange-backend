@@ -25455,6 +25455,50 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "countries",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "endorserOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "endorserLevel",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "\"\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "aggregators",
                   "description": null,
                   "type": {

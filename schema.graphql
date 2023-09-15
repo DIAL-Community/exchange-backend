@@ -1503,6 +1503,9 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+    countries: [String!] = []
+    endorserLevel: String = ""
+    endorserOnly: Boolean = false
 
     """
     Returns the first _n_ elements from the list.
