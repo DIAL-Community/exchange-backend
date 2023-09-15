@@ -88,6 +88,12 @@ module Queries
       products = []
       Product.where(slug: slugs).each do |product|
         current_product = {}
+        current_product['name'] = product.name
+        current_product['slug'] = product.slug
+        current_product['website'] = product.website
+        current_product['imageFile'] = product.image_file
+        current_product['ui.product.rubric.label'] = product.maturity_score_details
+
         current_product['ui.sector.label'] =
           product.sectors
                  .where(locale: I18n.locale)
@@ -113,6 +119,14 @@ module Queries
         else
           current_product['product.license'] = 'N/A'
         end
+
+        product_use_cases = []
+        product.use_case_steps.each do |use_case_step|
+          product_use_cases << use_case_step.use_case
+        end
+        current_product['ui.useCase.label'] = product_use_cases.sort_by(&:name)
+                                                               .map(&:name)
+                                                               .uniq
 
         products << current_product
       end
