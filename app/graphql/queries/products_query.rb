@@ -82,10 +82,24 @@ module Queries
 
     type GraphQL::Types::JSON, null: false
 
+    def calculate_intersections(intersections, key, current_product)
+      value = current_product[key]
+      if intersections.key?(key)
+        if intersections[key].is_a?(Array)
+          intersections[key] = intersections[key] & value
+        else
+          intersections[key] = nil unless intersections[key] == value
+        end
+      else
+        intersections[key] = value
+      end
+    end
+
     def resolve(slugs:)
       compared_products = {}
 
       products = []
+      intersections = {}
       Product.where(slug: slugs).each do |product|
         current_product = {}
         current_product['name'] = product.name
@@ -99,18 +113,22 @@ module Queries
                  .where(locale: I18n.locale)
                  .sort_by(&:name)
                  .map(&:name)
+        calculate_intersections(intersections, 'ui.sector.label', current_product)
 
         current_product['ui.buildingBlock.label'] =
           product.building_blocks
                  .sort_by(&:name)
                  .map(&:name)
+        calculate_intersections(intersections, 'ui.buildingBlock.label', current_product)
 
         current_product['ui.sdg.label'] =
           product.sustainable_development_goals
                  .sort_by(&:number)
                  .map { |sdg| "#{sdg.number}. #{sdg.name}" }
+        calculate_intersections(intersections, 'ui.sdg.label', current_product)
 
         current_product['ui.product.project.count'] = product.projects.count
+        calculate_intersections(intersections, 'ui.product.project.count', current_product)
 
         if product.commercial_product
           current_product['product.license'] = 'Commercial'
@@ -119,18 +137,22 @@ module Queries
         else
           current_product['product.license'] = 'N/A'
         end
+        calculate_intersections(intersections, 'product.license', current_product)
 
         product_use_cases = []
         product.use_case_steps.each do |use_case_step|
           product_use_cases << use_case_step.use_case
         end
-        current_product['ui.useCase.label'] = product_use_cases.sort_by(&:name)
-                                                               .map(&:name)
-                                                               .uniq
+        current_product['ui.useCase.label'] =
+          product_use_cases.sort_by(&:name)
+                           .map(&:name)
+                           .uniq
+        calculate_intersections(intersections, 'ui.useCase.label', current_product)
 
         products << current_product
       end
       compared_products['products'] = products
+      compared_products['intersections'] = intersections
       compared_products
     end
   end
