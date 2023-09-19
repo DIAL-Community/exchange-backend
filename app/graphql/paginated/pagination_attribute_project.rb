@@ -18,7 +18,7 @@ module Paginated
       if !search.nil? && !search.to_s.strip.empty?
         name_projects = projects.name_contains(search)
         desc_projects = projects.joins(:project_descriptions)
-                                .where('LOWER(description) like LOWER(?)', "%#{search}%")
+                                .where('LOWER(project_descriptions.description) like LOWER(?)', "%#{search}%")
         projects = projects.where(id: (name_projects + desc_projects).uniq)
       end
 

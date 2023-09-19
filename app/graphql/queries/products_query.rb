@@ -118,7 +118,7 @@ module Queries
         current_product['ui.buildingBlock.label'] =
           product.building_blocks
                  .sort_by(&:name)
-                 .map(&:name)
+                 .map { |b| b.name.to_s + (b.category == 'DPI' ? " [DPI]" : '') }
         calculate_intersections(intersections, 'ui.buildingBlock.label', current_product)
 
         current_product['ui.sdg.label'] =
