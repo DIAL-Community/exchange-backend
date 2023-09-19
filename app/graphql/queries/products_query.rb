@@ -100,7 +100,7 @@ module Queries
 
       products = []
       intersections = {}
-      Product.where(slug: slugs).each do |product|
+      Product.where(slug: slugs).order(:slug).each do |product|
         current_product = {}
         current_product['name'] = product.name
         current_product['slug'] = product.slug
