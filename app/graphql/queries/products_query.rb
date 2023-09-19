@@ -83,15 +83,42 @@ module Queries
     type GraphQL::Types::JSON, null: false
 
     def calculate_intersections(intersections, key, current_product)
-      value = current_product[key]
+      current_value = current_product[key]
       if intersections.key?(key)
         if intersections[key].is_a?(Array)
-          intersections[key] = intersections[key] & value
+          intersections[key] = intersections[key] & current_value
         else
-          intersections[key] = nil unless intersections[key] == value
+          intersections[key] = nil unless intersections[key] == current_value
         end
       else
-        intersections[key] = value
+        intersections[key] = current_value
+      end
+    end
+
+    def calculate_similarities(similarities, key, current_product)
+      current_value = current_product[key]
+      if similarities.key?(key)
+        similarity = similarities[key]
+        # Don't need to compare as the field is different already
+        return if similarity[:different]
+
+        # Field is still the same (or only contains the first value)
+        existing_value = similarities[key][:current]
+        if existing_value.is_a?(Array)
+          # (A-B).blank? && (B-A).blank? to check 2 arrays equality
+          similarities[key][:different] =
+            (current_value - existing_value).blank? &&
+            (existing_value - current_value).blank?
+        else
+          similarities[key][:different] = current_value.to_s == existing_value.to_s
+        end
+        similarities[key][:current] = current_value
+      else
+        # Initial value, not different and keep the current product field's value
+        similarities[key] = {
+          'different': false,
+          'current': current_value
+        }
       end
     end
 
@@ -99,6 +126,8 @@ module Queries
       compared_products = {}
 
       products = []
+
+      similarities = {}
       intersections = {}
       Product.where(slug: slugs).order(:slug).each do |product|
         current_product = {}
@@ -113,21 +142,25 @@ module Queries
                  .where(locale: I18n.locale)
                  .sort_by(&:name)
                  .map(&:name)
+        calculate_similarities(similarities, 'ui.sector.label', current_product)
         calculate_intersections(intersections, 'ui.sector.label', current_product)
 
         current_product['ui.buildingBlock.label'] =
           product.building_blocks
                  .sort_by(&:name)
                  .map { |b| b.name.to_s + (b.category == 'DPI' ? " [DPI]" : '') }
+        calculate_similarities(similarities, 'ui.buildingBlock.label', current_product)
         calculate_intersections(intersections, 'ui.buildingBlock.label', current_product)
 
         current_product['ui.sdg.label'] =
           product.sustainable_development_goals
                  .sort_by(&:number)
                  .map { |sdg| "#{sdg.number}. #{sdg.name}" }
+        calculate_similarities(similarities, 'ui.sdg.label', current_product)
         calculate_intersections(intersections, 'ui.sdg.label', current_product)
 
         current_product['ui.product.project.count'] = product.projects.count
+        calculate_similarities(similarities, 'ui.product.project.count', current_product)
         calculate_intersections(intersections, 'ui.product.project.count', current_product)
 
         if product.commercial_product
@@ -137,6 +170,7 @@ module Queries
         else
           current_product['product.license'] = 'N/A'
         end
+        calculate_similarities(similarities, 'product.license', current_product)
         calculate_intersections(intersections, 'product.license', current_product)
 
         product_use_cases = []
@@ -147,12 +181,14 @@ module Queries
           product_use_cases.sort_by(&:name)
                            .map(&:name)
                            .uniq
+        calculate_similarities(similarities, 'ui.useCase.label', current_product)
         calculate_intersections(intersections, 'ui.useCase.label', current_product)
 
         products << current_product
       end
       compared_products['products'] = products
       compared_products['intersections'] = intersections
+      compared_products['similarities'] = similarities.map { |k, v| [k, v[:different]] }.to_h
       compared_products
     end
   end
