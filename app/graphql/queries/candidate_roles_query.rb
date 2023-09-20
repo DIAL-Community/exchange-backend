@@ -47,17 +47,4 @@ module Queries
       candidate_roles.first
     end
   end
-
-  class SearchCandidateRolesQuery < Queries::BaseQuery
-    argument :search, String, required: true
-    type Types::CandidateRoleType.connection_type, null: false
-
-    def resolve(search:)
-      return unless an_admin
-
-      candidate_roles = CandidateRole.order(rejected: :desc).order(:email)
-      candidate_roles = candidate_roles.email_contains(search) unless search.blank?
-      candidate_roles
-    end
-  end
 end

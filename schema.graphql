@@ -60,47 +60,11 @@ type BuildingBlock {
   workflows: [Workflow!]
 }
 
-"""
-The connection type for BuildingBlock.
-"""
-type BuildingBlockConnection {
-  """
-  A list of edges.
-  """
-  edges: [BuildingBlockEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [BuildingBlock]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type BuildingBlockDescription {
   buildingBlockId: Int
   description: String!
   id: ID!
   locale: String!
-}
-
-"""
-An edge in a connection.
-"""
-type BuildingBlockEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: BuildingBlock
 }
 
 type CandidateDataset {
@@ -121,42 +85,6 @@ type CandidateDataset {
   website: String!
 }
 
-"""
-The connection type for CandidateDataset.
-"""
-type CandidateDatasetConnection {
-  """
-  A list of edges.
-  """
-  edges: [CandidateDatasetEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [CandidateDataset]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type CandidateDatasetEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: CandidateDataset
-}
-
 type CandidateOrganization {
   approvedBy: String
   approvedDate: ISO8601Date
@@ -172,42 +100,6 @@ type CandidateOrganization {
   rejectedDate: ISO8601Date
   slug: String!
   website: String
-}
-
-"""
-The connection type for CandidateOrganization.
-"""
-type CandidateOrganizationConnection {
-  """
-  A list of edges.
-  """
-  edges: [CandidateOrganizationEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [CandidateOrganization]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type CandidateOrganizationEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: CandidateOrganization
 }
 
 type CandidateProduct {
@@ -227,42 +119,6 @@ type CandidateProduct {
   website: String!
 }
 
-"""
-The connection type for CandidateProduct.
-"""
-type CandidateProductConnection {
-  """
-  A list of edges.
-  """
-  edges: [CandidateProductEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [CandidateProduct]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type CandidateProductEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: CandidateProduct
-}
-
 type CandidateRole {
   approvedBy: String
   approvedDate: ISO8601Date
@@ -280,42 +136,6 @@ type CandidateRole {
   rejectedBy: String
   rejectedDate: ISO8601Date
   roles: [String!]
-}
-
-"""
-The connection type for CandidateRole.
-"""
-type CandidateRoleConnection {
-  """
-  A list of edges.
-  """
-  edges: [CandidateRoleEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [CandidateRole]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type CandidateRoleEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: CandidateRole
 }
 
 type Capability {
@@ -384,17 +204,6 @@ type Contact {
   title: String
 }
 
-type Count {
-  buildingBlockCount: Int!
-  mapCount: Int!
-  orgCount: Int!
-  productCount: Int!
-  projectCount: Int!
-  sdgCount: Int!
-  useCaseCount: Int!
-  workflowCount: Int!
-}
-
 type Country {
   aliases: [String!]!
   code: String!
@@ -406,42 +215,6 @@ type Country {
   organizations: [Organization!]
   projects: [Project!]
   slug: String!
-}
-
-"""
-The connection type for Country.
-"""
-type CountryConnection {
-  """
-  A list of edges.
-  """
-  edges: [CountryEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Country]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type CountryEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Country
 }
 
 """
@@ -711,47 +484,11 @@ type Dataset {
   website: String
 }
 
-"""
-The connection type for Dataset.
-"""
-type DatasetConnection {
-  """
-  A list of edges.
-  """
-  edges: [DatasetEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Dataset]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type DatasetDescription {
   datasetId: Int
   description: String!
   id: ID!
   locale: String!
-}
-
-"""
-An edge in a connection.
-"""
-type DatasetEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Dataset
 }
 
 """
@@ -1272,42 +1009,6 @@ type Opportunity {
   webAddress: String
 }
 
-"""
-The connection type for Opportunity.
-"""
-type OpportunityConnection {
-  """
-  A list of edges.
-  """
-  edges: [OpportunityEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Opportunity]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type OpportunityEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Opportunity
-}
-
 type Organization {
   aliases: JSON
   buildingBlockCertifications: [BuildingBlock!]!
@@ -1386,42 +1087,6 @@ type Origin {
   id: ID!
   name: String
   slug: String!
-}
-
-"""
-The connection type for Origin.
-"""
-type OriginConnection {
-  """
-  A list of edges.
-  """
-  edges: [OriginEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Origin]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type OriginEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Origin
 }
 
 type PageContent {
@@ -1545,27 +1210,6 @@ type Playbook {
   updatedAt: ISO8601DateTime!
 }
 
-"""
-The connection type for Playbook.
-"""
-type PlaybookConnection {
-  """
-  A list of edges.
-  """
-  edges: [PlaybookEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Playbook]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type PlaybookDescription {
   audience: String!
   cover: String
@@ -1575,21 +1219,6 @@ type PlaybookDescription {
   overview: String!
   playbookId: Int
   sanitizedOverview: String!
-}
-
-"""
-An edge in a connection.
-"""
-type PlaybookEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Playbook
 }
 
 type PlaybookPlay {
@@ -1643,47 +1272,11 @@ type Product {
   website: String
 }
 
-"""
-The connection type for Product.
-"""
-type ProductConnection {
-  """
-  A list of edges.
-  """
-  edges: [ProductEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Product]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type ProductDescription {
   description: String!
   id: ID!
   locale: String!
   productId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type ProductEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Product
 }
 
 type ProductIndicator {
@@ -1790,12 +1383,12 @@ type Query {
   cities(search: String = ""): [City!]!
   city(slug: String!): City
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
+  compareProducts(slugs: [String!]!): JSON!
   contact(slug: String!): Contact
   contacts(search: String = ""): [Contact!]!
   countComments(commentObjectId: Int!, commentObjectType: String!): Int!
   countries(search: String = ""): [Country!]!
   country(slug: String!): Country
-  counts: Count!
   dataset(slug: String!): Dataset
   datasets(search: String = ""): [Dataset!]!
   endorsers(search: String = ""): [Endorser!]!
@@ -1816,33 +1409,6 @@ type Query {
   ownedProducts: [Product!]!
   owners(captcha: String!, slug: String!, type: String!): [User!]!
   pageContents(handbookPageId: ID!, locale: String = "en"): PageContent!
-  paginatedAggregators(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    offsetAttributes: OffsetAttributes!
-    search: String = ""
-    sectors: [String!] = []
-    services: [String!] = []
-    subSectors: [String!] = []
-  ): OrganizationConnection!
   paginatedBuildingBlocks(categoryTypes: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
   paginatedCandidateDatasets(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateDataset!]!
   paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
@@ -1851,117 +1417,12 @@ type Query {
   paginatedCities(offsetAttributes: OffsetAttributes!, search: String = ""): [City!]!
   paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Contact!]!
   paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
-  paginatedDatasets(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    datasetSortHint: String = "name"
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    offsetAttributes: OffsetAttributes!
-    sectors: [String!] = []
-    tags: [String!] = []
-  ): DatasetConnection!
-  paginatedDatasetsRedux(datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
+  paginatedDatasets(datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
-  paginatedPlaybooks(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    offsetAttributes: OffsetAttributes!
-    playbookSortHint: String = "name"
-    sectors: [String!] = []
-    tags: [String!] = []
-  ): PlaybookConnection!
-  paginatedPlaybooksRedux(offsetAttributes: OffsetAttributes!, search: String = "", tags: [String!] = []): [Playbook!]!
-  paginatedProducts(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    buildingBlocks: [String!] = []
-    commercialProduct: Boolean
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    offsetAttributes: OffsetAttributes!
-    productSortHint: String = "name"
-    sectors: [String!] = []
-    tags: [String!] = []
-    useCases: [String!] = []
-  ): ProductConnection!
-  paginatedProductsRedux(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
-  paginatedProjects(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    offsetAttributes: OffsetAttributes!
-    projectSortHint: String = "name"
-    sectors: [String!] = []
-    tags: [String!] = []
-  ): ProjectConnection!
-  paginatedProjectsRedux(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
+  paginatedPlaybooks(offsetAttributes: OffsetAttributes!, search: String = "", tags: [String!] = []): [Playbook!]!
+  paginatedProducts(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
+  paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedResources(offsetAttributes: OffsetAttributes!, search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false): [Resource!]!
   paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
   paginatedStorefronts(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], specialties: [String!] = []): [Organization!]!
@@ -2007,200 +1468,6 @@ type Query {
   sdg(slug: String!): SustainableDevelopmentGoal
   sdgTargets(search: String = ""): [SustainableDevelopmentGoalTarget!]!
   sdgs(search: String = ""): [SustainableDevelopmentGoal!]!
-  searchAggregators(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-    sectors: [String!] = []
-    services: [String!] = []
-    subSectors: [String!] = []
-  ): OrganizationConnection!
-  searchBuildingBlocks(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    categoryTypes: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    sdgs: [String!] = []
-    search: String = ""
-    showMature: Boolean = false
-    useCases: [String!] = []
-    workflows: [String!] = []
-  ): BuildingBlockConnection!
-  searchCandidateDatasets(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-  ): CandidateDatasetConnection!
-  searchCandidateOrganizations(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String!
-  ): CandidateOrganizationConnection!
-  searchCandidateProducts(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String!
-  ): CandidateProductConnection!
-  searchCandidateRoles(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String!
-  ): CandidateRoleConnection!
-  searchCountries(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-  ): CountryConnection!
-  searchDatasets(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    countries: [String!] = []
-    datasetSortHint: String = "name"
-    datasetTypes: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    organizations: [String!] = []
-    origins: [String!] = []
-    sdgs: [String!] = []
-    search: String = ""
-    sectors: [String!] = []
-    subSectors: [String!] = []
-    tags: [String!] = []
-  ): DatasetConnection!
   searchHandbook(search: String!, slug: String!): [HandbookSearchPage!]!
   searchMoves(
     """
@@ -2224,34 +1491,6 @@ type Query {
     last: Int
     search: String = ""
   ): MoveConnection!
-  searchOpportunities(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    buildingBlocks: [String!] = []
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    organizations: [String!] = []
-    search: String = ""
-    sectors: [String!] = []
-    showClosed: Boolean = false
-    useCases: [String!] = []
-  ): OpportunityConnection!
   searchOrganizations(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -2277,33 +1516,10 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    mapView: Boolean = false
     search: String = ""
     sectors: [String!] = []
     years: [Int!] = []
   ): OrganizationConnection!
-  searchOrigins(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String!
-  ): OriginConnection!
   searchPlaybookPlays(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -2327,30 +1543,6 @@ type Query {
     slug: String!
   ): PlayConnection!
   searchPlaybookTags(search: String = ""): [Tag!]!
-  searchPlaybooks(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    products: [String!] = []
-    search: String = ""
-    tags: [String!] = []
-  ): PlaybookConnection!
   searchPlays(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -2374,44 +1566,6 @@ type Query {
     products: [String!] = []
     search: String = ""
   ): PlayConnection!
-  searchProducts(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    buildingBlocks: [String!] = []
-    countries: [String!] = []
-    endorsers: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-    isEndorsed: Boolean = false
-    isLinkedWithDpi: Boolean = false
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    licenseTypes: [String!] = []
-    organizations: [String!] = []
-    origins: [String!] = []
-    productDeployable: Boolean = false
-    productSortHint: String = "name"
-    productTypes: [String!] = []
-    sdgs: [String!] = []
-    search: String = ""
-    sectors: [String!] = []
-    tags: [String!] = []
-    useCases: [String!] = []
-    workflows: [String!] = []
-  ): ProductConnection!
   searchProjects(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -2422,7 +1576,6 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
-    countries: [String!] = []
 
     """
     Returns the first _n_ elements from the list.
@@ -2433,211 +1586,13 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    mapView: Boolean = false
-    organizations: [String!] = []
-    origins: [String!] = []
     products: [String!] = []
-    projectSortHint: String = "name"
-    sdgs: [String!] = []
     search: String = ""
     sectors: [String!] = []
     tags: [String!] = []
   ): ProjectConnection!
-  searchResources(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-    showInExchange: Boolean = false
-    showInWizard: Boolean = false
-  ): ResourceConnection!
-  searchSdgs(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    sdgs: [String!] = []
-    search: String = ""
-  ): SustainableDevelopmentGoalConnection!
-  searchSectors(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-    isDisplayable: Boolean = null
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    locale: String = null
-    parentSectorId: Int = null
-    search: String = ""
-  ): SectorConnection!
-  searchStorefronts(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    buildingBlocks: [String!] = []
-    certifications: [String!] = []
-    countries: [String!] = []
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-    sectors: [String!] = []
-    specialties: [String!] = []
-  ): OrganizationConnection!
-  searchTags(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-  ): TagConnection!
-  searchUseCases(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-    govStackOnly: Boolean = false
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    sdgs: [String!] = []
-    search: String = ""
-    showBeta: Boolean = false
-  ): UseCaseConnection!
-  searchUsers(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-  ): UserConnection!
-  searchWorkflows(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    sdgs: [String!] = []
-    search: String = ""
-    useCases: [String!] = []
-  ): WorkflowConnection!
   sector(slug: String!): Sector
   sectors(locale: String = "en", search: String = ""): [Sector!]!
-  sectorsWithSubs(locale: String = "en"): [Sector!]!
   spreadsheetDataset: [DialSpreadsheetData!]!
   spreadsheetProduct: [DialSpreadsheetData!]!
   starredObject(sourceObjectType: String!, sourceObjectValue: String!, starredObjectType: String!, starredObjectValue: String!): StarredObject
@@ -2699,42 +1654,6 @@ type Resource {
   slug: String!
 }
 
-"""
-The connection type for Resource.
-"""
-type ResourceConnection {
-  """
-  A list of edges.
-  """
-  edges: [ResourceEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Resource]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type ResourceEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Resource
-}
-
 type RubricCategory {
   categoryIndicators: [CategoryIndicator!]
   id: ID!
@@ -2768,42 +1687,6 @@ type Sector {
   subSectors: [Sector!]
 }
 
-"""
-The connection type for Sector.
-"""
-type SectorConnection {
-  """
-  A list of edges.
-  """
-  edges: [SectorEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Sector]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type SectorEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Sector
-}
-
 type StarredObject {
   id: ID!
   sourceObjectType: String!
@@ -2822,42 +1705,6 @@ type SustainableDevelopmentGoal {
   number: Int!
   sdgTargets: [SustainableDevelopmentGoalTarget!]!
   slug: String!
-}
-
-"""
-The connection type for SustainableDevelopmentGoal.
-"""
-type SustainableDevelopmentGoalConnection {
-  """
-  A list of edges.
-  """
-  edges: [SustainableDevelopmentGoalEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [SustainableDevelopmentGoal]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type SustainableDevelopmentGoalEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: SustainableDevelopmentGoal
 }
 
 type SustainableDevelopmentGoalTarget {
@@ -2883,47 +1730,11 @@ type Tag {
   useCases: [UseCase!]!
 }
 
-"""
-The connection type for Tag.
-"""
-type TagConnection {
-  """
-  A list of edges.
-  """
-  edges: [TagEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Tag]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type TagDescription {
   description: String!
   id: ID!
   locale: String!
   tagId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type TagEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Tag
 }
 
 """
@@ -3315,47 +2126,11 @@ type UseCase {
   workflows: [Workflow!]
 }
 
-"""
-The connection type for UseCase.
-"""
-type UseCaseConnection {
-  """
-  A list of edges.
-  """
-  edges: [UseCaseEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [UseCase]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type UseCaseDescription {
   description: String!
   id: ID!
   locale: String!
   useCaseId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type UseCaseEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: UseCase
 }
 
 type UseCaseHeader {
@@ -3415,42 +2190,6 @@ type User {
   username: String
 }
 
-"""
-The connection type for User.
-"""
-type UserConnection {
-  """
-  A list of edges.
-  """
-  edges: [UserEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [User]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-"""
-An edge in a connection.
-"""
-type UserEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: User
-}
-
 type Wizard {
   digitalPrinciples: [DigitalPrinciple!]!
   playbooks: [Playbook!]!
@@ -3469,45 +2208,9 @@ type Workflow {
   workflowDescriptions: [WorkflowDescription!]!
 }
 
-"""
-The connection type for Workflow.
-"""
-type WorkflowConnection {
-  """
-  A list of edges.
-  """
-  edges: [WorkflowEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Workflow]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type WorkflowDescription {
   description: String!
   id: ID!
   locale: String!
   useCaseId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type WorkflowEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Workflow
 }

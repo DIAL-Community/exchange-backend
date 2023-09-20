@@ -90,7 +90,7 @@ module Paginated
       if !search.nil? && !search.to_s.strip.empty?
         name_products = products.name_contains(search)
         desc_products = products.joins(:product_descriptions)
-                                .where('LOWER(description) like LOWER(?)', "%#{search}%")
+                                .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{search}%")
         alias_products = products.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
         by_sectors = Product.joins(:sectors)
                             .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
