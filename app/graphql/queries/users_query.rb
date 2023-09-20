@@ -37,22 +37,6 @@ module Queries
     end
   end
 
-  class SearchUsersQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
-    argument :search, String, required: false, default_value: ''
-    type Types::UserType.connection_type, null: false
-
-    def resolve(search:)
-      return [] unless an_admin
-
-      users = User.order(:email)
-      users = users.name_contains(search) unless search.blank?
-
-      users.distinct
-    end
-  end
-
   class UserRolesQuery < Queries::BaseQuery
     type GraphQL::Types::JSON, null: true
 

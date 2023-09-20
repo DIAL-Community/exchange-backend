@@ -24,19 +24,4 @@ module Queries
       CandidateDataset.find_by(slug:)
     end
   end
-
-  class SearchCandidateDatasetsQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
-    argument :search, String, required: false, default_value: ''
-    type Types::CandidateDatasetType.connection_type, null: false
-
-    def resolve(search:)
-      return unless an_admin
-
-      candidate_datasets = CandidateDataset.order(rejected: :desc).order(:slug)
-      candidate_datasets = candidate_datasets.name_contains(search) unless search.blank?
-      candidate_datasets
-    end
-  end
 end
