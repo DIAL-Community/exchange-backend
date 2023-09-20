@@ -50,7 +50,7 @@ module Mutations
         end
       end
 
-      if has_storefront && !an_admin && !organization.nil? && !an_org_owner(organization.id)
+      if has_storefront && !an_admin && current_user.organization_id.nil?
         _email_user, email_host = current_user.email.split('@')
         unless website.include?(email_host)
           return {
