@@ -79,9 +79,22 @@ module Mutations
         assign_auditable_user(organization)
         organization.save
 
+        current_user = context[:current_user]
+        if current_user.organization_id.nil?
+          _email_user, email_host = current_user.email.split('@')
+          if organization.website.include?(email_host)
+            current_user.organization_id = organization.id
+            current_user.roles << User.user_roles[:org_user]
+            if current_user.save
+              puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
+            end
+          end
+        end
+
         unless image_file.nil?
           uploader = LogoUploader.new(organization, image_file.original_filename, context[:current_user])
           begin
+            puts "Saving logo file: '#{uploader.filename}'."
             uploader.store!(image_file)
             puts "Logo image: '#{uploader.filename}' saved."
           rescue StandardError => e
@@ -93,6 +106,7 @@ module Mutations
         unless hero_file.nil?
           uploader = HeroUploader.new(organization, "hero_#{hero_file.original_filename}", context[:current_user])
           begin
+            puts "Saving hero file: '#{uploader.filename}'."
             uploader.store!(hero_file)
             puts "Hero image: '#{uploader.filename}' saved."
           rescue StandardError => e
