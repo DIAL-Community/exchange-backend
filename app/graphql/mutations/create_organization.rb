@@ -84,7 +84,8 @@ module Mutations
           _email_user, email_host = current_user.email.split('@')
           if organization.website.include?(email_host)
             current_user.organization_id = organization.id
-            current_user.roles << User.user_roles[:org_user]
+            current_user.roles << User.user_roles[:org_user] \
+              unless current_user.roles.include?(User.user_roles[:org_user])
             if current_user.save
               puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
             end
