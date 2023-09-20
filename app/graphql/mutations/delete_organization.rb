@@ -15,9 +15,24 @@ module Mutations
         }
       end
       organization = Organization.find_by(id:)
-      assign_auditable_user(organization)
 
-      if organization.destroy
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        organization_owners = User.where(organization_id: id)
+        organization_owners.each do |organization_owner|
+          organization_owner.organization_id = nil
+          if organization_owner.save
+            puts "Unassigning organization owner: '#{organization_owner.email}'."
+          end
+        end
+
+        assign_auditable_user(organization)
+        organization.destroy
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful deletion, return the deleted organization with no errors
         {
           organization:,
