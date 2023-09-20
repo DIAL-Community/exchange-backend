@@ -28,17 +28,34 @@ module Mutations
       is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
       has_storefront: nil, description:, image_file: nil, hero_file: nil
     )
+      current_user = context[:current_user]
+      if current_user.nil?
+        return {
+          organization: nil,
+          errors: ['Must be logged in create / edit an organization.']
+        }
+      end
 
       # temporary special case for storefronts - want to allow any logged in user to create one
       # Look for an existing org before creating a new one
       if has_storefront
-        organization = Organization.first_duplicate([name], slug)
+        organization = Organization.first_duplicate(name, slug)
       else
         organization = Organization.find_by(slug:)
-        unless an_admin || (an_org_owner(organization.id) unless organization.nil?)
+        unless an_admin || (!organization.nil? && !an_org_owner(organization.id))
           return {
             organization: nil,
-            errors: ['Must be admin or organization owner to create an organization']
+            errors: ['Must be admin or organization owner to create / edit an organization']
+          }
+        end
+      end
+
+      if has_storefront && !an_admin && !organization.nil? && !an_org_owner(organization.id)
+        _email_user, email_host = current_user.email.split('@')
+        unless website.include?(email_host)
+          return {
+            organization: nil,
+            errors: ["User must have matching email host with organization's website"]
           }
         end
       end
@@ -80,15 +97,11 @@ module Mutations
         organization.save
 
         current_user = context[:current_user]
-        if current_user.organization_id.nil?
-          _email_user, email_host = current_user.email.split('@')
-          if organization.website.include?(email_host)
-            current_user.organization_id = organization.id
-            current_user.roles << User.user_roles[:org_user] \
-              unless current_user.roles.include?(User.user_roles[:org_user])
-            if current_user.save
-              puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
-            end
+        if has_storefront && !an_admin && !organization.nil? && !an_org_owner(organization.id)
+          current_user.organization_id = organization.id
+          current_user.roles << User.user_roles[:org_user]
+          if current_user.save
+            puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
           end
         end
 

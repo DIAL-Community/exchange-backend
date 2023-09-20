@@ -7,17 +7,19 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   let(:mutation) do
     <<~GQL
       mutation CreateOrganization(
-        $name: String!,
+        $name: String!
         $slug: String!
+        $website: String
         ) {
         createOrganization(
-          name: $name,
-          slug: $slug,
-          aliases: {},
-          website: "somewebsite.org",
-          isMni: false,
-          whenEndorsed: "2022-01-01",
-          endorserLevel: "none",
+          name: $name
+          slug: $slug
+          aliases: {}
+          website: $website
+          isMni: false
+          hasStorefront: true
+          whenEndorsed: "2022-01-01"
+          endorserLevel: "none"
           description: ""
         ) {
             organization
@@ -32,11 +34,11 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateOrganization).to(receive(:an_admin).and_return(true))
-
-    result = execute_graphql(
+    user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+    result = execute_graphql_as_user(
+      user,
       mutation,
-      variables: { name: "Some name", slug: "some_name" }
+      variables: { name: "Some name", slug: "some_name", website: "some.website.com" }
     )
 
     aggregate_failures do
@@ -46,13 +48,16 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   end
 
   it 'is successful - organization owner can update organization name and slug remains the same' do
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
-    expect_any_instance_of(Mutations::CreateOrganization).to(receive(:an_org_owner).and_return(true))
+    org = create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+    user = create(:user, email: 'user@some.website.com', roles: ['user', 'org_user'], organization_id: org.id)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
-      variables: { name: "Some new name", slug: "some_name" }
+      variables: { name: "Some new name", slug: "some_name", website: 'gmail.com' }
     )
+
+    puts "Result: #{result.inspect}"
 
     aggregate_failures do
       expect(result['data']['createOrganization']['organization'])
@@ -60,11 +65,32 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     end
   end
 
-  it 'is successful - admin can update organization name and slug remains the same' do
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
-    expect_any_instance_of(Mutations::CreateOrganization).to(receive(:an_admin).and_return(true))
+  it 'is successful - user can create storefront record and assigned as owner' do
+    user = create(:user, email: 'user@website.com', roles: ['user'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
+      mutation,
+      variables: { name: "Some storefront", slug: "", website: 'website.com' }
+    )
+
+    # Refresh current user record
+    user.reload
+
+    aggregate_failures do
+      expect(result['data']['createOrganization']['organization'])
+        .to(eq({ "name" => "Some storefront", "slug" => "some_storefront" }))
+      expect(user.organization_id).not_to(eq(nil))
+      expect(user.roles).to(eq(['user', 'org_user']))
+    end
+  end
+
+  it 'is successful - admin can update organization name and slug remains the same' do
+    user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+
+    result = execute_graphql_as_user(
+      user,
       mutation,
       variables: { name: "Some new name", slug: "some_name" }
     )
