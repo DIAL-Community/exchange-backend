@@ -28,6 +28,15 @@ module Mutations
       is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
       has_storefront: nil, description:, image_file: nil, hero_file: nil
     )
+      # Allowed to create record:
+      # - Admin user
+      # - Non admin user where email host is part of the organization's website
+
+      # Allowed to edit record:
+      # - Admin user
+      # - Organization owner
+
+      # Case: non user must not be allowed to create / edit storefront.
       current_user = context[:current_user]
       if current_user.nil?
         return {
@@ -36,13 +45,13 @@ module Mutations
         }
       end
 
-      # temporary special case for storefronts - want to allow any logged in user to create one
+      # Case: temporary special case for storefronts - want to allow any logged in user to create one
       # Look for an existing org before creating a new one
       if has_storefront
         organization = Organization.first_duplicate(name, slug)
       else
         organization = Organization.find_by(slug:)
-        unless an_admin || (!organization.nil? && !an_org_owner(organization.id))
+        unless an_admin || an_org_owner(organization&.id)
           return {
             organization: nil,
             errors: ['Must be admin or owner to create / edit an organization.']
@@ -50,7 +59,16 @@ module Mutations
         end
       end
 
-      if has_storefront && !an_admin && current_user.organization_id.nil?
+      creating_record = organization.nil?
+      # Case: non admin and non owner user are only allowed creating new storefront, not editing it
+      if has_storefront && !an_admin && !an_org_owner(organization&.id)
+        unless creating_record
+          return {
+            organization: nil,
+            errors: ["User are not allowed to edit existing organization record."]
+          }
+        end
+
         _email_user, email_host = current_user.email.split('@')
         unless website.include?(email_host)
           return {
@@ -97,7 +115,8 @@ module Mutations
         organization.save
 
         current_user = context[:current_user]
-        if has_storefront && !an_admin && !organization.nil? && !an_org_owner(organization.id)
+        # Only assigning ownership when the user is creating organization and not yet owning organization
+        if creating_record && has_storefront && !an_admin && !an_org_owner(organization&.id)
           current_user.organization_id = organization.id
           current_user.roles << User.user_roles[:org_user]
           if current_user.save
