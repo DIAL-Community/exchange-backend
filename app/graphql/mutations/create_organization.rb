@@ -45,7 +45,7 @@ module Mutations
         unless an_admin || (!organization.nil? && !an_org_owner(organization.id))
           return {
             organization: nil,
-            errors: ['Must be admin or organization owner to create / edit an organization']
+            errors: ['Must be admin or owner to create / edit an organization.']
           }
         end
       end
@@ -55,7 +55,7 @@ module Mutations
         unless website.include?(email_host)
           return {
             organization: nil,
-            errors: ["User must have matching email host with organization's website"]
+            errors: ["User must have matching email host with organization's website."]
           }
         end
       end

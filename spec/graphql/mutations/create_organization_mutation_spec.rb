@@ -10,7 +10,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
         $name: String!
         $slug: String!
         $website: String
-        ) {
+      ) {
         createOrganization(
           name: $name
           slug: $slug
@@ -22,8 +22,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
           endorserLevel: "none"
           description: ""
         ) {
-            organization
-            {
+            organization {
               name
               slug
             }
@@ -65,7 +64,23 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     end
   end
 
-  it 'is successful - user can create storefront record and assigned as owner' do
+  it 'is successful - admin can update organization name and slug remains the same' do
+    user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+
+    result = execute_graphql_as_user(
+      user,
+      mutation,
+      variables: { name: "Some new name", slug: "some_name" }
+    )
+
+    aggregate_failures do
+      expect(result['data']['createOrganization']['organization'])
+        .to(eq({ "name" => "Some new name", "slug" => "some_name" }))
+    end
+  end
+
+  it 'is successful - user with matching email host and get assigned as owner' do
     user = create(:user, email: 'user@website.com', roles: ['user'])
 
     result = execute_graphql_as_user(
@@ -85,19 +100,23 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     end
   end
 
-  it 'is successful - admin can update organization name and slug remains the same' do
-    user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+  it 'is failed - user with non matching email host' do
+    user = create(:user, email: 'user@non-website.com', roles: ['user'])
 
     result = execute_graphql_as_user(
       user,
       mutation,
-      variables: { name: "Some new name", slug: "some_name" }
+      variables: { name: "Some storefront", slug: "", website: 'website.com' }
     )
+
+    # Refresh current user record
+    user.reload
 
     aggregate_failures do
       expect(result['data']['createOrganization']['organization'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name" }))
+        .to(be(nil))
+      expect(user.organization_id).to(eq(nil))
+      expect(user.roles).to(eq(['user']))
     end
   end
 
