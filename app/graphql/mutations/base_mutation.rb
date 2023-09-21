@@ -20,23 +20,33 @@ module Mutations
     end
 
     def an_admin
-      !context[:current_user].nil? && context[:current_user].roles.include?('admin')
+      return false if context[:current_user].nil?
+
+      context[:current_user].roles.include?('admin')
     end
 
     def a_product_owner(product_id)
-      !context[:current_user].nil? && context[:current_user].user_products.include?(product_id)
+      return false if product_id.nil? || context[:current_user].nil?
+
+      context[:current_user].user_products.include?(product_id)
     end
 
     def an_org_owner(organization_id)
-      !context[:current_user].nil? && context[:current_user].organization_id.equal?(organization_id)
+      return false if organization_id.nil? || context[:current_user].nil?
+
+      context[:current_user].organization_id.equal?(organization_id)
     end
 
     def a_dataset_owner(dataset_id)
-      !context[:current_user].nil? && context[:current_user].user_datasets.include?(dataset_id)
+      return false if dataset_id.nil? || context[:current_user].nil?
+
+      context[:current_user].user_datasets.include?(dataset_id)
     end
 
     def a_content_editor
-      !context[:current_user].nil? && context[:current_user].roles.include?('content_editor')
+      return false if context[:current_user].nil?
+
+      context[:current_user].roles.include?('content_editor')
     end
 
     def product_owner_check_for_project(project)
