@@ -34,3 +34,14 @@ services:
     command: yarn start
     depends_on:
       - web
+  playbooks:
+    build: '../playbooks'
+    entrypoint: '/playbooks/docker-entrypoint.sh'
+    tty: true
+    stdin_open: true # without this node doesn't start
+    restart: always
+    ports:
+      - 3001:3001
+    depends_on:
+      - web
+      - catalog-front
