@@ -38,6 +38,7 @@ RUN gem install rswag-ui -v 2.9.0
 RUN gem install simple_token_authentication -v 1.18.1
 RUN gem install google-cloud-translate -v 3.4.0
 
+ENV BUNDLER_WITHOUT development
 RUN gem install bundler
 RUN bundle install --jobs 2 --retry 5
 
