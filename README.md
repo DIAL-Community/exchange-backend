@@ -13,7 +13,7 @@ The catalog supports the [SDG Digital Investment Framework](https://digitalimpac
 
 Note that this repository contains the code for the back-end/API for the Catalog. The front-end
 code for the Catalog can be referenced at:
-https://gitlab.com/dial/online-catalog/catalog-front/-/tree/development
+https://gitlab.com/dial/digital-impact-exchange/exchange-front/-/tree/development
 
 ## Documentation
 

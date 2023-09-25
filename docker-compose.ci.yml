@@ -27,9 +27,9 @@ services:
    - 3000:3000
   depends_on:
    - postgres
- catalog-front:
+ exchange-frontend:
   build:
-    context: ../catalog-front/
+    context: ../exchange-frontend/
     target: prod
   working_dir: /app
   user: nextjs
