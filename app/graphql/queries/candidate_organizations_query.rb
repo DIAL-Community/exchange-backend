@@ -24,19 +24,4 @@ module Queries
       CandidateOrganization.find_by(slug:)
     end
   end
-
-  class SearchCandidateOrganizationsQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
-    argument :search, String, required: true
-    type Types::CandidateOrganizationType.connection_type, null: false
-
-    def resolve(search:)
-      return unless an_admin
-
-      candidate_organizations = CandidateOrganization.order(rejected: :desc).order(:slug)
-      candidate_organizations = candidate_organizations.name_contains(search) unless search.blank?
-      candidate_organizations
-    end
-  end
 end

@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  web:
+  exchange-backend:
     # image: localhost:5000/t4d-product-backlog:${T4D_VERSION}
     build:
       context: .
@@ -21,9 +21,9 @@ services:
       - ./prod/logrotate.d/registry:/etc/logrotate.d/registry
     ports:
       - 80:3000
-  catalog-front:
+  exchange-frontend:
     build:
-      context: ../catalog-front/
+      context: ../exchange-frontend/
       target: prod
     working_dir: /app
     user: nextjs
@@ -33,7 +33,7 @@ services:
       - 3002:3002
     command: yarn start
     depends_on:
-      - web
+      - exchange-backend
   playbooks:
     build: '../playbooks'
     entrypoint: '/playbooks/docker-entrypoint.sh'
@@ -43,5 +43,5 @@ services:
     ports:
       - 3001:3001
     depends_on:
-      - web
-      - catalog-front
+      - exchange-backend
+      - exchange-frontend
