@@ -8,7 +8,13 @@ class TaskTracker < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
-  attr_accessor :tt_desc
+  def description_localized
+    description = task_tracker_descriptions.find_by(locale: I18n.locale)
+    if description.nil?
+      description = task_tracker_descriptions.find_by(locale: 'en')
+    end
+    description
+  end
 
   def to_param
     slug

@@ -3473,10 +3473,11 @@ CREATE TABLE public.task_trackers (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    last_run timestamp without time zone,
+    last_started_date timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    message character varying NOT NULL
+    last_received_message character varying NOT NULL,
+    task_completed boolean DEFAULT false NOT NULL
 );
 
 
@@ -7944,6 +7945,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230815093725'),
 ('20230816123325'),
 ('20230822215103'),
-('20230912211315');
+('20230912211315'),
+('20230928214508'),
+('20230928215346');
 
 
