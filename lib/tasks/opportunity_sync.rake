@@ -254,18 +254,18 @@ namespace :opportunities_sync do
           temp_file.write(response.body)
           temp_file.close
 
-          file_identical = FileUtils.compare_file(opportunity.image_file, temp_file)
-          unless file_identical
+          # TODO: Skipping if we already have the logo file. This would mean we could have stale logo.
+          # If we don't do this check, the scheduled task will bombard our mailbox with notification.
+          unless File.exist?(File.join('public', 'assets', 'opportunities', "#{opportunity.slug}.png"))
             # Maybe we can have system user in the future?
             uploader = User.find_by(username: 'nribeka')
             file_extension = logo_data['extension']
-            # Upload the logo file
+            # Upload the logo file because they're not in the filesystem.
             uploader = LogoUploader.new(opportunity, "#{opportunity.slug}.#{file_extension}", uploader)
             uploader.store!(temp_file)
           end
         rescue StandardError => e
-          puts "  Unable to save logo for '#{opportunity.name}'."
-          puts "  Message: '#{e}'"
+          puts "  Unable to save logo for: #{opportunity.name}. Error message: #{e.inspect}."
         ensure
           temp_file.unlink
         end
