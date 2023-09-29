@@ -65,9 +65,11 @@ namespace :opportunities_sync do
   end
 
   def create_opportunity_record(opportunity_structure, leverist_sector_mapping)
-    opportunity = Opportunity.find_by(slug: slug_em(opportunity_structure['title']))
+    opportunity_name = opportunity_structure['title']
+    opportunity_slug = slug_em(opportunity_structure['title'])
+    opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first
     if opportunity.nil?
-      opportunity = Opportunity.new(name: opportunity_structure['title'])
+      opportunity = Opportunity.new(name: opportunity_name)
       opportunity.slug = slug_em(opportunity_structure['title'])
 
       if Opportunity.where(slug: opportunity.slug).count.positive?
@@ -80,7 +82,7 @@ namespace :opportunities_sync do
     end
 
     # Don'r re-slug opportunity name
-    opportunity.name = opportunity_structure['title']
+    opportunity.name = opportunity_name
 
     unless opportunity_structure['slug'].nil?
       opportunity.web_address = "app.leverist.de/en/opportunities/#{opportunity_structure['slug']}"
@@ -252,12 +254,15 @@ namespace :opportunities_sync do
           temp_file.write(response.body)
           temp_file.close
 
-          uploader = LogoUploader.new(
-            opportunity,
-            "#{opportunity.slug}.#{logo_data['extension']}",
-            User.find_by(username: 'nribeka')
-          )
-          uploader.store!(temp_file)
+          file_identical = FileUtils.compare_file(opportunity.image_file, temp_file)
+          unless file_identical
+            # Maybe we can have system user in the future?
+            uploader = User.find_by(username: 'nribeka')
+            file_extension = logo_data['extension']
+            # Upload the logo file
+            uploader = LogoUploader.new(opportunity, "#{opportunity.slug}.#{file_extension}", uploader)
+            uploader.store!(temp_file)
+          end
         rescue StandardError => e
           puts "  Unable to save logo for '#{opportunity.name}'."
           puts "  Message: '#{e}'"

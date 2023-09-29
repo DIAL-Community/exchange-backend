@@ -80,7 +80,7 @@ class LogoUploader < CarrierWave::Uploader::Base
     "#{model.slug}.png"
   end
 
-  def send_notification(_file)
+  def send_notification
     filename = @file_name
     if filename.nil?
       filename = file.original_filename
