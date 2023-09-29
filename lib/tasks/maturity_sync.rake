@@ -221,7 +221,7 @@ namespace :maturity_sync do
     tracking_task_start(task_name)
 
     ProductRepository.all.each do |product_repository|
-      tracking_task_log(task_name, "Updating score for: #{product_repository.product.name}.")
+      tracking_task_log(task_name, "Updating language data for: #{product_repository.product.name}.")
       sync_product_languages(product_repository)
     end
 
@@ -237,7 +237,7 @@ namespace :maturity_sync do
     config_file = YAML.load_file('config/indicator_config.yml')
 
     Product.all.each do |product|
-      tracking_task_log(task_name, "Updating score for: #{product.name}.")
+      tracking_task_log(task_name, "Updating indicator for: #{product.name}.")
 
       sync_license_indicator(product)
       sync_containerized_indicator(product)

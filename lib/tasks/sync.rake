@@ -97,7 +97,7 @@ namespace :sync do
     osc_data.each do |product|
       next if search_in_ignorelist(product, ignore_list)
 
-      tracking_task_log(task_name, "Processing DS entry: #{product['name']}.")
+      tracking_task_log(task_name, "Processing OSC entry: #{product['name']}.")
       sync_json_product(product)
       sync_repository_data(product)
     end

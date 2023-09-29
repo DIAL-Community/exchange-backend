@@ -17,7 +17,7 @@ namespace :markdown_sync do
     UseCase.all.each do |use_case|
       next if use_case.markdown_url.nil?
 
-      tracking_task_log(task_name, "Updating use case for: #{use_case.name}.")
+      tracking_task_log(task_name, "Updating use case: #{use_case.name}.")
 
       data = URI.parse(use_case.markdown_url).read
 
