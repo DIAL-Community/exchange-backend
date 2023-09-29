@@ -28710,7 +28710,7 @@
               ],
               "type": {
                 "kind": "SCALAR",
-                "name": "ISO8601Date",
+                "name": "ISO8601DateTime",
                 "ofType": null
               },
               "isDeprecated": false,

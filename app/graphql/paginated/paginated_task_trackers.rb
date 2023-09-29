@@ -7,7 +7,7 @@ module Paginated
     type [Types::TaskTrackerType], null: false
 
     def resolve(search:, offset_attributes:)
-      task_trackers = TaskTracker.order(:name)
+      task_trackers = TaskTracker.order(last_started_date: :desc)
       unless search.blank?
         name_filter = task_trackers.name_contains(search)
         desc_filter = task_trackers.left_joins(:task_tracker_descriptions)

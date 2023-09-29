@@ -15,7 +15,7 @@ module Types
     field :task_completed, Boolean, null: false
 
     field :last_received_message, String, null: false
-    field :last_started_date, GraphQL::Types::ISO8601Date, null: true
+    field :last_started_date, GraphQL::Types::ISO8601DateTime, null: true
 
     field :task_tracker_descriptions, [Types::TaskTrackerDescriptionType], null: true
     field :task_tracker_description, Types::TaskTrackerDescriptionType, null: true, method: :description_localized

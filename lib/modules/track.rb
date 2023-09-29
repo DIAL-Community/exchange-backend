@@ -4,9 +4,8 @@ require 'modules/slugger'
 include Modules::Slugger
 
 module Modules
-  # Task tracker utility functions.
   module Track
-    def track_task(task_name, message, description)
+    def tracking_task_setup(task_name, message, description = nil)
       task_slug = slug_em(task_name)
       task_tracker = TaskTracker.find_by(slug: task_slug)
       if task_tracker.nil?
@@ -16,9 +15,8 @@ module Modules
       end
 
       task_tracker.last_received_message = message
-      task_tracker.last_started_date = Time.now
       if task_tracker.save
-        puts "Task: '#{task_name}' recorded with message: '#{message}'."
+        puts "Task Tracker: #{task_name}, saving message: '#{message}'."
 
         task_tracker_description = TaskTrackerDescription.find_by(
           task_tracker_id: task_tracker.id,
@@ -36,20 +34,35 @@ module Modules
       end
     end
 
-    def tracking_task_setup(task_name, message, description)
-      track_task(task_name, message, description)
+    def tracking_task_start(task_name)
+      task_slug = slug_em(task_name)
+      task_tracker = TaskTracker.find_by(slug: task_slug)
+      return if task_tracker.nil?
+
+      task_tracker.last_received_message = 'Starting up task.'
+      task_tracker.last_started_date = Time.now
+      task_tracker.task_completed = false
+      task_tracker.save
     end
 
-    def tracking_task_start(task_name)
-      track_task(task_name, 'Starting up task.')
+    def tracking_task_log(task_name, message)
+      task_slug = slug_em(task_name)
+      task_tracker = TaskTracker.find_by(slug: task_slug)
+      return if task_tracker.nil?
+
+      task_tracker.last_received_message = message
+      task_tracker.save
     end
 
     def tracking_task_finish(task_name)
-      track_task(task_name, 'Task completed.')
-    end
+      task_slug = slug_em(task_name)
+      task_tracker = TaskTracker.find_by(slug: task_slug)
+      return if task_tracker.nil?
 
-    def tracking_task_exception(task_name, message)
-      track_task(task_name, message)
+      task_tracker.last_received_message = 'Task completed.'
+      task_tracker.task_completed = true
+
+      task_tracker.save
     end
   end
 end

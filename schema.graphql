@@ -1753,7 +1753,7 @@ type TagDescription {
 type TaskTracker {
   id: ID!
   lastReceivedMessage: String!
-  lastStartedDate: ISO8601Date
+  lastStartedDate: ISO8601DateTime
   name: String!
   slug: String!
   taskCompleted: Boolean!

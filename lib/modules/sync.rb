@@ -625,7 +625,7 @@ module Modules
         end
       end
 
-      existing_project.save
+      existing_project.save!
 
       # Assign implementing organization
       implementer_organizations = Organization.name_contains(english_project[5])
@@ -718,7 +718,7 @@ module Modules
         end
       end
 
-      existing_project.save
+      existing_project.save!
       puts "-----------"
     end
 

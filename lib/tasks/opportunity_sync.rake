@@ -9,6 +9,10 @@ require 'modules/slugger'
 namespace :opportunities_sync do
   desc 'Sync use case github structure.'
   task sync_leverist: :environment do
+    task_name = 'Sync Leverist RFP'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     # page_query = ''
     page_query = '?industries=JZmYlQ31enoN'
     base_leverist_url = 'https://api.leverist.de/frontend/opportunities'
@@ -37,13 +41,17 @@ namespace :opportunities_sync do
       end
       break if page_query.blank?
     end
+
+    tracking_task_finish(task_name)
   end
 
   def process_leverist_data(leverist_data, leverist_sector_mapping)
+    task_name = 'Sync Leverist RFP'
     opportunity_data = leverist_data['data']
     opportunity_data.each do |opportunity_structure|
       puts '----------'
       puts "Reading opportunity: #{opportunity_structure['title']}."
+      tracking_task_log(task_name, "Parsing: #{opportunity_structure['title']}.")
       create_opportunity_record(opportunity_structure, leverist_sector_mapping)
     end
   end
