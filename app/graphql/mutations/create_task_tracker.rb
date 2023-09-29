@@ -33,9 +33,13 @@ module Mutations
           errors: ['Unable to find the expected task_tracker']
         }
       end
+      assign_auditable_user(task_tracker)
 
       successful_operation = false
       ActiveRecord::Base.transaction do
+        task_tracker.name = name
+        task_tracker.save
+
         task_tracker_description = TaskTrackerDescription.find_by(task_tracker_id: task_tracker.id, locale: I18n.locale)
         task_tracker_description = TaskTrackerDescription.new if task_tracker_description.nil?
         unless description.blank?
@@ -43,6 +47,7 @@ module Mutations
           task_tracker_description.task_tracker_id = task_tracker.id
           task_tracker_description.locale = I18n.locale
         end
+        assign_auditable_user(task_tracker_description)
         task_tracker_description.save
 
         successful_operation = true

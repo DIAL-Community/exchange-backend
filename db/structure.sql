@@ -3442,7 +3442,7 @@ CREATE TABLE public.task_tracker_descriptions (
     id bigint NOT NULL,
     task_tracker_id bigint NOT NULL,
     locale character varying NOT NULL,
-    description jsonb DEFAULT '{}'::jsonb NOT NULL
+    description character varying DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -7947,6 +7947,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230822215103'),
 ('20230912211315'),
 ('20230928214508'),
-('20230928215346');
+('20230928215346'),
+('20230929140735');
 
 
