@@ -7,6 +7,8 @@ module Paginated
     type [Types::TaskTrackerType], null: false
 
     def resolve(search:, offset_attributes:)
+      return [] unless an_admin
+
       task_trackers = TaskTracker.order(last_started_date: :desc)
       unless search.blank?
         name_filter = task_trackers.name_contains(search)
