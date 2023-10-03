@@ -308,7 +308,7 @@ namespace :sync do
       product_description = ProductDescription.where(product_id: product, locale: I18n.locale)
       next unless product_description.empty?
 
-      tracking_task_log(task_name, "Processing website for product: #{product['name']}.")
+      tracking_task_log(task_name, "Processing website for product: #{product.name}.")
 
       begin
         puts "(Product) Opening connection to: #{product.website}."
@@ -351,7 +351,7 @@ namespace :sync do
       org_description = OrganizationDescription.where(organization_id: organization, locale: I18n.locale)
       next unless org_description.empty?
 
-      tracking_task_log(task_name, "Processing website for organization: #{product['name']}.")
+      tracking_task_log(task_name, "Processing website for organization: #{organization.name}.")
 
       begin
         puts "(Organization) Opening connection to: #{organization.website}."
