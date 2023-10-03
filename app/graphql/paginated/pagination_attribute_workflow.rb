@@ -24,11 +24,11 @@ module Paginated
                                                 .select(:number)
         sdg_use_cases = UseCase.joins(:sdg_targets)
                                .where(sdg_targets: { sdg_number: sdg_numbers })
-        sdg_use_case_ids.concat(sdg_use_cases.ids)
+        sdg_use_case_ids += sdg_use_cases.ids unless sdg_use_cases.empty?
       end
 
       filtered_use_cases = use_cases.reject { |x| x.nil? || x.empty? }
-      filtered_use_cases = sdg_use_case_ids.concat(filtered_use_cases)
+      filtered_use_cases = sdg_use_case_ids + filtered_use_cases
       unless filtered_use_cases.empty?
         use_case_filter = Workflow.joins(:use_case_steps)
                                   .where(use_case_steps: { use_case_id: filtered_use_cases })

@@ -3,10 +3,11 @@
 module Paginated
   class PaginationAttributeTaskTracker < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
+    argument :show_failed_only, Boolean, required: false, default_value: false
 
     type Attributes::PaginationAttributes, null: false
 
-    def resolve(search:)
+    def resolve(search:, show_failed_only:)
       return { total_count: 0 } unless an_admin
 
       task_trackers = TaskTracker.order(:name)
@@ -15,6 +16,10 @@ module Paginated
         desc_filter = task_trackers.left_joins(:task_tracker_descriptions)
                                    .where('LOWER(task_tracker_descriptions.description) like LOWER(?)', "%#{search}%")
         task_trackers = task_trackers.where(id: (name_filter + desc_filter).uniq)
+      end
+
+      if show_failed_only
+        task_trackers = task_trackers.where(task_completed: false)
       end
 
       { total_count: task_trackers.count }
