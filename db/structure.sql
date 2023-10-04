@@ -437,6 +437,40 @@ ALTER SEQUENCE public.audits_id_seq OWNED BY public.audits.id;
 
 
 --
+-- Name: authors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.authors (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    email character varying,
+    picture character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.authors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.authors_id_seq OWNED BY public.authors.id;
+
+
+--
 -- Name: building_block_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3036,7 +3070,32 @@ CREATE TABLE public.resources (
     link character varying,
     description character varying,
     show_in_wizard boolean DEFAULT false NOT NULL,
-    show_in_exchange boolean DEFAULT false NOT NULL
+    show_in_exchange boolean DEFAULT false NOT NULL,
+    topic character varying,
+    published_date timestamp(6) without time zone,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    featured boolean DEFAULT false NOT NULL,
+    spotlight boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: resources_authors; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resources_authors (
+    resource_id bigint NOT NULL,
+    author_id bigint NOT NULL
+);
+
+
+--
+-- Name: resources_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resources_countries (
+    resource_id bigint NOT NULL,
+    country_id bigint NOT NULL
 );
 
 
@@ -3965,6 +4024,13 @@ ALTER TABLE ONLY public.audits ALTER COLUMN id SET DEFAULT nextval('public.audit
 
 
 --
+-- Name: authors id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.authors ALTER COLUMN id SET DEFAULT nextval('public.authors_id_seq'::regclass);
+
+
+--
 -- Name: building_block_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -4665,6 +4731,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 ALTER TABLE ONLY public.audits
     ADD CONSTRAINT audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authors authors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.authors
+    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
 
 
 --
@@ -5473,6 +5547,13 @@ CREATE INDEX auditable_index ON public.audits USING btree (action, id, version);
 
 
 --
+-- Name: authors_unique_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX authors_unique_slug ON public.authors USING btree (slug);
+
+
+--
 -- Name: bbs_plays_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6177,6 +6258,34 @@ CREATE INDEX index_projects_on_origin_id ON public.projects USING btree (origin_
 --
 
 CREATE INDEX index_regions_on_country_id ON public.regions USING btree (country_id);
+
+
+--
+-- Name: index_resources_authors_on_author_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_author_id ON public.resources_authors USING btree (author_id);
+
+
+--
+-- Name: index_resources_authors_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_resource_id ON public.resources_authors USING btree (resource_id);
+
+
+--
+-- Name: index_resources_countries_on_country_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_country_id ON public.resources_countries USING btree (country_id);
+
+
+--
+-- Name: index_resources_countries_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_resource_id ON public.resources_countries USING btree (resource_id);
 
 
 --
@@ -7948,6 +8057,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230912211315'),
 ('20230928214508'),
 ('20230928215346'),
-('20230929140735');
+('20230929140735'),
+('20231004184941');
 
 

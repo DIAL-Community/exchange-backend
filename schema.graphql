@@ -38,6 +38,13 @@ type ApproveRejectCandidateRolePayload {
   errors: [String!]
 }
 
+type Author {
+  email: String!
+  id: ID!
+  name: String!
+  picture: String!
+}
+
 type Bookmark {
   bookmarkedBuildingBlocks: [BuildingBlock!]
   bookmarkedProducts: [Product!]
@@ -1654,17 +1661,24 @@ type RemoveStarredObjectPayload {
 }
 
 type Resource {
+  authors: [Author!]!
+  countries: [Country!]!
   description: String
+  featured: Boolean!
   id: ID!
   imageFile: String!
   imageUrl: String
   link: String
   name: String!
-  organizations: [Organization!]
+  organizations: [Organization!]!
   phase: String!
+  publishedDate: ISO8601DateTime
   showInExchange: Boolean!
   showInWizard: Boolean!
   slug: String!
+  spotlight: Boolean!
+  tags: JSON!
+  topic: String
 }
 
 type RubricCategory {

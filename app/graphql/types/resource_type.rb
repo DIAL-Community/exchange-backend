@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 module Types
+  class AuthorType < Types::BaseObject
+    field :id, ID, null: false
+    field :name, String, null: false
+    field :email, String, null: false
+    field :picture, String, null: false
+  end
+
   class ResourceType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
@@ -15,6 +22,15 @@ module Types
     field :show_in_exchange, Boolean, null: false
     field :show_in_wizard, Boolean, null: false
 
-    field :organizations, [Types::OrganizationType], null: true
+    field :topic, String, null: true
+    field :featured, Boolean, null: false
+    field :spotlight, Boolean, null: false
+
+    field :published_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :tags, GraphQL::Types::JSON, null: false
+
+    field :organizations, [Types::OrganizationType], null: false
+    field :countries, [Types::CountryType], null: false, method: :countries_ordered
+    field :authors, [Types::AuthorType], null: false, method: :authors_ordered
   end
 end
