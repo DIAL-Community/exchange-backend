@@ -27,6 +27,9 @@ RUN git clone https://github.com/publicgoods/products.git /products
 RUN mkdir /product-evaluation-rubric
 RUN git clone https://gitlab.com/dial/product-evaluation-rubric/product-evaluation-rubric.git /product-evaluation-rubric
 
+COPY cron-sync /etc/cron.d/cron-sync
+RUN crontab /etc/cron.d/cron-sync
+
 WORKDIR /tmp
 ENV BUNDLER_VERSION 2.4.17
 COPY Gemfile /tmp/Gemfile
@@ -75,6 +78,9 @@ RUN git clone https://github.com/publicgoods/products.git /products
 
 RUN mkdir /product-evaluation-rubric
 RUN git clone https://gitlab.com/dial/product-evaluation-rubric/product-evaluation-rubric.git /product-evaluation-rubric
+
+# COPY cron-sync /etc/cron.d/cron-sync
+# RUN crontab /etc/cron.d/cron-sync
 
 WORKDIR /tmp
 ENV BUNDLER_VERSION 2.4.17

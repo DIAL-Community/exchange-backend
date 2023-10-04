@@ -30,25 +30,25 @@ module Paginated
                                                 .select(:number)
         sdg_use_cases = UseCase.joins(:sdg_targets)
                                .where(sdg_targets: { sdg_number: sdg_numbers })
-        use_case_ids.concat(sdg_use_cases.ids)
+        use_case_ids += sdg_use_cases.ids unless sdg_use_cases.empty?
       end
 
       workflow_ids = []
-      filtered_use_cases = use_case_ids.concat(use_cases.reject { |x| x.nil? || x.empty? })
+      filtered_use_cases = use_case_ids + use_cases.reject { |x| x.nil? || x.empty? }
       unless filtered_use_cases.empty?
         filtered = true
         use_case_workflows = Workflow.joins(:use_case_steps)
                                      .where(use_case_steps: { use_case_id: filtered_use_cases })
-        workflow_ids.concat(use_case_workflows.ids)
+        workflow_ids += use_case_workflows.ids unless use_case_workflows.empty?
       end
 
       filtered_workflows = workflows.reject { |x| x.nil? || x.empty? }
       filtered ||= !filtered_workflows.empty?
 
-      filtered_workflows = workflow_ids.concat(filtered_workflows)
+      filtered_workflows = workflow_ids + filtered_workflows
       if filtered
         if filtered_workflows.empty?
-          return []
+          return { total_count: 0 }
         else
           building_blocks = building_blocks.joins(:workflows)
                                            .where(workflows: { id: filtered_workflows })

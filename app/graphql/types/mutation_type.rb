@@ -149,5 +149,7 @@ module Types
 
     field :create_starred_object, mutation: Mutations::CreateStarredObject
     field :remove_starred_object, mutation: Mutations::RemoveStarredObject
+
+    field :create_task_tracker, mutation: Mutations::CreateTaskTracker
   end
 end
