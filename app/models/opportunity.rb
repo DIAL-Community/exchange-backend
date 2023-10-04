@@ -61,10 +61,8 @@ class Opportunity < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: 300 }
 
-  scope(
-    :name_contains,
-    ->(name) { where('LOWER(opportunities.name) like LOWER(?)', "%#{name}%") }
-  )
+  scope :name_contains, ->(name) { where('LOWER(opportunities.name) like LOWER(?)', "%#{name}%") }
+  scope :name_and_slug_search, -> (name, slug) { where('opportunities.name = ? OR opportunities.slug = ?', name, slug) }
 
   def image_file
     if File.exist?(File.join('public', 'assets', 'opportunities', "#{slug}.png"))

@@ -37,6 +37,10 @@ namespace :endorsers do
 
   desc 'Read and parse endorser data from the form response.'
   task sync_form_response: :environment do |_, _params|
+    task_name = 'Process Endorser Form Response'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     spreadsheet_id = '1wFAs-HeamUIwRwKCKwJqOmaWvXBwHoBQSSx6dctWn-Y'
     range = 'Form Responses!A2:Z'
     response = read_spreadsheet(spreadsheet_id, range)
@@ -50,6 +54,8 @@ namespace :endorsers do
       _timestamp, email_address, name, title, organization_name, organization_website, _organization_type,
       headquarters_city, headquarters_country, countries, sectors, _sdgs, _organizations_goals, contact_person,
       contact_name, contact_title, contact_email = row
+
+      tracking_task_log(task_name, "Processing: #{organization_name}.")
 
       organization_slug = slug_em(organization_name)
       organization = Organization.find_by(slug: organization_slug)
@@ -129,6 +135,8 @@ namespace :endorsers do
         puts "Endorser '#{organization.name}' added to the database."
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   def generate_offset(first_duplicate)

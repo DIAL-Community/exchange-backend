@@ -30,7 +30,10 @@ namespace :sync do
 
   desc 'Sync the database with the public goods lists.'
   task :public_goods, [:path] => :environment do
-    puts 'Pulling data from DPGA.'
+    task_name = 'Sync DPGA Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     dpg_uri = URI.parse('https://api.digitalpublicgoods.net/dpgs/')
@@ -39,6 +42,7 @@ namespace :sync do
     dpg_data.each do |entry|
       next if search_in_ignorelist(entry, ignore_list)
 
+      tracking_task_log(task_name, "Processing DPG entry: #{entry['name']}.")
       sync_public_dataset(entry)
       sync_public_product(entry)
       sync_repository_data(entry)
@@ -51,17 +55,21 @@ namespace :sync do
     dpg_data.each do |entry|
       next if search_in_ignorelist(entry, ignore_list)
 
+      tracking_task_log(task_name, "Processing DPG nominee entry: #{entry['name']}.")
       sync_public_dataset(entry)
       sync_public_product(entry)
       sync_repository_data(entry)
       puts "--------"
     end
-    puts 'DPGA data synced.'
     send_notification
+    tracking_task_finish(task_name)
   end
 
   task :digi_square_digital_good, [:path] => :environment do
-    puts 'Parsing data from Digital Square Global Goods.'
+    task_name = 'Sync DS Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     digisquare_maturity = JSON.parse(File.read('config/digisquare_maturity_data.json'))
@@ -69,15 +77,19 @@ namespace :sync do
     digisquare_products['products'].each do |digi_product|
       next if search_in_ignorelist(digi_product, ignore_list)
 
+      tracking_task_log(task_name, "Processing DS entry: #{digi_product['name']}.")
       sync_digisquare_product(digi_product, digisquare_maturity)
       sync_repository_data(digi_product)
     end
-    puts 'Digital Square Global Goods data synced.'
     send_notification
+    tracking_task_finish(task_name)
   end
 
   task :osc_digital_good_local, [] => :environment do
-    puts 'Pulling data from Open Source Center.'
+    task_name = 'Sync OSC Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     ignore_list = YAML.load_file('config/product_ignorelist.yml')
 
     osc_file = File.read('utils/digital_global_goods.json')
@@ -85,11 +97,12 @@ namespace :sync do
     osc_data.each do |product|
       next if search_in_ignorelist(product, ignore_list)
 
+      tracking_task_log(task_name, "Processing OSC entry: #{product['name']}.")
       sync_json_product(product)
       sync_repository_data(product)
     end
-    puts 'Open Source Center data synced.'
     send_notification
+    tracking_task_finish(task_name)
   end
 
   task :indiastack_products, [] => :environment do
@@ -283,7 +296,9 @@ namespace :sync do
   end
 
   task :fetch_website_data, [:path] => :environment do |_, _params|
-    puts 'Updating organization and product description data ...'
+    task_name = 'Update Website Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
 
     Product.left_joins(:product_descriptions)
            .where(product_descriptions: { id: nil })
@@ -292,6 +307,8 @@ namespace :sync do
 
       product_description = ProductDescription.where(product_id: product, locale: I18n.locale)
       next unless product_description.empty?
+
+      tracking_task_log(task_name, "Processing website for product: #{product.name}.")
 
       begin
         puts "(Product) Opening connection to: #{product.website}."
@@ -321,7 +338,9 @@ namespace :sync do
       product_description.product_id = product.id
       product_description.locale = I18n.locale
       product_description.description = description.strip
-      puts "Setting description for: #{product.name} => #{description}" if product_description.save!
+      if product_description.save!
+        puts "Setting description for: #{product.name} => #{description}"
+      end
     end
 
     Organization.left_joins(:organization_descriptions)
@@ -331,6 +350,8 @@ namespace :sync do
 
       org_description = OrganizationDescription.where(organization_id: organization, locale: I18n.locale)
       next unless org_description.empty?
+
+      tracking_task_log(task_name, "Processing website for organization: #{organization.name}.")
 
       begin
         puts "(Organization) Opening connection to: #{organization.website}."
@@ -360,9 +381,11 @@ namespace :sync do
       organization_description.locale = I18n.locale
       organization_description.description = description.strip
       if organization_description.save!
-        puts "Setting description for: #{organization.name} => #{organization_description.description}"
+        puts "Setting description for: #{organization.name} => #{description}"
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   desc 'Sync the database with the public goods lists.'
@@ -446,14 +469,21 @@ namespace :sync do
   end
 
   task :update_tco_data, [] => :environment do
-    puts 'Updating TCO data for products.'
-
+    task_name = 'Update TCO Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
     ProductRepository.all.each do |product_repository|
+      tracking_task_log(task_name, "Updating score for: #{product_repository.product.name}.")
       update_tco_data(product_repository)
     end
+    tracking_task_finish(task_name)
   end
 
   task :sync_giz_projects, [] => :environment do
+    task_name = 'Update GIZ Project Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     giz_origin = Origin.find_by(name: 'GIZ')
     if giz_origin.nil?
       giz_origin = Origin.new
@@ -461,7 +491,7 @@ namespace :sync do
       giz_origin.slug = slug_em(giz_origin.name)
       giz_origin.description = 'Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH'
 
-      puts 'GIZ as origin is created.' if giz_origin.save
+      puts 'GIZ as origin is created.' if giz_origin.save!
     end
 
     # Get credentials for Toolkit
@@ -485,7 +515,7 @@ namespace :sync do
     request['Cookie'] = cookies
     english_response = http.request(request)
 
-    puts "Parsing english csv file."
+    tracking_task_log(task_name, 'Parsing english csv file.')
     english_csv = CSV.parse(english_response.body, headers: true)
 
     uri = URI('https://digitalportfolio.bmz-digital.global/projects/export/')
@@ -496,16 +526,25 @@ namespace :sync do
     request['Cookie'] = cookies
     german_response = http.request(request)
 
-    puts "Parsing german csv file."
+    tracking_task_log(task_name, 'Parsing german csv file.')
     german_csv = CSV.parse(german_response.body, headers: true)
 
     english_csv.each_with_index do |english_project, index|
+      project_name = english_project[0]
+      tracking_task_log(task_name, "Processing project: #{project_name}.")
+
       german_project = german_csv[index]
       sync_giz_project(english_project, german_project, giz_origin)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :sync_digital_health_atlas_data, [] => :environment do
+    task_name = 'Update DHA Project Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     dha_origin = Origin.find_by(name: 'Digital Health Atlas')
     if dha_origin.nil?
       dha_origin = Origin.new
@@ -537,6 +576,8 @@ namespace :sync do
       project_name = project['name']
       project_slug = slug_em(project_name, 64)
       existing_project = Project.find_by(slug: project_slug, origin_id: dha_origin.id)
+
+      tracking_task_log(task_name, "Processing project: #{project_name}.")
 
       if existing_project.nil?
         existing_project = Project.new
@@ -653,6 +694,8 @@ namespace :sync do
         end
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :import_dha_projects, [] => :environment do

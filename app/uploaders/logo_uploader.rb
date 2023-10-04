@@ -31,7 +31,7 @@ class LogoUploader < CarrierWave::Uploader::Base
   #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
   # end
 
-  process resize_image: 195
+  process resize_image: 240
   def resize_image(size)
     manipulate! do |image|
       image.strip
@@ -80,7 +80,9 @@ class LogoUploader < CarrierWave::Uploader::Base
     "#{model.slug}.png"
   end
 
-  def send_notification(_file)
+  def send_notification(_)
+    # Method caller is expecting single parameter (the file).
+
     filename = @file_name
     if filename.nil?
       filename = file.original_filename
