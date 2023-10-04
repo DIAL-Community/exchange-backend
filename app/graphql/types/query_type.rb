@@ -190,6 +190,11 @@ module Types
     field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
 
+    field :paginated_task_trackers, resolver: Paginated::PaginatedTaskTrackers
+    field :pagination_attribute_task_tracker, resolver: Paginated::PaginationAttributeTaskTracker
+    field :task_trackers, resolver: Queries::TaskTrackersQuery
+    field :task_tracker, resolver: Queries::TaskTrackerQuery
+
     field :starred_objects, resolver: Queries::StarredObjectsQuery
     field :starred_object, resolver: Queries::StarredObjectQuery
   end

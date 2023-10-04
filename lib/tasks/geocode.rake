@@ -92,7 +92,7 @@ namespace :geocode do
 
   task :migrate_aggregator_capabilities_to_country, [] => :environment do
     task_name = 'Migrate Aggregator Country'
-    start_tracking_task(task_name)
+    tracking_task_start(task_name)
 
     google_auth_key = Rails.application.secrets.google_api_key
     AggregatorCapability.all.each do |aggregator|
@@ -111,12 +111,12 @@ namespace :geocode do
       aggregator.country_id = country.id
       puts "Adding country for aggregator: #{aggregator.aggregator_id}  to -> #{country.name}." if aggregator.save!
     end
-    end_tracking_task(task_name)
+    tracking_task_finish(task_name)
   end
 
   task :migrate_operator_services_to_country, [] => :environment do
     task_name = 'Migrate Operator Country'
-    start_tracking_task(task_name)
+    tracking_task_start(task_name)
 
     google_auth_key = Rails.application.secrets.google_api_key
     OperatorService.all.each do |operator|
@@ -142,12 +142,12 @@ namespace :geocode do
       operator.country_name = country.name
       puts "Adding country for operator: #{operator.name} to -> #{country.name}." if operator.save!
     end
-    end_tracking_task(task_name)
+    tracking_task_finish(task_name)
   end
 
   task :migrate_projects_locations_with_google, [] => :environment do
     task_name = 'Migrate Project Country'
-    start_tracking_task(task_name)
+    tracking_task_start(task_name)
 
     google_auth_key = Rails.application.secrets.google_api_key
     Project.all.each do |project|
@@ -178,12 +178,12 @@ namespace :geocode do
         puts "Location marked as migrated: #{project_location.location_id}." if project_location.save!
       end
     end
-    end_tracking_task(task_name)
+    tracking_task_finish(task_name)
   end
 
   task :migrate_organizations_locations_with_google, [] => :environment do
     task_name = 'Migrate Organization Country'
-    start_tracking_task(task_name)
+    tracking_task_start(task_name)
 
     google_auth_key = Rails.application.secrets.google_api_key
     Organization.all.each do |organization|
@@ -283,7 +283,7 @@ namespace :geocode do
       end
       puts '------------------------------------------'
     end
-    end_tracking_task(task_name)
+    tracking_task_finish(task_name)
   end
 
   def find_country(country_code_or_name, google_auth_key)

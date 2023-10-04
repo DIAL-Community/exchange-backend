@@ -21,6 +21,7 @@ class Project < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(projects.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(projects.slug) like LOWER(?)', "#{slug}%\\_") }
+  scope :name_and_slug_search, -> (name, slug) { where('projects.name = ? OR projects.slug = ?', name, slug) }
 
   def sectors_localized
     sectors.where('locale = ?', I18n.locale)

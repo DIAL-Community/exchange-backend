@@ -7,6 +7,10 @@ include Modules::Notifier
 namespace :notifier do
   desc 'Notify admins of new comments.'
   task :daily_comment_digest, [:path] => :environment do |_, _|
+    task_name = 'Daily Comment Digest'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     admin_users = User.where(receive_admin_emails: true)
 
     email_subject = 'Recent comments made in the Catalog'
@@ -24,5 +28,6 @@ namespace :notifier do
       AdminMailer.send_mail_from_client('notifier@exchange.dial.global',
          admin.email, email_subject, email_body, "text/html").deliver_now
     end
+    tracking_task_finish(task_name)
   end
 end
