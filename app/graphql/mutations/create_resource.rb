@@ -9,11 +9,15 @@ module Mutations
     argument :name, String, required: true
     argument :slug, String, required: true
     argument :phase, String, required: false, default_value: ''
+
+    argument :image_url, String, required: false, default_value: nil
     argument :image_file, ApolloUploadServer::Upload, required: false
 
-    argument :link, String, required: false, default_value: nil
-    argument :image_url, String, required: false, default_value: nil
     argument :description, String, required: false, default_value: nil
+
+    argument :resource_link, String, required: false, default_value: nil
+    argument :resource_type, String, required: false, default_value: nil
+    argument :resource_topic, String, required: false, default_value: nil
 
     argument :show_in_exchange, Boolean, required: false
     argument :show_in_wizard, Boolean, required: false
@@ -24,10 +28,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(
-      name:, slug:, phase:, image_file: nil,
-      link:, image_url:, description:,
-      show_in_exchange: false, show_in_wizard: false,
-      organization_slug:
+      name:, slug:, phase:, image_url:, image_file: nil,
+      resource_link:, resource_type:, resource_topic:, description:,
+      show_in_exchange: false, show_in_wizard: false, organization_slug:
     )
       unless an_admin || a_content_editor
         return {
@@ -61,7 +64,10 @@ module Mutations
       resource.name = name
       resource.phase = phase
 
-      resource.link = link
+      resource.resource_link = resource_link
+      resource.resource_type = resource_type
+      resource.resource_topic = resource_topic
+
       resource.image_url = image_url
       resource.description = description
 

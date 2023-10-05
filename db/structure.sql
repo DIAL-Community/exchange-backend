@@ -3067,13 +3067,14 @@ CREATE TABLE public.resources (
     slug character varying NOT NULL,
     phase character varying NOT NULL,
     image_url character varying,
-    link character varying,
+    resource_link character varying,
     description character varying,
     show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL,
-    topic character varying,
+    resource_type character varying,
+    resource_topic character varying,
+    resource_tags character varying[] DEFAULT '{}'::character varying[],
     published_date timestamp(6) without time zone,
-    tags character varying[] DEFAULT '{}'::character varying[],
     featured boolean DEFAULT false NOT NULL,
     spotlight boolean DEFAULT false NOT NULL
 );

@@ -13,21 +13,24 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :phase, String, null: false
-    field :image_file, String, null: false
 
-    field :link, String, null: true
+    field :image_file, String, null: false
     field :image_url, String, null: true
+
     field :description, String, null: true
 
     field :show_in_exchange, Boolean, null: false
     field :show_in_wizard, Boolean, null: false
 
-    field :topic, String, null: true
+    field :resource_link, String, null: true
+    field :resource_type, String, null: true
+    field :resource_topic, String, null: true
+    field :resource_tags, GraphQL::Types::JSON, null: false
+
     field :featured, Boolean, null: false
     field :spotlight, Boolean, null: false
 
     field :published_date, GraphQL::Types::ISO8601DateTime, null: true
-    field :tags, GraphQL::Types::JSON, null: false
 
     field :organizations, [Types::OrganizationType], null: false
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
