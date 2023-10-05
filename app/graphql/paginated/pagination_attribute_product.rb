@@ -26,31 +26,31 @@ module Paginated
                                                 .select(:number)
         sdg_use_cases = UseCase.joins(:sdg_targets)
                                .where(sdg_targets: { sdg_number: sdg_numbers })
-        use_case_ids.concat(sdg_use_cases.ids)
+        use_case_ids += sdg_use_cases.ids unless sdg_use_cases.empty?
       end
 
       workflow_ids = []
-      filtered_use_cases = use_case_ids.concat(use_cases.reject { |x| x.nil? || x.empty? })
+      filtered_use_cases = use_case_ids + use_cases.reject { |x| x.nil? || x.empty? }
       unless filtered_use_cases.empty?
         filtered = true
         use_case_workflows = Workflow.joins(:use_case_steps)
                                      .where(use_case_steps: { use_case_id: filtered_use_cases.map(&:to_i) })
-        workflow_ids.concat(use_case_workflows.ids)
+        workflow_ids += use_case_workflows.ids unless use_case_workflows.empty?
       end
 
       building_block_ids = []
-      filtered_workflows = workflow_ids.concat(workflows.reject { |x| x.nil? || x.empty? })
+      filtered_workflows = workflow_ids + workflows.reject { |x| x.nil? || x.empty? }
       unless filtered_workflows.empty?
         filtered = true
         workflow_building_blocks = BuildingBlock.joins(:workflows)
                                                 .where(workflows: { id: filtered_workflows.map(&:to_i) })
-        building_block_ids.concat(workflow_building_blocks.ids)
+        building_block_ids += workflow_building_blocks.ids unless workflow_building_blocks.empty?
       end
 
       filtered_bbs = building_blocks.reject { |x| x.nil? || x.empty? }
       unless filtered_bbs.empty?
         filtered = true
-        building_block_ids.concat(filtered_bbs.map(&:to_i))
+        building_block_ids += filtered_bbs.map(&:to_i)
       end
 
       if is_linked_with_dpi

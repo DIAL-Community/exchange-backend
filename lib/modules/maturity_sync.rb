@@ -447,7 +447,9 @@ module Modules
       response = http.request(request)
       product_repository.language_data = JSON.parse(response.body)
 
-      puts "Repository language data for '#{product_repository.name}' saved." if product_repository.save!
+      if product_repository.save!
+        puts "Repository language data for '#{product_repository.name}' saved."
+      end
     end
 
     def graph_ql_languages(owner, repo)

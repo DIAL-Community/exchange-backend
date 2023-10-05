@@ -3,34 +3,57 @@
 namespace :data_processors do
   desc 'Process dataset spreadsheet and populate the json file.'
   task process_dataset_spreadsheet: :environment do
+    task_name = 'Process Dataset Spreadsheet'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     base_export_directory = './exported_data/datasets'
     DialSpreadsheetData.where(spreadsheet_type: 'dataset').each do |spreadsheet_data|
       File.open("#{base_export_directory}/#{spreadsheet_data.slug}.json", 'w') do |json_file|
         json_file.write(spreadsheet_data.spreadsheet_data.to_json)
       end
 
+      tracking_task_log(task_name, "Processing: #{spreadsheet_data.slug}.")
+
       puts "Dataset json \"#{spreadsheet_data.slug}.json\" written to filesystem."
     end
+
+    tracking_task_finish(task_name)
   end
 
   desc 'Process product spreadsheet and populate the json file.'
   task process_product_spreadsheet: :environment do
+    task_name = 'Process Product Spreadsheet'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     base_export_directory = './exported_data/products'
     DialSpreadsheetData.where(spreadsheet_type: 'product').each do |spreadsheet_data|
       File.open("#{base_export_directory}/#{spreadsheet_data.slug}.json", 'w') do |json_file|
         json_file.write(spreadsheet_data.spreadsheet_data.to_json)
       end
 
+      tracking_task_log(task_name, "Processing: #{spreadsheet_data.slug}.")
+
       puts "Product json \"#{spreadsheet_data.slug}.json\" written to filesystem."
     end
+
+    tracking_task_finish(task_name)
   end
 
   desc 'Process list of product json files and convert them to product.'
   task process_exported_json_files: :environment do
+    task_name = 'Process Exported Spreadsheet JSON'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     base_export_directories = ['./exported_data/products/*.json', './exported_data/datasets/*.json']
     base_export_directories.each do |base_export_directory|
       Dir.glob(base_export_directory).map do |filename|
         json_representation = JSON.parse(File.read(filename))
+
+        tracking_task_log(task_name, "Parsing: #{json_representation['name']}.")
+
         obj_type = 'product'
         if base_export_directory.include?('datasets')
           obj_type = 'dataset'
@@ -70,6 +93,8 @@ namespace :data_processors do
         end
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   def generate_product(json_data, obj_type)

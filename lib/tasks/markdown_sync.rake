@@ -10,8 +10,14 @@ include Modules::Slugger
 namespace :markdown_sync do
   desc 'Sync use case github structure.'
   task use_case_definition: :environment do
+    task_name = 'Process Use Case Definition'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     UseCase.all.each do |use_case|
       next if use_case.markdown_url.nil?
+
+      tracking_task_log(task_name, "Updating use case: #{use_case.name}.")
 
       data = URI.parse(use_case.markdown_url).read
 
@@ -39,6 +45,8 @@ namespace :markdown_sync do
         puts "Use case '#{use_case.name}' data saved."
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   def find_use_case_description(root)

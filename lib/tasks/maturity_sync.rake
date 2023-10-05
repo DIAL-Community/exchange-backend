@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require 'modules/slugger'
 require 'modules/maturity_sync'
+require 'modules/slugger'
+require 'modules/track'
 require 'kramdown'
 require 'nokogiri'
 
-namespace :maturity_sync do
-  include Modules::Slugger
-  include Modules::MaturitySync
-  include Kramdown
-  include Nokogiri
+include Modules::MaturitySync
+include Modules::Slugger
+include Modules::Track
+include Kramdown
+include Nokogiri
 
+namespace :maturity_sync do
   task :sync_data, [:path] => :environment do |_, params|
     logger = Logger.new($stdout)
     logger.level = Logger::DEBUG
@@ -173,59 +175,97 @@ namespace :maturity_sync do
   end
 
   task :update_maturity_scores, [:path] => :environment do |_, _params|
+    task_name = 'Update Maturity Score'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     Product.all.each do |product|
       puts "Updating score for: #{product.name}."
+      tracking_task_log(task_name, "Updating score for: #{product.name}.")
       calculate_maturity_scores(product.id)
       calculate_product_indicators(product.id)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_license_data, [] => :environment do
-    puts 'Starting to pull license data ...'
+    task_name = 'Update License Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
 
     ProductRepository.all.each do |product_repository|
+      tracking_task_log(task_name, "Updating license for: #{product_repository.product.name}.")
       sync_license_information(product_repository)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_statistics_data, [] => :environment do
-    puts 'Starting to pull statistic data ...'
+    task_name = 'Update Statistics Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
 
     ProductRepository.all.each do |product_repository|
+      tracking_task_log(task_name, "Updating statistics for: #{product_repository.product.name}.")
       sync_product_statistics(product_repository)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_language_data, [] => :environment do
-    puts 'Updating language data for products.'
+    task_name = 'Update Language Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
 
     ProductRepository.all.each do |product_repository|
+      tracking_task_log(task_name, "Updating language data for: #{product_repository.product.name}.")
       sync_product_languages(product_repository)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_code_review_indicators, [] => :environment do
-    puts 'Updating code review indicators data for products.'
+    task_name = 'Update Review Indicator Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
 
     lang_file = YAML.load_file('utils/top_25_languages.yml')
     config_file = YAML.load_file('config/indicator_config.yml')
 
     Product.all.each do |product|
-      puts "Updating code review indicators data for product: #{product.name}"
-      sync_containerized_indicator(product)
+      tracking_task_log(task_name, "Updating indicator for: #{product.name}.")
+
       sync_license_indicator(product)
-      sync_language_indicator(config_file, lang_file, product)
+      sync_containerized_indicator(product)
       sync_documentation_indicator(product)
+      sync_language_indicator(config_file, lang_file, product)
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_top_25_languages, [] => :environment do
+    task_name = 'Update Top 25 Languages'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     read_languages_file
+
+    tracking_task_finish(task_name)
   end
 
   task :update_products_languages, [] => :environment do
+    task_name = 'Update Product Languages'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     Product.all.each do |product|
-      puts "Updating top languages for product: #{product.name}."
+      tracking_task_log(task_name, "Updating languages for: #{product.name}.")
+
       product_repositories = ProductRepository.where(product_id: product.id)
       product_languages = []
       product_repositories.each do |repository|
@@ -252,11 +292,19 @@ namespace :maturity_sync do
       product.languages = nil if top_languages == [nil]
       product.save!
     end
+
+    tracking_task_finish(task_name)
   end
 
   task :update_api_docs_indicators, [] => :environment do
+    task_name = 'Update Product API Indicators'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     ProductRepository.all.each do |product_repository|
+      tracking_task_log(task_name, "Updating api indicators for: #{product_repository.product.name}.")
       api_check(product_repository)
     end
+    tracking_task_finish(task_name)
   end
 end

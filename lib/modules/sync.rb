@@ -580,12 +580,13 @@ module Modules
       german_sectors = []
 
       # Create new project or update existing project
-      project_slug = slug_em(english_project[0], 64)
+      project_name = english_project[0]
+      project_slug = slug_em(project_name, 64)
 
-      existing_project = Project.find_by(slug: project_slug)
+      existing_project = Project.name_and_slug_search(project_name, project_slug).first
       existing_project = Project.new if existing_project.nil?
 
-      existing_project.name = english_project[0].force_encoding('UTF-8')
+      existing_project.name = project_name.force_encoding('UTF-8')
       existing_project.slug = project_slug
       existing_project.origin_id = giz_origin.id
 
@@ -601,8 +602,30 @@ module Modules
         puts " Unable to parse project end date."
       end
 
-      existing_project.project_url = cleanup_url(english_project[38]) unless english_project[38].nil?
-      existing_project.save
+      en_more_urls = '<hr />'
+      de_more_urls = '<hr />'
+      unless english_project[38].nil?
+        project_urls = english_project[38].split(', ')
+        main_url, *other_urls = *project_urls
+
+        existing_project.project_url = cleanup_url(main_url)
+
+        if other_urls.length.positive?
+          en_more_urls += '<p>Other urls</p>'
+          de_more_urls += '<p>Mehr urls</p>'
+
+          en_more_urls += '<ul">'
+          de_more_urls += '<ul">'
+          other_urls.each do |other_url|
+            en_more_urls += "<li>#{other_url}</li>"
+            de_more_urls += "<li>#{other_url}</li>"
+          end
+          en_more_urls += '</ul">'
+          de_more_urls += '</ul">'
+        end
+      end
+
+      existing_project.save!
 
       # Assign implementing organization
       implementer_organizations = Organization.name_contains(english_project[5])
@@ -670,8 +693,8 @@ module Modules
       project_description = ProjectDescription.new if project_description.nil?
 
       project_description.project_id = existing_project.id
-      english_project[3] = 'No description' if english_project[3].nil?
-      project_description.description = english_project[3]
+      english_project[3] = 'No description.' if english_project[3].blank? && en_more_urls.blank?
+      project_description.description = "#{english_project[3]}#{en_more_urls}"
       project_description.locale = 'en'
       project_description.save
 
@@ -679,8 +702,8 @@ module Modules
       project_description = ProjectDescription.new if project_description.nil?
 
       project_description.project_id = existing_project.id
-      german_project[3] = 'Kein description' if german_project[3].nil?
-      project_description.description = german_project[3]
+      german_project[3] = 'Kein description.' if german_project[3].blank? && de_more_urls.blank?
+      project_description.description = "#{german_project[3]}#{de_more_urls}"
       project_description.locale = 'de'
       project_description.save
 
@@ -695,7 +718,7 @@ module Modules
         end
       end
 
-      existing_project.save
+      existing_project.save!
       puts "-----------"
     end
 

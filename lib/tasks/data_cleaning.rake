@@ -17,7 +17,11 @@ namespace :data do
   desc 'Data related rake tasks.'
 
   task remove_http_protocol: :environment do
-    puts "Processing building block records."
+    task_name = 'Cleanup HTTP Protocol'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    tracking_task_log(task_name, 'Processing building blocks.')
     BuildingBlock.all.each do |building_block|
       next if building_block.spec_url.blank?
 
@@ -29,6 +33,7 @@ namespace :data do
     end
 
     puts "Processing candidate dataset records."
+    tracking_task_log(task_name, 'Processing candidate datasets.')
     CandidateDataset.all.each do |candidate_dataset|
       next if candidate_dataset.website.blank? && candidate_dataset.visualization_url.blank?
 
@@ -44,6 +49,7 @@ namespace :data do
     end
 
     puts "Processing candidate organization records."
+    tracking_task_log(task_name, 'Processing candidate organizations.')
     CandidateOrganization.all.each do |candidate_organization|
       next if candidate_organization.website.blank?
 
@@ -55,6 +61,7 @@ namespace :data do
     end
 
     puts "Processing candidate product records."
+    tracking_task_log(task_name, 'Processing candidate products.')
     CandidateProduct.all.each do |candidate_product|
       next if candidate_product.website.blank? && candidate_product.repository.blank?
 
@@ -70,6 +77,7 @@ namespace :data do
     end
 
     puts "Processing dataset records."
+    tracking_task_log(task_name, 'Processing datasets.')
     Dataset.all.each do |dataset|
       next if dataset.website.blank? && dataset.visualization_url.blank?
 
@@ -85,6 +93,7 @@ namespace :data do
     end
 
     puts "Processing opportunity records."
+    tracking_task_log(task_name, 'Processing rfps.')
     Opportunity.all.each do |opportunity|
       next if opportunity.web_address.blank?
 
@@ -96,6 +105,7 @@ namespace :data do
     end
 
     puts "Processing organization records."
+    tracking_task_log(task_name, 'Processing organizations.')
     Organization.all.each do |organization|
       next if organization.website.blank? && organization.hero_url.blank?
 
@@ -112,6 +122,7 @@ namespace :data do
     end
 
     puts "Processing move resource records."
+    tracking_task_log(task_name, 'Processing moves.')
     PlayMove.all.each do |play_move|
       play_move.resources.each do |resource|
         resource['url'] = cleanup_url(resource['url'])
@@ -123,6 +134,7 @@ namespace :data do
     end
 
     puts "Processing product records."
+    tracking_task_log(task_name, 'Processing products.')
     Product.all.each do |product|
       next if product.website.blank?
 
@@ -134,6 +146,7 @@ namespace :data do
     end
 
     puts "Processing product repository records."
+    tracking_task_log(task_name, 'Processing product repositories.')
     ProductRepository.all.each do |product_repository|
       next if product_repository.absolute_url.blank?
 
@@ -145,6 +158,7 @@ namespace :data do
     end
 
     puts "Processing project records."
+    tracking_task_log(task_name, 'Processing projects.')
     Project.all.each do |project|
       next if project.project_url.blank?
 
@@ -156,6 +170,7 @@ namespace :data do
     end
 
     puts "Processing resource records."
+    tracking_task_log(task_name, 'Processing resources.')
     Resource.all.each do |resource|
       next if resource.link.blank?
 
@@ -167,6 +182,7 @@ namespace :data do
     end
 
     puts "Processing use case records."
+    tracking_task_log(task_name, 'Processing use cases.')
     UseCase.all.each do |use_case|
       next if use_case.markdown_url.blank?
 
@@ -176,6 +192,8 @@ namespace :data do
         puts "  Use case markdown updated: #{original_markdown_url} -> #{use_case.markdown_url}."
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   task clean_enum: :environment do
