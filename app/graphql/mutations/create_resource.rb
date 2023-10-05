@@ -22,15 +22,18 @@ module Mutations
     argument :show_in_exchange, Boolean, required: false
     argument :show_in_wizard, Boolean, required: false
 
+    argument :featured, Boolean, required: false
+    argument :spotlight, Boolean, required: false
+
     argument :organization_slug, String, required: false, default_value: nil
 
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
 
     def resolve(
-      name:, slug:, phase:, image_url:, image_file: nil,
-      resource_link:, resource_type:, resource_topic:, description:,
-      show_in_exchange: false, show_in_wizard: false, organization_slug:
+      name:, slug:, phase:, image_url:, image_file: nil, resource_link:, resource_type:, resource_topic:,
+      description:, show_in_exchange: false, show_in_wizard: false, featured: false, spotlight: false,
+      organization_slug:
     )
       unless an_admin || a_content_editor
         return {
@@ -68,6 +71,9 @@ module Mutations
       resource.resource_type = resource_type
       resource.resource_topic = resource_topic
 
+      resource.featured = featured
+      resource.spotlight = spotlight
+
       resource.image_url = image_url
       resource.description = description
 
@@ -85,7 +91,7 @@ module Mutations
         resource.save
 
         unless image_file.nil?
-          uploader = LogoUploader.new(resource, image_file.original_filename, context[:current_user])
+          uploader = SimpleUploader.new(resource, image_file.original_filename, context[:current_user])
           begin
             uploader.store!(image_file)
           rescue StandardError => e

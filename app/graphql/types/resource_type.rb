@@ -18,6 +18,12 @@ module Types
     field :image_url, String, null: true
 
     field :description, String, null: true
+    field :parsed_description, String, null: true
+    def parsed_description
+      first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
+      return first_paragraph.text unless first_paragraph.nil?
+      return object.description if first_paragraph.nil?
+    end
 
     field :show_in_exchange, Boolean, null: false
     field :show_in_wizard, Boolean, null: false
