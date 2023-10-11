@@ -9,14 +9,32 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       mutation CreateResource(
         $name: String!
         $slug: String!
-        $showInExchange: Boolean!
-        $showInWizard: Boolean!
+        $description: String
+        $featured: Boolean
+        $spotlight: Boolean
+        $resourceLink: String
+        $resourceType: String
+        $resourceTopic: String
+        $showInExchange: Boolean
+        $showInWizard: Boolean
+        $organizationSlug: String
+        $authorName: String!
+        $authorEmail: String
       ) {
         createResource(
           name: $name
           slug: $slug
+          description: $description
+          featured: $featured
+          spotlight: $spotlight
+          resourceLink: $resourceLink
+          resourceType: $resourceType
+          resourceTopic: $resourceTopic
           showInExchange: $showInExchange
           showInWizard: $showInWizard
+          organizationSlug: $organizationSlug
+          authorName: $authorName
+          authorEmail: $authorEmail
         ) {
             resource {
               name
@@ -38,6 +56,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -58,6 +77,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Updated name",
         slug: "some_resource",
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -80,6 +100,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -101,6 +122,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
