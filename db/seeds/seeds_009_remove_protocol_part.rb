@@ -73,7 +73,7 @@ Project.all.each do |project|
 end
 
 Resource.all.each do |resource|
-  url = resource.resourceLink
+  url = resource.resource_link
   next if url.nil?
 
   if url.include?('http://')
