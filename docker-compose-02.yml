@@ -49,5 +49,5 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=exchangeapp01.dial.global,nolock,soft,rw"
-      device: ":/root/product-registry/public"
+      device: ":/root/exchange-backend/public"
 
