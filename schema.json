@@ -22843,26 +22843,42 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "resourceType",
+                  "name": "resourceTypes",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
                 {
-                  "name": "resourceTopic",
+                  "name": "resourceTopics",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -24721,26 +24737,42 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "resourceType",
+                  "name": "resourceTypes",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
                 {
-                  "name": "resourceTopic",
+                  "name": "resourceTopics",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
                   },
-                  "defaultValue": "\"\"",
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },

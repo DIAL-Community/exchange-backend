@@ -7,8 +7,8 @@ module Paginated
     argument :show_in_wizard, Boolean, required: false, default_value: false
     argument :show_in_exchange, Boolean, required: false, default_value: false
 
-    argument :resource_type, String, required: false, default_value: ''
-    argument :resource_topic, String, required: false, default_value: ''
+    argument :resource_types, [String], required: false, default_value: []
+    argument :resource_topics, [String], required: false, default_value: []
 
     argument :compartmentalized, Boolean, required: true, default_value: false
     argument :featured_only, Boolean, required: false, default_value: false
@@ -23,7 +23,7 @@ module Paginated
     def resolve(
       search:, show_in_wizard:, show_in_exchange:, offset_attributes:, compartmentalized:,
       featured_only:, featured_length:, spotlight_only:, spotlight_length:,
-      resource_type:, resource_topic:
+      resource_types:, resource_topics:
     )
       # Sort resources by:
       # - spotlight
@@ -60,12 +60,12 @@ module Paginated
         end
       end
 
-      unless resource_type.blank?
-        resources = resources.where('LOWER(resource_type) like LOWER(?)', "%#{resource_type}%")
+      unless resource_types.empty?
+        resources = resources.where(resource_type: resource_types)
       end
 
-      unless resource_topic.blank?
-        resources = resources.where('LOWER(resource_topic) like LOWER(?)', "%#{resource_topic}%")
+      unless resource_topics.empty?
+        resources = resources.where(resource_topic: resource_topics)
       end
 
       resources = resources.where(show_in_exchange: true) if show_in_exchange
