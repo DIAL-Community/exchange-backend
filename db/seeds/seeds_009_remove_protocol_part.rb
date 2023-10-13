@@ -77,9 +77,9 @@ Resource.all.each do |resource|
   next if url.nil?
 
   if url.include?('http://')
-    resource.resourceLink.slice!('http://')
+    resource.resource_link.slice!('http://')
   elsif url.include?('https://')
-    resource.resourceLink.slice!('https://')
+    resource.resource_link.slice!('https://')
   end
   resource.save!
 end
