@@ -3071,9 +3071,9 @@ CREATE TABLE public.resources (
     description character varying,
     show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
     resource_type character varying,
     resource_topic character varying,
-    resource_tags character varying[] DEFAULT '{}'::character varying[],
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
     spotlight boolean DEFAULT false NOT NULL

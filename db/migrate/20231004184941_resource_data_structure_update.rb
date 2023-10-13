@@ -14,9 +14,10 @@ class ResourceDataStructureUpdate < ActiveRecord::Migration[7.0]
 
     rename_column(:resources, :link, :resource_link)
 
+    add_column(:resources, :tags, :string, array: true, default: [])
+
     add_column(:resources, :resource_type, :string, null: true)
     add_column(:resources, :resource_topic, :string, null: true)
-    add_column(:resources, :resource_tags, :string, array: true, default: [])
 
     add_column(:resources, :published_date, :datetime, null: true)
     add_column(:resources, :featured, :boolean, null: false, default: false)

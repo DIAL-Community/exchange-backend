@@ -31,7 +31,8 @@ module Types
     field :resource_link, String, null: true
     field :resource_type, String, null: true
     field :resource_topic, String, null: true
-    field :resource_tags, GraphQL::Types::JSON, null: false
+
+    field :tags, GraphQL::Types::JSON, null: false
 
     field :featured, Boolean, null: false
     field :spotlight, Boolean, null: false
