@@ -10684,6 +10684,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "description",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "imageFile",
                   "description": null,
                   "type": {
@@ -10696,14 +10708,18 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "description",
+                  "name": "publishedDate",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ISO8601Date",
+                      "ofType": null
+                    }
                   },
-                  "defaultValue": "null",
+                  "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
                 },

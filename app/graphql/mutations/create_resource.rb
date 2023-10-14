@@ -10,8 +10,10 @@ module Mutations
     argument :slug, String, required: true
     argument :phase, String, required: false, default_value: ''
     argument :image_url, String, required: false, default_value: nil
-    argument :image_file, ApolloUploadServer::Upload, required: false
     argument :description, String, required: false, default_value: nil
+
+    argument :image_file, ApolloUploadServer::Upload, required: false
+    argument :published_date, GraphQL::Types::ISO8601Date, required: true
 
     argument :resource_link, String, required: false, default_value: nil
     argument :resource_type, String, required: false, default_value: nil
@@ -32,7 +34,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(
-      name:, slug:, phase:, image_url:, image_file: nil, description:,
+      name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, spotlight: false,
       resource_link:, resource_type:, resource_topic:, author_name:, author_email:,
       organization_slug:
@@ -78,6 +80,12 @@ module Mutations
 
       resource.image_url = image_url
       resource.description = description
+
+      unless published_date.nil?
+        date = published_date.to_s
+        timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "+00:00")
+        resource.published_date = timestamp
+      end
 
       resource.show_in_exchange = show_in_exchange
       unless organization.nil?

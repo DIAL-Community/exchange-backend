@@ -10,6 +10,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $name: String!
         $slug: String!
         $description: String
+        $publishedDate: ISO8601Date!
         $featured: Boolean
         $spotlight: Boolean
         $resourceLink: String
@@ -25,6 +26,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           name: $name
           slug: $slug
           description: $description
+          publishedDate: $publishedDate
           featured: $featured
           spotlight: $spotlight
           resourceLink: $resourceLink
@@ -56,6 +58,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
@@ -77,6 +80,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Updated name",
         slug: "some_resource",
+        publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
@@ -100,6 +104,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
@@ -122,6 +127,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true

@@ -37,7 +37,7 @@ module Types
     field :featured, Boolean, null: false
     field :spotlight, Boolean, null: false
 
-    field :published_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :published_date, GraphQL::Types::ISO8601Date, null: true
 
     field :organizations, [Types::OrganizationType], null: false
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
