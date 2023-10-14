@@ -1674,7 +1674,7 @@ type Resource {
   organizations: [Organization!]!
   parsedDescription: String
   phase: String!
-  publishedDate: ISO8601DateTime
+  publishedDate: ISO8601Date
   resourceLink: String
   resourceTopic: String
   resourceType: String
