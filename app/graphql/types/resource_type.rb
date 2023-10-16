@@ -29,6 +29,7 @@ module Types
     field :show_in_wizard, Boolean, null: false
 
     field :resource_link, String, null: true
+    field :link_desc, String, null: true
     field :resource_type, String, null: true
     field :resource_topic, String, null: true
 

@@ -13,6 +13,7 @@ class ResourceDataStructureUpdate < ActiveRecord::Migration[7.0]
     end
 
     rename_column(:resources, :link, :resource_link)
+    add_column(:resources, :link_desc, :string, null: true)
 
     add_column(:resources, :tags, :string, array: true, default: [])
 

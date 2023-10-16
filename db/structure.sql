@@ -10,6 +10,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
 -- Name: agg_capabilities; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -3071,6 +3078,7 @@ CREATE TABLE public.resources (
     description character varying,
     show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL,
+    link_desc character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     resource_type character varying,
     resource_topic character varying,

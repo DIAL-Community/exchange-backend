@@ -16,6 +16,7 @@ module Mutations
     argument :published_date, GraphQL::Types::ISO8601Date, required: true
 
     argument :resource_link, String, required: false, default_value: nil
+    argument :link_desc, String, required: false, default_value: nil
     argument :resource_type, String, required: false, default_value: nil
     argument :resource_topic, String, required: false, default_value: nil
 
@@ -36,8 +37,8 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, spotlight: false,
-      resource_link:, resource_type:, resource_topic:, author_name:, author_email:,
-      organization_slug:
+      resource_link:, link_desc:, resource_type:, resource_topic:, author_name:, 
+      author_email:, organization_slug:
     )
       unless an_admin || a_content_editor
         return {
@@ -72,6 +73,7 @@ module Mutations
       resource.phase = phase
 
       resource.resource_link = resource_link
+      resource.link_desc = link_desc
       resource.resource_type = resource_type
       resource.resource_topic = resource_topic
 
