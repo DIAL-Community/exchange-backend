@@ -562,9 +562,9 @@ module Modules
       puts "Processing data: '#{english_project[0]}'."
       # Expected csv columns:
       # Project Name:                           A - 0 - Title
-      # Project Description:                    D - 3 - Description
-      # Project Start Date:                     K - 10 - Start Date
-      # Project End Date:                       L - 11 - End Date
+      # Project Description:                    F - 5 - Description
+      # Project Start Date:                     M - 12 - Start Date
+      # Project End Date:                       N - 13 - End Date
       # Project URL:                            AM - 38 - Links
       # Project Sectors:
       #   Main sectors:                         V - 21 - Main Sector
@@ -591,13 +591,13 @@ module Modules
       existing_project.origin_id = giz_origin.id
 
       begin
-        existing_project.start_date = Date.strptime(english_project[10], '%m/%Y')
+        existing_project.start_date = Date.strptime(english_project[12], '%m/%Y')
       rescue StandardError
         puts "  Unable to parse project start date."
       end
 
       begin
-        existing_project.end_date = Date.strptime(english_project[11], '%m/%Y')
+        existing_project.end_date = Date.strptime(english_project[13], '%m/%Y')
       rescue StandardError
         puts " Unable to parse project end date."
       end
@@ -693,8 +693,8 @@ module Modules
       project_description = ProjectDescription.new if project_description.nil?
 
       project_description.project_id = existing_project.id
-      english_project[3] = 'No description.' if english_project[3].blank? && en_more_urls.blank?
-      project_description.description = "#{english_project[3]}#{en_more_urls}"
+      english_project[3] = 'No description.' if english_project[5].blank? && en_more_urls.blank?
+      project_description.description = "#{english_project[5]}#{en_more_urls}"
       project_description.locale = 'en'
       project_description.save
 
@@ -702,8 +702,8 @@ module Modules
       project_description = ProjectDescription.new if project_description.nil?
 
       project_description.project_id = existing_project.id
-      german_project[3] = 'Kein description.' if german_project[3].blank? && de_more_urls.blank?
-      project_description.description = "#{german_project[3]}#{de_more_urls}"
+      german_project[3] = 'Kein description.' if german_project[5].blank? && de_more_urls.blank?
+      project_description.description = "#{german_project[5]}#{de_more_urls}"
       project_description.locale = 'de'
       project_description.save
 
