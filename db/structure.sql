@@ -3084,7 +3084,8 @@ CREATE TABLE public.resources (
     resource_topic character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
-    spotlight boolean DEFAULT false NOT NULL
+    spotlight boolean DEFAULT false NOT NULL,
+    source character varying
 );
 
 
