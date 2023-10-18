@@ -24,6 +24,8 @@ class ResourceDataStructureUpdate < ActiveRecord::Migration[7.0]
     add_column(:resources, :featured, :boolean, null: false, default: false)
     add_column(:resources, :spotlight, :boolean, null: false, default: false)
 
+    add_column(:resources, :source, :string, null: true)
+
     create_join_table(:resources, :authors, table_name: 'resources_authors') do |t|
       t.index(:resource_id)
       t.index(:author_id)

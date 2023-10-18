@@ -32,6 +32,7 @@ module Types
     field :link_desc, String, null: true
     field :resource_type, String, null: true
     field :resource_topic, String, null: true
+    field :source, String, null: true
 
     field :tags, GraphQL::Types::JSON, null: false
 
