@@ -8,6 +8,7 @@ module Paginated
 
     argument :resource_types, [String], required: false, default_value: []
     argument :resource_topics, [String], required: false, default_value: []
+    argument :tags, [String], required: false, default_value: []
 
     argument :compartmentalized, Boolean, required: true, default_value: false
     argument :featured_length, Integer, required: false, default_value: 3
@@ -18,7 +19,7 @@ module Paginated
     def resolve(
       search:, show_in_exchange:, show_in_wizard:, compartmentalized:,
       featured_length:, spotlight_length:,
-      resource_types:, resource_topics:
+      resource_types:, resource_topics:, tags:
     )
       resources = Resource
                   .order(spotlight: :desc)
@@ -42,6 +43,14 @@ module Paginated
 
       unless resource_topics.empty?
         resources = resources.where(resource_topic: resource_topics)
+      end
+
+      filtered_tags = tags.reject { |x| x.nil? || x.blank? }
+      unless filtered_tags.empty?
+        resources = resources.where(
+          "resources.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
+          "resources.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+        )
       end
 
       resources = resources.where(show_in_exchange: true) if show_in_exchange
