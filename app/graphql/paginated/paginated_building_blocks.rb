@@ -7,13 +7,17 @@ module Paginated
     argument :use_cases, [String], required: false, default_value: []
     argument :workflows, [String], required: false, default_value: []
     argument :category_types, [String], required: false, default_value: []
+    argument :filter_blocks, [String], required: false, default_value: []
     argument :show_mature, Boolean, required: false, default_value: false
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
 
     type [Types::BuildingBlockType], null: false
 
-    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, show_mature:, offset_attributes:)
-      building_blocks = BuildingBlock.order(:name).distinct
+    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:, show_mature:,
+      offset_attributes:)
+      building_blocks = BuildingBlock.order(:name).distinct if filter_blocks.empty?
+      building_blocks = BuildingBlock.where(id: filter_blocks) if filter_blocks.any?
+
       unless search.blank?
         name_bbs = building_blocks.name_contains(search)
         desc_bbs = building_blocks.joins(:building_block_descriptions)

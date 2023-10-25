@@ -1427,7 +1427,7 @@ type Query {
   ownedProducts: [Product!]!
   owners(captcha: String!, slug: String!, type: String!): [User!]!
   pageContents(handbookPageId: ID!, locale: String = "en"): PageContent!
-  paginatedBuildingBlocks(categoryTypes: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
+  paginatedBuildingBlocks(categoryTypes: [String!] = [], filterBlocks: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
   paginatedCandidateDatasets(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateDataset!]!
   paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
   paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
@@ -1448,8 +1448,9 @@ type Query {
   paginatedTaskTrackers(offsetAttributes: OffsetAttributes!, search: String = "", showFailedOnly: Boolean = false): [TaskTracker!]!
   paginatedUseCases(govStackOnly: Boolean = false, offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): [UseCase!]!
   paginatedUsers(offsetAttributes: OffsetAttributes!, search: String = ""): [User!]!
+  paginatedWizardUseCases(buildingBlocks: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): [UseCase!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
-  paginationAttributeBuildingBlock(categoryTypes: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeBuildingBlock(categoryTypes: [String!] = [], filterBlocks: [String!] = [], sdgs: [String!] = [], search: String = "", showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateProduct(search: String = ""): PaginationAttributes!
@@ -1471,6 +1472,7 @@ type Query {
   paginationAttributeUseCase(govStackOnly: Boolean = false, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false): PaginationAttributes!
   paginationAttributeUser(search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
+  paginationWizardAttributeUseCase(buildingBlocks: [String!] = [], sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
