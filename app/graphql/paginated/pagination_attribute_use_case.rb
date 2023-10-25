@@ -31,4 +31,41 @@ module Paginated
       { total_count: use_cases.count }
     end
   end
+
+  class PaginationWizardAttributeUseCase < Queries::BaseQuery
+    argument :sectors, [String], required: false, default_value: []
+    argument :use_cases, [String], required: false, default_value: []
+    argument :sdgs, [String], required: false, default_value: []
+    argument :building_blocks, [String], required: false, default_value: []
+    type Attributes::PaginationAttributes, null: false
+
+    def resolve(sectors:, use_cases:, sdgs:, building_blocks:)
+      curr_sectors = Sector.where(id: sectors)
+      curr_sdgs = SustainableDevelopmentGoal.where(id: sdgs)
+
+      if use_cases.empty?
+        output_use_cases = UseCase.none
+        sdg_use_cases = nil
+        unless curr_sectors.nil?
+          sector_use_cases = UseCase.where(sector_id: curr_sectors, maturity: 'PUBLISHED')
+        end
+
+        curr_sdgs.each do |curr_sdg|
+          next if curr_sdgs.nil?
+          curr_targets = SdgTarget.where(sdg_number: curr_sdg.number)
+          sdg_use_cases = UseCase.where(
+            "id in (select use_case_id from use_cases_sdg_targets where sdg_target_id in (?)) and maturity='PUBLISHED'",
+            curr_targets.ids
+          )
+        end
+        
+        output_use_cases = output_use_cases.or(sdg_use_cases) unless sdg_use_cases.nil?
+        output_use_cases = output_use_cases.or(sector_use_cases) unless sector_use_cases.nil?
+      else
+        output_use_cases = UseCase.where(id: use_cases)
+      end
+
+      { total_count: output_use_cases.count }
+    end
+  end
 end

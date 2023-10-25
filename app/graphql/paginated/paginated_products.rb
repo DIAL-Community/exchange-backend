@@ -35,7 +35,7 @@ module Paginated
         filtered = true
         use_case_workflows = Workflow.joins(:use_case_steps)
                                      .where(use_case_steps: { use_case_id: filtered_use_cases.map(&:to_i) })
-        workflow_ids += use_case_workflows.ids(ubless(use_case_workflows.empty?))
+        workflow_ids += use_case_workflows.ids unless use_case_workflows.empty?
       end
 
       building_block_ids = []
