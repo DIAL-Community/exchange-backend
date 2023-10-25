@@ -13,7 +13,8 @@ module Paginated
 
     type [Types::BuildingBlockType], null: false
 
-    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:, show_mature:, offset_attributes:)
+    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:, show_mature:,
+      offset_attributes:)
       building_blocks = BuildingBlock.order(:name).distinct if filter_blocks.empty?
       building_blocks = BuildingBlock.where(id: filter_blocks) if filter_blocks.any?
 
