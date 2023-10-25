@@ -73,13 +73,13 @@ Project.all.each do |project|
 end
 
 Resource.all.each do |resource|
-  url = resource.link
+  url = resource.resource_link
   next if url.nil?
 
   if url.include?('http://')
-    resource.link.slice!('http://')
+    resource.resource_link.slice!('http://')
   elsif url.include?('https://')
-    resource.link.slice!('https://')
+    resource.resource_link.slice!('https://')
   end
   resource.save!
 end
