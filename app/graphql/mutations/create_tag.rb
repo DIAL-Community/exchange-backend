@@ -54,6 +54,7 @@ module Mutations
           Product.update_all(sanitized_update)
           Project.update_all(sanitized_update)
           UseCase.update_all(sanitized_update)
+          Resource.update_all(sanitized_update)
         end
 
         tag.name = name

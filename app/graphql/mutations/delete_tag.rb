@@ -38,6 +38,7 @@ module Mutations
         Product.update_all(sanitized_sql)
         Project.update_all(sanitized_sql)
         UseCase.update_all(sanitized_sql)
+        Resource.update_all(sanitized_sql)
 
         tag.destroy
 
