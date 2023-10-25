@@ -122,7 +122,9 @@ module Types
     field :resource, resolver: Queries::ResourceQuery
 
     field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
+    field :paginated_wizard_use_cases, resolver: Paginated::PaginatedWizardUseCases
     field :pagination_attribute_use_case, resolver: Paginated::PaginationAttributeUseCase
+    field :pagination_wizard_attribute_use_case, resolver: Paginated::PaginationWizardAttributeUseCase
 
     field :paginated_products, resolver: Paginated::PaginatedProducts
     field :pagination_attribute_product, resolver: Paginated::PaginationAttributeProduct
