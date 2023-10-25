@@ -9,14 +9,36 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       mutation CreateResource(
         $name: String!
         $slug: String!
-        $showInExchange: Boolean!
-        $showInWizard: Boolean!
+        $description: String
+        $publishedDate: ISO8601Date!
+        $featured: Boolean
+        $spotlight: Boolean
+        $resourceLink: String
+        $resourceType: String
+        $resourceTopic: String
+        $source: String
+        $showInExchange: Boolean
+        $showInWizard: Boolean
+        $organizationSlug: String
+        $authorName: String!
+        $authorEmail: String
       ) {
         createResource(
           name: $name
           slug: $slug
+          description: $description
+          publishedDate: $publishedDate
+          featured: $featured
+          spotlight: $spotlight
+          resourceLink: $resourceLink
+          resourceType: $resourceType
+          resourceTopic: $resourceTopic
+          source: $source
           showInExchange: $showInExchange
           showInWizard: $showInWizard
+          organizationSlug: $organizationSlug
+          authorName: $authorName
+          authorEmail: $authorEmail
         ) {
             resource {
               name
@@ -38,6 +60,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -58,6 +82,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Updated name",
         slug: "some_resource",
+        publishedDate: '2023-10-10T00:00:00.000Z',
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -80,6 +106,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }
@@ -101,6 +129,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       variables: {
         name: "Some Name",
         slug: "some_name",
+        publishedDate: '2023-10-10T00:00:00.000Z',
+        authorName: 'Nyoman Ribeka',
         showInExchange: false,
         showInWizard: true
       }

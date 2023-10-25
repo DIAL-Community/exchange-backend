@@ -151,5 +151,8 @@ module Types
     field :remove_starred_object, mutation: Mutations::RemoveStarredObject
 
     field :create_task_tracker, mutation: Mutations::CreateTaskTracker
+
+    field :update_resource_tags, mutation: Mutations::UpdateResourceTags
+    field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
   end
 end
