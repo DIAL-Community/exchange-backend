@@ -65,6 +65,7 @@ gem 'combine_pdf'
 gem 'pdfkit'
 
 gem 'google-cloud-translate'
+gem 'ros-apartment', require: 'apartment'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

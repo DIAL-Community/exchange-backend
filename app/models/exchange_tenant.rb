@@ -1,0 +1,2 @@
+class ExchangeTenant < ApplicationRecord
+end
