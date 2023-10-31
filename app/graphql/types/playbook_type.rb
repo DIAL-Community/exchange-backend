@@ -14,7 +14,10 @@ module Types
     def sanitized_overview
       overview_html = Nokogiri::HTML.fragment(object.overview)
       overview_html.css('a').each { |node| node.replace(node.children) }
-      overview_html.to_html
+
+      first_paragraph = overview_html.at('p')
+
+      first_paragraph.nil? ? overview_html.to_html : first_paragraph.inner_html
     end
   end
 

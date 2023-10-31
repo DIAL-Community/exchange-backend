@@ -28,8 +28,19 @@ module Types
     field :organization_descriptions, [Types::OrganizationDescriptionType], null: false
 
     field :sectors, [Types::SectorType], null: false, method: :sectors_localized
-    field :organization_description, Types::OrganizationDescriptionType, null: true,
-                                                                         method: :organization_description_localized
+    field :organization_description,
+      Types::OrganizationDescriptionType,
+      null: true,
+      method: :organization_description_localized
+
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.organization_description_localized.nil?
+
+      object_description = object.organization_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
 
     field :countries, [Types::CountryType], null: false, method: :organization_countries_ordered
     field :offices, [Types::OfficeType], null: false
