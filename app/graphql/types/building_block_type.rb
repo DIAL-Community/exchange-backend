@@ -21,6 +21,15 @@ module Types
     field :building_block_description, Types::BuildingBlockDescriptionType, null: true,
           method: :building_block_description_localized
 
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.building_block_description_localized.nil?
+
+      object_description = object.building_block_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
+
     field :workflows, [Types::WorkflowType], null: true
     field :products, [Types::ProductType], null: true
   end
