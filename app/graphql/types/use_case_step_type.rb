@@ -15,8 +15,19 @@ module Types
     field :step_number, Integer, null: false
 
     field :use_case_step_descriptions, [Types::UseCaseStepDescriptionType], null: true
-    field :use_case_step_description, Types::UseCaseStepDescriptionType, null: true,
-                                                                         method: :use_case_step_description_localized
+    field :use_case_step_description,
+      Types::UseCaseStepDescriptionType,
+      null: true,
+      method: :use_case_step_description_localized
+
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.use_case_step_description_localized.nil?
+
+      object_description = object.use_case_step_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
 
     field :use_case, Types::UseCaseType, null: false
     field :workflows, [Types::WorkflowType], null: false

@@ -19,8 +19,19 @@ module Types
     field :project_descriptions, [Types::ProjectDescriptionType], null: true
 
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized
-    field :project_description, Types::ProjectDescriptionType, null: true,
-                                                               method: :project_description_localized
+    field :project_description,
+      Types::ProjectDescriptionType,
+      null: true,
+      method: :project_description_localized
+
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.project_description_localized.nil?
+
+      object_description = object.project_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
 
     field :origin, Types::OriginType, null: true
     field :sustainable_development_goals, [Types::SustainableDevelopmentGoalType], null: true
