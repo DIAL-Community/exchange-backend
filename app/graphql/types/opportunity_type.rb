@@ -8,6 +8,15 @@ module Types
     field :image_file, String, null: true
     field :description, String, null: false
 
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.description.nil?
+
+      object_description = object.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
+
     field :contact_name, String, null: true
     def contact_name
       context[:current_user].nil? ? nil : object.contact_name

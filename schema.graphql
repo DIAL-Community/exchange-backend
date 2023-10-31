@@ -61,6 +61,7 @@ type BuildingBlock {
   imageFile: String
   maturity: String
   name: String!
+  parsedDescription: String
   products: [Product!]
   slug: String!
   specUrl: String
@@ -487,6 +488,7 @@ type Dataset {
   name: String!
   organizations: [Organization!]
   origins: [Origin!]
+  parsedDescription: String
   sdgs: [SustainableDevelopmentGoal!]
   sdgsMapping: String
   sectors: [Sector!]
@@ -1019,6 +1021,7 @@ type Opportunity {
   opportunityType: String!
   organizations: [Organization!]!
   origin: Origin!
+  parsedDescription: String
   requirements: String
   sectors: [Sector!]!
   slug: String!
@@ -1046,6 +1049,7 @@ type Organization {
   offices: [Office!]!
   organizationDescription: OrganizationDescription
   organizationDescriptions: [OrganizationDescription!]!
+  parsedDescription: String
   productCertifications: [Product!]!
   products: [Product!]!
   projects: [Project!]!
@@ -1272,6 +1276,7 @@ type Product {
   origins: [Origin!]
   overallMaturityScore: Float
   owner: String
+  parsedDescription: String
   playbooks: [Playbook!]
   pricingDetails: String
   pricingModel: String
@@ -1325,6 +1330,7 @@ type Project {
   name: String!
   organizations: [Organization!]
   origin: Origin
+  parsedDescription: String
   products: [Product!]
   projectDescription: ProjectDescription
   projectDescriptions: [ProjectDescription!]
@@ -2183,6 +2189,7 @@ type UseCase {
   markdownUrl: String
   maturity: String!
   name: String!
+  parsedDescription: String
   sanitizedDescription: String!
   sdgTargets: [SustainableDevelopmentGoalTarget!]!
   sector: Sector!
@@ -2214,6 +2221,7 @@ type UseCaseStep {
   datasets: [Dataset!]
   id: ID!
   name: String!
+  parsedDescription: String
   products: [Product!]
   slug: String!
   stepNumber: Int!
@@ -2270,6 +2278,7 @@ type Workflow {
   id: ID!
   imageFile: String!
   name: String!
+  parsedDescription: String
   slug: String!
   useCaseSteps: [UseCaseStep!]!
   useCases: [UseCase!]!

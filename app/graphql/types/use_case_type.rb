@@ -27,6 +27,15 @@ module Types
     field :use_case_description, Types::UseCaseDescriptionType, null: false,
       method: :use_case_description_localized
 
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.use_case_description_localized.nil?
+
+      object_description = object.use_case_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
+
     field :sanitized_description, String, null: false
     def sanitized_description
       use_case_description = object.use_case_description_localized
