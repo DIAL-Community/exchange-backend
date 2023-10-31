@@ -27,8 +27,19 @@ module Types
     field :dataset_descriptions, [Types::DatasetDescriptionType], null: true
 
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized
-    field :dataset_description, Types::DatasetDescriptionType, null: true,
-                                                               method: :dataset_description_localized
+    field :dataset_description,
+      Types::DatasetDescriptionType,
+      null: true,
+      method: :dataset_description_localized
+
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.dataset_description_localized.nil?
+
+      object_description = object.dataset_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
 
     field :origins, [Types::OriginType], null: true
     field :organizations, [Types::OrganizationType], null: true
