@@ -111,7 +111,7 @@ end
 #   request.host.split('.').first
 #}
 
-Rails.application.config.middleware.use Apartment::Elevators::Exchange
+#Rails.application.config.middleware.use Apartment::Elevators::Exchange
 #Rails.application.config.middleware.use Apartment::Elevators::Generic, proc { |request| 'fao' }
 Rails.application.config.middleware.insert_before Warden::Manager, Apartment::Elevators::Exchange
 # Rails.application.config.middleware.use Apartment::Elevators::Host
