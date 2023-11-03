@@ -29,7 +29,7 @@ class AuthenticationController < Devise::SessionsController
       return respond_to do |format|
         format.json { render(json: unauthorized_response, status: :unauthorized) }
       end
-    end  
+    end
 
     if user.valid_password?(params['user']['password']) && !user.confirmed?
       return respond_to do |format|
