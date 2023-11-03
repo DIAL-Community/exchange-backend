@@ -15,8 +15,19 @@ module Types
     field :image_file, String, null: false
 
     field :workflow_descriptions, [Types::WorkflowDescriptionType], null: false
-    field :workflow_description, Types::WorkflowDescriptionType, null: true,
-                                                                 method: :workflow_description_localized
+    field :workflow_description,
+      Types::WorkflowDescriptionType,
+      null: true,
+      method: :workflow_description_localized
+
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.workflow_description_localized.nil?
+
+      object_description = object.workflow_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
 
     field :use_cases, [Types::UseCaseType], null: false
     field :use_case_steps, [Types::UseCaseStepType], null: false

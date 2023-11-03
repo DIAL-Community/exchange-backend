@@ -43,6 +43,15 @@ module Types
     field :product_description, Types::ProductDescriptionType, null: true,
       method: :product_description_localized
 
+    field :parsed_description, String, null: true
+    def parsed_description
+      return if object.product_description_localized.nil?
+
+      object_description = object.product_description_localized.description
+      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
+      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+    end
+
     field :origins, [Types::OriginType], null: true
     field :endorsers, [Types::EndorserType], null: true
     field :organizations, [Types::OrganizationType], null: true
