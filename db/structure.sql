@@ -10,13 +10,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
 -- Name: agg_capabilities; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -522,7 +515,8 @@ CREATE TABLE public.building_blocks (
     maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     spec_url character varying,
     category public.category_type,
-    display_order integer DEFAULT 0 NOT NULL
+    display_order integer DEFAULT 0 NOT NULL,
+    govstack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -1733,7 +1727,8 @@ CREATE TABLE public.opportunities (
     tags character varying[] DEFAULT '{}'::character varying[],
     origin_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    govstack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -2792,7 +2787,8 @@ CREATE TABLE public.products (
     hosting_model character varying,
     pricing_date date,
     pricing_url character varying,
-    languages jsonb
+    languages jsonb,
+    govstack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -3811,7 +3807,8 @@ CREATE TABLE public.use_cases (
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
     maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     tags character varying[] DEFAULT '{}'::character varying[],
-    markdown_url character varying
+    markdown_url character varying,
+    govstack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -8068,6 +8065,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230928214508'),
 ('20230928215346'),
 ('20230929140735'),
-('20231004184941');
+('20231004184941'),
+('20231103194201');
 
 
