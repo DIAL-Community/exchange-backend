@@ -9,7 +9,11 @@ module Paginated
     argument :use_cases, [String], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
     argument :tags, [String], required: false, default_value: []
+
     argument :show_closed, Boolean, required: false, default_value: false
+    # Show only flagged govstack_entity. Query: govstack_entity = true if show_gov_stack_only is true.
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
+
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
 
     type [Types::OpportunityType], null: false
@@ -23,6 +27,7 @@ module Paginated
       sectors:,
       tags:,
       show_closed:,
+      show_gov_stack_only:,
       offset_attributes:
     )
       opportunities = Opportunity.order_by_status.order(:closing_date)
@@ -63,9 +68,8 @@ module Paginated
                                      .where(building_blocks: { id: filtered_building_blocks })
       end
 
-      unless show_closed
-        opportunities = opportunities.where.not(opportunity_status: 'CLOSED')
-      end
+      opportunities = opportunities.where.not(opportunity_status: 'CLOSED') unless show_closed
+      opportunities = opportunities.where(govstack_entity: show_gov_stack_only) if show_gov_stack_only
 
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?

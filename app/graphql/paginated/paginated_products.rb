@@ -11,7 +11,11 @@ module Paginated
     argument :workflows, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
     argument :origins, [String], required: false, default_value: []
+
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
+    # Show only flagged govstack_entity. Query: govstack_entity = true if show_gov_stack_only is true.
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
+
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::ProductType], null: false
 
@@ -67,9 +71,8 @@ module Paginated
     end
 
     def resolve(
-      search:, use_cases:, building_blocks:, sectors:, tags:,
-      license_types:, workflows:, sdgs:, origins:, is_linked_with_dpi:,
-      offset_attributes:
+      search:, use_cases:, building_blocks:, sectors:, tags:, license_types:, workflows:, sdgs:, origins:,
+      is_linked_with_dpi:, show_gov_stack_only:, offset_attributes:
     )
       products = Product.order(:name).distinct
 
@@ -124,6 +127,8 @@ module Paginated
       elsif (license_types - ['commercial_only']).empty? && (['commercial_only'] - license_types).empty?
         products = products.where(commercial_product: true)
       end
+
+      products = products.where(govstack_entity: show_gov_stack_only) if show_gov_stack_only
 
       offset_params = offset_attributes.to_h
       products.limit(offset_params[:limit]).offset(offset_params[:offset]).distinct

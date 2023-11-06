@@ -5,11 +5,11 @@ module Paginated
     argument :search, String, required: false, default_value: ''
     argument :sdgs, [String], required: false, default_value: []
     argument :show_beta, Boolean, required: false, default_value: false
-    argument :gov_stack_only, Boolean, required: false, default_value: false
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::UseCaseType], null: false
 
-    def resolve(search:, sdgs:, show_beta:, gov_stack_only:, offset_attributes:)
+    def resolve(search:, sdgs:, show_beta:, show_gov_stack_only:, offset_attributes:)
       use_cases = UseCase.order(:name).distinct
       unless search.blank?
         name_filter = use_cases.name_contains(search)
@@ -27,7 +27,9 @@ module Paginated
       end
 
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
-      use_cases = use_cases.where.not(markdown_url: nil) if gov_stack_only
+
+      use_cases = use_cases.where.not(markdown_url: nil) if show_gov_stack_only
+      use_cases = use_cases.where(govstack_entity: show_gov_stack_only) if show_gov_stack_only
 
       offset_params = offset_attributes.to_h
       use_cases.limit(offset_params[:limit]).offset(offset_params[:offset])
