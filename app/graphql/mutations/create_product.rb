@@ -63,7 +63,7 @@ module Mutations
       product.pricing_details = pricing_details
 
       # Only admin will be allowed to set this flag
-      product.gov_stack_entity = gov_stack_entity if an_admin && gov_stack_entity
+      product.gov_stack_entity = gov_stack_entity if an_admin
 
       successful_operation = false
       ActiveRecord::Base.transaction do

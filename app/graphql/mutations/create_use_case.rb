@@ -49,7 +49,7 @@ module Mutations
       use_case.markdown_url = markdown_url
 
       # Only admin will be allowed to set this flag
-      use_case.gov_stack_entity = gov_stack_entity if an_admin && gov_stack_entity
+      use_case.gov_stack_entity = gov_stack_entity if an_admin
 
       sector = Sector.find_by(slug: sector_slug)
       use_case.sector = sector unless sector.nil?

@@ -70,7 +70,7 @@ module Mutations
       opportunity.origin = Origin.find_by(slug: opportunity_origin)
 
       # Only admin will be allowed to set this flag
-      opportunity.gov_stack_entity = gov_stack_entity if an_admin && gov_stack_entity
+      opportunity.gov_stack_entity = gov_stack_entity if an_admin
 
       successful_operation = false
       ActiveRecord::Base.transaction do

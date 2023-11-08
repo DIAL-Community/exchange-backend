@@ -50,7 +50,7 @@ module Mutations
       building_block.spec_url = spec_url
 
       # Only admin will be allowed to set this flag
-      building_block.gov_stack_entity = gov_stack_entity if an_admin && gov_stack_entity
+      building_block.gov_stack_entity = gov_stack_entity if an_admin
 
       successful_operation = false
       ActiveRecord::Base.transaction do
