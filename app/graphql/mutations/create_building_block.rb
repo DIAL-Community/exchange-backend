@@ -12,12 +12,14 @@ module Mutations
     argument :maturity, String, required: true
     argument :category, String, required: false
     argument :spec_url, String, required: false
-    argument :image_file, ApolloUploadServer::Upload, required: false
+    argument :image_file, ApolloUploadServer::Upload, required: false, default_value: nil
+
+    argument :gov_stack_entity, Boolean, required: false, default_value: false
 
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, maturity:, category:, spec_url:, image_file: nil)
+    def resolve(name:, slug:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
       unless an_admin || a_content_editor
         return {
           building_block: nil,
@@ -46,6 +48,9 @@ module Mutations
       building_block.maturity = maturity
       building_block.category = category
       building_block.spec_url = spec_url
+
+      # Only admin will be allowed to set this flag
+      building_block.gov_stack_entity = gov_stack_entity if an_admin && gov_stack_entity
 
       successful_operation = false
       ActiveRecord::Base.transaction do

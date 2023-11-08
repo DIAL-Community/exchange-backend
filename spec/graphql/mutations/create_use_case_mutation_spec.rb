@@ -6,28 +6,30 @@ require 'rails_helper'
 RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
   let(:mutation) do
     <<~GQL
-      mutation CreateUseCase (
+      mutation CreateUseCase(
         $name: String!
         $slug: String!
         $sectorSlug: String!
         $maturity: String!
         $description: String!
-        ) {
+        $govStackEntity: Boolean
+      ) {
         createUseCase(
           name: $name
           slug: $slug
           sectorSlug: $sectorSlug
           maturity: $maturity
           description: $description
+          govStackEntity: $govStackEntity
         ) {
-            useCase
-            {
+            useCase {
               name
               slug
               sector {
                 slug
               }
               maturity
+              govStackEntity
               useCaseDescription {
                 description
               }
@@ -39,12 +41,20 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
   end
 
   it 'creates use case - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateUseCase).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:sector, slug: 'sec_1', name: 'Sec 1')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA", description: "some description" }
+      variables: {
+        name: "Some name",
+        slug: "",
+        sectorSlug: "sec_1",
+        maturity: "BETA",
+        description: "some description",
+        govStackEntity: true
+      }
     )
 
     aggregate_failures do
@@ -54,6 +64,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
           "slug" => "some_name",
           "sector" => { "slug" => "sec_1" },
           "maturity" => "BETA",
+          "govStackEntity" => true,
           "useCaseDescription" => { "description" => "some description" }
         }))
       expect(result['data']['createUseCase']['errors'])
@@ -62,54 +73,82 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
   end
 
   it 'creates use case - user is logged in as content editor' do
-    expect_any_instance_of(Mutations::CreateUseCase).to(receive(:a_content_editor).and_return(true))
+    editor_user = create(:user, email: 'editor@gmail.com', roles: [:content_editor])
     create(:sector, slug: 'sec_1', name: 'Sec 1')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      editor_user,
       mutation,
-      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA",
-                   description: "some description" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        sectorSlug: "sec_1",
+        maturity: "BETA",
+        description: "some description",
+        govStackEntity: true
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCase']['useCase'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "sector" => { "slug" => "sec_1" },
-                 "maturity" => "BETA",
-                 "useCaseDescription" => { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some_name",
+          "sector" => { "slug" => "sec_1" },
+          "maturity" => "BETA",
+          "govStackEntity" => false,
+          "useCaseDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createUseCase']['errors'])
         .to(eq([]))
     end
   end
 
   it 'updates a name without changing slug' do
-    expect_any_instance_of(Mutations::CreateUseCase).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:use_case, name: "Some name", slug: "some_name")
     create(:sector, slug: 'sec_1', name: 'Sec 1')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { name: "Some new name", slug: "some_name", sectorSlug: "sec_1", maturity: "BETA",
-                   description: "some description" },
+      variables: {
+        name: "Some new name",
+        slug: "some_name",
+        sectorSlug: "sec_1",
+        maturity: "BETA",
+        description: "some description"
+      }
     )
 
     aggregate_failures do
       expect(result['data']['createUseCase']['useCase'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name", "sector" => { "slug" => "sec_1" },
-                 "maturity" => "BETA",
-                 "useCaseDescription" => { "description" => "some description" } }))
+        .to(eq({
+          "name" => "Some new name",
+          "slug" => "some_name",
+          "sector" => { "slug" => "sec_1" },
+          "maturity" => "BETA",
+          "govStackEntity" => false,
+          "useCaseDescription" => { "description" => "some description" }
+        }))
       expect(result['data']['createUseCase']['errors'])
         .to(eq([]))
     end
   end
 
   it 'fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::CreateUseCase).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::CreateUseCase).to(receive(:a_content_editor).and_return(false))
+    standard_user = create(:user, email: 'user@gmail.com', roles: [:user])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      standard_user,
       mutation,
-      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA",
-                   description: "some description" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        sectorSlug: "sec_1",
+        maturity: "BETA",
+        description: "some description"
+      }
     )
 
     aggregate_failures do
@@ -123,8 +162,13 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", sectorSlug: "sec_1", maturity: "BETA",
-                   description: "some description" },
+      variables: {
+        name: "Some name",
+        slug: "",
+        sectorSlug: "sec_1",
+        maturity: "BETA",
+        description: "some description"
+      }
     )
 
     aggregate_failures do

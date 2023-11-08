@@ -63,7 +63,7 @@ namespace :govstack do
       opportunity.opportunity_type = Opportunity.opportunity_type_types[:OTHER]
       opportunity.opportunity_status = Opportunity.opportunity_status_types[:OPEN]
 
-      opportunity.govstack_entity = true
+      opportunity.gov_stack_entity = true
       opportunity.origin = govstack_origin
 
       opportunity.description = <<-govstack_rfp_description

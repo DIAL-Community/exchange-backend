@@ -13,7 +13,7 @@ module Paginated
     argument :origins, [String], required: false, default_value: []
 
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
-    # Show only flagged govstack_entity. Query: govstack_entity = true if show_gov_stack_only is true.
+    # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
     argument :show_gov_stack_only, Boolean, required: false, default_value: false
 
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
@@ -128,7 +128,7 @@ module Paginated
         products = products.where(commercial_product: true)
       end
 
-      products = products.where(govstack_entity: show_gov_stack_only) if show_gov_stack_only
+      products = products.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
 
       offset_params = offset_attributes.to_h
       products.limit(offset_params[:limit]).offset(offset_params[:offset]).distinct

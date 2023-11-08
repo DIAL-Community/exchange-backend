@@ -29,7 +29,7 @@ module Paginated
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
 
       use_cases = use_cases.where.not(markdown_url: nil) if show_gov_stack_only
-      use_cases = use_cases.where(govstack_entity: show_gov_stack_only) if show_gov_stack_only
+      use_cases = use_cases.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
 
       offset_params = offset_attributes.to_h
       use_cases.limit(offset_params[:limit]).offset(offset_params[:offset])

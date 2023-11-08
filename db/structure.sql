@@ -516,7 +516,7 @@ CREATE TABLE public.building_blocks (
     spec_url character varying,
     category public.category_type,
     display_order integer DEFAULT 0 NOT NULL,
-    govstack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -1728,7 +1728,7 @@ CREATE TABLE public.opportunities (
     origin_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    govstack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -2788,7 +2788,7 @@ CREATE TABLE public.products (
     pricing_date date,
     pricing_url character varying,
     languages jsonb,
-    govstack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -3808,7 +3808,7 @@ CREATE TABLE public.use_cases (
     maturity public.entity_status_type DEFAULT 'DRAFT'::public.entity_status_type NOT NULL,
     tags character varying[] DEFAULT '{}'::character varying[],
     markdown_url character varying,
-    govstack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
