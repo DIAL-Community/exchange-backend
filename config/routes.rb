@@ -61,6 +61,9 @@ Rails.application.routes.draw do
   get 'api/v1/building_blocks', to: 'building_blocks#simple_search', defaults: { format: 'json' }
   post 'api/v1/building_blocks', to: 'building_blocks#complex_search', defaults: { format: 'json' }
 
+  get 'api/v1/govstack_building_blocks', to: 'building_blocks#govstack_search', defaults: { format: 'json' }
+  get 'api/v1/govstack_building_blocks/:id', to: 'building_blocks#govstack_unique_search'
+
   get 'api/v1/cities/:id', to: 'cities#unique_search'
   get 'api/v1/cities', to: 'cities#simple_search', defaults: { format: 'json' }
 
@@ -71,6 +74,9 @@ Rails.application.routes.draw do
   get 'api/v1/products', to: 'products#simple_search', defaults: { format: 'json' }
   post 'api/v1/products', to: 'products#complex_search', defaults: { format: 'json' }
   post 'api/v1/products/owners', to: 'products#owner_search', defaults: { format: 'json' }
+
+  get 'api/v1/govstack_products', to: 'products#govstack_search', defaults: { format: 'json' }
+  get 'api/v1/govstack_products/:id', to: 'products#govstack_unique_search'
 
   get 'api/v1/projects/:id', to: 'projects#unique_search'
   get 'api/v1/projects', to: 'projects#simple_search', defaults: { format: 'json' }
@@ -93,6 +99,9 @@ Rails.application.routes.draw do
   get 'api/v1/use_cases/:id', to: 'use_cases#unique_search'
   get 'api/v1/use_cases', to: 'use_cases#simple_search', defaults: { format: 'json' }
   post 'api/v1/use_cases', to: 'use_cases#complex_search', defaults: { format: 'json' }
+
+  get 'api/v1/govstack_use_cases', to: 'use_cases#govstack_search', defaults: { format: 'json' }
+  get 'api/v1/govstack_use_cases/:id', to: 'use_cases#unique_search'
 
   get 'api/v1/use_cases/:id/use_case_steps/:step_id', to: 'use_case_steps#unique_search'
   get 'api/v1/use_cases/:id/use_case_steps', to: 'use_case_steps#simple_search', defaults: { format: 'json' }
