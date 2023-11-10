@@ -80,7 +80,7 @@ class UseCase < ApplicationRecord
 
   def as_json(options = {})
     json = super(options)
-    json['sector'] = sector.as_json({ only: %i[name slug], api_path: api_path(options) })
+    json['sector'] = sector.as_json({ only: %i[name slug locale], api_path: api_path(options) })
     if options[:include_relationships].present?
       json['use_case_steps'] = use_case_steps.as_json({ only: %i[name slug website], api_path: api_path(options) })
     end

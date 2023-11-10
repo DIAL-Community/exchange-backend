@@ -110,6 +110,12 @@ Rails.application.routes.draw do
   get 'api/v1/workflows', to: 'workflows#simple_search', defaults: { format: 'json' }
   post 'api/v1/workflows', to: 'workflows#complex_search', defaults: { format: 'json' }
 
+  get 'api/v1/opportunities/:id', to: 'opportunities#unique_search'
+  get 'api/v1/opportunities', to: 'opportunities#simple_search', defaults: { format: 'json' }
+
+  get 'api/v1/govstack_opportunities', to: 'opportunities#govstack_search', defaults: { format: 'json' }
+  get 'api/v1/govstack_opportunities/:id', to: 'opportunities#govstack_unique_search'
+
   # End of external API routes
 
   resources :audits, only: [:index]
