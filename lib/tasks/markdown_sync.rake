@@ -19,7 +19,7 @@ namespace :markdown_sync do
 
       tracking_task_log(task_name, "Updating use case: #{use_case.name}.")
 
-      data = URI.parse(use_case.markdown_url).read
+      data = URI.parse("https://" + use_case.markdown_url).read
 
       html_md = Kramdown::Document.new(data, input: 'GFM').to_html
       html_fragment = Nokogiri::HTML.fragment(html_md)
@@ -95,22 +95,24 @@ namespace :markdown_sync do
     node_found = false
     until node_found || current_node.nil?
       current_node = current_node.next
-      if current_node.name == 'h2' && current_node.text.start_with?('SDG Targets')
+      if !current_node.nil? && current_node.name == 'h2' && current_node.text.start_with?('SDG Targets')
         node_found = true
       end
     end
 
     use_case_sdg_targets = []
 
-    target_number_format = /(\d+\.\d+)/
-    sdg_target_nodes = current_node.at_css('+ ul').css('li')
-    sdg_target_nodes.each do |sdg_target_node|
-      matches = sdg_target_node.content.match(target_number_format)
-      target_number, _others = matches
-      sdg_target = SdgTarget.find_by(target_number: target_number.to_s)
-      puts "  '#{target_number}' returning #{sdg_target.nil? ? 'no record' : 'a record'}."
+    if node_found
+      target_number_format = /(\d+\.\d+)/
+      sdg_target_nodes = current_node.at_css('+ ul').css('li')
+      sdg_target_nodes.each do |sdg_target_node|
+        matches = sdg_target_node.content.match(target_number_format)
+        target_number, _others = matches
+        sdg_target = SdgTarget.find_by(target_number: target_number.to_s)
+        puts "  '#{target_number}' returning #{sdg_target.nil? ? 'no record' : 'a record'}."
 
-      use_case_sdg_targets << sdg_target unless sdg_target.nil?
+        use_case_sdg_targets << sdg_target unless sdg_target.nil?
+      end
     end
     use_case.sdg_targets = use_case_sdg_targets
   end
