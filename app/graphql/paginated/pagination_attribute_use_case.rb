@@ -5,11 +5,11 @@ module Paginated
     argument :search, String, required: false, default_value: ''
     argument :sdgs, [String], required: false, default_value: []
     argument :show_beta, Boolean, required: false, default_value: false
-    argument :gov_stack_only, Boolean, required: false, default_value: false
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
 
     type Attributes::PaginationAttributes, null: false
 
-    def resolve(search:, sdgs:, show_beta:, gov_stack_only:)
+    def resolve(search:, sdgs:, show_beta:, show_gov_stack_only:)
       use_cases = UseCase.order(:name).distinct
       unless search.blank?
         name_filter = use_cases.name_contains(search)
@@ -27,7 +27,9 @@ module Paginated
       end
 
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED]) unless show_beta
-      use_cases = use_cases.where.not(markdown_url: nil) if gov_stack_only
+
+      use_cases = use_cases.where.not(markdown_url: nil) if show_gov_stack_only
+      use_cases = use_cases.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
       { total_count: use_cases.count }
     end
   end

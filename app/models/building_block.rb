@@ -73,7 +73,10 @@ class BuildingBlock < ApplicationRecord
   end
 
   def self_url(options = {})
-    return "#{options[:api_path]}/building_blocks/#{slug}" if options[:api_path].present?
+    if options[:api_path].present?
+      return "#{options[:api_path]}/govstack_building_blocks/#{slug}" if options[:govstack_path].present?
+      return "#{options[:api_path]}/building_blocks/#{slug}" unless options[:govstack_path].present?
+    end
     return options[:item_path] if options[:item_path].present?
     return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
@@ -86,15 +89,27 @@ class BuildingBlock < ApplicationRecord
 
   def api_path(options = {})
     return options[:api_path] if options[:api_path].present?
-    return options[:item_path].sub("/building_blocks/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path].sub('/building_blocks', '') if options[:collection_path].present?
+    if options[:item_path].present?
+      return options[:item_path].sub("/govstack_building_blocks/#{slug}", '') if options[:govstack_path].present?
+      return options[:item_path].sub("/building_blocks/#{slug}", '') unless options[:govstack_path].present?
+    end
+
+    if options[:collection_path].present?
+      return options[:collection_path].sub('/govstack_building_blocks', '') if options[:govstack_path].present?
+      return options[:collection_path].sub('/building_blocks', '') unless options[:govstack_path].present?
+    end
+  end
+
+  def govstack_path(options = {})
+    options[:govstack_path]
   end
 
   def as_json(options = {})
     json = super(options)
     if options[:include_relationships].present?
-      json['products'] = products.as_json({ only: %i[name slug website], api_path: api_path(options) })
-      json['workflows'] = workflows.as_json({ only: %i[name slug], api_path: api_path(options) })
+      child_options = { api_path: api_path(options) }
+      json['products'] = products.as_json(child_options.merge({ only: %i[name slug website] }))
+      json['workflows'] = workflows.as_json(child_options.merge({ only: %i[name slug] }))
     end
     json['self_url'] = self_url(options) if options[:collection_path].present? || options[:api_path].present?
     json['collection_url'] = collection_url(options) if options[:item_path].present?
@@ -122,11 +137,9 @@ class BuildingBlock < ApplicationRecord
 
   def self.serialization_options
     {
-      except: %i[id created_at updated_at description],
+      except: %i[id created_at updated_at description entity_status_type],
       include: {
-        building_block_descriptions: { only: [:description] },
-        products: { only: %i[name slug] },
-        workflows: { only: %i[name slug] }
+        building_block_descriptions: { only: [:description, :locale] }
       }
     }
   end

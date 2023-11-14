@@ -3,15 +3,79 @@
 class BuildingBlocksController < ApplicationController
   include ApiFilterConcern
 
+  def govstack_search
+    page_size = 20
+    building_blocks = BuildingBlock.where(gov_stack_entity: true)
+
+    current_page = 1
+    current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
+
+    building_blocks = building_blocks.name_contains(params[:search]) if params[:search].present?
+
+    results = {
+      url: request.original_url,
+      count: building_blocks.count,
+      page_size:
+    }
+
+    uri = URI.parse(request.original_url)
+    query = Rack::Utils.parse_query(uri.query)
+
+    if building_blocks.count > page_size * current_page
+      query['page'] = current_page + 1
+      uri.query = Rack::Utils.build_query(query)
+      results['next_page'] = uri.to_s
+    end
+
+    if current_page > 1
+      query['page'] = current_page - 1
+      uri.query = Rack::Utils.build_query(query)
+      results['previous_page'] = uri.to_s
+    end
+
+    results['results'] = building_blocks.paginate(page: current_page, per_page: page_size)
+                                        .order(:slug)
+
+    uri.fragment = uri.query = nil
+    respond_to do |format|
+      format.csv do
+        render(csv: results['results'].to_csv, filename: 'csv-building-blocks')
+      end
+      format.json do
+        render(json: results.to_json(
+          BuildingBlock.serialization_options.merge({
+            collection_path: uri.to_s,
+            include_relationships: true,
+            govstack_path: true
+          })
+        ))
+      end
+    end
+  end
+
+  def govstack_unique_search
+    record = BuildingBlock.find_by(slug: params[:id])
+    return render(json: {}, status: :not_found) if record.nil?
+
+    render(json: record.to_json(
+      BuildingBlock.serialization_options.merge({
+        item_path: request.original_url,
+        include_relationships: true,
+        govstack_path: true
+      })
+    ))
+  end
+
   def unique_search
     record = BuildingBlock.find_by(slug: params[:id])
     return render(json: {}, status: :not_found) if record.nil?
 
-    render(json: record.to_json(BuildingBlock.serialization_options
-                                             .merge({
-                                               item_path: request.original_url,
-                                               include_relationships: true
-                                             })))
+    render(json: record.to_json(
+      BuildingBlock.serialization_options.merge({
+        item_path: request.original_url,
+        include_relationships: true
+      })
+    ))
   end
 
   def simple_search
@@ -35,13 +99,13 @@ class BuildingBlocksController < ApplicationController
     if building_blocks.count > page_size * current_page
       query['page'] = current_page + 1
       uri.query = Rack::Utils.build_query(query)
-      results['next_page'] = CGI.escape(uri.to_s)
+      results['next_page'] = uri.to_s
     end
 
     if current_page > 1
       query['page'] = current_page - 1
       uri.query = Rack::Utils.build_query(query)
-      results['previous_page'] = CGI.escape(uri.to_s)
+      results['previous_page'] = uri.to_s
     end
 
     results['results'] = building_blocks.paginate(page: current_page, per_page: page_size)
@@ -53,11 +117,12 @@ class BuildingBlocksController < ApplicationController
         render(csv: results['results'].to_csv, filename: 'csv-building-blocks')
       end
       format.json do
-        render(json: results.to_json(BuildingBlock.serialization_options
-                                                  .merge({
-                                                    collection_path: uri.to_s,
-                                                    include_relationships: true
-                                                  })))
+        render(json: results.to_json(
+          BuildingBlock.serialization_options.merge({
+            collection_path: uri.to_s,
+            include_relationships: true
+          })
+        ))
       end
     end
   end
@@ -147,13 +212,13 @@ class BuildingBlocksController < ApplicationController
     if building_blocks.count > page_size * current_page
       query['page'] = current_page + 1
       uri.query = Rack::Utils.build_query(query)
-      results['next_page'] = CGI.escape(uri.to_s)
+      results['next_page'] = uri.to_s
     end
 
     if current_page > 1
       query['page'] = current_page - 1
       uri.query = Rack::Utils.build_query(query)
-      results['previous_page'] = CGI.escape(uri.to_s)
+      results['previous_page'] = uri.to_s
     end
 
     results['results'] = building_blocks.paginate(page: current_page, per_page: page_size)
@@ -165,11 +230,12 @@ class BuildingBlocksController < ApplicationController
         render(csv: results['results'].to_csv, filename: 'csv-building-blocks')
       end
       format.json do
-        render(json: results.to_json(BuildingBlock.serialization_options
-                                                  .merge({
-                                                    collection_path: uri.to_s,
-                                                    include_relationships: true
-                                                  })))
+        render(json: results.to_json(
+          BuildingBlock.serialization_options.merge({
+            collection_path: uri.to_s,
+            include_relationships: true
+          })
+        ))
       end
     end
   end

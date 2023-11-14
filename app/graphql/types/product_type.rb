@@ -33,7 +33,7 @@ module Types
     end
 
     field :languages, GraphQL::Types::JSON, null: true
-
+    field :gov_stack_entity, Boolean, null: false
     field :product_type, String, null: false
 
     field :main_repository, Types::ProductRepositoryType, null: true

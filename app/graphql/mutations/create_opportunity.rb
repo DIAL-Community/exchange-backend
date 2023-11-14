@@ -20,7 +20,9 @@ module Mutations
 
     argument :opening_date, GraphQL::Types::ISO8601Date, required: false
     argument :closing_date, GraphQL::Types::ISO8601Date, required: true
-    argument :image_file, ApolloUploadServer::Upload, required: false
+    argument :image_file, ApolloUploadServer::Upload, required: false, default_value: nil
+
+    argument :gov_stack_entity, Boolean, required: false, default_value: false
 
     field :opportunity, Types::OpportunityType, null: true
     field :errors, [String], null: true
@@ -28,7 +30,7 @@ module Mutations
     def resolve(
       name:, slug:, web_address:, description:, contact_name:, contact_email:,
       opportunity_type:, opportunity_status:, opportunity_origin:,
-      opening_date:, closing_date:, image_file: nil
+      opening_date:, closing_date:, image_file:, gov_stack_entity:
     )
       opportunity = Opportunity.find_by(slug:)
       unless an_admin
@@ -66,6 +68,9 @@ module Mutations
       opportunity.closing_date = closing_date
 
       opportunity.origin = Origin.find_by(slug: opportunity_origin)
+
+      # Only admin will be allowed to set this flag
+      opportunity.gov_stack_entity = gov_stack_entity if an_admin
 
       successful_operation = false
       ActiveRecord::Base.transaction do
