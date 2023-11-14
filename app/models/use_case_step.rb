@@ -64,7 +64,10 @@ class UseCaseStep < ApplicationRecord
 
   def self.serialization_options
     {
-      except: %i[id use_case_id created_at updated_at]
+      except: %i[id use_case_id created_at updated_at],
+      include: {
+        use_case_step_descriptions: { only: [:description, :locale] }
+      }
     }
   end
 end

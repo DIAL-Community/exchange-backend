@@ -8,6 +8,8 @@ module Types
     field :image_file, String, null: true
     field :description, String, null: false
 
+    field :gov_stack_entity, Boolean, null: false
+
     field :parsed_description, String, null: true
     def parsed_description
       return if object.description.nil?

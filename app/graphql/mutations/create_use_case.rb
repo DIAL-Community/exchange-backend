@@ -11,13 +11,15 @@ module Mutations
     argument :sector_slug, String, required: true
     argument :maturity, String, required: true
     argument :description, String, required: true
-    argument :markdown_url, String, required: false
-    argument :image_file, ApolloUploadServer::Upload, required: false
+    argument :markdown_url, String, required: false, default_value: nil
+    argument :image_file, ApolloUploadServer::Upload, required: false, default_value: nil
+
+    argument :gov_stack_entity, Boolean, required: false, default_value: false
 
     field :use_case, Types::UseCaseType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, sector_slug:, maturity:, description:, markdown_url: nil, image_file: nil)
+    def resolve(name:, slug:, sector_slug:, maturity:, description:, markdown_url:, image_file:, gov_stack_entity:)
       unless an_admin || a_content_editor
         return {
           use_case: nil,
@@ -45,6 +47,9 @@ module Mutations
       use_case.name = name
       use_case.maturity = maturity
       use_case.markdown_url = markdown_url
+
+      # Only admin will be allowed to set this flag
+      use_case.gov_stack_entity = gov_stack_entity if an_admin
 
       sector = Sector.find_by(slug: sector_slug)
       use_case.sector = sector unless sector.nil?

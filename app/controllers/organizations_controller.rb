@@ -49,13 +49,13 @@ class OrganizationsController < ApplicationController
     if organizations.count > page_size * current_page
       query['page'] = current_page + 1
       uri.query = Rack::Utils.build_query(query)
-      results['next_page'] = CGI.escape(uri.to_s)
+      results['next_page'] = uri.to_s
     end
 
     if current_page > 1
       query['page'] = current_page - 1
       uri.query = Rack::Utils.build_query(query)
-      results['previous_page'] = CGI.escape(uri.to_s)
+      results['previous_page'] = uri.to_s
     end
 
     results['results'] = organizations.paginate(page: current_page, per_page: page_size)
@@ -129,13 +129,13 @@ class OrganizationsController < ApplicationController
     if organizations.count > page_size * current_page
       query['page'] = current_page + 1
       uri.query = Rack::Utils.build_query(query)
-      results['next_page'] = CGI.escape(uri.to_s)
+      results['next_page'] = uri.to_s
     end
 
     if current_page > 1
       query['page'] = current_page - 1
       uri.query = Rack::Utils.build_query(query)
-      results['previous_page'] = CGI.escape(uri.to_s)
+      results['previous_page'] = uri.to_s
     end
 
     current_user = User.find_by(

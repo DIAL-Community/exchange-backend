@@ -8,11 +8,17 @@ module Paginated
     argument :workflows, [String], required: false, default_value: []
     argument :category_types, [String], required: false, default_value: []
     argument :filter_blocks, [String], required: false, default_value: []
+
     argument :show_mature, Boolean, required: false, default_value: false
+    # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
 
     type Attributes::PaginationAttributes, null: false
 
-    def resolve(search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:, show_mature:)
+    def resolve(
+      search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:,
+      show_mature:, show_gov_stack_only:
+    )
       building_blocks = BuildingBlock.order(:name).distinct if filter_blocks.empty?
       building_blocks = BuildingBlock.where(id: filter_blocks) if filter_blocks.any?
 
@@ -60,6 +66,7 @@ module Paginated
 
       published_building_block = BuildingBlock.entity_status_types[:PUBLISHED]
       building_blocks = building_blocks.where(maturity: published_building_block) if show_mature
+      building_blocks = building_blocks.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
 
       building_blocks = building_blocks.where(category: category_types) unless category_types.empty?
 
