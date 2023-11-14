@@ -26,7 +26,7 @@ class Resource < ApplicationRecord
     dependent: :delete_all
   )
 
-  scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
+  scope :name_contains, ->(name) { where('LOWER(resources.name) like LOWER(?)', "%#{name}%") }
 
   def image_file
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
@@ -37,10 +37,10 @@ class Resource < ApplicationRecord
   end
 
   def countries_ordered
-    countries&.order('name ASC')
+    countries&.order('countries.name ASC')
   end
 
   def authors_ordered
-    authors&.order('name ASC')
+    authors&.order('authors.name ASC')
   end
 end
