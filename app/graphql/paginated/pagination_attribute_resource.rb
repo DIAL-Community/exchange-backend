@@ -8,7 +8,9 @@ module Paginated
 
     argument :resource_types, [String], required: false, default_value: []
     argument :resource_topics, [String], required: false, default_value: []
+
     argument :tags, [String], required: false, default_value: []
+    argument :countries, [String], required: false, default_value: []
 
     argument :compartmentalized, Boolean, required: true, default_value: false
     argument :featured_length, Integer, required: false, default_value: 3
@@ -19,7 +21,7 @@ module Paginated
     def resolve(
       search:, show_in_exchange:, show_in_wizard:, compartmentalized:,
       featured_length:, spotlight_length:,
-      resource_types:, resource_topics:, tags:
+      resource_types:, resource_topics:, tags:, countries:
     )
       resources = Resource
                   .order(spotlight: :desc)
@@ -43,6 +45,12 @@ module Paginated
 
       unless resource_topics.empty?
         resources = resources.where(resource_topic: resource_topics)
+      end
+
+      filtered_countries = countries.reject { |x| x.nil? || x.empty? }
+      unless filtered_countries.empty?
+        resources = resources.joins(:countries)
+                             .where(countries: { id: filtered_countries })
       end
 
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }

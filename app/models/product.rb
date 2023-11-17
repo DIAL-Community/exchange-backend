@@ -177,7 +177,10 @@ class Product < ApplicationRecord
   end
 
   def self_url(options = {})
-    return "#{options[:api_path]}/products/#{slug}" if options[:api_path].present?
+    if options[:api_path].present?
+      return "#{options[:api_path]}/govstack_products/#{slug}" if options[:govstack_path].present?
+      return "#{options[:api_path]}/products/#{slug}" unless options[:govstack_path].present?
+    end
     return options[:item_path] if options[:item_path].present?
     return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
@@ -190,20 +193,33 @@ class Product < ApplicationRecord
 
   def api_path(options = {})
     return options[:api_path] if options[:api_path].present?
-    return options[:item_path].sub("/products/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path].sub('/products', '') if options[:collection_path].present?
+    if options[:item_path].present?
+      return options[:item_path].sub("/govstack_products/#{slug}", '') if options[:govstack_path].present?
+      return options[:item_path].sub("/products/#{slug}", '') unless options[:govstack_path].present?
+    end
+
+    if options[:collection_path].present?
+      return options[:collection_path].sub('/govstack_products', '') if options[:govstack_path].present?
+      return options[:collection_path].sub('/products', '') unless options[:govstack_path].present?
+    end
+  end
+
+  def govstack_path(options = {})
+    options[:govstack_path]
   end
 
   def as_json(options = {})
     json = super(options)
     if options[:include_relationships].present?
-      json['organizations'] = organizations.as_json({ only: %i[name slug website], api_path: api_path(options) })
-      json['origins'] = origins.as_json({ only: %i[name slug], api_path: api_path(options), api_source: 'products' })
-      json['building_blocks'] = building_blocks.as_json({ only: %i[name slug], api_path: api_path(options) })
-      json['sustainable_development_goals'] = sustainable_development_goals.as_json({ only: %i[name slug number],
-                                                                                      api_path: api_path(options) })
-      json['repositories'] = product_repositories.as_json({ only: %i[name slug absolute_url],
-                                                            api_path: api_path(options) })
+      child_options = { api_path: api_path(options) }
+      json['organizations'] = organizations.as_json(child_options.merge({ only: %i[name slug website] }))
+      json['origins'] = origins.as_json(child_options.merge({ only: %i[name slug], api_source: 'products' }))
+      json['building_blocks'] = building_blocks.as_json(child_options.merge({ only: %i[name slug] }))
+      json['repositories'] = product_repositories.as_json(child_options.merge({ only: %i[name slug absolute_url] }))
+      json['sectors'] = sectors.as_json(child_options.merge({ only: %i[name slug locale] }))
+
+      sdgs = sustainable_development_goals
+      json['sustainable_development_goals'] = sdgs.as_json(child_options.merge({ only: %i[name slug number] }))
     end
     json['self_url'] = self_url(options) if options[:collection_path].present? || options[:api_path].present?
     json['collection_url'] = collection_url(options) if options[:item_path].present?
@@ -211,16 +227,7 @@ class Product < ApplicationRecord
   end
 
   def self.serialization_options
-    {
-      except: %i[id statistics license_analysis default_url status created_at updated_at],
-      include: {
-        organizations: { only: [:name] },
-        sectors: { only: [:name] },
-        origins: { only: [:name] },
-        building_blocks: { only: [:name] },
-        sustainable_development_goals: { only: %i[number name] }
-      }
-    }
+    { except: %i[id statistics license_analysis default_url status created_at updated_at start_assessment] }
   end
 
   def sustainable_development_goals_mapping_status

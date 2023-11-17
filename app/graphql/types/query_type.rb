@@ -53,6 +53,7 @@ module Types
 
     field :countries, resolver: Queries::CountriesQuery
     field :country, resolver: Queries::CountryQuery
+    field :countries_with_resources, resolver: Queries::CountriesWithResourcesQuery
 
     field :organizations, resolver: Queries::OrganizationsQuery
     field :organization, resolver: Queries::OrganizationQuery

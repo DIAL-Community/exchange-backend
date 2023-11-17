@@ -17,6 +17,8 @@ module Types
     field :category, String, null: true
     field :spec_url, String, null: true
 
+    field :gov_stack_entity, Boolean, null: false
+
     field :building_block_descriptions, [Types::BuildingBlockDescriptionType], null: true
     field :building_block_description, Types::BuildingBlockDescriptionType, null: true,
           method: :building_block_description_localized

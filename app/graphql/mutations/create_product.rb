@@ -19,12 +19,15 @@ module Mutations
     argument :pricing_details, String, required: false, default_value: nil
     argument :hosting_model, String, required: false, default_value: nil
 
+    argument :gov_stack_entity, Boolean, required: false, default_value: false
+
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
 
     def resolve(
       name:, slug:, aliases: nil, website: nil, description:, image_file: nil,
-      commercial_product:, pricing_url:, pricing_model:, pricing_details:, hosting_model:
+      commercial_product:, pricing_url:, pricing_model:, pricing_details:, hosting_model:,
+      gov_stack_entity:
     )
       product = Product.find_by(slug:)
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
@@ -58,6 +61,9 @@ module Mutations
       product.hosting_model = hosting_model
       product.pricing_model = pricing_model
       product.pricing_details = pricing_details
+
+      # Only admin will be allowed to set this flag
+      product.gov_stack_entity = gov_stack_entity if an_admin
 
       successful_operation = false
       ActiveRecord::Base.transaction do

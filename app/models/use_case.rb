@@ -47,7 +47,10 @@ class UseCase < ApplicationRecord
   end
 
   def self_url(options = {})
-    return "#{options[:api_path]}/use_cases/#{slug}" if options[:api_path].present?
+    if options[:api_path].present?
+      return "#{options[:api_path]}/govstack_use_cases/#{slug}" if options[:govstack_path].present?
+      return "#{options[:api_path]}/use_cases/#{slug}" unless options[:govstack_path].present?
+    end
     return options[:item_path] if options[:item_path].present?
     return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
@@ -60,13 +63,24 @@ class UseCase < ApplicationRecord
 
   def api_path(options = {})
     return options[:api_path] if options[:api_path].present?
-    return options[:item_path].sub("/use_cases/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path].sub('/use_cases', '') if options[:collection_path].present?
+    if options[:item_path].present?
+      return options[:item_path].sub("/govstack_use_cases/#{slug}", '') if options[:govstack_path].present?
+      return options[:item_path].sub("/use_cases/#{slug}", '') unless options[:govstack_path].present?
+    end
+
+    if options[:collection_path].present?
+      return options[:collection_path].sub('/govstack_use_cases', '') if options[:govstack_path].present?
+      return options[:collection_path].sub('/use_cases', '') unless options[:govstack_path].present?
+    end
+  end
+
+  def govstack_path(options = {})
+    options[:govstack_path]
   end
 
   def as_json(options = {})
     json = super(options)
-    json['sector'] = sector.as_json({ only: %i[name slug], api_path: api_path(options) })
+    json['sector'] = sector.as_json({ only: %i[name slug locale], api_path: api_path(options) })
     if options[:include_relationships].present?
       json['use_case_steps'] = use_case_steps.as_json({ only: %i[name slug website], api_path: api_path(options) })
     end
@@ -95,14 +109,10 @@ class UseCase < ApplicationRecord
 
   def self.serialization_options
     {
-      except: %i[id sector_id created_at updated_at description],
+      except: %i[id sector_id created_at updated_at description entity_status_type],
       include: {
-        use_case_descriptions: { only: [:description] },
-        sdg_targets: { only: %i[name target_number] },
-        use_case_steps: { only: %i[name description],
-                          include: {
-                            use_case_step_descriptions: { only: [:description] }
-                          } }
+        use_case_descriptions: { only: [:description, :locale] },
+        sdg_targets: { only: %i[name target_number] }
       }
     }
   end

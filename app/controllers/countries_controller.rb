@@ -8,11 +8,12 @@ class CountriesController < ApplicationController
     record = Country.find_by(slug: params[:id])
     return render(json: {}, status: :not_found) if record.nil?
 
-    render(json: record.as_json(Country.serialization_options
-                                       .merge({
-                                         item_path: request.original_url,
-                                         include_relationships: true
-                                       })))
+    render(json: record.as_json(
+      Country.serialization_options.merge({
+        item_path: request.original_url,
+        include_relationships: true
+      })
+    ))
   end
 
   def simple_search
@@ -36,22 +37,23 @@ class CountriesController < ApplicationController
     if countries.count > default_page_size * current_page
       query['page'] = current_page + 1
       uri.query = Rack::Utils.build_query(query)
-      results['next_page'] = CGI.escape(uri.to_s)
+      results['next_page'] = uri.to_s
     end
 
     if current_page > 1
       query['page'] = current_page - 1
       uri.query = Rack::Utils.build_query(query)
-      results['previous_page'] = CGI.escape(uri.to_s)
+      results['previous_page'] = uri.to_s
     end
 
     results['results'] = countries.paginate(page: current_page, per_page: default_page_size)
 
     uri.fragment = uri.query = nil
-    render(json: results.to_json(Country.serialization_options
-                                        .merge({
-                                          collection_path: uri.to_s,
-                                          include_relationships: true
-                                        })))
+    render(json: results.to_json(
+      Country.serialization_options.merge({
+        collection_path: uri.to_s,
+        include_relationships: true
+      })
+    ))
   end
 end
