@@ -1,0 +1,6 @@
+tenants:
+  - name: fao
+    urls: 
+      - url: fao.localhost
+      - url: fao.dial.community
+adminPassword: Admin123
