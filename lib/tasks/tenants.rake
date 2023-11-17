@@ -8,7 +8,7 @@ namespace :tenants do
       # check to see if tenant exists already
       existing_tenant = ExchangeTenant.find_by(tenant_name: tenant['name'])
       next if existing_tenant.present?
-      
+
       Apartment::Tenant.create(tenant['name'])
 
       tenant['urls'].each do |url|
@@ -45,14 +45,15 @@ namespace :tenants do
         "data_source, source_indicator, created_at, updated_at, script_name FROM public.category_indicators;"
       ActiveRecord::Base.connection.exec_query(query)
 
-      query = "INSERT INTO #{tenant_name}.category_indicator_descriptions SELECT * FROM  public.category_indicator_descriptions;"
+      query = "INSERT INTO #{tenant_name}.category_indicator_descriptions " \
+        "SELECT * FROM  public.category_indicator_descriptions;"
       ActiveRecord::Base.connection.exec_query(query)
-      
 
       # Create default admin user
       admin_email = "admin@#{tenant_name}.org"
       Apartment::Tenant.switch(tenant_name) do
-        admin_user = User.new({ email: admin_email, password: tenant_file['adminPassword'], password_confirmation: tenant_file['adminPassword'] })
+        admin_user = User.new({ email: admin_email, password: tenant_file['adminPassword'],
+                                password_confirmation: tenant_file['adminPassword'] })
         admin_user.confirm
         admin_user.save
         admin_user.roles = ['admin']
