@@ -24,6 +24,7 @@ class User < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(users.email) like LOWER(?)', "%#{name}%") }
 
   attr_accessor :is_approved
+  attr_accessor :tenant_url
 
   def organization
     !organization_id.nil? ? Organization.find(organization_id) : nil

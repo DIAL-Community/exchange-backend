@@ -7,6 +7,7 @@ class AuthenticationController < Devise::SessionsController
 
   def sign_up_ux
     user = User.new(user_params)
+    user.tenant_url = request.referrer
     respond_to do |format|
       if user.save
         AdminMailer
