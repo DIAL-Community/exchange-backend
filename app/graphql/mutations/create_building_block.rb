@@ -11,7 +11,7 @@ module Mutations
     argument :description, String, required: true
     argument :maturity, String, required: true
     argument :category, String, required: false
-    argument :spec_url, String, required: false
+    argument :spec_url, String, required: false, default_value: nil
     argument :image_file, ApolloUploadServer::Upload, required: false, default_value: nil
 
     argument :gov_stack_entity, Boolean, required: false, default_value: false
