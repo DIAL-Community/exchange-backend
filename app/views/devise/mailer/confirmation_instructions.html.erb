@@ -1,0 +1,5 @@
+<p>Welcome <%= @email %>!</p>
+
+<p>You can confirm your account email through the link below:</p>
+
+<p><a href="<%= headers['X-Tenant-ID'] %>users/confirmation?confirmation_token=<%= @token %>">Confirm my account</a></p>

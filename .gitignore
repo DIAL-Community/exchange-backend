@@ -87,6 +87,7 @@ public/version.txt
 /coverage
 
 utils/GIZ_Projects.csv
+utils/FAO_Products.csv
 utils/translate-key-file.json
 
 setEnv.sh
