@@ -872,7 +872,7 @@ type Mutation {
   autoSaveMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   autoSavePlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
-  createBuildingBlock(category: String, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, maturity: String!, name: String!, slug: String!, specUrl: String): CreateBuildingBlockPayload
+  createBuildingBlock(category: String, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, maturity: String!, name: String!, slug: String!, specUrl: String = null): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, datasetType: String!, description: String!, name: String!, slug: String!, submitterEmail: String!, visualizationUrl: String, website: String!): CreateCandidateDatasetPayload
   createCandidateOrganization(captcha: String!, createStorefront: Boolean!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
