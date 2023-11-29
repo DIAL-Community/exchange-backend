@@ -37,6 +37,8 @@ namespace :tenants do
       ].each do |table|
         query = "INSERT INTO #{tenant_name}.#{table} SELECT * FROM  public.#{table};"
         ActiveRecord::Base.connection.exec_query(query)
+        query = "SELECT setval(pg_get_serial_sequence('#{tenant_name}.#{table}', 'id'), MAX(id)) FROM #{tenant_name}.#{table};"
+        ActiveRecord::Base.connection.exec_query(query)
       end
 
       # Category Indicators table has a special type, so do it separately
@@ -52,7 +54,7 @@ namespace :tenants do
       # Create default admin user
       admin_email = "admin@#{tenant_name}.org"
       Apartment::Tenant.switch(tenant_name) do
-        admin_user = User.new({ email: admin_email, password: tenant_file['adminPassword'],
+        admin_user = User.new({ email: admin_email, username: 'admin', password: tenant_file['adminPassword'],
                                 password_confirmation: tenant_file['adminPassword'] })
         admin_user.confirm
         admin_user.save

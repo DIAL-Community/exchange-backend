@@ -90,10 +90,14 @@ class Product < ApplicationRecord
                         dependent: :delete_all,
                         after_add: :association_add, before_remove: :association_remove
 
+has_many :product_countries
+has_many :countries, through: :product_countries
+
   validates :name, presence: true, length: { maximum: 300 }
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
+  scope :name_and_slug_search, -> (name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
 
   def self.first_duplicate(name, slug)
     find_by('name = ? OR slug = ? OR ? = ANY(aliases)', name, slug, name)
