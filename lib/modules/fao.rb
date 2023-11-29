@@ -1,6 +1,6 @@
+# frozen_string_literal: true
 module Modules
   module Fao
-
     def sync_fao_product(fao_product, fao_origin, fao_organization)
       puts "Processing data: '#{fao_product[0]}'."
       # Expected csv columns:
@@ -23,7 +23,6 @@ module Modules
       # Dependencies                            Use Interoperates field
 
       # Sector assignment?
-    
 
       # Create new product or update existing product
       product_name = fao_product[0]
@@ -43,7 +42,7 @@ module Modules
       unless fao_product[4].blank?
         upload_user = User.find_by(username: 'admin')
         begin
-          image_file = URI.open(fao_product[4])
+          image_file = URI.parse(fao_product[4]).open
           uploader = LogoUploader.new(existing_product, fao_product[4], upload_user)
           uploader.store!(image_file)
         rescue StandardError => e
@@ -109,9 +108,9 @@ module Modules
       # Assign to locations
       country_names = fao_product[13].to_s.split(';')
       country_names.each do |country_name|
-        country = Country.find_by(name: country_name.gsub('#','').strip)
+        country = Country.find_by(name: country_name.gsub('#', '').strip)
         next if country.nil?
-        
+
         existing_product.countries << country
       end
 

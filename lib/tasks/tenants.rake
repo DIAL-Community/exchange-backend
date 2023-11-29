@@ -37,7 +37,8 @@ namespace :tenants do
       ].each do |table|
         query = "INSERT INTO #{tenant_name}.#{table} SELECT * FROM  public.#{table};"
         ActiveRecord::Base.connection.exec_query(query)
-        query = "SELECT setval(pg_get_serial_sequence('#{tenant_name}.#{table}', 'id'), MAX(id)) FROM #{tenant_name}.#{table};"
+        query = "SELECT setval(pg_get_serial_sequence('#{tenant_name}.#{table}', 'id'), " \
+          "MAX(id)) FROM #{tenant_name}.#{table};"
         ActiveRecord::Base.connection.exec_query(query)
       end
 

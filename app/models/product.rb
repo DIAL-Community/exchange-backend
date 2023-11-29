@@ -90,8 +90,8 @@ class Product < ApplicationRecord
                         dependent: :delete_all,
                         after_add: :association_add, before_remove: :association_remove
 
-has_many :product_countries
-has_many :countries, through: :product_countries
+  has_many :product_countries
+  has_many :countries, through: :product_countries
 
   validates :name, presence: true, length: { maximum: 300 }
 

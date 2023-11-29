@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 class AddExtraAttributesToProducts < ActiveRecord::Migration[7.0]
   def change
-    add_column :products, :extra_attributes, :jsonb, default: {}
+    add_column(:products, :extra_attributes, :jsonb, default: {})
 
     create_table(:product_countries) do |t|
       t.bigint('product_id', null: false)
