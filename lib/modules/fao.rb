@@ -42,9 +42,9 @@ module Modules
       unless fao_product[4].blank?
         upload_user = User.find_by(username: 'admin')
         begin
-          image_file = URI.parse(fao_product[4]).open
           uploader = LogoUploader.new(existing_product, fao_product[4], upload_user)
-          uploader.store!(image_file)
+          uploader.download!(fao_product[4])
+          uploader.store!
         rescue StandardError => e
           puts "Unable to save image for: #{existing_product.name}. Standard error: #{e}."
         end
@@ -111,7 +111,7 @@ module Modules
         country = Country.find_by(name: country_name.gsub('#', '').strip)
         next if country.nil?
 
-        existing_product.countries << country
+        existing_product.countries << country unless existing_product.countries.include?(country)
       end
 
       if !fao_product[21].nil? && fao_product[21].downcase == 'approved'

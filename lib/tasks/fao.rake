@@ -14,7 +14,7 @@ namespace :fao do
       tracking_task_setup(task_name, 'Preparing task tracker record.')
       tracking_task_start(task_name)
 
-      fao_origin = Origin.find_by(name: 'FAO')
+      fao_origin = Origin.find_by(slug: 'fao')
       if fao_origin.nil?
         fao_origin = Origin.new
         fao_origin.name = 'FAO'
@@ -49,7 +49,8 @@ namespace :fao do
       if fao_organization.nil?
         fao_organization = Organization.new
         fao_organization.name = 'Food and Agriculture Organization (FAO) of the United Nations'
-        fao_organization.slug = slug_em(fao_organization.name)
+        fao_organization.slug = 'fao'
+        fao_origin.aliases = ['FAO']
         fao_organization.save
 
         organization_desc = OrganizationDescription.new
@@ -68,8 +69,7 @@ namespace :fao do
       tracking_task_log(task_name, 'Parsing csv file.')
       csv_data = CSV.parse(File.read('./utils/FAO_products.csv'), headers: true)
 
-      # csv_data.each_with_index do |fao_product, index|
-      csv_data.first(20).each_with_index do |fao_product, _index|
+      csv_data.each_with_index do |fao_product, _index|
         product_name = fao_product[0]
         tracking_task_log(task_name, "Processing product: #{product_name}.")
         sync_fao_product(fao_product, fao_origin, fao_organization)
