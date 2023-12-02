@@ -15,8 +15,10 @@ module Mutations
     argument :image_file, ApolloUploadServer::Upload, required: false
     argument :published_date, GraphQL::Types::ISO8601Date, required: true
 
-    argument :resource_link, String, required: false, default_value: nil
     argument :link_desc, String, required: false, default_value: nil
+    argument :resource_file, ApolloUploadServer::Upload, required: false
+    argument :resource_link, String, required: false, default_value: nil
+
     argument :resource_type, String, required: false, default_value: nil
     argument :resource_topic, String, required: false, default_value: nil
     argument :source, String, required: false, default_value: nil
@@ -38,8 +40,8 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, spotlight: false,
-      resource_link:, link_desc:, resource_type:, resource_topic:, author_name:, source:,
-      author_email:, organization_slug:
+      resource_file: nil, resource_link:, link_desc:, resource_type:, resource_topic:, source:,
+      author_name:, author_email:, organization_slug:
     )
       unless an_admin || a_content_editor
         return {
@@ -126,6 +128,18 @@ module Mutations
             puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
           end
           resource.auditable_image_changed(image_file.original_filename)
+        end
+
+        unless resource_file.nil?
+          uploader = FileUploader.new(resource, resource_file.original_filename, context[:current_user])
+          begin
+            uploader.store!(resource_file)
+            # Update resource filename in the database
+            resource.resource_file = uploader.filename
+            resource.save
+          rescue StandardError => e
+            puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."
+          end
         end
 
         unless organization.nil?
