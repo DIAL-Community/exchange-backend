@@ -3115,7 +3115,7 @@ CREATE TABLE public.resources (
     featured boolean DEFAULT false NOT NULL,
     spotlight boolean DEFAULT false NOT NULL,
     source character varying,
-    resource_file character varying
+    resource_filename character varying
 );
 
 

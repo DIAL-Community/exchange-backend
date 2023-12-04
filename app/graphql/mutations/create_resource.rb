@@ -135,7 +135,7 @@ module Mutations
           begin
             uploader.store!(resource_file)
             # Update resource filename in the database
-            resource.resource_file = uploader.filename
+            resource.resource_filename = uploader.filename
             resource.save
           rescue StandardError => e
             puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."

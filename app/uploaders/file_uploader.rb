@@ -6,8 +6,8 @@ class FileUploader < CarrierWave::Uploader::Base
 
   attr_reader :filename
 
-  def initialize(file_name, current_user)
-    super()
+  def initialize(_model, file_name, current_user)
+    super(model, nil)
     @file_name = file_name
     @current_user = current_user
   end
@@ -17,15 +17,23 @@ class FileUploader < CarrierWave::Uploader::Base
   end
 
   def store_dir
-    Rails.root.join('public', 'assets', 'entities')
+    Rails.root.join('public', 'assets', 'resources')
   end
 
   def extension_allowlist
-    %w[pdf]
+    %w[pdf doc docx ppt pptx xls xlsx]
   end
 
   def content_type_allowlist
-    %w[application/pdf]
+    %w[
+      application/pdf
+      application/msword
+      application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      application/vnd.ms-powerpoint
+      application/vnd.openxmlformats-officedocument.presentationml.presentation
+      application/vnd.ms-excel
+      application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    ]
   end
 
   def send_notification(file)
