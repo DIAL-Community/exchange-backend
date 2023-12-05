@@ -35,8 +35,17 @@ module Modules
       existing_product.slug = product_slug
       existing_product.origins << fao_origin unless existing_product.origins.include?(fao_origin)
 
-      existing_product.aliases << fao_product[1] unless fao_product[1].blank?
-      # To-Do - Also-Known-As
+      product_aliases = []
+      existing_product.aliases << fao_product[1] unless fao_product[1].blank? ||
+        existing_product.aliases.include?(fao_product[1])
+      product_aliases = fao_product[2].split(';') unless fao_product[2].blank?
+      product_aliases.each do |alias_name|
+        alias_name = alias_name.gsub(';', '').gsub('#', '')
+        # Skip if it is an integer (the primary keys are listed with the aliases)
+        next if alias_name.to_i.to_s == alias_name
+
+        existing_product.aliases << alias_name unless existing_product.aliases.include?(alias_name)
+      end
 
       existing_product.website = fao_product[3] unless fao_product[3].blank?
       unless fao_product[4].blank?
@@ -121,6 +130,35 @@ module Modules
         unless existing_product.endorsers.include?(dpga_endorser)
           existing_product.origins << dpga_origin
           existing_product.endorsers << dpga_endorser
+        end
+      end
+
+      unless fao_product[22].blank?
+        include_product = Product.where('name = ? or ? = ANY(aliases)', fao_product[22], fao_product[22]).first
+
+        if !include_product.nil? && !existing_product.includes.include?(include_product)
+          existing_product.includes << include_product
+        end
+      end
+
+      unless fao_product[23].blank?
+        interoperates_products = fao_product[23].split(';')
+        interoperates_products.each do |interop_product_name|
+          interop_product_name = interop_product_name.gsub(';', '').gsub('#', '')
+          # Skip if it is an integer (the primary keys are listed with the product names)
+          next if interop_product_name.to_i.to_s == interop_product_name
+
+          interop_product = Product.where('name = ? or ? = ANY(aliases)', interop_product_name,
+interop_product_name).first
+
+          next unless !interop_product.nil? && !existing_product.interoperates_with.include?(interop_product)
+          interop_relationship = ProductProductRelationship.new
+          interop_relationship.from_product = existing_product
+          interop_relationship.to_product = interop_product
+          interop_relationship.relationship_type = 'interoperates'
+          interop_relationship.save
+
+          # existing_product.interoperates_with << interop_product
         end
       end
 
