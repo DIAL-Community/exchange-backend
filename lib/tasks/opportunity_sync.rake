@@ -7,7 +7,7 @@ require 'tempfile'
 require 'modules/slugger'
 
 namespace :opportunities_sync do
-  desc 'Sync use case github structure.'
+  desc 'Sync RFP data from Leverist.'
   task sync_leverist: :environment do
     task_name = 'Sync Leverist RFP'
     tracking_task_setup(task_name, 'Preparing task tracker record.')
@@ -277,5 +277,14 @@ namespace :opportunities_sync do
     if successful_operation
       puts "Opportunity '#{opportunity.name}' record saved."
     end
+  end
+
+  desc 'Sync RFP data from UNGM.'
+  task sync_leverist: :environment do
+    task_name = 'Sync UNGM RFP'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    tracking_task_finish(task_name)
   end
 end
