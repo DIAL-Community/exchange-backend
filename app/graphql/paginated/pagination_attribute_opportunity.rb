@@ -11,6 +11,9 @@ module Paginated
     argument :tags, [String], required: false, default_value: []
     argument :show_closed, Boolean, required: false, default_value: false
 
+    # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
+    argument :show_gov_stack_only, Boolean, required: false, default_value: false
+
     type Attributes::PaginationAttributes, null: false
 
     def resolve(
@@ -21,7 +24,8 @@ module Paginated
       use_cases:,
       sectors:,
       tags:,
-      show_closed:
+      show_closed:,
+      show_gov_stack_only:
     )
       opportunities = Opportunity.order_by_status.order(:closing_date)
       unless search.blank?
@@ -61,9 +65,8 @@ module Paginated
                                      .where(building_blocks: { id: filtered_building_blocks })
       end
 
-      unless show_closed
-        opportunities = opportunities.where.not(opportunity_status: 'CLOSED')
-      end
+      opportunities = opportunities.where.not(opportunity_status: 'CLOSED') unless show_closed
+      opportunities = opportunities.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
 
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?

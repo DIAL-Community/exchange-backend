@@ -901,9 +901,9 @@ ActiveRecord::Schema[6.1].define(version: 2022_09_23_161216) do
     t.index ["workflow_id", "use_case_id"], name: "workflows_usecases", unique: true
   end
 
-  add_foreign_key "aggregator_capabilities", "countries"
-  add_foreign_key "aggregator_capabilities", "operator_services", column: "operator_services_id"
-  add_foreign_key "aggregator_capabilities", "organizations", column: "aggregator_id"
+  #add_foreign_key "aggregator_capabilities", "countries"
+  #add_foreign_key "aggregator_capabilities", "operator_services", column: "operator_services_id"
+  #add_foreign_key "aggregator_capabilities", "organizations", column: "aggregator_id"
   add_foreign_key "building_block_descriptions", "building_blocks"
   add_foreign_key "candidate_organizations", "users", column: "approved_by_id"
   add_foreign_key "candidate_organizations", "users", column: "rejected_by_id"

@@ -114,7 +114,7 @@ class Project < ApplicationRecord
       json['countries'] = countries.as_json({ only: %i[name slug code], api_path: api_path(options) })
       json['organizations'] = organizations.as_json({ only: %i[name slug website], api_path: api_path(options) })
       json['products'] = products.as_json({ only: %i[name slug], api_path: api_path(options) })
-      json['sectors'] = sectors.as_json({ only: %i[name slug], api_path: api_path(options) })
+      json['sectors'] = sectors.as_json({ only: %i[name slug locale], api_path: api_path(options) })
       json['sustainable_development_goals'] = sustainable_development_goals.as_json({ only: %i[name slug number],
                                                                                       api_path: api_path(options) })
     end

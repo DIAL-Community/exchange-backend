@@ -6,13 +6,14 @@ require 'rails_helper'
 RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
   let(:mutation) do
     <<~GQL
-      mutation CreateBuildingBlock (
+      mutation CreateBuildingBlock(
         $name: String!
         $slug: String!
         $description: String!
         $maturity: String!
         $category: String
         $specUrl: String
+        $govStackEntity: Boolean
       ) {
         createBuildingBlock(
           name: $name
@@ -21,17 +22,18 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
           maturity: $maturity
           category: $category
           specUrl: $specUrl
+          govStackEntity: $govStackEntity
         ) {
-            buildingBlock
-            {
+            buildingBlock {
               name
               slug
               buildingBlockDescription {
                 description
               }
+              specUrl
               maturity
               category
-              specUrl
+              govStackEntity
             }
             errors
           }
@@ -40,9 +42,10 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
   end
 
   it 'creates building block - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some name",
@@ -50,7 +53,8 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
         description: "some description",
         maturity: "PUBLISHED",
         category: "DPI",
-        specUrl: "some.url"
+        specUrl: "some.url",
+        govStackEntity: true
       }
     )
 
@@ -62,16 +66,18 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "PUBLISHED",
           "category" => "DPI",
-          "specUrl" => "some.url"
+          "specUrl" => "some.url",
+          "govStackEntity" => true
         }))
       expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
   it 'creates building block - user is logged in as content editor' do
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:a_content_editor).and_return(true))
+    content_editor_user = create(:user, email: 'editor@gmail.com', roles: [:content_editor])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      content_editor_user,
       mutation,
       variables: {
         name: "Some name",
@@ -79,7 +85,8 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
         description: "some description",
         maturity: "BETA",
         category: nil,
-        specUrl: "some.url"
+        specUrl: "some.url",
+        govStackEntity: true
       }
     )
 
@@ -91,17 +98,19 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
-          "specUrl" => "some.url"
+          "specUrl" => "some.url",
+          "govStackEntity" => false
         }))
       expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
   it 'updates name for existing method matched by slug' do
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:building_block, name: "Some name", slug: "some_name")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some new name",
@@ -109,7 +118,8 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
         description: "some description",
         maturity: "BETA",
         category: nil,
-        specUrl: "some.url"
+        specUrl: "some.url",
+        govStackEntity: true
       }
     )
 
@@ -121,17 +131,19 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
-          "specUrl" => "some.url"
+          "specUrl" => "some.url",
+          "govStackEntity" => true
         }))
       expect(result['data']['createBuildingBlock']['errors']).to(eq([]))
     end
   end
 
   it 'generate offset for new building block with duplicated name' do
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:building_block, name: "Some name", slug: "some_name")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some name",
@@ -151,7 +163,8 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
-          "specUrl" => "some.url"
+          "specUrl" => "some.url",
+          "govStackEntity" => false
         }))
       expect(result['data']['createBuildingBlock']['errors'])
         .to(eq([]))
@@ -159,10 +172,10 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
   end
 
   it 'fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::CreateBuildingBlock).to(receive(:a_content_editor).and_return(false))
+    standard_user = create(:user, email: 'user@gmail.com', roles: [:user])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      standard_user,
       mutation,
       variables: {
         name: "Some name",

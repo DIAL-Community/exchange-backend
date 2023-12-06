@@ -524,6 +524,24 @@
               "deprecationReason": null
             },
             {
+              "name": "govStackEntity",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -8404,7 +8422,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -8416,7 +8434,19 @@
                     "name": "Upload",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "govStackEntity",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -9808,7 +9838,19 @@
                     "name": "Upload",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "govStackEntity",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -10409,6 +10451,18 @@
                     "ofType": null
                   },
                   "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "govStackEntity",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -11422,7 +11476,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -11434,7 +11488,19 @@
                     "name": "Upload",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "govStackEntity",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -15668,6 +15734,24 @@
               "deprecationReason": null
             },
             {
+              "name": "govStackEntity",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -18185,6 +18269,24 @@
                     "name": "Endorser",
                     "ofType": null
                   }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "govStackEntity",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
                 }
               },
               "isDeprecated": false,
@@ -20738,6 +20840,43 @@
               "deprecationReason": null
             },
             {
+              "name": "countriesWithResources",
+              "description": null,
+              "args": [
+                {
+                  "name": "search",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "\"\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "Country",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "country",
               "description": null,
               "args": [
@@ -21679,6 +21818,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -22388,6 +22539,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -22823,6 +22986,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -23134,6 +23309,26 @@
                 },
                 {
                   "name": "tags",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "countries",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -23626,7 +23821,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "govStackOnly",
+                  "name": "showGovStackOnly",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -24059,6 +24254,18 @@
                 },
                 {
                   "name": "showMature",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "showGovStackOnly",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -24561,6 +24768,18 @@
                   "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
+                },
+                {
+                  "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -24924,6 +25143,18 @@
                   "defaultValue": "false",
                   "isDeprecated": false,
                   "deprecationReason": null
+                },
+                {
+                  "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -25189,6 +25420,26 @@
                 },
                 {
                   "name": "tags",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "countries",
                   "description": null,
                   "type": {
                     "kind": "LIST",
@@ -25537,7 +25788,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "govStackOnly",
+                  "name": "showGovStackOnly",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -32370,6 +32621,24 @@
                     "name": "BuildingBlock",
                     "ofType": null
                   }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "govStackEntity",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
                 }
               },
               "isDeprecated": false,

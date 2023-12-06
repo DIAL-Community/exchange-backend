@@ -65,8 +65,6 @@ module Mutations
         Rails.application.secrets.google_api_key
       )
 
-      puts "City: #{city.inspect}."
-
       region = city.region
       country = region.country
 

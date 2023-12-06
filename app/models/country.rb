@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Country < ApplicationRecord
+  has_and_belongs_to_many :resources, join_table: :resources_countries
   has_and_belongs_to_many :opportunities, join_table: :opportunities_countries
   has_and_belongs_to_many :organizations, join_table: :organizations_countries, dependent: :destroy
   has_and_belongs_to_many :projects, join_table: :projects_countries, dependent: :destroy
@@ -11,7 +12,7 @@ class Country < ApplicationRecord
   has_many :offices, dependent: :destroy
   has_many :regions, dependent: :destroy
 
-  scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
+  scope :name_contains, ->(name) { where('LOWER(countries.name) like LOWER(?)', "%#{name}%") }
 
   def to_param
     slug
