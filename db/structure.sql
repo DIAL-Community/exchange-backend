@@ -2586,6 +2586,36 @@ ALTER SEQUENCE public.product_classifications_id_seq OWNED BY public.product_cla
 
 
 --
+-- Name: product_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.product_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: product_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_countries_id_seq OWNED BY public.product_countries.id;
+
+
+--
 -- Name: product_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2821,7 +2851,8 @@ CREATE TABLE public.products (
     pricing_date date,
     pricing_url character varying,
     languages jsonb,
-    gov_stack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL,
+    extra_attributes jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -4485,6 +4516,13 @@ ALTER TABLE ONLY public.product_classifications ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: product_countries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries ALTER COLUMN id SET DEFAULT nextval('public.product_countries_id_seq'::regclass);
+
+
+--
 -- Name: product_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5262,6 +5300,14 @@ ALTER TABLE ONLY public.product_classifications
 
 
 --
+-- Name: product_countries product_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: product_descriptions product_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5649,6 +5695,13 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON public.candidate_roles USIN
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON public.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_product_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_product_idx ON public.product_countries USING btree (country_id, product_id);
 
 
 --
@@ -6566,6 +6619,13 @@ CREATE UNIQUE INDEX prod_blocks ON public.product_building_blocks USING btree (p
 --
 
 CREATE UNIQUE INDEX prod_sdgs ON public.product_sustainable_development_goals USING btree (product_id, sustainable_development_goal_id);
+
+
+--
+-- Name: product_countries_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX product_countries_idx ON public.product_countries USING btree (product_id, country_id);
 
 
 --
@@ -7622,6 +7682,22 @@ ALTER TABLE ONLY public.product_classifications
 
 
 --
+-- Name: product_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: product_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: product_building_blocks products_building_blocks_building_block_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -8117,6 +8193,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231004184941'),
 ('20231030214704'),
 ('20231103194201'),
+('20231128225429'),
 ('20231201214658');
 
 
