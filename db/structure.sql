@@ -868,7 +868,8 @@ CREATE TABLE fao.building_blocks (
     maturity fao.entity_status_type DEFAULT 'DRAFT'::fao.entity_status_type NOT NULL,
     spec_url character varying,
     category fao.category_type,
-    display_order integer DEFAULT 0 NOT NULL
+    display_order integer DEFAULT 0 NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -1722,6 +1723,39 @@ ALTER SEQUENCE fao.endorsers_id_seq OWNED BY fao.endorsers.id;
 
 
 --
+-- Name: exchange_tenants; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.exchange_tenants (
+    id bigint NOT NULL,
+    tenant_name character varying,
+    domain character varying,
+    postgres_config jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.exchange_tenants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.exchange_tenants_id_seq OWNED BY fao.exchange_tenants.id;
+
+
+--
 -- Name: froala_images; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2079,7 +2113,8 @@ CREATE TABLE fao.opportunities (
     tags character varying[] DEFAULT '{}'::character varying[],
     origin_id bigint,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -3138,7 +3173,8 @@ CREATE TABLE fao.products (
     hosting_model character varying,
     pricing_date date,
     pricing_url character varying,
-    languages jsonb
+    languages jsonb,
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -3916,37 +3952,6 @@ ALTER SEQUENCE fao.task_trackers_id_seq OWNED BY fao.task_trackers.id;
 
 
 --
--- Name: tenants; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.tenants (
-    id bigint NOT NULL,
-    tenant_name character varying,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: tenants_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.tenants_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.tenants_id_seq OWNED BY fao.tenants.id;
-
-
---
 -- Name: use_case_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -4188,7 +4193,8 @@ CREATE TABLE fao.use_cases (
     description jsonb DEFAULT '{}'::jsonb NOT NULL,
     maturity fao.entity_status_type DEFAULT 'DRAFT'::fao.entity_status_type NOT NULL,
     tags character varying[] DEFAULT '{}'::character varying[],
-    markdown_url character varying
+    markdown_url character varying,
+    gov_stack_entity boolean DEFAULT false NOT NULL
 );
 
 
@@ -6630,6 +6636,36 @@ ALTER SEQUENCE public.product_classifications_id_seq OWNED BY public.product_cla
 
 
 --
+-- Name: product_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.product_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: product_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.product_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.product_countries_id_seq OWNED BY public.product_countries.id;
+
+
+--
 -- Name: product_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6865,7 +6901,8 @@ CREATE TABLE public.products (
     pricing_date date,
     pricing_url character varying,
     languages jsonb,
-    gov_stack_entity boolean DEFAULT false NOT NULL
+    gov_stack_entity boolean DEFAULT false NOT NULL,
+    extra_attributes jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -8290,6 +8327,13 @@ ALTER TABLE ONLY fao.endorsers ALTER COLUMN id SET DEFAULT nextval('fao.endorser
 
 
 --
+-- Name: exchange_tenants id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.exchange_tenants ALTER COLUMN id SET DEFAULT nextval('fao.exchange_tenants_id_seq'::regclass);
+
+
+--
 -- Name: froala_images id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -8707,13 +8751,6 @@ ALTER TABLE ONLY fao.task_tracker_descriptions ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY fao.task_trackers ALTER COLUMN id SET DEFAULT nextval('fao.task_trackers_id_seq'::regclass);
-
-
---
--- Name: tenants id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.tenants ALTER COLUMN id SET DEFAULT nextval('fao.tenants_id_seq'::regclass);
 
 
 --
@@ -9235,6 +9272,13 @@ ALTER TABLE ONLY public.product_classifications ALTER COLUMN id SET DEFAULT next
 
 
 --
+-- Name: product_countries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries ALTER COLUMN id SET DEFAULT nextval('public.product_countries_id_seq'::regclass);
+
+
+--
 -- Name: product_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9740,6 +9784,14 @@ ALTER TABLE ONLY fao.endorsers
 
 
 --
+-- Name: exchange_tenants exchange_tenants_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.exchange_tenants
+    ADD CONSTRAINT exchange_tenants_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: froala_images froala_images_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -10225,14 +10277,6 @@ ALTER TABLE ONLY fao.task_tracker_descriptions
 
 ALTER TABLE ONLY fao.task_trackers
     ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
-
-
---
--- Name: tenants tenants_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.tenants
-    ADD CONSTRAINT tenants_pkey PRIMARY KEY (id);
 
 
 --
@@ -10833,6 +10877,14 @@ ALTER TABLE ONLY public.product_building_blocks
 
 ALTER TABLE ONLY public.product_classifications
     ADD CONSTRAINT product_classifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_countries product_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -12402,6 +12454,13 @@ CREATE UNIQUE INDEX classifications_products_idx ON public.product_classificatio
 
 
 --
+-- Name: countries_product_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_product_idx ON public.product_countries USING btree (country_id, product_id);
+
+
+--
 -- Name: dataset_sdg_index_on_sdg_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -13316,6 +13375,13 @@ CREATE UNIQUE INDEX prod_blocks ON public.product_building_blocks USING btree (p
 --
 
 CREATE UNIQUE INDEX prod_sdgs ON public.product_sustainable_development_goals USING btree (product_id, sustainable_development_goal_id);
+
+
+--
+-- Name: product_countries_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX product_countries_idx ON public.product_countries USING btree (product_id, country_id);
 
 
 --
@@ -15476,6 +15542,22 @@ ALTER TABLE ONLY public.product_classifications
 
 
 --
+-- Name: product_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: product_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.product_countries
+    ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
 -- Name: product_building_blocks products_building_blocks_building_block_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15970,6 +16052,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230929140735'),
 ('20231004184941'),
 ('20231030214704'),
-('20231103194201');
+('20231103194201'),
+('20231128225429');
 
 

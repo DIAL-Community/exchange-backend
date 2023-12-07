@@ -97,6 +97,17 @@ namespace :db do
     tracking_task_finish(task_name)
   end
 
+  desc 'Clean audit records if they are older than 90 days.'
+  task clean_older_audits: :environment do
+    task_name = 'Clear Older Audit Records'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    Audit.where('created_at < ?', 90.days.ago).destroy_all
+
+    tracking_task_finish(task_name)
+  end
+
   private
 
   def with_config

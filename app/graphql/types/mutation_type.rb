@@ -63,6 +63,7 @@ module Types
     field :update_product_building_blocks, mutation: Mutations::UpdateProductBuildingBlocks
     field :update_product_organizations, mutation: Mutations::UpdateProductOrganizations
     field :update_product_projects, mutation: Mutations::UpdateProductProjects
+    field :update_product_countries, mutation: Mutations::UpdateProductCountries
     field :update_product_tags, mutation: Mutations::UpdateProductTags
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
