@@ -10806,7 +10806,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "linkDesc",
+                  "name": "linkDescription",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -28619,7 +28619,7 @@
               "deprecationReason": null
             },
             {
-              "name": "linkDesc",
+              "name": "linkDescription",
               "description": null,
               "args": [
 

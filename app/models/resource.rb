@@ -37,7 +37,7 @@ class Resource < ApplicationRecord
   end
 
   def resource_file
-    if File.exist?(File.join('public', 'assets', 'resources', resource_filename))
+    if !resource_filename.nil? && File.exist?(File.join('public', 'assets', 'resources', resource_filename))
       "/assets/resources/#{resource_filename}"
     end
   end

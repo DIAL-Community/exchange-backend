@@ -3138,7 +3138,7 @@ CREATE TABLE public.resources (
     description character varying,
     show_in_wizard boolean DEFAULT false NOT NULL,
     show_in_exchange boolean DEFAULT false NOT NULL,
-    link_desc character varying,
+    link_description character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     resource_type character varying,
     resource_topic character varying,
@@ -8194,6 +8194,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231030214704'),
 ('20231103194201'),
 ('20231128225429'),
-('20231201214658');
+('20231201214658'),
+('20231207212017');
 
 

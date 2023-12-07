@@ -28,7 +28,7 @@ module Types
     field :show_in_exchange, Boolean, null: false
     field :show_in_wizard, Boolean, null: false
 
-    field :link_desc, String, null: true
+    field :link_description, String, null: true
     field :resource_file, String, null: true
     field :resource_link, String, null: true
 
