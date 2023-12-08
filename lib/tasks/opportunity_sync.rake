@@ -280,11 +280,104 @@ namespace :opportunities_sync do
   end
 
   desc 'Sync RFP data from UNGM.'
-  task sync_leverist: :environment do
+  task sync_ungm: :environment do
     task_name = 'Sync UNGM RFP'
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
+    still_seeing_notices = true
+    connection = Faraday.new(url: 'https://www.ungm.org/Public/Notice/Search')
+
+    current_page = 1
+    while still_seeing_notices
+      response = connection.post do |request|
+        request.headers['Content-Type'] = 'application/json'
+        request.body = %{
+          {
+            "PageIndex": #{current_page},
+            "PageSize": 15,
+            "Title": "",
+            "Description": "",
+            "Reference": "",
+            "PublishedFrom": "",
+            "PublishedTo": "01-Jan-2023",
+            "DeadlineFrom": "01-Jan-2023",
+            "DeadlineTo": "",
+            "Countries": [],
+            "Agencies": [],
+            "UNSPSCs": [
+                107373,
+                145204
+            ],
+            "NoticeTypes": [],
+            "SortField": "DatePublished",
+            "SortAscending": false,
+            "isPicker": false,
+            "IsSustainable": false,
+            "NoticeDisplayType": null,
+            "NoticeSearchTotalLabelId": "noticeSearchTotal",
+            "TypeOfCompetitions": []
+          }
+        }
+      end
+
+      if response.status == 200
+        html_response = response.body
+        parsed_response = Nokogiri::HTML(html_response)
+
+        # We're only interested in the notice divs, not the script tag.
+        notice_divs = parsed_response.css('div.notice-table')
+
+        puts "Seeing #{notice_divs.count} notices."
+        if notice_divs.count.zero?
+          still_seeing_notices = false
+        else
+          notice_divs.each do |notice_div|
+            process_ungm_notice(notice_div)
+          end
+        end
+      end
+
+      current_page += 1
+    end
+
     tracking_task_finish(task_name)
+  end
+
+  def process_ungm_notice(notice_div)
+    base_ungm_notice_url = 'https://www.ungm.org/Public/Notice/'
+
+    notice_id = notice_div.attribute('data-noticeid')
+    response = Faraday.get("#{base_ungm_notice_url}#{notice_id}")
+
+    html_response = response.body
+    parsed_response = Nokogiri::HTML(html_response)
+
+    puts "****** Processing notice: #{notice_id} ******"
+
+    base_info_div, background_info_div, contact_info_div = parsed_response.css('.ungm-list-item.ungm-background')
+    notice_title = base_info_div.css('span.title').text.strip
+    puts "  Notice title: #{notice_title}"
+
+    reference, country, published_date, deadline_date = base_info_div.css('span.value')
+    puts "  Reference: #{reference.text.strip}"
+    puts "  Country: #{country.text.strip}"
+    puts "  Published date: #{published_date.text.strip}"
+    puts "  Deadline date: #{deadline_date.text.strip}"
+
+    notice_contact = contact_info_div.css('span.title').text.strip
+    puts "  Notice contact: #{notice_contact}"
+
+    background_div = background_info_div.css('div.title ~ *')
+    puts "  Background: #{background_div.html}"
+
+    document_info_div = parsed_response.css('.docslist')
+    document_anchor = document_info_div.css('a').first
+    unless document_anchor.nil?
+      document_link = document_anchor.attribute('href').value.strip
+      puts "  Document link: #{document_link}"
+      document_text = document_anchor.text.strip
+      puts "  Document text: #{document_text}"
+    end
   end
 end
