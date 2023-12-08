@@ -285,6 +285,20 @@ namespace :opportunities_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
+    ungm_origin = Origin.find_by(name: 'United Nations Global Marketplace')
+    if ungm_origin.nil?
+      ungm_origin = Origin.new
+      ungm_origin.name = 'United Nations Global Marketplace'
+      ungm_origin.slug = slug_em('United Nations Global Marketplace', 64)
+      ungm_origin.description = %{
+        The United Nations Global Marketplace (UNGM) is the official procurement portal of the United Nations
+        System. The UNGM portal brings together UN procurement staff and suppliers interested in doing business
+        with the United Nations.
+      }.strip
+
+      puts 'United Nations Global Marketplace as origin is created.' if ungm_origin.save!
+    end
+
     still_seeing_notices = true
     connection = Faraday.new(url: 'https://www.ungm.org/Public/Notice/Search')
 
@@ -359,25 +373,82 @@ namespace :opportunities_sync do
     notice_title = base_info_div.css('span.title').text.strip
     puts "  Notice title: #{notice_title}"
 
-    reference, country, published_date, deadline_date = base_info_div.css('span.value')
-    puts "  Reference: #{reference.text.strip}"
-    puts "  Country: #{country.text.strip}"
-    puts "  Published date: #{published_date.text.strip}"
-    puts "  Deadline date: #{deadline_date.text.strip}"
+    opportunity_name = notice_title
+    opportunity_slug = slug_em(notice_title)
+    opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first
+    if opportunity.nil?
+      opportunity = Opportunity.new(name: opportunity_name, slug: opportunity_slug)
+      if Opportunity.where(slug: opportunity.slug).count.positive?
+        # Check if we need to add _dup to the slug.
+        first_duplicate = Opportunity.slug_simple_starts_with(opportunity.slug)
+                                     .order(slug: :desc)
+                                     .first
+        opportunity.slug += generate_offset(first_duplicate)
+      end
+    end
 
-    notice_contact = contact_info_div.css('span.title').text.strip
-    puts "  Notice contact: #{notice_contact}"
+    # Set the web address for the opportunity pointing directly to the notice.
+    opportunity.web_address = "#{base_ungm_notice_url}#{notice_id}".gsub('https://', '').gsub('http://', '')
+
+    # Set the origin for the opportunity to United Nations Global Marketplace.
+    opportunity.origin = Origin.find_by(name: 'United Nations Global Marketplace')
+
+    base_info_values = base_info_div.css('span.value')
+    if !base_info_values.nil? && !base_info_values.text.strip.empty?
+      base_details = base_info_div.css('span.label')
+      base_details.each do |base_detail|
+        if base_detail.text.strip.downcase == 'deadline on:'
+          date_format = "%d-%b-%Y %H:%M"
+          opportunity.closing_date = Time.strptime(base_detail.next_element.text.strip, date_format)
+        elsif base_detail.text.strip.downcase == 'beneficiary countries:'
+          opportunity.countries = []
+          country = Country.find_by(name: base_detail.next_element.text.strip)
+          opportunity.countries << country unless country.nil?
+          puts "  Country: Unable to find '#{country.text.strip}'." if country.nil?
+        end
+      end
+    end
+
+    opportunity_type = Opportunity.opportunity_type_types[:TENDER]
+    opportunity.opportunity_type = opportunity_type
+
+    opportunity_status = Opportunity.opportunity_status_types[:OPEN]
+    opportunity.opportunity_status = opportunity_status
+
+    contact_email = 'N/A'
+    contact_last_name = 'N/A'
+    contact_first_name = 'N/A'
+    if contact_info_div.css('span.value').nil? || contact_info_div.css('span.value').text.strip.empty?
+      opportunity.contact_email = contact_info_div.css('span.title').text.strip
+      opportunity.contact_name = 'N/A'
+    else
+      contact_details = contact_info_div.css('.contactDetails').css('span.label')
+      contact_details.each do |contact_detail|
+        if contact_detail.text.strip.downcase == 'email'
+          contact_email = contact_detail.next_element.text.strip
+        elsif contact_detail.text.strip.downcase == 'surname'
+          contact_last_name = contact_detail.next_element.text.strip
+        elsif contact_detail.text.strip.downcase == 'first_name'
+          contact_first_name = contact_detail.next_element.text.strip
+        end
+      end
+
+      opportunity.contact_email = contact_email
+      opportunity.contact_name = "#{contact_first_name} #{contact_last_name}"
+    end
 
     background_div = background_info_div.css('div.title ~ *')
-    puts "  Background: #{background_div.html}"
+    opportunity.description = background_div.inner_html
 
-    document_info_div = parsed_response.css('.docslist')
-    document_anchor = document_info_div.css('a').first
-    unless document_anchor.nil?
-      document_link = document_anchor.attribute('href').value.strip
-      puts "  Document link: #{document_link}"
-      document_text = document_anchor.text.strip
-      puts "  Document text: #{document_text}"
+    successful_operation = false
+    ActiveRecord::Base.transaction do
+      opportunity.save
+
+      successful_operation = true
+    end
+
+    if successful_operation
+      puts "  RFP: '#{opportunity.name}' saved."
     end
   end
 end
