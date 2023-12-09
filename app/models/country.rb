@@ -10,7 +10,7 @@ class Country < ApplicationRecord
   has_many :operator_services, dependent: :destroy
 
   has_many :offices, dependent: :destroy
-  has_many :regions, dependent: :destroy
+  has_many :provinces, dependent: :destroy
 
   scope :name_contains, ->(name) { where('LOWER(countries.name) like LOWER(?)', "%#{name}%") }
 

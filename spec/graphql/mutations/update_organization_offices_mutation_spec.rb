@@ -32,22 +32,22 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     country_1 = create(:country, name: "Country 1", code_longer: "C01", code: "C1", id: 1)
     country_2 = create(:country, name: "Country 2", code_longer: "C02", code: "C2", id: 2)
 
-    region_1 = create(:region, name: "Region 1", id: 1, country: country_1)
-    region_2 = create(:region, name: "Region 2", id: 2, country: country_2)
+    province_1 = create(:province, name: "Region 1", id: 1, country: country_1)
+    province_2 = create(:province, name: "Region 2", id: 2, country: country_2)
 
-    create(:city, name: "City 1", id: 1, region: region_1)
-    create(:city, name: "City 2", id: 2, region: region_2)
+    create(:city, name: "City 1", id: 1, province: province_1)
+    create(:city, name: "City 2", id: 2, province: province_2)
     expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_admin)
                                                                 .and_return(true))
 
     offices_data = [{
       cityName: "City 1",
-      regionName: "Region 1",
+      provinceName: "Region 1",
       countryCode: "C1",
       countryName: "Country 1"
     }, {
       cityName: "City 2",
-      regionName: "Region 2",
+      provinceName: "Region 2",
       countryCode: "C2",
       countryName: "Country 2"
     }]
@@ -78,22 +78,22 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     country_3 = create(:country, name: "Country 3", code_longer: "C03", code: "C3", id: 3)
     country_4 = create(:country, name: "Country 4", code_longer: "C04", code: "C4", id: 4)
 
-    region_3 = create(:region, name: "Region 3", id: 1, country: country_3)
-    region_4 = create(:region, name: "Region 4", id: 2, country: country_4)
+    province_3 = create(:province, name: "Region 3", id: 1, country: country_3)
+    province_4 = create(:province, name: "Region 4", id: 2, country: country_4)
 
-    create(:city, name: "City 3", id: 1, region: region_3)
-    create(:city, name: "City 4", id: 2, region: region_4)
+    create(:city, name: "City 3", id: 1, province: province_3)
+    create(:city, name: "City 4", id: 2, province: province_4)
     expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_org_owner)
                                                                 .and_return(true))
 
     offices_data = [{
       cityName: "City 3",
-      regionName: "Region 3",
+      provinceName: "Region 3",
       countryCode: "C3",
       countryName: "Country 3"
     }, {
       cityName: "City 4",
-      regionName: "Region 4",
+      provinceName: "Region 4",
       countryCode: "C4",
       countryName: "Country 4"
     }]
@@ -124,12 +124,12 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      regionName: "Region 1",
+      provinceName: "Region 1",
       countryCode: "C1",
       countryName: "Country 1"
     }, {
       cityName: "City 2",
-      regionName: "Region 2",
+      provinceName: "Region 2",
       countryCode: "C2",
       countryName: "Country 2"
     }]
@@ -151,11 +151,11 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     country_1 = create(:country, name: "Country 1", code_longer: "C01", code: "C1", id: 1)
     country_2 = create(:country, name: "Country 2", code_longer: "C02", code: "C1", id: 2)
 
-    region_1 = create(:region, name: "Region 1", id: 1, country: country_1)
-    region_2 = create(:region, name: "Region 2", id: 2, country: country_2)
+    province_1 = create(:province, name: "Region 1", id: 1, country: country_1)
+    province_2 = create(:province, name: "Region 2", id: 2, country: country_2)
 
-    create(:city, name: "City 1", id: 1, region: region_1)
-    create(:city, name: "City 2", id: 2, region: region_2)
+    create(:city, name: "City 1", id: 1, province: province_1)
+    create(:city, name: "City 2", id: 2, province: province_2)
     expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_admin)
                                                                 .and_return(false))
     expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_org_owner)
@@ -163,12 +163,12 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      regionName: "Region 1",
+      provinceName: "Region 1",
       countryCode: "C1",
       countryName: "Country 1"
     }, {
       cityName: "City 2",
-      regionName: "Region 2",
+      provinceName: "Region 2",
       countryCode: "C2",
       countryName: "Country 2"
     }]

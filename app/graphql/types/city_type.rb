@@ -7,11 +7,11 @@ module Types
     field :name, String, null: false
     field :latitude, String, null: false
     field :longitude, String, null: false
-    field :region, Types::RegionType, null: true
+    field :province, Types::ProvinceType, null: true
     field :organizations, [Types::OrganizationType], null: false
 
-    def region
-      Region.find_by(id: object.region_id)
+    def province
+      Province.find_by(id: object.province_id)
     end
 
     def organizations

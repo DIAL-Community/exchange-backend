@@ -6,29 +6,29 @@ require 'modules/track'
 namespace :geocode do
   desc 'Geocode to find lattitude and longitude of addresses.'
 
-  task :regions, %i[path_to_regions_file country_code] => :environment do |_, params|
+  task :provinces, %i[path_to_provinces_file country_code] => :environment do |_, params|
     params.with_defaults(country_code: 'USA')
     country = Country.find_by(code: params[:country_code])
 
-    puts("Reading regions from: #{params[:path_to_regions_file]}")
-    region_string = File.read(params[:path_to_regions_file])
-    addresses = build_regions(region_string, country)
+    puts("Reading provinces from: #{params[:path_to_provinces_file]}")
+    province_string = File.read(params[:path_to_provinces_file])
+    addresses = build_provinces(province_string, country)
 
-    puts("Geocoding: #{addresses[:records].length} regions!")
+    puts("Geocoding: #{addresses[:records].length} provinces!")
     auth_token = authenticate_user
     response = geocode(addresses, params[:country_code], auth_token)
 
-    region_data = JSON.parse(response.body)
+    province_data = JSON.parse(response.body)
 
-    region_data['locations'].each do |region|
-      region_record = Region.new
-      region_record.name = region['attributes']['Region']
-      region_record.slug = slug_em(region_record.name)
-      region_record.country_id = country.id
-      region_record.latitude = region['location']['x']
-      region_record.longitude = region['location']['y']
+    province_data['locations'].each do |province|
+      province_record = Province.new
+      province_record.name = province['attributes']['Region']
+      province_record.slug = slug_em(province_record.name)
+      province_record.country_id = country.id
+      province_record.latitude = province['location']['x']
+      province_record.longitude = province['location']['y']
 
-      puts("Saving region: #{region_record.name}.") if region_record.save!
+      puts("Saving province: #{province_record.name}.") if province_record.save!
     end
   end
 
@@ -44,17 +44,17 @@ namespace :geocode do
     auth_token = authenticate_user
     response = geocode(addresses, params[:country_code], auth_token)
 
-    region_data = JSON.parse(response.body)
+    province_data = JSON.parse(response.body)
 
-    region_data['locations'].each do |region|
-      region_record = District.new
-      region_record.name = region['attributes']['Subregion']
-      region_record.slug = slug_em(region_record.name)
-      region_record.country_id = country.id
-      region_record.latitude = region['location']['x']
-      region_record.longitude = region['location']['y']
+    province_data['locations'].each do |province|
+      province_record = District.new
+      province_record.name = province['attributes']['Subregion']
+      province_record.slug = slug_em(province_record.name)
+      province_record.country_id = country.id
+      province_record.latitude = province['location']['x']
+      province_record.longitude = province['location']['y']
 
-      puts("Saving region: #{region_record.name}.") if region_record.save!
+      puts("Saving province: #{province_record.name}.") if province_record.save!
     end
   end
 
@@ -223,9 +223,9 @@ namespace :geocode do
                address_component['types'].include?('postal_town')
               office_data['city'] = address_component['long_name']
             elsif address_component['types'].include?('administrative_area_level_2')
-              office_data['subregion'] = address_component['long_name']
+              office_data['subprovince'] = address_component['long_name']
             elsif address_component['types'].include?('administrative_area_level_1')
-              office_data['region'] = address_component['long_name']
+              office_data['province'] = address_component['long_name']
             elsif address_component['types'].include?('country')
               office_data['country_code'] = address_component['short_name']
             end
@@ -241,15 +241,15 @@ namespace :geocode do
           office.country_id = country.id
         end
 
-        region_name = office_data['region']
-        unless office_data['region'].blank? || office_data['country_code'].blank?
-          region = find_region(region_name, country_code, google_auth_key)
-          office.region_id = region.id
+        province_name = office_data['province']
+        unless office_data['province'].blank? || office_data['country_code'].blank?
+          province = find_province(province_name, country_code, google_auth_key)
+          office.province_id = province.id
         end
 
         city_name = office_data['city']
-        unless office_data['city'].blank? || office_data['region'].blank? || office_data['country_code'].blank?
-          city = find_city(city_name, region_name, country_code, google_auth_key)
+        unless office_data['city'].blank? || office_data['province'].blank? || office_data['country_code'].blank?
+          city = find_city(city_name, province_name, country_code, google_auth_key)
 
           office.city = city.name
 
@@ -257,13 +257,13 @@ namespace :geocode do
           office.longitude = city.longitude
         end
 
-        if office_data['city'].blank? || office_data['region'].blank? || office_data['country_code'].blank?
+        if office_data['city'].blank? || office_data['province'].blank? || office_data['country_code'].blank?
           office.latitude = location[:points][0].x
           office.longitude = location[:points][0].y
           office_data['city'].blank? ? office.city = 'Unknown' : office.city = office_data['city']
         end
 
-        address = "#{city_name}, #{region_name}, #{country_code}"
+        address = "#{city_name}, #{province_name}, #{country_code}"
         office.name = address
         office.slug = slug_em("#{organization.name} #{office.name}")
 
@@ -320,59 +320,59 @@ namespace :geocode do
     country
   end
 
-  def find_region(region_name, country_code, google_auth_key)
-    return if region_name.blank?
+  def find_province(province_name, country_code, google_auth_key)
+    return if province_name.blank?
 
-    puts "Processing region: #{region_name}."
-    region_name = 'Québe' if region_name == 'Quebec'
+    puts "Processing province: #{province_name}."
+    province_name = 'Québe' if province_name == 'Quebec'
     country = find_country(country_code, google_auth_key)
-    region = Region.find_by('(name = ? OR ? = ANY(aliases)) AND country_id = ?',
-                            region_name, region_name, country.id)
-    if region.nil?
-      region = Region.new
-      region.country_id = country.id
+    province = Province.find_by('(name = ? OR ? = ANY(aliases)) AND country_id = ?',
+                            province_name, province_name, country.id)
+    if province.nil?
+      province = Province.new
+      province.country_id = country.id
 
-      address = "#{region_name}, #{country_code}"
-      region_data = JSON.parse(geocode_with_google(address, country_code, google_auth_key))
+      address = "#{province_name}, #{country_code}"
+      province_data = JSON.parse(geocode_with_google(address, country_code, google_auth_key))
 
-      region_results = region_data['results']
-      region_results.each do |region_result|
-        address_key = region_result['types'].reject { |x| x == 'political' }
-                                            .first
-        region_result['address_components'].each do |address_component|
+      province_results = province_data['results']
+      province_results.each do |province_result|
+        address_key = province_result['types'].reject { |x| x == 'political' }
+                                              .first
+        province_result['address_components'].each do |address_component|
           next unless address_component['types'].include?(address_key)
 
-          region.name = address_component['long_name']
-          region.slug = slug_em(region.name)
+          province.name = address_component['long_name']
+          province.slug = slug_em(province.name)
         end
-        region.latitude = region_result['geometry']['location']['lat']
-        region.longitude = region_result['geometry']['location']['lng']
+        province.latitude = province_result['geometry']['location']['lat']
+        province.longitude = province_result['geometry']['location']['lng']
       end
 
-      region.aliases << region_name
-      puts("Region saved: #{region.name}.") if !region.name.nil? && region.save!
+      province.aliases << province_name
+      puts("Province saved: #{province.name}.") if !province.name.nil? && province.save!
     end
-    region
+    province
   end
 
-  def find_city(city_name, region_name, country_code, google_auth_key)
+  def find_city(city_name, province_name, country_code, google_auth_key)
     puts "Processing city: #{city_name}."
 
-    # Need to do this because Ramallah doesn't have region or country.
-    region = find_region(region_name, country_code, google_auth_key)
-    if region.nil?
+    # Need to do this because Ramallah doesn't have province or country.
+    province = find_province(province_name, country_code, google_auth_key)
+    if province.nil?
       city = City.find_by('(name = ? OR ? = ANY(aliases))', city_name, city_name)
     else
-      city = City.find_by('(name = ? OR ? = ANY(aliases)) AND region_id = ?', city_name, city_name, region.id)
+      city = City.find_by('(name = ? OR ? = ANY(aliases)) AND province_id = ?', city_name, city_name, province.id)
     end
 
     if city.nil?
       city = City.new
 
-      city.region_id = region.id unless region.nil?
+      city.province_id = province.id unless province.nil?
 
       address = city_name
-      address = "#{address}, #{region_name}" unless region_name.blank?
+      address = "#{address}, #{province_name}" unless province_name.blank?
 
       address = "#{address}, #{country_code}" unless country_code.blank?
 
@@ -399,7 +399,7 @@ namespace :geocode do
   end
 
   def geocode_with_google(address, country_code, auth_key)
-    puts "Geocoding address: #{address} in region: #{country_code}."
+    puts "Geocoding address: #{address} in province: #{country_code}."
     uri_template = Addressable::Template.new('https://maps.googleapis.com/maps/api/geocode/json{?q*}')
     geocode_uri = uri_template.expand({
       'q' => {
@@ -464,36 +464,36 @@ namespace :geocode do
         office.slug = slug_em("#{organization.name} #{office.name}")
         office.city = location.city
 
-        region_name = location.state
+        province_name = location.state
         org_country = Country.find_by('name = ? OR ? = ANY(aliases)', location.country, location.country)
 
-        if region_name.nil? || region_name.blank?
+        if province_name.nil? || province_name.blank?
           response = reverse_geocode(location, auth_token)
           location_data = JSON.parse(response.body)
 
           office.city = location_data['address']['ShortLabel']
-          region_name = location_data['address']['Region']
+          province_name = location_data['address']['Region']
           country_code = location_data['address']['CountryCode']
 
-          if region_name.nil? || region_name.blank?
-            region_element = {}
-            region_element['ObjectId'] = 1
-            region_element['SingleLine'] = office.city
-            region_list = [{ 'attributes': region_element }]
+          if province_name.nil? || province_name.blank?
+            province_element = {}
+            province_element['ObjectId'] = 1
+            province_element['SingleLine'] = office.city
+            province_list = [{ 'attributes': province_element }]
 
-            response = geocode({ 'records': region_list }, country_code, auth_token)
-            region_data = JSON.parse(response.body)
-            region_data['locations'].each do |region|
-              next if region['address'].blank? || region['address'].nil?
+            response = geocode({ 'records': province_list }, country_code, auth_token)
+            province_data = JSON.parse(response.body)
+            province_data['locations'].each do |province|
+              next if province['address'].blank? || province['address'].nil?
 
-              office.city = region['attributes']['City']
-              region_name = region['attributes']['Region']
-              country_code = region['attributes']['Country']
+              office.city = province['attributes']['City']
+              province_name = province['attributes']['Region']
+              country_code = province['attributes']['Country']
             end
           end
 
           org_country = Country.find_by(code_longer: country_code) if org_country.nil?
-          puts "Reverse geocoding returned: #{office.city}, #{region_name}, #{org_country.code_longer}!"
+          puts "Reverse geocoding returned: #{office.city}, #{province_name}, #{org_country.code_longer}!"
         end
 
         unless org_country.nil?
@@ -501,37 +501,37 @@ namespace :geocode do
           office.country_id = org_country.id
         end
 
-        org_region = Region.find_by('name = ? OR ? = ANY(aliases)', region_name, region_name)
-        if org_region.nil?
-          puts "Geocoding to find: #{region_name} in country #{org_country.code}."
-          addresses = build_regions(region_name, org_country)
+        org_province = Province.find_by('name = ? OR ? = ANY(aliases)', province_name, province_name)
+        if org_province.nil?
+          puts "Geocoding to find: #{province_name} in country #{org_country.code}."
+          addresses = build_provinces(province_name, org_country)
 
           country_code = nil
           country_code = org_country.code_longer unless org_country.nil?
 
           response = geocode(addresses, country_code, auth_token)
-          region_data = JSON.parse(response.body)
-          region_data['locations'].each do |region|
-            if region['address'].blank? || region['address'].nil?
-              puts "Skipping unresolved region: #{region_name}!"
+          province_data = JSON.parse(response.body)
+          province_data['locations'].each do |province|
+            if province['address'].blank? || province['address'].nil?
+              puts "Skipping unresolved province: #{province_name}!"
               next
             end
 
-            region_record = Region.new
-            region_record.name = region['attributes']['Region']
-            region_record.slug = slug_em(region_record.name)
-            region_record.country_id = org_country.id
-            region_record.latitude = region['location']['x']
-            region_record.longitude = region['location']['y']
-            region_record.aliases << region_name
+            province_record = Province.new
+            province_record.name = province['attributes']['Region']
+            province_record.slug = slug_em(province_record.name)
+            province_record.country_id = org_country.id
+            province_record.latitude = province['location']['x']
+            province_record.longitude = province['location']['y']
+            province_record.aliases << province_name
 
-            if region_record.save!
-              office.region_id = region_record.id
-              puts("Saving region: #{region_record.name}.")
+            if province_record.save!
+              office.province_id = province_record.id
+              puts("Saving province: #{province_record.name}.")
             end
           end
         else
-          office.region_id = org_region.id
+          office.province_id = org_province.id
         end
 
         office.latitude = location.points[0].x.to_f
@@ -547,31 +547,31 @@ namespace :geocode do
     end
   end
 
-  def build_regions(region_string, country)
-    region_list = []
-    region_string.split("\n").each_with_index do |region, index|
-      if region.blank?
-        puts('Skipping blank region!')
+  def build_provinces(province_string, country)
+    province_list = []
+    province_string.split("\n").each_with_index do |province, index|
+      if province.blank?
+        puts('Skipping blank province!')
         next
       end
 
       unless country.nil?
-        existing_regions = Region.where('(slug = ? OR ? = ANY(aliases)) AND country_id = ?',
-                                        slug_em(region), region, country.id)
-        unless existing_regions.empty?
-          puts("Skipping existing record for #{region} in #{country.code}!")
+        existing_provinces = Province.where('(slug = ? OR ? = ANY(aliases)) AND country_id = ?',
+                                        slug_em(province), province, country.id)
+        unless existing_provinces.empty?
+          puts("Skipping existing record for #{province} in #{country.code}!")
           next
         end
       end
 
-      puts("Processing: #{region}")
+      puts("Processing: #{province}")
 
-      region_element = {}
-      region_element['objectId'] = index + 1
-      region_element['region'] = region
-      region_list << { 'attributes': region_element }
+      province_element = {}
+      province_element['objectId'] = index + 1
+      province_element['province'] = province
+      province_list << { 'attributes': province_element }
     end
-    { 'records': region_list }
+    { 'records': province_list }
   end
 
   def authenticate_user
