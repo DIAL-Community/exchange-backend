@@ -973,7 +973,8 @@ CREATE TABLE public.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    region_id bigint
 );
 
 
@@ -3125,6 +3126,40 @@ ALTER SEQUENCE public.provinces_id_seq OWNED BY public.provinces.id;
 
 
 --
+-- Name: regions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.regions (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.regions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
+
+
+--
 -- Name: resources; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4614,6 +4649,13 @@ ALTER TABLE ONLY public.provinces ALTER COLUMN id SET DEFAULT nextval('public.pr
 
 
 --
+-- Name: regions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regions_id_seq'::regclass);
+
+
+--
 -- Name: resources id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5412,6 +5454,14 @@ ALTER TABLE ONLY public.provinces
 
 
 --
+-- Name: regions regions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.regions
+    ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: resources resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5870,6 +5920,13 @@ CREATE INDEX index_ckeditor_assets_on_type ON public.ckeditor_assets USING btree
 --
 
 CREATE UNIQUE INDEX index_contacts_on_slug ON public.contacts USING btree (slug);
+
+
+--
+-- Name: index_countries_on_region_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_countries_on_region_id ON public.countries USING btree (region_id);
 
 
 --
@@ -6367,6 +6424,13 @@ CREATE INDEX index_projects_on_origin_id ON public.projects USING btree (origin_
 --
 
 CREATE INDEX index_provinces_on_country_id ON public.provinces USING btree (country_id);
+
+
+--
+-- Name: index_regions_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_on_slug ON public.regions USING btree (slug);
 
 
 --
@@ -8196,6 +8260,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231128225429'),
 ('20231201214658'),
 ('20231207212017'),
-('20231209110335');
+('20231209110335'),
+('20231211144224');
 
 
