@@ -25,7 +25,8 @@ rake data_processors:process_dataset_spreadsheet    || exit_code+=" 15"
 rake data_processors:process_exported_json_files    || exit_code+=" 16"
 rake markdown_sync:use_case_definition              || exit_code+=" 17"
 rake opportunities_sync:sync_leverist               || exit_code+=" 18"
-rake opportunity:close_opportunities                || exit_code+=" 19"
-rake govstack:sync_govstack_procurements            || exit_code+=" 20"
+rake opportunities_sync:sync_ungm                   || exit_code+=" 19"
+rake opportunity:close_opportunities                || exit_code+=" 20"
+rake govstack:sync_govstack_procurements            || exit_code+=" 21"
 
 echo $exit_code

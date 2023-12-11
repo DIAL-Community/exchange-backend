@@ -302,9 +302,10 @@ namespace :opportunities_sync do
     still_seeing_notices = true
     connection = Faraday.new(url: 'https://www.ungm.org/Public/Notice/Search')
 
-    current_page = 1
+    current_page = 0
     while still_seeing_notices
       response = connection.post do |request|
+        request.headers['Accept'] = 'application/json'
         request.headers['Content-Type'] = 'application/json'
         request.body = %{
           {
@@ -314,8 +315,8 @@ namespace :opportunities_sync do
             "Description": "",
             "Reference": "",
             "PublishedFrom": "",
-            "PublishedTo": "01-Jan-2023",
-            "DeadlineFrom": "01-Jan-2023",
+            "PublishedTo": "#{Date.today.strftime('%d-%b-%Y')}",
+            "DeadlineFrom": "#{Date.today.strftime('%d-%b-%Y')}",
             "DeadlineTo": "",
             "Countries": [],
             "Agencies": [],
@@ -334,6 +335,8 @@ namespace :opportunities_sync do
           }
         }
       end
+
+      puts "Response status: #{response.status}."
 
       if response.status == 200
         html_response = response.body
@@ -400,11 +403,12 @@ namespace :opportunities_sync do
         if base_detail.text.strip.downcase == 'deadline on:'
           date_format = "%d-%b-%Y %H:%M"
           opportunity.closing_date = Time.strptime(base_detail.next_element.text.strip, date_format)
+          puts "  Setting up closing date: '#{base_detail.next_element.text.strip}'."
         elsif base_detail.text.strip.downcase == 'beneficiary countries:'
           opportunity.countries = []
           country = Country.find_by(name: base_detail.next_element.text.strip)
           opportunity.countries << country unless country.nil?
-          puts "  Country: Unable to find '#{country.text.strip}'." if country.nil?
+          puts "  Setting up country: '#{base_detail.next_element.text.strip}'."
         end
       end
     end
