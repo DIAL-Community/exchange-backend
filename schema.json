@@ -10806,7 +10806,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "resourceLink",
+                  "name": "linkDescription",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -10818,7 +10818,19 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "linkDesc",
+                  "name": "resourceFile",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Upload",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "resourceLink",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -28607,7 +28619,7 @@
               "deprecationReason": null
             },
             {
-              "name": "linkDesc",
+              "name": "linkDescription",
               "description": null,
               "args": [
 
@@ -28705,6 +28717,20 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "ISO8601Date",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "resourceFile",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
