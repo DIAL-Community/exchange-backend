@@ -13,6 +13,11 @@ namespace :resources_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
+    # Some of the resources' content is not returned by the wordpress API, so we need to
+    # fetch them from the wordpress site and then parse it with nokogiri and then  sync
+    # them with the database.
+    # https://stackoverflow.com/q/43381617
+
     # Fetch all resources from wordpress API
     current_page = 1
     wp_api_base = 'https://dial.global/wp-json/wp/v2/posts'
