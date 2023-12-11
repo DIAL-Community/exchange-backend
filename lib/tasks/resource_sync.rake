@@ -17,6 +17,7 @@ namespace :resources_sync do
     # fetch them from the wordpress site and then parse it with nokogiri and then  sync
     # them with the database.
     # https://stackoverflow.com/q/43381617
+    # Last content with proper content in the renderer field: "2023-01-05T05:51:42".
 
     # Fetch all resources from wordpress API
     current_page = 1
