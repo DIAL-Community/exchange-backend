@@ -7,7 +7,7 @@ require 'tempfile'
 require 'modules/slugger'
 
 namespace :opportunities_sync do
-  desc 'Sync use case github structure.'
+  desc 'Sync RFP data from Leverist.'
   task sync_leverist: :environment do
     task_name = 'Sync Leverist RFP'
     tracking_task_setup(task_name, 'Preparing task tracker record.')
@@ -276,6 +276,183 @@ namespace :opportunities_sync do
 
     if successful_operation
       puts "Opportunity '#{opportunity.name}' record saved."
+    end
+  end
+
+  desc 'Sync RFP data from UNGM.'
+  task sync_ungm: :environment do
+    task_name = 'Sync UNGM RFP'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    ungm_origin = Origin.find_by(name: 'United Nations Global Marketplace')
+    if ungm_origin.nil?
+      ungm_origin = Origin.new
+      ungm_origin.name = 'United Nations Global Marketplace'
+      ungm_origin.slug = slug_em('United Nations Global Marketplace', 64)
+      ungm_origin.description = %{
+        The United Nations Global Marketplace (UNGM) is the official procurement portal of the United Nations
+        System. The UNGM portal brings together UN procurement staff and suppliers interested in doing business
+        with the United Nations.
+      }.strip
+
+      puts 'United Nations Global Marketplace as origin is created.' if ungm_origin.save!
+    end
+
+    still_seeing_notices = true
+    connection = Faraday.new(url: 'https://www.ungm.org/Public/Notice/Search')
+
+    current_page = 0
+    while still_seeing_notices
+      response = connection.post do |request|
+        request.headers['Accept'] = 'application/json'
+        request.headers['Content-Type'] = 'application/json'
+        request.body = %{
+          {
+            "PageIndex": #{current_page},
+            "PageSize": 15,
+            "Title": "",
+            "Description": "",
+            "Reference": "",
+            "PublishedFrom": "",
+            "PublishedTo": "#{Date.today.strftime('%d-%b-%Y')}",
+            "DeadlineFrom": "#{Date.today.strftime('%d-%b-%Y')}",
+            "DeadlineTo": "",
+            "Countries": [],
+            "Agencies": [],
+            "UNSPSCs": [
+                107373,
+                145204
+            ],
+            "NoticeTypes": [],
+            "SortField": "DatePublished",
+            "SortAscending": false,
+            "isPicker": false,
+            "IsSustainable": false,
+            "NoticeDisplayType": null,
+            "NoticeSearchTotalLabelId": "noticeSearchTotal",
+            "TypeOfCompetitions": []
+          }
+        }
+      end
+
+      puts "Response status: #{response.status}."
+
+      if response.status == 200
+        html_response = response.body
+        parsed_response = Nokogiri::HTML(html_response)
+
+        # We're only interested in the notice divs, not the script tag.
+        notice_divs = parsed_response.css('div.notice-table')
+
+        puts "Seeing #{notice_divs.count} notices."
+        if notice_divs.count.zero?
+          still_seeing_notices = false
+        else
+          notice_divs.each do |notice_div|
+            process_ungm_notice(notice_div)
+          end
+        end
+      end
+
+      current_page += 1
+    end
+
+    tracking_task_finish(task_name)
+  end
+
+  def process_ungm_notice(notice_div)
+    base_ungm_notice_url = 'https://www.ungm.org/Public/Notice/'
+
+    notice_id = notice_div.attribute('data-noticeid')
+    response = Faraday.get("#{base_ungm_notice_url}#{notice_id}")
+
+    html_response = response.body
+    parsed_response = Nokogiri::HTML(html_response)
+
+    puts "****** Processing notice: #{notice_id} ******"
+
+    base_info_div, background_info_div, contact_info_div = parsed_response.css('.ungm-list-item.ungm-background')
+    notice_title = base_info_div.css('span.title').text.strip
+    puts "  Notice title: #{notice_title}"
+
+    opportunity_name = notice_title
+    opportunity_slug = slug_em(notice_title)
+    opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first
+    if opportunity.nil?
+      opportunity = Opportunity.new(name: opportunity_name, slug: opportunity_slug)
+      if Opportunity.where(slug: opportunity.slug).count.positive?
+        # Check if we need to add _dup to the slug.
+        first_duplicate = Opportunity.slug_simple_starts_with(opportunity.slug)
+                                     .order(slug: :desc)
+                                     .first
+        opportunity.slug += generate_offset(first_duplicate)
+      end
+    end
+
+    # Set the web address for the opportunity pointing directly to the notice.
+    opportunity.web_address = "#{base_ungm_notice_url}#{notice_id}".gsub('https://', '').gsub('http://', '')
+
+    # Set the origin for the opportunity to United Nations Global Marketplace.
+    opportunity.origin = Origin.find_by(name: 'United Nations Global Marketplace')
+
+    base_info_values = base_info_div.css('span.value')
+    if !base_info_values.nil? && !base_info_values.text.strip.empty?
+      base_details = base_info_div.css('span.label')
+      base_details.each do |base_detail|
+        if base_detail.text.strip.downcase == 'deadline on:'
+          date_format = "%d-%b-%Y %H:%M"
+          opportunity.closing_date = Time.strptime(base_detail.next_element.text.strip, date_format)
+          puts "  Setting up closing date: '#{base_detail.next_element.text.strip}'."
+        elsif base_detail.text.strip.downcase == 'beneficiary countries:'
+          opportunity.countries = []
+          country = Country.find_by(name: base_detail.next_element.text.strip)
+          opportunity.countries << country unless country.nil?
+          puts "  Setting up country: '#{base_detail.next_element.text.strip}'."
+        end
+      end
+    end
+
+    opportunity_type = Opportunity.opportunity_type_types[:TENDER]
+    opportunity.opportunity_type = opportunity_type
+
+    opportunity_status = Opportunity.opportunity_status_types[:OPEN]
+    opportunity.opportunity_status = opportunity_status
+
+    contact_email = 'N/A'
+    contact_last_name = 'N/A'
+    contact_first_name = 'N/A'
+    if contact_info_div.css('span.value').nil? || contact_info_div.css('span.value').text.strip.empty?
+      opportunity.contact_email = contact_info_div.css('span.title').text.strip
+      opportunity.contact_name = 'N/A'
+    else
+      contact_details = contact_info_div.css('.contactDetails').css('span.label')
+      contact_details.each do |contact_detail|
+        if contact_detail.text.strip.downcase == 'email'
+          contact_email = contact_detail.next_element.text.strip
+        elsif contact_detail.text.strip.downcase == 'surname'
+          contact_last_name = contact_detail.next_element.text.strip
+        elsif contact_detail.text.strip.downcase == 'first_name'
+          contact_first_name = contact_detail.next_element.text.strip
+        end
+      end
+
+      opportunity.contact_email = contact_email
+      opportunity.contact_name = "#{contact_first_name} #{contact_last_name}"
+    end
+
+    background_div = background_info_div.css('div.title ~ *')
+    opportunity.description = background_div.inner_html
+
+    successful_operation = false
+    ActiveRecord::Base.transaction do
+      opportunity.save
+
+      successful_operation = true
+    end
+
+    if successful_operation
+      puts "  RFP: '#{opportunity.name}' saved."
     end
   end
 end
