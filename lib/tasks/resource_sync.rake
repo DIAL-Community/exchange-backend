@@ -21,12 +21,12 @@ namespace :resources_sync do
 
     # Fetch all resources from wordpress API
     current_page = 1
-    wp_api_base = 'https://dial.global/wp-json/wp/v2/posts'
+    wp_post_base = 'https://dial.global/wp-json/wp/v2/posts'
 
     still_seeing_resources = true
     while still_seeing_resources
-      wp_page_query = "?page=#{current_page}"
-      response = Faraday.get("#{wp_api_base}#{wp_page_query}")
+      wp_post_query = "?page=#{current_page}"
+      response = Faraday.get("#{wp_post_base}#{wp_post_query}")
       response_body = JSON.parse(response.body)
 
       # Last page of the /wp/v2/posts API:
@@ -54,7 +54,7 @@ namespace :resources_sync do
         still_seeing_resources = false
       else
         response_body.each do |post_structure|
-          puts "Processing resource: #{post_structure['title']['rendered']}"
+          puts "Processing resource: #{CGI.unescapeHTML(post_structure['title']['rendered'])}"
           process_dial_resource(post_structure)
         end
       end
@@ -66,7 +66,7 @@ namespace :resources_sync do
   end
 
   def process_dial_resource(post_structure)
-    resource_name = post_structure['title']['rendered']
+    resource_name = CGI.unescapeHTML(post_structure['title']['rendered'])
     resource_slug = post_structure['slug']
     resource = Resource.name_and_slug_search(resource_name, resource_slug).first
     if resource.nil?
@@ -91,6 +91,29 @@ namespace :resources_sync do
 
     resource.show_in_wizard = false
     resource.show_in_exchange = true
+
+    tag_current_page = 1
+    wp_tag_base = 'https://dial.global/wp-json/wp/v2/tags'
+
+    resource_tags = []
+    still_seeing_tags = true
+    while still_seeing_tags
+      wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
+      tag_response = Faraday.get("#{wp_tag_base}#{wp_tag_query}")
+      tag_response_body = JSON.parse(tag_response.body)
+
+      if tag_response_body.is_a?(Array) && tag_response_body.empty?
+        still_seeing_tags = false
+      else
+        tag_response_body.each do |tag_structure|
+          existing_tag = Tag.find_by(name: tag_structure['name'])
+          resource_tags << existing_tag.name unless existing_tag.nil?
+        end
+      end
+
+      tag_current_page += 1
+    end
+    resource.tags = resource_tags
 
     successful_operation = false
     ActiveRecord::Base.transaction do
