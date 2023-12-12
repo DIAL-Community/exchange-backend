@@ -4,6 +4,7 @@ require 'faraday'
 require 'json'
 require 'nokogiri'
 require 'modules/slugger'
+require 'modules/url_sanitizer'
 
 namespace :resources_sync do
   desc 'Sync DIAL resources data with wordpress API.'
@@ -84,7 +85,7 @@ namespace :resources_sync do
     resource.featured = false
     resource.spotlight = false
 
-    resource.resource_link = post_structure['link']
+    resource.resource_link = cleanup_url(post_structure['link'])
     resource.description = post_structure['content']['rendered']
     resource.published_date = Date.strptime(post_structure['date_gmt'])
 
@@ -93,6 +94,28 @@ namespace :resources_sync do
 
     successful_operation = false
     ActiveRecord::Base.transaction do
+      authors = post_structure['_links']['author']
+      authors.each do |author|
+        author_href = author['href']
+        next if author_href.nil?
+
+        author_href_response = Faraday.get(author_href)
+        author_href_response_body = JSON.parse(author_href_response.body)
+
+        next if !author_href_response_body['data'].nil? && author_href_response_body['data']['status'] == 401
+
+        resource_author = Author.find_by(name: author_href_response_body['name'])
+        resource_author = Author.new if resource_author.nil?
+
+        resource_author.name = author_href_response_body['name']
+        resource_author.slug = reslug_em(author_href_response_body['name'])
+        avatar_api = 'https://ui-avatars.com/api/?name='
+        avatar_params = '&background=2e3192&color=fff&format=svg'
+        resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
+
+        resource.authors = [resource_author]
+      end
+
       resource.save
       successful_operation = true
     end
