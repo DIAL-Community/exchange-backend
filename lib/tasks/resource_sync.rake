@@ -3,7 +3,6 @@
 require 'faraday'
 require 'json'
 require 'nokogiri'
-require 'tempfile'
 require 'modules/slugger'
 
 namespace :resources_sync do
@@ -53,8 +52,9 @@ namespace :resources_sync do
       if response_body.is_a?(Hash)
         still_seeing_resources = false
       else
-        response_body.each do |post|
-          puts "Processing resource: #{post['id']}"
+        response_body.each do |post_structure|
+          puts "Processing resource: #{post_structure['title']['rendered']}"
+          process_dial_resource(post_structure)
         end
       end
 
@@ -62,5 +62,43 @@ namespace :resources_sync do
     end
 
     tracking_task_finish(task_name)
+  end
+
+  def process_dial_resource(post_structure)
+    resource_name = post_structure['title']['rendered']
+    resource_slug = post_structure['slug']
+    resource = Resource.name_and_slug_search(resource_name, resource_slug).first
+    if resource.nil?
+      resource = Resource.new(name: resource_name, slug: resource_slug)
+      if Resource.where(slug: resource.slug).count.positive?
+        # Check if we need to add _dup to the slug.
+        first_duplicate = Resource.slug_simple_starts_with(resource.slug)
+                                  .order(slug: :desc)
+                                  .first
+        resource.slug += generate_offset(first_duplicate)
+      end
+    end
+
+    resource.phase = ''
+
+    resource.featured = false
+    resource.spotlight = false
+
+    resource.resource_link = post_structure['link']
+    resource.description = post_structure['content']['rendered']
+    resource.published_date = Date.strptime(post_structure['date_gmt'])
+
+    resource.show_in_wizard = false
+    resource.show_in_exchange = true
+
+    successful_operation = false
+    ActiveRecord::Base.transaction do
+      resource.save
+      successful_operation = true
+    end
+
+    if successful_operation
+      puts "Resource '#{resource.name}' record saved."
+    end
   end
 end
