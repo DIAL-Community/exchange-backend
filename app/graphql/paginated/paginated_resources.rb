@@ -45,6 +45,8 @@ module Paginated
                   .order(published_date: :desc)
 
       current_offset = 0
+      featured_resources = []
+      spotlight_resources = []
       if compartmentalized
         spotlight_resources = resources.where(spotlight: true).limit(spotlight_length).offset(current_offset)
         return spotlight_resources if spotlight_only
