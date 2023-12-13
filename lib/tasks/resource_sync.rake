@@ -75,7 +75,7 @@ namespace :resources_sync do
     resource_slug = post_structure['slug']
     resource = Resource.name_and_slug_search(resource_name, resource_slug).first
     if resource.nil?
-      resource = Resource.new(name: resource_name, slug: resource_slug)
+      resource = Resource.new(name: resource_name, slug: resource_slug, phase: 'Not Applicable')
       if Resource.where(slug: resource.slug).count.positive?
         # Check if we need to add _dup to the slug.
         first_duplicate = Resource.slug_simple_starts_with(resource.slug)
@@ -84,11 +84,6 @@ namespace :resources_sync do
         resource.slug += generate_offset(first_duplicate)
       end
     end
-
-    resource.phase = ''
-
-    resource.featured = false
-    resource.spotlight = false
 
     resource.resource_link = cleanup_url(post_structure['link'])
     resource.description = post_structure['excerpt']['rendered']
