@@ -215,7 +215,7 @@ namespace :markdown_sync do
         use_case_step_workflows << workflow unless workflow.nil?
       end
     end
-    use_case_step.workflows = use_case_step_workflows
+    use_case_step.workflows = use_case_step_workflows.uniq(&:id)
   end
 
   def update_step_example_implementation(use_case_step, step_root)
@@ -254,7 +254,7 @@ namespace :markdown_sync do
 
       use_case_step_building_blocks << building_block unless building_block.nil?
     end
-    use_case_step.building_blocks = use_case_step_building_blocks
+    use_case_step.building_blocks = use_case_step_building_blocks.uniq(&:id)
   end
 
   def find_strong_node(starting_node, node_text)
