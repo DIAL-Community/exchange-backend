@@ -21,12 +21,17 @@ namespace :resources_sync do
 
     # Fetch all resources from wordpress API
     current_page = 1
-    wp_post_base = 'https://dial.global/wp-json/wp/v2/posts'
+    wp_base = 'https://dial.global'
+    wp_research_base = '/wp-json/wp/v2/research'
 
     still_seeing_resources = true
     while still_seeing_resources
       wp_post_query = "?page=#{current_page}"
-      response = Faraday.get("#{wp_post_base}#{wp_post_query}")
+
+      connection = Faraday.new(url: wp_base)
+      connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
+
+      response = connection.get("#{wp_research_base}#{wp_post_query}")
       response_body = JSON.parse(response.body)
 
       # Last page of the /wp/v2/posts API:
@@ -86,28 +91,32 @@ namespace :resources_sync do
     resource.spotlight = false
 
     resource.resource_link = cleanup_url(post_structure['link'])
-    resource.description = post_structure['content']['rendered']
+    resource.description = post_structure['excerpt']['rendered']
     resource.published_date = Date.strptime(post_structure['date_gmt'])
 
     resource.show_in_wizard = false
     resource.show_in_exchange = true
 
     tag_current_page = 1
-    wp_tag_base = 'https://dial.global/wp-json/wp/v2/tags'
+    wp_base = 'https://dial.global'
+    wp_tag_base = '/wp-json/wp/v2/tags'
 
     resource_tags = []
     still_seeing_tags = true
     while still_seeing_tags
       wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
-      tag_response = Faraday.get("#{wp_tag_base}#{wp_tag_query}")
+
+      connection = Faraday.new(url: wp_base)
+      connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
+
+      tag_response = connection.get("#{wp_tag_base}#{wp_tag_query}")
       tag_response_body = JSON.parse(tag_response.body)
 
       if tag_response_body.is_a?(Array) && tag_response_body.empty?
         still_seeing_tags = false
       else
         tag_response_body.each do |tag_structure|
-          existing_tag = Tag.find_by(name: tag_structure['name'])
-          resource_tags << existing_tag.name unless existing_tag.nil?
+          resource_tags << tag_structure['name']
         end
       end
 
@@ -122,7 +131,10 @@ namespace :resources_sync do
         author_href = author['href']
         next if author_href.nil?
 
-        author_href_response = Faraday.get(author_href)
+        author_connection = Faraday.new(author_href)
+        author_connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
+
+        author_href_response = author_connection.get('')
         author_href_response_body = JSON.parse(author_href_response.body)
 
         next if !author_href_response_body['data'].nil? && author_href_response_body['data']['status'] == 401
