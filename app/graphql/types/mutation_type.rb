@@ -155,5 +155,9 @@ module Types
 
     field :update_resource_tags, mutation: Mutations::UpdateResourceTags
     field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
+
+    field :create_region, mutation: Mutations::CreateRegion
+    field :delete_region, mutation: Mutations::DeleteRegion
+    field :update_region_countries, mutation: Mutations::UpdateRegionCountries
   end
 end

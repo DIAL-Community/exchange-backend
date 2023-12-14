@@ -5,6 +5,7 @@ class Country < ApplicationRecord
   has_and_belongs_to_many :opportunities, join_table: :opportunities_countries
   has_and_belongs_to_many :organizations, join_table: :organizations_countries, dependent: :destroy
   has_and_belongs_to_many :projects, join_table: :projects_countries, dependent: :destroy
+  has_and_belongs_to_many :regions, join_table: :regions_countries, dependent: :destroy
 
   has_many :aggregator_capabilities, dependent: :destroy
   has_many :operator_services, dependent: :destroy

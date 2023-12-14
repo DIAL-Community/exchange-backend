@@ -973,8 +973,7 @@ CREATE TABLE public.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    region_id bigint
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -3131,12 +3130,22 @@ ALTER SEQUENCE public.provinces_id_seq OWNED BY public.provinces.id;
 
 CREATE TABLE public.regions (
     id bigint NOT NULL,
-    name character varying NOT NULL,
     slug character varying NOT NULL,
+    name character varying NOT NULL,
     description character varying NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: regions_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.regions_countries (
+    region_id bigint NOT NULL,
+    country_id bigint NOT NULL
 );
 
 
@@ -5923,13 +5932,6 @@ CREATE UNIQUE INDEX index_contacts_on_slug ON public.contacts USING btree (slug)
 
 
 --
--- Name: index_countries_on_region_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_countries_on_region_id ON public.countries USING btree (region_id);
-
-
---
 -- Name: index_dataset_descriptions_on_dataset_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6424,6 +6426,20 @@ CREATE INDEX index_projects_on_origin_id ON public.projects USING btree (origin_
 --
 
 CREATE INDEX index_provinces_on_country_id ON public.provinces USING btree (country_id);
+
+
+--
+-- Name: index_regions_countries_on_country_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_regions_countries_on_country_id ON public.regions_countries USING btree (country_id);
+
+
+--
+-- Name: index_regions_countries_on_region_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_regions_countries_on_region_id ON public.regions_countries USING btree (region_id);
 
 
 --
