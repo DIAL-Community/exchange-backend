@@ -6429,17 +6429,10 @@ CREATE INDEX index_provinces_on_country_id ON public.provinces USING btree (coun
 
 
 --
--- Name: index_regions_countries_on_country_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_regions_countries; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_regions_countries_on_country_id ON public.regions_countries USING btree (country_id);
-
-
---
--- Name: index_regions_countries_on_region_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_regions_countries_on_region_id ON public.regions_countries USING btree (region_id);
+CREATE UNIQUE INDEX index_regions_countries ON public.regions_countries USING btree (region_id, country_id);
 
 
 --

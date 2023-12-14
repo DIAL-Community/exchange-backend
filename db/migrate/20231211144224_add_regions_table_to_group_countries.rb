@@ -12,9 +12,7 @@ class AddRegionsTableToGroupCountries < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    create_join_table(:regions, :countries, table_name: 'regions_countries') do |t|
-      t.index(:region_id)
-      t.index(:country_id)
-    end
+    create_join_table(:regions, :countries, table_name: 'regions_countries')
+    add_index(:regions_countries, [:region_id, :country_id], unique: true, name: 'index_regions_countries')
   end
 end
