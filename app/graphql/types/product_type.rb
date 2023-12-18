@@ -22,6 +22,7 @@ module Types
     field :website, String, null: true
     field :aliases, GraphQL::Types::JSON, null: true
     field :tags, GraphQL::Types::JSON, null: true
+    field :extra_attributes, GraphQL::Types::JSON, null: true
 
     # TODO: Deprecate this field after migration to the new UI
     field :owner, String, null: true
@@ -38,6 +39,7 @@ module Types
 
     field :main_repository, Types::ProductRepositoryType, null: true
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized
+    field :countries, [Types::CountryType], null: true
 
     field :product_descriptions, [Types::ProductDescriptionType], null: true
     field :product_description, Types::ProductDescriptionType, null: true,

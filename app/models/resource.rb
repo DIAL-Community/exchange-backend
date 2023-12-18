@@ -36,6 +36,12 @@ class Resource < ApplicationRecord
     end
   end
 
+  def resource_file
+    if !resource_filename.nil? && File.exist?(File.join('public', 'assets', 'resources', resource_filename))
+      "/assets/resources/#{resource_filename}"
+    end
+  end
+
   def countries_ordered
     countries&.order('countries.name ASC')
   end
