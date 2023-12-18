@@ -50,7 +50,7 @@ namespace :fao do
         fao_organization = Organization.new
         fao_organization.name = 'Food and Agriculture Organization (FAO) of the United Nations'
         fao_organization.slug = 'fao'
-        fao_origin.aliases = ['FAO']
+        fao_organization.aliases = ['FAO']
         fao_organization.save
 
         organization_desc = OrganizationDescription.new
