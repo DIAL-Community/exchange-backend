@@ -30,7 +30,7 @@ module Mutations
         current_office = Office.find_by(
           organization_id: organization.id,
           city: office_params[:city],
-          region_id: office_params[:region_id],
+          province_id: office_params[:province_id],
           country_id: office_params[:country_id]
         )
         if current_office.nil?
@@ -60,20 +60,20 @@ module Mutations
     def generate_office_params(office)
       city = find_city(
         office['cityName'],
-        office['regionName'],
+        office['provinceName'],
         office['countryCode'],
         Rails.application.secrets.google_api_key
       )
 
-      region = city.region
-      country = region.country
+      province = city.province
+      country = province.country
 
-      name_string = "#{city.name}, #{region.name}, #{country.code}"
+      name_string = "#{city.name}, #{province.name}, #{country.code}"
       office_params = {
         name: name_string,
         slug: slug_em(name_string),
 
-        region_id: region.id,
+        province_id: province.id,
         country_id: country.id,
 
         city: city.name,

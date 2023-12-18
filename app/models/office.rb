@@ -5,7 +5,7 @@ class Office < ApplicationRecord
 
   belongs_to :organization
   belongs_to :country
-  belongs_to :region
+  belongs_to :province
 
   def self_url(options = {})
     record = City.find_by(name: city)

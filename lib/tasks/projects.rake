@@ -19,7 +19,7 @@ namespace :projects do
     range = '1. Partners support to frontline HWs tools!A1:Z'
     response = sync_spreadsheet(spreadsheet_id, range)
     headers = response.values.shift
-    # take off the first 2 - region and country
+    # take off the first 2 - province and country
     headers.shift
     headers.shift
     puts 'No data found.' if response.values.empty?
@@ -58,19 +58,20 @@ namespace :projects do
              address_component['types'].include?('postal_town')
             city_data['city'] = address_component['long_name']
           elsif address_component['types'].include?('administrative_area_level_1')
-            city_data['region'] = address_component['long_name']
+            city_data['province'] = address_component['long_name']
           elsif address_component['types'].include?('country')
             city_data['country_code'] = address_component['short_name']
           end
         end
       end
 
-      unless city_data['city'].blank? || city_data['region'].blank? || city_data['country_code'].blank?
-        find_city(city_data['city'], city_data['region'], city_data['country_code'], google_auth_key)
+      unless city_data['city'].blank? || city_data['province'].blank? || city_data['country_code'].blank?
+        find_city(city_data['city'], city_data['province'], city_data['country_code'], google_auth_key)
       end
     end
   end
 
+  # https://www.newamerica.org/digital-impact-governance-initiative/reports/digital-government-mapping-project/digital-government-platform-tracker
   desc 'Read data from New America Digital Government Platform Tracker'
   task :parse_digital_gov_tracker, [:digital_gov_tracker_file] => :environment do |_, params|
     dgpt_origin = Origin.find_by(name: 'Digital Government Platform Tracker')
@@ -144,7 +145,7 @@ namespace :projects do
                 country = Country.find_by(name: city_country[1])
                 puts "Searching country: #{city_country[1]} resolving: #{country}."
               elsif !city.is_a?(Array)
-                country = city.region.country
+                country = city.province.country
               end
             end
             project_countries << country unless country.nil?
@@ -169,7 +170,7 @@ namespace :projects do
             # Or is it a city?
             city = geocode_city(name: jurisdictions.strip)
             if !city.is_a?(Array) && !city.nil?
-              country = city.region.country
+              country = city.province.country
             end
           end
           project_countries << country unless country.nil?

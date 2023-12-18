@@ -35,12 +35,12 @@ unless country_invalid_georgia.nil?
     puts "Country data for organization: '#{organization.name}' updated." if organization.save!
   end
 
-  regions_with_valid_georgia = Region.where(country_id: country_valid_georgia.id)
-  puts "Regions with invalid georgia: #{regions_with_valid_georgia.count}."
+  provinces_with_valid_georgia = Region.where(country_id: country_valid_georgia.id)
+  puts "Regions with invalid georgia: #{provinces_with_valid_georgia.count}."
 
-  regions_with_valid_georgia.each do |region|
-    region.country_id = country_invalid_georgia.id
-    puts "Region data for region: '#{region.name}' updated." if region.save!
+  provinces_with_valid_georgia.each do |province|
+    province.country_id = country_invalid_georgia.id
+    puts "Province data for province: '#{province.name}' updated." if province.save!
   end
 
   if Country.find_by(name: 'Georgia', slug: 'ge').destroy

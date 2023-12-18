@@ -11,7 +11,7 @@ module Types
     field :longitude, String, null: false
 
     field :organization, Types::OrganizationType, null: false
-    field :region, Types::RegionType, null: false
+    field :province, Types::ProvinceType, null: false
     field :country, Types::CountryType, null: false
 
     field :city_data, Types::CityType, null: true

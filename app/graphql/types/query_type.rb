@@ -198,6 +198,11 @@ module Types
     field :task_trackers, resolver: Queries::TaskTrackersQuery
     field :task_tracker, resolver: Queries::TaskTrackerQuery
 
+    field :regions, resolver: Queries::RegionsQuery
+    field :region, resolver: Queries::RegionQuery
+    field :paginated_regions, resolver: Paginated::PaginatedRegions
+    field :pagination_attribute_region, resolver: Paginated::PaginationAttributeRegion
+
     field :starred_objects, resolver: Queries::StarredObjectsQuery
     field :starred_object, resolver: Queries::StarredObjectQuery
   end

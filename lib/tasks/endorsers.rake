@@ -113,8 +113,8 @@ namespace :endorsers do
       if !existing_city.nil? && !existing_city.id.nil?
         existing_office_name = "#{organization.name} #{existing_city.name}"
 
-        existing_region = Region.find(existing_city.region_id)
-        existing_office_name = "#{existing_office_name} #{existing_region.name}" unless existing_region.nil?
+        existing_province = Province.find(existing_city.province_id)
+        existing_office_name = "#{existing_office_name} #{existing_province.name}" unless existing_province.nil?
         existing_office_name = "#{existing_office_name} #{existing_country.code}" unless existing_country.nil?
 
         existing_office = Office.find_by(slug: slug_em(existing_office_name))
@@ -124,8 +124,8 @@ namespace :endorsers do
           existing_office.longitude = existing_city.longitude
           existing_office.city = existing_city.name
 
-          existing_office.country_id = existing_region.id unless existing_region.nil?
-          existing_office.region_id = existing_country.id unless existing_country.nil?
+          existing_office.country_id = existing_province.id unless existing_province.nil?
+          existing_office.province_id = existing_country.id unless existing_country.nil?
         end
 
         organization.offices = [existing_office] unless existing_office.nil?

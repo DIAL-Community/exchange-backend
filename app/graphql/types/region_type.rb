@@ -5,9 +5,9 @@ module Types
     field :id, ID, null: false
     field :slug, String, null: false
     field :name, String, null: false
-    field :latitude, String, null: false
-    field :longitude, String, null: false
+    field :description, String, null: false
+    field :aliases, GraphQL::Types::JSON, null: true
 
-    field :country, Types::CountryType, null: false
+    field :countries, [Types::CountryType], null: true
   end
 end

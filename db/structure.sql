@@ -793,7 +793,7 @@ CREATE TABLE public.cities (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    region_id bigint,
+    province_id bigint,
     latitude numeric NOT NULL,
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
@@ -1310,7 +1310,7 @@ CREATE TABLE public.districts (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
-    region_id bigint NOT NULL,
+    province_id bigint NOT NULL,
     latitude numeric NOT NULL,
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
@@ -1681,7 +1681,7 @@ CREATE TABLE public.offices (
     longitude numeric NOT NULL,
     city character varying NOT NULL,
     organization_id bigint NOT NULL,
-    region_id bigint,
+    province_id bigint,
     country_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -3089,10 +3089,10 @@ CREATE TABLE public.projects_sectors (
 
 
 --
--- Name: regions; Type: TABLE; Schema: public; Owner: -
+-- Name: provinces; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.regions (
+CREATE TABLE public.provinces (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
@@ -3102,6 +3102,50 @@ CREATE TABLE public.regions (
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.provinces_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.provinces_id_seq OWNED BY public.provinces.id;
+
+
+--
+-- Name: regions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.regions (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: regions_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.regions_countries (
+    region_id bigint NOT NULL,
+    country_id bigint NOT NULL
 );
 
 
@@ -4607,6 +4651,13 @@ ALTER TABLE ONLY public.projects_digital_principles ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: provinces id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.provinces ALTER COLUMN id SET DEFAULT nextval('public.provinces_id_seq'::regclass);
+
+
+--
 -- Name: regions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5404,6 +5455,14 @@ ALTER TABLE ONLY public.projects
 
 
 --
+-- Name: provinces provinces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.provinces
+    ADD CONSTRAINT provinces_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: regions regions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5852,10 +5911,10 @@ CREATE INDEX index_category_indicators_on_rubric_category_id ON public.category_
 
 
 --
--- Name: index_cities_on_region_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cities_on_province_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_cities_on_region_id ON public.cities USING btree (region_id);
+CREATE INDEX index_cities_on_province_id ON public.cities USING btree (province_id);
 
 
 --
@@ -5943,10 +6002,10 @@ CREATE INDEX index_deploys_on_user_id ON public.deploys USING btree (user_id);
 
 
 --
--- Name: index_districts_on_region_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_districts_on_province_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_districts_on_region_id ON public.districts USING btree (region_id);
+CREATE INDEX index_districts_on_province_id ON public.districts USING btree (province_id);
 
 
 --
@@ -6013,10 +6072,10 @@ CREATE INDEX index_offices_on_organization_id ON public.offices USING btree (org
 
 
 --
--- Name: index_offices_on_region_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_offices_on_province_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_offices_on_region_id ON public.offices USING btree (region_id);
+CREATE INDEX index_offices_on_province_id ON public.offices USING btree (province_id);
 
 
 --
@@ -6363,10 +6422,24 @@ CREATE INDEX index_projects_on_origin_id ON public.projects USING btree (origin_
 
 
 --
--- Name: index_regions_on_country_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_provinces_on_country_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_regions_on_country_id ON public.regions USING btree (country_id);
+CREATE INDEX index_provinces_on_country_id ON public.provinces USING btree (country_id);
+
+
+--
+-- Name: index_regions_countries; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_countries ON public.regions_countries USING btree (region_id, country_id);
+
+
+--
+-- Name: index_regions_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_on_slug ON public.regions USING btree (slug);
 
 
 --
@@ -6846,7 +6919,7 @@ ALTER TABLE ONLY public.plays_subplays
 --
 
 ALTER TABLE ONLY public.districts
-    ADD CONSTRAINT fk_rails_002fc30497 FOREIGN KEY (region_id) REFERENCES public.regions(id);
+    ADD CONSTRAINT fk_rails_002fc30497 FOREIGN KEY (province_id) REFERENCES public.provinces(id);
 
 
 --
@@ -6854,7 +6927,7 @@ ALTER TABLE ONLY public.districts
 --
 
 ALTER TABLE ONLY public.offices
-    ADD CONSTRAINT fk_rails_0722c0e4f7 FOREIGN KEY (region_id) REFERENCES public.regions(id);
+    ADD CONSTRAINT fk_rails_0722c0e4f7 FOREIGN KEY (province_id) REFERENCES public.provinces(id);
 
 
 --
@@ -7494,7 +7567,7 @@ ALTER TABLE ONLY public.play_moves
 --
 
 ALTER TABLE ONLY public.cities
-    ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (region_id) REFERENCES public.regions(id);
+    ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES public.provinces(id);
 
 
 --
@@ -7546,10 +7619,10 @@ ALTER TABLE ONLY public.starred_objects
 
 
 --
--- Name: regions fk_rails_f2ba72ccee; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: provinces fk_rails_f2ba72ccee; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.regions
+ALTER TABLE ONLY public.provinces
     ADD CONSTRAINT fk_rails_f2ba72ccee FOREIGN KEY (country_id) REFERENCES public.countries(id);
 
 
@@ -8195,6 +8268,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231103194201'),
 ('20231128225429'),
 ('20231201214658'),
-('20231207212017');
+('20231207212017'),
+('20231209110335'),
+('20231211144224');
 
 
