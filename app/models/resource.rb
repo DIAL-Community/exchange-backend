@@ -27,6 +27,7 @@ class Resource < ApplicationRecord
   )
 
   scope :name_contains, ->(name) { where('LOWER(resources.name) like LOWER(?)', "%#{name}%") }
+  scope :name_and_slug_search, -> (name, slug) { where('resources.name = ? OR resources.slug = ?', name, slug) }
 
   def image_file
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
