@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class City < ApplicationRecord
-  belongs_to :region
+  belongs_to :province
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
 
@@ -29,7 +29,7 @@ class City < ApplicationRecord
 
   def as_json(options = {})
     json = super(options)
-    json['region'] = region.as_json({ only: [:name] })
+    json['province'] = province.as_json({ only: [:name] })
     if options[:include_relationships].present?
       offices = Office.where(city: name)
       json['organizations'] = offices.as_json({ only: %i[name slug website], api_path: api_path(options) })
@@ -41,7 +41,7 @@ class City < ApplicationRecord
 
   def self.serialization_options
     {
-      except: %i[id region_id created_at updated_at]
+      except: %i[id province_id created_at updated_at]
     }
   end
 end

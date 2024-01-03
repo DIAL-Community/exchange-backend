@@ -25,7 +25,7 @@ namespace :tenants do
 
       %w[
         countries
-        regions
+        provinces
         districts
         origins
         sustainable_development_goals

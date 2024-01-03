@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   # Incomplete factory definition. Add more field as needed.
-  factory :region do
+  factory :province do
     sequence(:slug)
     sequence(:name)
     sequence(:latitude)
