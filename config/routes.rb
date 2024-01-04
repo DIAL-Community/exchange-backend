@@ -118,10 +118,8 @@ Rails.application.routes.draw do
 
   # End of external API routes
 
-  resources :audits, only: [:index]
-
-  get '/object_counts', to: 'application#object_counts', as: :object_counts
   get '/healthcheck', to: 'about#healthcheck', as: :healthcheck
+  get '/tenant', to: 'about#tenant', as: :tenant
 
   post '/send_email', to: 'application#send_email', as: :send_email
   post '/create_issue', to: 'application#create_issue', as: :create_issue
