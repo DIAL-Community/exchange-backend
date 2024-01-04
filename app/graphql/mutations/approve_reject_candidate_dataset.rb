@@ -58,7 +58,7 @@ module Mutations
       candidate_dataset.rejected_date = Time.now
       candidate_dataset.rejected_by_id = context[:current_user].id
 
-      return true if candidate_dataset.save!
+      true if candidate_dataset.save!
     end
 
     def approve_candidate(candidate_dataset)

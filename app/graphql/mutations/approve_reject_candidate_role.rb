@@ -101,7 +101,7 @@ module Mutations
         candidate_role.rejected_by_id = context[:current_user].id
       end
 
-      return true if candidate_role.save!
+      true if candidate_role.save!
     end
   end
 end

@@ -10,7 +10,7 @@ class Office < ApplicationRecord
   def self_url(options = {})
     record = City.find_by(name: city)
     return "#{options[:api_path]}/cities/" if options[:api_path].present? && record.nil?
-    return "#{options[:api_path]}/cities/#{record.slug}" if options[:api_path].present?
+    "#{options[:api_path]}/cities/#{record.slug}" if options[:api_path].present?
   end
 
   def as_json(options = {})

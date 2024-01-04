@@ -78,13 +78,13 @@ class BuildingBlock < ApplicationRecord
       return "#{options[:api_path]}/building_blocks/#{slug}" unless options[:govstack_path].present?
     end
     return options[:item_path] if options[:item_path].present?
-    return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
+    "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
 
   def collection_url(options = {})
     return "#{options[:api_path]}/building_blocks" if options[:api_path].present?
     return options[:item_path].sub("/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path] if options[:collection_path].present?
+    options[:collection_path] if options[:collection_path].present?
   end
 
   def api_path(options = {})
@@ -96,7 +96,7 @@ class BuildingBlock < ApplicationRecord
 
     if options[:collection_path].present?
       return options[:collection_path].sub('/govstack_building_blocks', '') if options[:govstack_path].present?
-      return options[:collection_path].sub('/building_blocks', '') unless options[:govstack_path].present?
+      options[:collection_path].sub('/building_blocks', '') unless options[:govstack_path].present?
     end
   end
 

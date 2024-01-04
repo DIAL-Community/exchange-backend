@@ -186,13 +186,13 @@ class Product < ApplicationRecord
       return "#{options[:api_path]}/products/#{slug}" unless options[:govstack_path].present?
     end
     return options[:item_path] if options[:item_path].present?
-    return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
+    "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
 
   def collection_url(options = {})
     return "#{options[:api_path]}/products" if options[:api_path].present?
     return options[:item_path].sub("/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path] if options[:collection_path].present?
+    options[:collection_path] if options[:collection_path].present?
   end
 
   def api_path(options = {})
@@ -204,7 +204,7 @@ class Product < ApplicationRecord
 
     if options[:collection_path].present?
       return options[:collection_path].sub('/govstack_products', '') if options[:govstack_path].present?
-      return options[:collection_path].sub('/products', '') unless options[:govstack_path].present?
+      options[:collection_path].sub('/products', '') unless options[:govstack_path].present?
     end
   end
 

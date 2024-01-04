@@ -37,20 +37,20 @@ class UseCaseStep < ApplicationRecord
   def self_url(options = {})
     return "#{options[:api_path]}/use_cases/#{use_case.slug}/use_case_steps/#{slug}" if options[:api_path].present?
     return options[:item_path] if options[:item_path].present?
-    return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
+    "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
 
   def collection_url(options = {})
     return "#{options[:api_path]}/use_cases/#{use_case.slug}" if options[:api_path].present?
     return options[:item_path].sub("/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path] if options[:collection_path].present?
+    options[:collection_path] if options[:collection_path].present?
   end
 
   def api_path(options = {})
     return options[:api_path] if options[:api_path].present?
     return options[:item_path].sub("/use_cases/#{use_case.slug}/use_case_steps/#{slug}", '') \
       if options[:item_path].present?
-    return options[:collection_path].sub("/use_cases/#{use_case.slug}/use_case_steps", '') \
+    options[:collection_path].sub("/use_cases/#{use_case.slug}/use_case_steps", '') \
       if options[:collection_path].present?
   end
 
