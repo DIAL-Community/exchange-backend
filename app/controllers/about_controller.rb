@@ -9,4 +9,8 @@ class AboutController < ApplicationController
 
     render(json: { "webapp": true, "psql": db_health })
   end
+
+  def tenant
+    render(json: { "tenant": Apartment::Tenant.current })
+  end
 end
