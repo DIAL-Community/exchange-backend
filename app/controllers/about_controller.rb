@@ -13,4 +13,8 @@ class AboutController < ApplicationController
   def tenant
     render(json: { "tenant": Apartment::Tenant.current })
   end
+
+  def tenants
+    render(json: { "tenants": ExchangeTenant.distinct.pluck(:tenant_name) })
+  end
 end
