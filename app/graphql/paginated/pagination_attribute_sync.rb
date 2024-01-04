@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Paginated
-  class PaginationAttributeContact < Queries::BaseQuery
+  class PaginationAttributeSync < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
 
     type Attributes::PaginationAttributes, null: false
@@ -9,12 +9,12 @@ module Paginated
     def resolve(search:)
       return { total_count: 0 } unless an_admin
 
-      contacts = Contact.order(:name)
+      syncs = TenantSync.order(:name)
       unless search.blank?
-        contacts = contacts.name_contains(search)
+        syncs = syncs.name_contains(search)
       end
 
-      { total_count: contacts.count }
+      { total_count: syncs.count }
     end
   end
 end

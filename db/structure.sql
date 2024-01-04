@@ -4021,44 +4021,6 @@ ALTER SEQUENCE fao.task_trackers_id_seq OWNED BY fao.task_trackers.id;
 
 
 --
--- Name: tenant_syncs; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.tenant_syncs (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    tenant_source character varying NOT NULL,
-    tenant_destination character varying NOT NULL,
-    enabled boolean DEFAULT true NOT NULL,
-    sync_configuration json DEFAULT '{}'::json NOT NULL,
-    last_sync_at timestamp(6) without time zone,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: tenant_syncs_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.tenant_syncs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: tenant_syncs_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.tenant_syncs_id_seq OWNED BY fao.tenant_syncs.id;
-
-
---
 -- Name: use_case_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -7832,6 +7794,44 @@ ALTER SEQUENCE public.task_trackers_id_seq OWNED BY public.task_trackers.id;
 
 
 --
+-- Name: tenant_syncs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tenant_syncs (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    tenant_source character varying NOT NULL,
+    tenant_destination character varying NOT NULL,
+    sync_enabled boolean DEFAULT true NOT NULL,
+    sync_configuration json DEFAULT '{}'::json NOT NULL,
+    last_sync_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tenant_syncs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tenant_syncs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tenant_syncs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tenant_syncs_id_seq OWNED BY public.tenant_syncs.id;
+
+
+--
 -- Name: use_case_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8920,13 +8920,6 @@ ALTER TABLE ONLY fao.task_trackers ALTER COLUMN id SET DEFAULT nextval('fao.task
 
 
 --
--- Name: tenant_syncs id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.tenant_syncs ALTER COLUMN id SET DEFAULT nextval('fao.tenant_syncs_id_seq'::regclass);
-
-
---
 -- Name: use_case_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9645,6 +9638,13 @@ ALTER TABLE ONLY public.task_tracker_descriptions ALTER COLUMN id SET DEFAULT ne
 --
 
 ALTER TABLE ONLY public.task_trackers ALTER COLUMN id SET DEFAULT nextval('public.task_trackers_id_seq'::regclass);
+
+
+--
+-- Name: tenant_syncs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_syncs ALTER COLUMN id SET DEFAULT nextval('public.tenant_syncs_id_seq'::regclass);
 
 
 --
@@ -10473,14 +10473,6 @@ ALTER TABLE ONLY fao.task_tracker_descriptions
 
 ALTER TABLE ONLY fao.task_trackers
     ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
-
-
---
--- Name: tenant_syncs tenant_syncs_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.tenant_syncs
-    ADD CONSTRAINT tenant_syncs_pkey PRIMARY KEY (id);
 
 
 --
@@ -11321,6 +11313,14 @@ ALTER TABLE ONLY public.task_tracker_descriptions
 
 ALTER TABLE ONLY public.task_trackers
     ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_syncs tenant_syncs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tenant_syncs
+    ADD CONSTRAINT tenant_syncs_pkey PRIMARY KEY (id);
 
 
 --
@@ -16327,6 +16327,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231201214658'),
 ('20231207212017'),
 ('20231209110335'),
-('20231211144224');
+('20231211144224'),
+('20240104215749');
 
 
