@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-RSpec.describe(TenantSync, type: :model) do
+RSpec.describe(TenantSyncConfiguration, type: :model) do
   pending "add some examples to (or delete) #{__FILE__}"
 end

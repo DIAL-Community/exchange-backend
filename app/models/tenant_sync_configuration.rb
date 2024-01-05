@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TenantSync < ApplicationRecord
+class TenantSyncConfiguration < ApplicationRecord
   include Auditable
 
   scope :name_contains, ->(name) { where('LOWER(task_trackers.name) like LOWER(?)', "%#{name}%") }

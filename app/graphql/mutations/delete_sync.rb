@@ -15,7 +15,7 @@ module Mutations
         }
       end
 
-      sync = TenantSync.find_by(id:)
+      sync = TenantSyncConfiguration.find_by(id:)
       if sync.nil?
         return {
           sync: nil,

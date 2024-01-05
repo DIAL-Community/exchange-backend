@@ -8,7 +8,7 @@ module Queries
     def resolve(search:)
       return [] unless an_admin
 
-      syncs = TenantSync.order(:name)
+      syncs = TenantSyncConfiguration.order(:name)
       syncs = syncs.name_contains(search) unless search.blank?
       syncs
     end
@@ -21,7 +21,7 @@ module Queries
     def resolve(slug:)
       return nil unless an_admin
 
-      TenantSync.find_by(slug:)
+      TenantSyncConfiguration.find_by(slug:)
     end
   end
 end

@@ -9,7 +9,7 @@ module Paginated
     def resolve(search:)
       return { total_count: 0 } unless an_admin
 
-      syncs = TenantSync.order(:name)
+      syncs = TenantSyncConfiguration.order(:name)
       unless search.blank?
         syncs = syncs.name_contains(search)
       end

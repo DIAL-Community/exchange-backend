@@ -7794,10 +7794,10 @@ ALTER SEQUENCE public.task_trackers_id_seq OWNED BY public.task_trackers.id;
 
 
 --
--- Name: tenant_syncs; Type: TABLE; Schema: public; Owner: -
+-- Name: tenant_sync_configurations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.tenant_syncs (
+CREATE TABLE public.tenant_sync_configurations (
     id bigint NOT NULL,
     name character varying NOT NULL,
     slug character varying NOT NULL,
@@ -7813,10 +7813,10 @@ CREATE TABLE public.tenant_syncs (
 
 
 --
--- Name: tenant_syncs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE public.tenant_syncs_id_seq
+CREATE SEQUENCE public.tenant_sync_configurations_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -7825,10 +7825,10 @@ CREATE SEQUENCE public.tenant_syncs_id_seq
 
 
 --
--- Name: tenant_syncs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.tenant_syncs_id_seq OWNED BY public.tenant_syncs.id;
+ALTER SEQUENCE public.tenant_sync_configurations_id_seq OWNED BY public.tenant_sync_configurations.id;
 
 
 --
@@ -9641,10 +9641,10 @@ ALTER TABLE ONLY public.task_trackers ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- Name: tenant_syncs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: tenant_sync_configurations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_syncs ALTER COLUMN id SET DEFAULT nextval('public.tenant_syncs_id_seq'::regclass);
+ALTER TABLE ONLY public.tenant_sync_configurations ALTER COLUMN id SET DEFAULT nextval('public.tenant_sync_configurations_id_seq'::regclass);
 
 
 --
@@ -11316,11 +11316,11 @@ ALTER TABLE ONLY public.task_trackers
 
 
 --
--- Name: tenant_syncs tenant_syncs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tenant_sync_configurations tenant_sync_configurations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.tenant_syncs
-    ADD CONSTRAINT tenant_syncs_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tenant_sync_configurations
+    ADD CONSTRAINT tenant_sync_configurations_pkey PRIMARY KEY (id);
 
 
 --

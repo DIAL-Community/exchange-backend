@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-class CreateTenantSyncs < ActiveRecord::Migration[7.0]
+class CreateTenantSyncConfigurations < ActiveRecord::Migration[7.0]
   def change
-    create_table(:tenant_syncs) do |t|
+    create_table(:tenant_sync_configurations) do |t|
       t.string(:name, null: false)
       t.string(:slug, null: false)
       t.string(:description, null: false)

@@ -25,15 +25,15 @@ module Mutations
       end
 
       # Prevent duplicating sync by the name of the sync.
-      sync = TenantSync.find_by(slug:)
-      sync = TenantSync.find_by(name:) if sync.nil?
+      sync = TenantSyncConfiguration.find_by(slug:)
+      sync = TenantSyncConfiguration.find_by(name:) if sync.nil?
       if sync.nil?
-        sync = TenantSync.new(name:, slug: slug_em(name))
+        sync = TenantSyncConfiguration.new(name:, slug: slug_em(name))
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = TenantSync.slug_simple_starts_with(sync.slug)
-                                    .order(slug: :desc)
-                                    .first
+        first_duplicate = TenantSyncConfiguration.slug_simple_starts_with(sync.slug)
+                                                 .order(slug: :desc)
+                                                 .first
         unless first_duplicate.nil?
           sync.slug += generate_offset(first_duplicate)
         end

@@ -64,4 +64,32 @@ namespace :tenants do
       end
     end
   end
+
+  task sync_between_tenants: :environment do
+    TenantSyncConfiguration.all.each do |tenant_sync|
+      puts "Source tenant: #{tenant_sync.tenant_source}."
+      puts "Destination tenant: #{tenant_sync.tenant_destination}."
+
+      tenant_sync.sync_configuration['includes'].each do |sync_model_name|
+        Apartment::Tenant.switch!(tenant_sync.tenant_source)
+        sync_object_model = sync_model_name.constantize
+        puts "Syncing #{sync_object_model.count} #{sync_object_model.name} records."
+
+        sync_object_model.all.each do |source_model|
+          Apartment::Tenant.switch!(tenant_sync.tenant_destination)
+          puts "Finding destination model for #{source_model.slug}"
+
+          destination_object = sync_object_model.find_by(slug: source_model.slug)
+          if destination_object.nil?
+            puts "  Destination model not found for #{source_model.slug}, creating."
+            destination_object = source_model.amoeba_dup
+          end
+
+          if destination_object.save
+            puts "  Synced #{source_model.slug} to #{destination_object.slug}."
+          end
+        end
+      end
+    end
+  end
 end
