@@ -66,9 +66,16 @@ namespace :tenants do
   end
 
   task sync_between_tenants: :environment do
+    task_name = 'Sync Tenants Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     TenantSyncConfiguration.all.each do |tenant_sync|
       puts "Source tenant: '#{tenant_sync.tenant_source}'."
       puts "Destination tenant: '#{tenant_sync.tenant_destination}'."
+
+      Apartment::Tenant.switch!
+      tracking_task_log(task_name, "Processing tenant sync: '#{tenant_sync.name}'.")
 
       tenant_sync.sync_configuration['models'].each do |synchronized_model_name|
         Apartment::Tenant.switch!(tenant_sync.tenant_source)
@@ -93,5 +100,8 @@ namespace :tenants do
         end
       end
     end
+
+    Apartment::Tenant.switch!
+    tracking_task_finish(task_name)
   end
 end

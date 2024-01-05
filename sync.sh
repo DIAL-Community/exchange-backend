@@ -28,5 +28,6 @@ rake opportunities_sync:sync_leverist               || exit_code+=" 18"
 rake opportunities_sync:sync_ungm                   || exit_code+=" 19"
 rake opportunity:close_opportunities                || exit_code+=" 20"
 rake govstack:sync_govstack_procurements            || exit_code+=" 21"
+rake tenants:sync_between_tenants                   || exit_code+=" 22"
 
 echo $exit_code
