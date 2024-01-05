@@ -930,7 +930,7 @@ type Mutation {
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
   createStarredObject(sourceObjectType: String!, sourceObjectValue: String!, starredObjectType: String!, starredObjectValue: String!): CreateStarredObjectPayload
-  createSync(description: String!, destination: String!, name: String!, slug: String!, source: String!): CreateSyncPayload
+  createSync(description: String!, destination: String!, name: String!, slug: String!, source: String!, synchronizedModels: [String!]!): CreateSyncPayload
   createTag(description: String, name: String!, slug: String!): CreateTagPayload
   createTaskTracker(description: String!, name: String!, slug: String!): CreateTaskTrackerPayload
   createUseCase(description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, markdownUrl: String = null, maturity: String!, name: String!, sectorSlug: String!, slug: String!): CreateUseCasePayload

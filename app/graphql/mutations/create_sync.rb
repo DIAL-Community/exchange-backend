@@ -13,10 +13,12 @@ module Mutations
     argument :source, String, required: true
     argument :destination, String, required: true
 
+    argument :synchronized_models, [String], required: true
+
     field :sync, Types::SyncType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, name:, description:, source:, destination:)
+    def resolve(slug:, name:, description:, source:, destination:, synchronized_models:)
       unless an_admin
         return {
           sync: nil,
@@ -44,6 +46,7 @@ module Mutations
 
       sync.tenant_source = source
       sync.tenant_destination = destination
+      sync.sync_configuration['models'] = synchronized_models
 
       successful_operation = false
       ActiveRecord::Base.transaction do
