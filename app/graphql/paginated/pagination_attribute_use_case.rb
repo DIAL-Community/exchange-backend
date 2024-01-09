@@ -10,7 +10,7 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sdgs:, show_beta:, show_gov_stack_only:)
-      unless unsecure_read_allowed
+      if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
       end
 

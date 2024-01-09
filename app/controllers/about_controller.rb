@@ -11,6 +11,9 @@ class AboutController < ApplicationController
   end
 
   def tenant
-    render(json: { "tenant": Apartment::Tenant.current })
+    render(json: {
+      "tenant": Apartment::Tenant.current,
+      "hostname": URI.parse(request.referrer).host
+    })
   end
 end
