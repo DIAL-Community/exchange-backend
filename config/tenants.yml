@@ -3,4 +3,5 @@ tenants:
     urls: 
       - url: fao.localhost
       - url: fao.dial.community
+    allow_unsecure_read: false
 adminPassword: Admin123

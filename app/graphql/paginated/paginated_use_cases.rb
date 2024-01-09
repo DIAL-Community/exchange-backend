@@ -10,6 +10,10 @@ module Paginated
     type [Types::UseCaseType], null: false
 
     def resolve(search:, sdgs:, show_beta:, show_gov_stack_only:, offset_attributes:)
+      unless unsecure_read_allowed
+        return []
+      end
+
       use_cases = UseCase.order(:name).distinct
       unless search.blank?
         name_filter = use_cases.name_contains(search)

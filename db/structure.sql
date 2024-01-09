@@ -1379,7 +1379,8 @@ CREATE TABLE public.exchange_tenants (
     domain character varying,
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecure_read boolean NOT NULL
 );
 
 
@@ -8270,6 +8271,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231201214658'),
 ('20231207212017'),
 ('20231209110335'),
-('20231211144224');
+('20231211144224'),
+('20240109024648');
 
 
