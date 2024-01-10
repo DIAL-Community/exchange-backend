@@ -31,15 +31,6 @@ module Queries
           end
         end
         use_case.workflows = workflows.sort_by { |w| w.name.downcase }
-
-        # Append each step's building block list to the use case's building block list
-        building_blocks = []
-        if use_case.use_case_steps && !use_case.use_case_steps.empty?
-          use_case.use_case_steps.each do |use_case_step|
-            building_blocks |= use_case_step.building_blocks
-          end
-        end
-        use_case.building_blocks = building_blocks.sort_by(&:display_order)
       end
       use_case
     end
