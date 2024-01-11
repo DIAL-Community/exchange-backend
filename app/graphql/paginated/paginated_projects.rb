@@ -14,6 +14,10 @@ module Paginated
     type [Types::ProjectType], null: false
 
     def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       projects = Project.all
       if !search.nil? && !search.to_s.strip.empty?
         name_projects = projects.name_contains(search)

@@ -9,6 +9,10 @@ module Paginated
     type [Types::WorkflowType], null: false
 
     def resolve(search:, sdgs:, use_cases:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       workflows = Workflow.order(:name)
       unless search.blank?
         name_filter = Workflow.name_contains(search).distinct

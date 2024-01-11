@@ -8,6 +8,10 @@ module Paginated
     type [Types::PlaybookType], null: false
 
     def resolve(search:, tags:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       playbooks = Playbook.all.order(:name)
       unless an_admin || a_content_editor
         playbooks = playbooks.where(draft: false)
