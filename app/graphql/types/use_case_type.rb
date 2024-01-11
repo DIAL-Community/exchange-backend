@@ -76,6 +76,16 @@ module Types
     end
 
     field :workflows, [Types::WorkflowType], null: true
+    def workflows
+      use_case_workflows = []
+      if !object.use_case_steps.nil? && !object.use_case_steps.empty?
+        object.use_case_steps.each do |use_case_step|
+          use_case_workflows |= use_case_step.workflows
+        end
+      end
+      use_case_workflows.sort_by { |w| w.name.downcase }
+    end
+
     field :tags, GraphQL::Types::JSON, null: true
     field :sector, Types::SectorType, null: false
   end
