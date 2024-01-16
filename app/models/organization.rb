@@ -215,7 +215,7 @@ class Organization < ApplicationRecord
           only: %i[name city],
           include: {
             country: { only: %i[name slug code] },
-            region: { only: [:name] }
+            province: { only: [:name] }
           }
         },
         products: { only: %i[name slug] },
