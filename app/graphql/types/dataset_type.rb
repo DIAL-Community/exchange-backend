@@ -44,6 +44,9 @@ module Types
     field :origins, [Types::OriginType], null: true
     field :organizations, [Types::OrganizationType], null: true
     field :countries, [Types::CountryType], null: true
+    def countries
+      object.countries&.order(:name)
+    end
 
     field :sustainable_development_goals, [Types::SustainableDevelopmentGoalType], null: true
     field :sustainable_development_goal_mapping, String,
