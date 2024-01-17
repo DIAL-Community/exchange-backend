@@ -23938,30 +23938,6 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "spotlightOnly",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  },
-                  "defaultValue": "false",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "spotlightLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "1",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -26062,18 +26038,6 @@
                     "ofType": null
                   },
                   "defaultValue": "3",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "spotlightLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "1",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
