@@ -30,7 +30,6 @@ module Mutations
     argument :show_in_wizard, Boolean, required: false
 
     argument :featured, Boolean, required: false
-    argument :spotlight, Boolean, required: false
 
     argument :organization_slug, String, required: false, default_value: nil
 
@@ -39,7 +38,7 @@ module Mutations
 
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
-      show_in_exchange: false, show_in_wizard: false, featured: false, spotlight: false,
+      show_in_exchange: false, show_in_wizard: false, featured: false,
       resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:,
       author_name:, author_email:, organization_slug:
     )
@@ -82,7 +81,6 @@ module Mutations
       resource.source = source
 
       resource.featured = featured
-      resource.spotlight = spotlight
 
       resource.image_url = image_url
       resource.description = description

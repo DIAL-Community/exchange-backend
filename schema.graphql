@@ -909,7 +909,7 @@ type Mutation {
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
-  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null, spotlight: Boolean): CreateResourcePayload
+  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null): CreateResourcePayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
@@ -1732,7 +1732,6 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: String
-  spotlight: Boolean!
   tags: JSON!
 }
 
