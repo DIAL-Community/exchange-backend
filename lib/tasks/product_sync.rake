@@ -4,7 +4,7 @@ require 'modules/slugger'
 
 namespace :product_sync do
   desc 'Sync Digital Square implementation countries.'
-  task sync_digital_square_implementation: :environment do
+  task digital_square_implementation: :environment do
     # Data pulled from: https://digitalsquare.org/global-goods-map
     # Saved under data/digital-square-implementations.csv
 
