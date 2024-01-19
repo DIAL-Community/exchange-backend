@@ -41,10 +41,9 @@ namespace :gdpir_sync do
     dpi_body = outer_dpi_accordion_item.at_css('div.accordion-body')
     dpi_body_links = dpi_body.css('a')
     dpi_body_links.each do |dpi_body_link|
-      puts "  Processing link: #{dpi_body_link.attr('href')}."
-
-      dpi_body_link_logo = dpi_body_link.at_css('img')
-      puts "  Processing logo: #{dpi_body_link_logo.attr('src')}." unless dpi_body_link_logo.nil?
+      dpi_product_url = dpi_body_link.attr('href')
+      dpi_product_logo_url = dpi_body_link.at_css('img')
+      process_dpi_product(dpi_product_url, dpi_product_logo_url)
     end
 
     dpi_accordion_items = outer_dpi_accordion_item.css('div.accordion-item')
@@ -79,13 +78,13 @@ namespace :gdpir_sync do
     product = Product.find_by(id: (name_products.ids + desc_products.ids + alias_products.ids).uniq.first)
 
     # Skip if the product already exists and is manually updated already.
-    next if product.manual_update
+    return if !product.nil? && product.manual_update
 
     if product.nil?
       product = Product.new(
         name: dpi_product_title,
         slug: slug_em(dpi_product_title),
-        website: dpi_product_url
+        website: cleanup_url(dpi_product_url)
       )
     end
 
@@ -97,7 +96,11 @@ namespace :gdpir_sync do
       containers = html_fragment.css('section#aadhaar-card > div.container-fluid')
       containers.each do |container|
         container_title_element = container.at_css('h3')
+        container_title_element.xpath('//@*').remove
         puts "    Processing: #{container_title_element.text.strip}."
+        description += <<~EOF
+          #{container_title_element}
+        EOF
 
         container_body_element = container_title_element.next_element
         next if container_body_element.nil?
