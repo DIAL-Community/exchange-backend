@@ -11,10 +11,25 @@ namespace :gdpir_sync do
   task sync_products: :environment do
     gdpir_dpi_url = 'https://www.dpi.global/globaldpi/dpicatedata'
 
+    gdpir_origin = Origin.find_by(slug: 'gdpir')
+    if gdpir_origin.nil?
+      gdpir_origin = Origin.new
+      gdpir_origin.name = 'GDPIR'
+      gdpir_origin.slug = 'gdpir'
+      gdpir_origin.description = 'The Global Digital Public Infrastructure Repository'
+
+      puts 'FAO as origin is created.' if gdpir_origin.save!
+    end
+
     puts "Opening: #{gdpir_dpi_url}."
     response = Faraday.get(gdpir_dpi_url)
     puts "Response status: #{response.status}."
     break unless response.status == 200
+
+    category_to_building_block_map = {
+      'Payment' => 'Payments',
+      'Data Exchange' => 'Information Mediator'
+    }
 
     html_fragment = Nokogiri::HTML.fragment(response.body)
 
@@ -38,12 +53,19 @@ namespace :gdpir_sync do
     dpi_header_title = outer_dpi_accordion_item.at_css('h2.accordion-header').text.strip
     puts "Processing: #{dpi_header_title}."
 
+    building_block = BuildingBlock.find_by(name: dpi_header_title)
+    if building_block.nil?
+      mapped_category = category_to_building_block_map[dpi_header_title]
+      building_block = BuildingBlock.find_by(name: mapped_category)
+    end
+    puts "  Mapped to building block: #{building_block.name}." unless building_block.nil?
+
     dpi_body = outer_dpi_accordion_item.at_css('div.accordion-body')
     dpi_body_links = dpi_body.css('a')
     dpi_body_links.each do |dpi_body_link|
       dpi_product_url = dpi_body_link.attr('href')
       dpi_product_logo_url = dpi_body_link.at_css('img')
-      process_dpi_product(dpi_product_url, dpi_product_logo_url)
+      process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
     end
 
     dpi_accordion_items = outer_dpi_accordion_item.css('div.accordion-item')
@@ -51,17 +73,24 @@ namespace :gdpir_sync do
       dpi_header_title = dpi_accordion_item.at_css('h2.accordion-header').text.strip
       puts "Processing: #{dpi_header_title}."
 
+      building_block = BuildingBlock.find_by(name: dpi_header_title)
+      if building_block.nil?
+        mapped_category = category_to_building_block_map[dpi_header_title]
+        building_block = BuildingBlock.find_by(name: mapped_category)
+      end
+      puts "  Mapped to building block: #{building_block.name}." unless building_block.nil?
+
       dpi_body = dpi_accordion_item.at_css('div.accordion-body')
       dpi_body_links = dpi_body.css('a')
       dpi_body_links.each do |dpi_body_link|
         dpi_product_url = dpi_body_link.attr('href')
         dpi_product_logo_url = dpi_body_link.at_css('img')
-        process_dpi_product(dpi_product_url, dpi_product_logo_url)
+        process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
       end
     end
   end
 
-  def process_dpi_product(dpi_product_url, dpi_product_logo_url)
+  def process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
     response = Faraday.get(dpi_product_url)
     puts "  Product url: #{dpi_product_url}."
     puts "    Response status: #{response.status}."
@@ -88,13 +117,24 @@ namespace :gdpir_sync do
       )
     end
 
+    unless building_block.nil?
+      product.building_blocks << building_block unless product.building_blocks.include?(building_block)
+    end
+
+    gdpir_origin = Origin.find_by(slug: 'gdpir')
+    product.origins << gdpir_origin unless product.origins.include?(gdpir_origin) || gdpir_origin.nil?
+
     successful_operation = false
     ActiveRecord::Base.transaction do
       product.save
 
       description = ''
-      containers = html_fragment.css('section#aadhaar-card > div.container-fluid')
-      containers.each do |container|
+      section_container = html_fragment.at_css('section')
+      section_container_children = section_container.children
+
+      section_container_children.each do |container|
+        next if container.name != 'div'
+
         container_title_element = container.at_css('h3')
         container_title_element.xpath('//@*').remove
         puts "    Processing: #{container_title_element.text.strip}."
