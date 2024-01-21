@@ -1311,6 +1311,7 @@ type Product {
   productIndicators: [ProductIndicator!]
   productType: String!
   projects: [Project!]
+  resources: [Resource!]
   sdgs: [SustainableDevelopmentGoal!]
   sdgsMappingStatus: String
   sectors: [Sector!]
