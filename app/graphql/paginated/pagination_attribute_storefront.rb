@@ -12,6 +12,10 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sectors:, countries:, building_blocks:, specialties:, certifications:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       organizations = Organization.order(:name).where(has_storefront: true)
 
       unless search.blank?

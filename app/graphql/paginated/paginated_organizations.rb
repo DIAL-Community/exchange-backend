@@ -12,6 +12,10 @@ module Paginated
     type [Types::OrganizationType], null: false
 
     def resolve(search:, sectors:, countries:, years:, aggregator_only:, endorser_only:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       organizations = Organization.order(:name)
       organizations = organizations.where(is_mni: true) if aggregator_only
       organizations = organizations.where(is_endorser: true) if endorser_only
