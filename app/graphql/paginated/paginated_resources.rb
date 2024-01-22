@@ -28,6 +28,10 @@ module Paginated
       featured_only:, featured_length:, spotlight_only:, spotlight_length:,
       resource_types:, resource_topics:, tags:, countries:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       # Sort resources by:
       # - spotlight
       # - featured

@@ -19,6 +19,10 @@ module Paginated
       search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:,
       show_mature:, show_gov_stack_only:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       building_blocks = BuildingBlock.order(:name).distinct if filter_blocks.empty?
       building_blocks = BuildingBlock.where(id: filter_blocks) if filter_blocks.any?
 

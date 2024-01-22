@@ -7,6 +7,10 @@ module Paginated
     type [Types::CityType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       cities = City.order(:name)
       unless search.blank?
         cities = cities.name_contains(search)
