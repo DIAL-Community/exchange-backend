@@ -11135,18 +11135,6 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "spotlight",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
                   "name": "organizationSlug",
                   "description": null,
                   "type": {
@@ -14558,6 +14546,59 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateProductProjectsPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateProductResources",
+              "description": null,
+              "args": [
+                {
+                  "name": "resourceSlugs",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "NON_NULL",
+                        "name": null,
+                        "ofType": {
+                          "kind": "SCALAR",
+                          "name": "String",
+                          "ofType": null
+                        }
+                      }
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateProductResourcesPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -19147,6 +19188,28 @@
               "deprecationReason": null
             },
             {
+              "name": "resources",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Resource",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "sdgs",
               "description": null,
               "args": [
@@ -22851,6 +22914,26 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "countries",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -23307,6 +23390,26 @@
                     "ofType": null
                   },
                   "defaultValue": "\"\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "countries",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -23934,30 +24037,6 @@
                     "ofType": null
                   },
                   "defaultValue": "3",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "spotlightOnly",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  },
-                  "defaultValue": "false",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "spotlightLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "1",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -25157,6 +25236,26 @@
                   "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
+                },
+                {
+                  "name": "countries",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -25519,6 +25618,26 @@
                     "ofType": null
                   },
                   "defaultValue": "\"\"",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "countries",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "String",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": "[]",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -26062,18 +26181,6 @@
                     "ofType": null
                   },
                   "defaultValue": "3",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "spotlightLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "1",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -29391,24 +29498,6 @@
               "deprecationReason": null
             },
             {
-              "name": "spotlight",
-              "description": null,
-              "args": [
-
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "tags",
               "description": null,
               "args": [
@@ -32321,6 +32410,55 @@
           "kind": "OBJECT",
           "name": "UpdateProductProjectsPayload",
           "description": "Autogenerated return type of UpdateProductProjects.",
+          "fields": [
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "product",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Product",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UpdateProductResourcesPayload",
+          "description": "Autogenerated return type of UpdateProductResources.",
           "fields": [
             {
               "name": "errors",

@@ -909,7 +909,7 @@ type Mutation {
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
-  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null, spotlight: Boolean): CreateResourcePayload
+  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null): CreateResourcePayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
@@ -978,6 +978,7 @@ type Mutation {
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
   updateProductOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
   updateProductProjects(projectSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
+  updateProductResources(resourceSlugs: [String!]!, slug: String!): UpdateProductResourcesPayload
   updateProductSdgs(mappingStatus: String!, sdgSlugs: [String!]!, slug: String!): UpdateProductSdgsPayload
   updateProductSectors(sectorSlugs: [String!]!, slug: String!): UpdateProductSectorsPayload
   updateProductTags(slug: String!, tagNames: [String!]!): UpdateProductTagsPayload
@@ -1311,6 +1312,7 @@ type Product {
   productIndicators: [ProductIndicator!]
   productType: String!
   projects: [Project!]
+  resources: [Resource!]
   sdgs: [SustainableDevelopmentGoal!]
   sdgsMappingStatus: String
   sectors: [Sector!]
@@ -1477,14 +1479,14 @@ type Query {
   paginatedCities(offsetAttributes: OffsetAttributes!, search: String = ""): [City!]!
   paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Contact!]!
   paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
-  paginatedDatasets(datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
+  paginatedDatasets(countries: [String!] = [], datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
   paginatedPlaybooks(offsetAttributes: OffsetAttributes!, search: String = "", tags: [String!] = []): [Playbook!]!
-  paginatedProducts(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
+  paginatedProducts(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedRegions(offsetAttributes: OffsetAttributes!, search: String = ""): [Region!]!
-  paginatedResources(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, featuredOnly: Boolean = false, offsetAttributes: OffsetAttributes!, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, spotlightLength: Int = 1, spotlightOnly: Boolean = false, tags: [String!] = []): [Resource!]!
+  paginatedResources(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, featuredOnly: Boolean = false, offsetAttributes: OffsetAttributes!, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, tags: [String!] = []): [Resource!]!
   paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
   paginatedStorefronts(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], specialties: [String!] = []): [Organization!]!
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
@@ -1501,14 +1503,14 @@ type Query {
   paginationAttributeCity(search: String = ""): PaginationAttributes!
   paginationAttributeContact(search: String = ""): PaginationAttributes!
   paginationAttributeCountry(search: String = ""): PaginationAttributes!
-  paginationAttributeDataset(datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
+  paginationAttributeDataset(countries: [String!] = [], datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
   paginationAttributePlaybook(search: String = "", tags: [String!] = []): PaginationAttributes!
-  paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeProduct(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeRegion(search: String = ""): PaginationAttributes!
-  paginationAttributeResource(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, spotlightLength: Int = 1, tags: [String!] = []): PaginationAttributes!
+  paginationAttributeResource(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, tags: [String!] = []): PaginationAttributes!
   paginationAttributeSector(search: String = ""): PaginationAttributes!
   paginationAttributeStorefront(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], search: String = "", sectors: [String!] = [], specialties: [String!] = []): PaginationAttributes!
   paginationAttributeTag(search: String = ""): PaginationAttributes!
@@ -1732,7 +1734,6 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: String
-  spotlight: Boolean!
   tags: JSON!
 }
 
@@ -2073,6 +2074,14 @@ type UpdateProductOrganizationsPayload {
 Autogenerated return type of UpdateProductProjects.
 """
 type UpdateProductProjectsPayload {
+  errors: [String!]
+  product: Product
+}
+
+"""
+Autogenerated return type of UpdateProductResources.
+"""
+type UpdateProductResourcesPayload {
   errors: [String!]
   product: Product
 }

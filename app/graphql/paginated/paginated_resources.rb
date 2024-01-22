@@ -16,8 +16,6 @@ module Paginated
     argument :compartmentalized, Boolean, required: true, default_value: false
     argument :featured_only, Boolean, required: false, default_value: false
     argument :featured_length, Integer, required: false, default_value: 3
-    argument :spotlight_only, Boolean, required: false, default_value: false
-    argument :spotlight_length, Integer, required: false, default_value: 1
 
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
 
@@ -25,34 +23,26 @@ module Paginated
 
     def resolve(
       search:, show_in_wizard:, show_in_exchange:, offset_attributes:, compartmentalized:,
-      featured_only:, featured_length:, spotlight_only:, spotlight_length:,
-      resource_types:, resource_topics:, tags:, countries:
+      featured_only:, featured_length:, resource_types:, resource_topics:, tags:, countries:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       # Sort resources by:
-      # - spotlight
       # - featured
       # - published_date
       #
       # Offset calculation steps:
-      # - Find spotlight resource
-      # - If spotlight resource found, offset = offset + 1
-      # - Return the next 3 resources
-      #   - The 3 will be either all 3 featured resources or some
+      # - Return the 3 featured resources
 
       resources = Resource
-                  .order(spotlight: :desc)
                   .order(featured: :desc)
                   .order(published_date: :desc)
 
       current_offset = 0
       featured_resources = []
-      spotlight_resources = []
       if compartmentalized
-        spotlight_resources = resources.where(spotlight: true).limit(spotlight_length).offset(current_offset)
-        return spotlight_resources if spotlight_only
-
-        current_offset += spotlight_length unless spotlight_resources.empty?
-
         featured_resources = resources.where(featured: true).limit(featured_length).offset(current_offset)
         return featured_resources if featured_only
       end
@@ -80,14 +70,13 @@ module Paginated
         resources = resources.where(
           "resources.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
           "resources.tags @> '{#{filtered_tags.join(',')}}'::varchar[] or " \
-          "resources.spotlight is true or resources.featured is true"
+          "resources.featured is true"
         )
       end
 
       resources = resources.where(show_in_exchange: true) if show_in_exchange
       resources = resources.where(show_in_wizard: true) if show_in_wizard
 
-      resources = resources.where.not(id: spotlight_resources.ids) unless spotlight_resources.empty?
       resources = resources.where.not(id: featured_resources.ids) unless featured_resources.empty?
 
       # We need to add the following records to make sure we're returning the correct offset

@@ -39,7 +39,6 @@ module Types
     field :tags, GraphQL::Types::JSON, null: false
 
     field :featured, Boolean, null: false
-    field :spotlight, Boolean, null: false
 
     field :published_date, GraphQL::Types::ISO8601Date, null: true
 

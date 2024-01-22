@@ -7,6 +7,10 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       tags = Tag.order(:name)
       unless search.blank?
         name_filter = tags.name_contains(search)

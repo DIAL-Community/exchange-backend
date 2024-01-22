@@ -12,7 +12,6 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $description: String
         $publishedDate: ISO8601Date!
         $featured: Boolean
-        $spotlight: Boolean
         $resourceLink: String
         $resourceType: String
         $resourceTopic: String
@@ -29,7 +28,6 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           description: $description
           publishedDate: $publishedDate
           featured: $featured
-          spotlight: $spotlight
           resourceLink: $resourceLink
           resourceType: $resourceType
           resourceTopic: $resourceTopic

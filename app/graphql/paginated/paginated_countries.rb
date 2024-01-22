@@ -7,6 +7,10 @@ module Paginated
     type [Types::CountryType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       countries = Country.order(:name)
       unless search.blank?
         countries = countries.name_contains(search)
