@@ -9,6 +9,10 @@ require 'modules/url_sanitizer'
 namespace :gdpir_sync do
   desc 'Scrape the GDPIR website for products.'
   task sync_products: :environment do
+    task_name = 'Sync GDPIR Products'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
     gdpir_dpi_url = 'https://www.dpi.global/globaldpi/dpicatedata'
 
     gdpir_origin = Origin.find_by(slug: 'gdpir')
@@ -88,6 +92,8 @@ namespace :gdpir_sync do
         process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
       end
     end
+
+    tracking_task_finish(task_name)
   end
 
   def process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
@@ -98,6 +104,9 @@ namespace :gdpir_sync do
 
     html_fragment = Nokogiri::HTML.fragment(response.body)
     dpi_product_title = html_fragment.at_css('h5').text.strip
+
+    task_name = 'Sync GDPIR Products'
+    tracking_task_log(task_name, "Processing: #{dpi_product_title}.")
     puts "    Processing: #{dpi_product_title}."
 
     name_products = Product.name_contains(dpi_product_title)
@@ -150,6 +159,35 @@ namespace :gdpir_sync do
           #{container_body_element}
         EOF
       end
+
+      # contact_section = section_container.at_css('section h3')
+      # unless contact_section.nil?
+      #   puts "    Processing: #{contact_section.text.strip}."
+      #   description += <<~EOF
+      #     #{contact_section}
+      #   EOF
+
+      #   contact_section_body = contact_section.next_element
+      #   description += <<~EOF
+      #     #{contact_section_body}
+      #   EOF
+      # end
+
+      # repository_section_headers = section_container.css('section h5')
+      # repository_section_headers.each do |repository_section_header|
+      #   next if repository_section_header.nil?
+
+      #   puts "    Processing: #{repository_section_header.text.strip}."
+      #   description += <<~EOF
+      #     #{repository_section_header}
+      #   EOF
+
+      #   repository_hr_element = repository_section_header.next_element
+      #   repository_section_body = repository_hr_element.next_element
+      #   description += <<~EOF
+      #     #{repository_section_body}
+      #   EOF
+      # end
 
       unless description.blank?
         product_description = ProductDescription.find_by(product_id: product.id, locale: I18n.locale)
