@@ -909,7 +909,7 @@ type Mutation {
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
-  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null, spotlight: Boolean): CreateResourcePayload
+  createResource(authorEmail: String = null, authorName: String!, description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopic: String = null, resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null): CreateResourcePayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
@@ -1484,7 +1484,7 @@ type Query {
   paginatedProducts(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedRegions(offsetAttributes: OffsetAttributes!, search: String = ""): [Region!]!
-  paginatedResources(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, featuredOnly: Boolean = false, offsetAttributes: OffsetAttributes!, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, spotlightLength: Int = 1, spotlightOnly: Boolean = false, tags: [String!] = []): [Resource!]!
+  paginatedResources(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, featuredOnly: Boolean = false, offsetAttributes: OffsetAttributes!, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, tags: [String!] = []): [Resource!]!
   paginatedSectors(offsetAttributes: OffsetAttributes!, search: String = ""): [Sector!]!
   paginatedStorefronts(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], specialties: [String!] = []): [Organization!]!
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
@@ -1508,7 +1508,7 @@ type Query {
   paginationAttributeProduct(buildingBlocks: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeRegion(search: String = ""): PaginationAttributes!
-  paginationAttributeResource(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, spotlightLength: Int = 1, tags: [String!] = []): PaginationAttributes!
+  paginationAttributeResource(compartmentalized: Boolean! = false, countries: [String!] = [], featuredLength: Int = 3, resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, tags: [String!] = []): PaginationAttributes!
   paginationAttributeSector(search: String = ""): PaginationAttributes!
   paginationAttributeStorefront(buildingBlocks: [String!] = [], certifications: [String!] = [], countries: [String!] = [], search: String = "", sectors: [String!] = [], specialties: [String!] = []): PaginationAttributes!
   paginationAttributeTag(search: String = ""): PaginationAttributes!
@@ -1732,7 +1732,6 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: String
-  spotlight: Boolean!
   tags: JSON!
 }
 
