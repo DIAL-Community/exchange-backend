@@ -1725,7 +1725,8 @@ CREATE TABLE fao.exchange_tenants (
     domain character varying,
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecure_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -4021,6 +4022,44 @@ ALTER SEQUENCE fao.task_trackers_id_seq OWNED BY fao.task_trackers.id;
 
 
 --
+-- Name: tenant_sync_configurations; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.tenant_sync_configurations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    tenant_source character varying NOT NULL,
+    tenant_destination character varying NOT NULL,
+    sync_enabled boolean DEFAULT true NOT NULL,
+    sync_configuration json DEFAULT '{}'::json NOT NULL,
+    last_sync_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.tenant_sync_configurations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.tenant_sync_configurations_id_seq OWNED BY fao.tenant_sync_configurations.id;
+
+
+--
 -- Name: use_case_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -5498,7 +5537,8 @@ CREATE TABLE public.exchange_tenants (
     domain character varying,
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecure_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -8920,6 +8960,13 @@ ALTER TABLE ONLY fao.task_trackers ALTER COLUMN id SET DEFAULT nextval('fao.task
 
 
 --
+-- Name: tenant_sync_configurations id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.tenant_sync_configurations ALTER COLUMN id SET DEFAULT nextval('fao.tenant_sync_configurations_id_seq'::regclass);
+
+
+--
 -- Name: use_case_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -10473,6 +10520,14 @@ ALTER TABLE ONLY fao.task_tracker_descriptions
 
 ALTER TABLE ONLY fao.task_trackers
     ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_sync_configurations tenant_sync_configurations_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.tenant_sync_configurations
+    ADD CONSTRAINT tenant_sync_configurations_pkey PRIMARY KEY (id);
 
 
 --
@@ -16328,6 +16383,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231207212017'),
 ('20231209110335'),
 ('20231211144224'),
-('20240104215749');
+('20240104215749'),
+('20240109024648');
 
 

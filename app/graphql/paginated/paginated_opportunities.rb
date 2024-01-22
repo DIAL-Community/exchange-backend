@@ -30,6 +30,10 @@ module Paginated
       show_gov_stack_only:,
       offset_attributes:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       opportunities = Opportunity.order_by_status.order(:closing_date)
       unless search.blank?
         description_query = 'LOWER(opportunities.description) like LOWER(?)'

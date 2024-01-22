@@ -13,7 +13,11 @@ namespace :tenants do
 
       tenant['urls'].each do |url|
         # Add to Tenants table in database
-        ExchangeTenant.create(tenant_name: tenant['name'], domain: url['url'])
+        ExchangeTenant.create(
+          tenant_name: tenant['name'],
+          domain: url['url'],
+          allow_unsecure_read: tenant['allow_unsecure_read']
+        )
       end
     end
   end

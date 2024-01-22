@@ -14,6 +14,10 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       projects = Project.all
       if !search.nil? && !search.to_s.strip.empty?
         name_projects = projects.name_contains(search)

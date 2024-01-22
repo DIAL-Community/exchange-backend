@@ -9,6 +9,10 @@ module Paginated
     def resolve(search:, offset_attributes:)
       return [] unless an_admin
 
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       contacts = Contact.order(:name)
       unless search.blank?
         contacts = contacts.name_contains(search)

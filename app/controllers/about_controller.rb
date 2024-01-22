@@ -11,7 +11,12 @@ class AboutController < ApplicationController
   end
 
   def tenant
-    render(json: { "tenant": Apartment::Tenant.current })
+    current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
+    render(json: {
+      "hostname": request.referrer.blank? ? 'default' : URI.parse(request.referrer).hostname,
+      'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecure_read,
+      "tenant": current_tenant.nil? ? 'default' : current_tenant.tenant_name
+    })
   end
 
   def tenants

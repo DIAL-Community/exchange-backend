@@ -23,6 +23,10 @@ module Paginated
       featured_length:, spotlight_length:,
       resource_types:, resource_topics:, tags:, countries:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       resources = Resource
                   .order(spotlight: :desc)
                   .order(featured: :desc)
