@@ -58,6 +58,8 @@ module Types
     field :endorsers, [Types::EndorserType], null: true
     field :organizations, [Types::OrganizationType], null: true
 
+    field :resources, [Types::ResourceType], null: true
+
     field :current_projects, [Types::ProjectType], null: true do
       argument :first, Integer, required: false
     end

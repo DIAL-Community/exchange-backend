@@ -1725,7 +1725,8 @@ CREATE TABLE fao.exchange_tenants (
     domain character varying,
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecure_read boolean DEFAULT true NOT NULL
 );
 
 
