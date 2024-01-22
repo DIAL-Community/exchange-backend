@@ -7,6 +7,10 @@ module Paginated
     type [Types::CandidateRoleType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       return [] unless an_admin
 
       candidate_products = CandidateRole.order(rejected: :desc)

@@ -75,6 +75,10 @@ module Paginated
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, offset_attributes:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       products = Product.order(:name).distinct
 
       filtered, filtered_building_blocks = filter_building_blocks(

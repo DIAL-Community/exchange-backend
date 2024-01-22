@@ -13,6 +13,10 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sectors:, sdgs:, tags:, origins:, dataset_types:, countries:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       datasets = Dataset.order(:name)
       unless search.blank?
         name_filter = datasets.name_contains(search)

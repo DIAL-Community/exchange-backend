@@ -7,6 +7,10 @@ module Paginated
     type [Types::CandidateDatasetType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       return [] unless an_admin
 
       candidate_products = CandidateDataset.order(rejected: :desc)
