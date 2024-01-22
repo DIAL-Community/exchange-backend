@@ -93,6 +93,14 @@ class Product < ApplicationRecord
   has_many :product_countries
   has_many :countries, through: :product_countries
 
+  has_and_belongs_to_many(
+    :resources,
+     join_table: :products_resources,
+     dependent: :delete_all,
+     after_add: :association_add,
+     before_remove: :association_remove
+  )
+
   validates :name, presence: true, length: { maximum: 300 }
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }

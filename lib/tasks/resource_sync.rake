@@ -151,7 +151,7 @@ namespace :resource_sync do
     end
 
     if successful_operation
-      puts "Resource '#{resource.name}' record saved."
+      puts "  Resource '#{resource.name}' record saved."
     end
   end
 end

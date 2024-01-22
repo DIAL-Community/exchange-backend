@@ -3,6 +3,7 @@
 module Paginated
   class PaginatedProducts < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
+    argument :countries, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
     argument :building_blocks, [String], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
@@ -71,8 +72,8 @@ module Paginated
     end
 
     def resolve(
-      search:, use_cases:, building_blocks:, sectors:, tags:, license_types:, workflows:, sdgs:, origins:,
-      is_linked_with_dpi:, show_gov_stack_only:, offset_attributes:
+      search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
+      workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, offset_attributes:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
@@ -104,6 +105,12 @@ module Paginated
                             .ids
 
         products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
+      end
+
+      filtered_countries = countries.reject { |x| x.nil? || x.empty? }
+      unless filtered_countries.empty?
+        products = products.joins(:countries)
+                           .where(countries: { id: filtered_countries })
       end
 
       filtered_origins = origins.reject { |x| x.nil? || x.empty? }

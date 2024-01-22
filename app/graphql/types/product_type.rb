@@ -40,6 +40,9 @@ module Types
     field :main_repository, Types::ProductRepositoryType, null: true
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized
     field :countries, [Types::CountryType], null: true
+    def countries
+      object.countries&.order(:name)
+    end
 
     field :product_descriptions, [Types::ProductDescriptionType], null: true
     field :product_description, Types::ProductDescriptionType, null: true,
@@ -57,6 +60,8 @@ module Types
     field :origins, [Types::OriginType], null: true
     field :endorsers, [Types::EndorserType], null: true
     field :organizations, [Types::OrganizationType], null: true
+
+    field :resources, [Types::ResourceType], null: true
 
     field :current_projects, [Types::ProjectType], null: true do
       argument :first, Integer, required: false
