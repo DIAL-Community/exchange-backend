@@ -7,6 +7,10 @@ module Paginated
     type [Types::RegionType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       regions = Region.order(:name)
       unless search.blank?
         regions = regions.name_contains(search)
