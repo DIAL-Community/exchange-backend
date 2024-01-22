@@ -136,6 +136,16 @@ module Modules
           end
         end
 
+        deployment_countries = json_data['locations']['deploymentCountries']
+        if !deployment_countries.nil? && !deployment_countries.empty?
+          deployment_countries.each do |deployment_country|
+            country = Country.find_by(name: deployment_country)
+            next if country.nil?
+
+            existing_dataset.countries << country unless existing_dataset.countries.include?(country)
+          end
+        end
+
         ActiveRecord::Base.transaction do
           if is_new || !existing_dataset.manual_update
             existing_dataset.save!
@@ -242,6 +252,16 @@ module Modules
 
         if json_data['stage'] == 'DPG' && !existing_product.endorsers.include?(dpga_endorser)
           existing_product.endorsers << dpga_endorser
+        end
+
+        deployment_countries = json_data['locations']['deploymentCountries']
+        if !deployment_countries.nil? && !deployment_countries.empty?
+          deployment_countries.each do |deployment_country|
+            country = Country.find_by(name: deployment_country)
+            next if country.nil?
+
+            existing_product.countries << country unless existing_product.countries.include?(country)
+          end
         end
 
         ActiveRecord::Base.transaction do
