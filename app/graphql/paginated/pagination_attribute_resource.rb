@@ -21,6 +21,10 @@ module Paginated
       search:, show_in_exchange:, show_in_wizard:, compartmentalized:,
       featured_length:, resource_types:, resource_topics:, tags:, countries:
     )
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return { total_count: 0 }
+      end
+
       resources = Resource
                   .order(featured: :desc)
                   .order(published_date: :desc)
