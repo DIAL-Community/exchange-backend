@@ -33,7 +33,7 @@ build_rails:
   tags:
     - rails
   stage: build
-  timeout: 30m
+  timeout: 60m
   script:
     - apt-get update -yy && apt-get install build-essential libpq-dev postgresql postgresql-contrib cmake -y
     - gem install bundler:2.4.10
