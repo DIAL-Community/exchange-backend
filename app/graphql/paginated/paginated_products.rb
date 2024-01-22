@@ -95,7 +95,7 @@ module Paginated
         end
       end
 
-      if !search.nil? && !search.to_s.strip.empty?
+      if !search.nil? && !search.to_s.strip.blank?
         name_products = products.name_contains(search)
         desc_products = products.joins(:product_descriptions)
                                 .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{search}%")

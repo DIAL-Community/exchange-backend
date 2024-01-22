@@ -160,34 +160,134 @@ namespace :gdpir_sync do
         EOF
       end
 
-      # contact_section = section_container.at_css('section h3')
-      # unless contact_section.nil?
-      #   puts "    Processing: #{contact_section.text.strip}."
-      #   description += <<~EOF
-      #     #{contact_section}
-      #   EOF
+      # Processing section with image. This section usually have h1 as the title.
+      # Expected structure:
+      # <section>
+      #   <h1>Architecture</h1>
+      #   <img src="image_source" width="70%" height="70%" alt="Title" />
+      # </section>
+      other_sections = section_container.css('section h1')
+      other_sections.each do |other_section|
+        puts "    Processing: #{other_section.text.strip}."
 
-      #   contact_section_body = contact_section.next_element
-      #   description += <<~EOF
-      #     #{contact_section_body}
-      #   EOF
-      # end
+        image_element = other_section.next_element
+        image_source = image_element.attr('src')
+        puts "      Image source: #{image_source}."
 
-      # repository_section_headers = section_container.css('section h5')
-      # repository_section_headers.each do |repository_section_header|
-      #   next if repository_section_header.nil?
+        description += <<~EOF
+          <h3>#{other_section.text.strip}</h3>
+          <img src="#{image_source}" width="70%" height="70%" alt="#{other_section.text.strip}" />
+        EOF
+      end
 
-      #   puts "    Processing: #{repository_section_header.text.strip}."
-      #   description += <<~EOF
-      #     #{repository_section_header}
-      #   EOF
+      # Processing contact section. This section usually have h3 as the title.
+      # Expected structure:
+      # <section>
+      #   <h3>Contact Us</h3>
+      #   <ul>
+      #     <li>
+      #       <b>Name of the contact</b>
+      #       <span>Title of the contact</span>
+      #     </li>
+      #     <li>
+      #       <span>Email of the contact</span>
+      #     </li>
+      #    </ul>
+      # </section>
+      # Or different variation of the expected structure:
+      # <section>
+      #   <h3>Contact Us</h3>
+      #   <ul>
+      #     <li>
+      #       <span>Email of the contact</span>
+      #     </li>
+      #    </ul>
+      # </section>
+      contact_section = section_container.at_css('section h3')
+      unless contact_section.nil?
+        puts "    Processing: #{contact_section.text.strip}."
+        description += <<~EOF
+          <h3>#{contact_section.text.strip}</h3>
+        EOF
 
-      #   repository_hr_element = repository_section_header.next_element
-      #   repository_section_body = repository_hr_element.next_element
-      #   description += <<~EOF
-      #     #{repository_section_body}
-      #   EOF
-      # end
+        contact_section_body = contact_section.next_element
+        contact_section_body_elements = contact_section_body.css('li')
+        contact_section_body_elements.each do |contact_section_body_element|
+          name_element = contact_section_body_element.at_css('b')
+          if name_element.nil?
+            description += <<~EOF
+              <div>#{contact_section_body_element.text.strip}</div>
+            EOF
+          else
+            description += <<~EOF
+              <div>#{name_element.text.strip}</div>
+            EOF
+
+            title_element = name_element.next_element
+            if title_element.nil?
+              puts "    Skipping processing: #{name_element}."
+              next
+            end
+
+            description += <<~EOF
+              <div>#{title_element.text.strip}</div>
+            EOF
+          end
+        end
+      end
+
+      # Processing website and repository section. This section usually have h5 as the title.
+      # Expected structure:
+      # <section>
+      #   <div>
+      #     <h5>Github</h5>
+      #     <ol>
+      #       <li>
+      #         <a>Link to github</a>
+      #       </li>
+      #     </ol>
+      #   </div>
+      #   <div>
+      #     <h5>Website</h5>
+      #     <ol>
+      #       <li>
+      #         <a>Link to website</a>
+      #       </li>
+      #     </ol>
+      #   </div>
+      # </section>
+      # Or different variation of the expected structure:
+      # <section>
+      #   <div>
+      #     <h5>Website</h5>
+      #     <ol>
+      #       <li>
+      #         <a>Link to website</a>
+      #       </li>
+      #     </ol>
+      #   </div>
+      # </section>
+
+      repository_section_headers = section_container.css('section h5')
+      repository_section_headers.each do |repository_section_header|
+        next if repository_section_header.nil?
+
+        puts "    Processing: #{repository_section_header.text.strip.gsub(':', '')}."
+        description += <<~EOF
+          <h3>#{repository_section_header.text.strip.gsub(':', '')}</h3>
+        EOF
+
+        # Processing next element, which is the hr element.
+        repository_hr_element = repository_section_header.next_element
+
+        repository_list_element = repository_hr_element.next_element
+        repository_section_body = repository_list_element.at_css('li a')
+        description += <<~EOF
+          <a href='//#{cleanup_url(repository_section_body.attr('href'))}' target='_blank' rel='noreferrer'>
+            #{repository_section_body.attr('href')}
+          </a>
+        EOF
+      end
 
       unless description.blank?
         product_description = ProductDescription.find_by(product_id: product.id, locale: I18n.locale)
