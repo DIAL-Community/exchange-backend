@@ -40,6 +40,9 @@ module Types
     field :main_repository, Types::ProductRepositoryType, null: true
     field :sectors, [Types::SectorType], null: true, method: :sectors_localized
     field :countries, [Types::CountryType], null: true
+    def countries
+      object.countries&.order(:name)
+    end
 
     field :product_descriptions, [Types::ProductDescriptionType], null: true
     field :product_description, Types::ProductDescriptionType, null: true,
