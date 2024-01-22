@@ -65,7 +65,27 @@ module Types
     end
 
     field :building_blocks, [Types::BuildingBlockType], null: true
+    def building_blocks
+      use_case_building_blocks = []
+      if !object.use_case_steps.nil? && !object.use_case_steps.empty?
+        object.use_case_steps.each do |use_case_step|
+          use_case_building_blocks |= use_case_step.building_blocks
+        end
+      end
+      use_case_building_blocks.sort_by(&:display_order)
+    end
+
     field :workflows, [Types::WorkflowType], null: true
+    def workflows
+      use_case_workflows = []
+      if !object.use_case_steps.nil? && !object.use_case_steps.empty?
+        object.use_case_steps.each do |use_case_step|
+          use_case_workflows |= use_case_step.workflows
+        end
+      end
+      use_case_workflows.sort_by { |w| w.name.downcase }
+    end
+
     field :tags, GraphQL::Types::JSON, null: true
     field :sector, Types::SectorType, null: false
   end
