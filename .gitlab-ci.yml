@@ -38,7 +38,7 @@ build_rails:
     - apt-get update -yy && apt-get install build-essential libpq-dev postgresql postgresql-contrib cmake -y
     - gem install bundler:2.4.10
     - bundle config set path 'vendor/bundle'
-    - bundle install
+    - bundle install --verbose
 
 lint_rails:
   tags:
