@@ -8,10 +8,11 @@ module Paginated
     argument :tags, [String], required: false, default_value: []
     argument :origins, [String], required: false, default_value: []
     argument :dataset_types, [String], required: false, default_value: []
+    argument :countries, [String], required: false, default_value: []
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::DatasetType], null: false
 
-    def resolve(search:, sectors:, sdgs:, tags:, origins:, dataset_types:, offset_attributes:)
+    def resolve(search:, sectors:, sdgs:, tags:, origins:, dataset_types:, countries:, offset_attributes:)
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
       end
@@ -22,6 +23,12 @@ module Paginated
         desc_filter = datasets.left_joins(:dataset_descriptions)
                               .where('LOWER(dataset_descriptions.description) like LOWER(?)', "%#{search}%")
         datasets = datasets.where(id: (name_filter + desc_filter).uniq)
+      end
+
+      filtered_countries = countries.reject { |x| x.nil? || x.empty? }
+      unless filtered_countries.empty?
+        datasets = datasets.joins(:countries)
+                           .where(countries: { id: filtered_countries })
       end
 
       filtered_sectors = sectors.reject { |x| x.nil? || x.empty? }
