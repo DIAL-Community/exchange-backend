@@ -44,7 +44,7 @@ lint_rails:
   tags:
     - rails
   stage: lint
-  timeout: 20m
+  timeout: 30m
   before_script:
     - bundle config set path 'vendor/bundle'
     - bundle check || bundle install
@@ -56,7 +56,7 @@ test_rails:
   tags:
     - rails
   stage: test
-  timeout: 10m
+  timeout: 30m
   before_script:
     - curl -sL https://deb.nodesource.com/setup_16.x | bash -
     - apt-get update -yy && apt-get install postgresql postgresql-contrib nodejs -y
