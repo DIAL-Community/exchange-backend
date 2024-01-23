@@ -15,15 +15,23 @@ namespace :gdpir_sync do
 
     gdpir_dpi_url = 'https://www.dpi.global/globaldpi/dpicatedata'
 
+    gdpir_name = 'Global Digital Public Infrastructure Repository'
     gdpir_origin = Origin.find_by(slug: 'gdpir')
+    gdpir_origin = Origin.find_by(slug: slug_em(gdpir_name)) if gdpir_origin.nil?
     if gdpir_origin.nil?
       gdpir_origin = Origin.new
-      gdpir_origin.name = 'GDPIR'
-      gdpir_origin.slug = 'gdpir'
-      gdpir_origin.description = 'The Global Digital Public Infrastructure Repository'
-
-      puts 'FAO as origin is created.' if gdpir_origin.save!
     end
+
+    gdpir_origin.name = gdpir_name
+    gdpir_origin.slug = slug_em(gdpir_name)
+    gdpir_origin.description = <<~DESCRIPTION
+      The GDPIR is designed to be a resource for key lessons and knowledge available from G20
+      members and guest countries, enabling easy discoverability. It is aimed at addressing
+      the existing knowledge gap around the right practices to design, build, and deploy population
+      scale DPI.
+    DESCRIPTION
+
+    puts 'GDPIR as origin is created.' if gdpir_origin.save!
 
     puts "Opening: #{gdpir_dpi_url}."
     response = Faraday.get(gdpir_dpi_url)
@@ -93,7 +101,75 @@ namespace :gdpir_sync do
       end
     end
 
+    # Next we process the countries where we can find each of the DPI.
+    country_name_to_code_hash = {
+      'Republic of Korea' => 'KR',
+      'European Union' => 'N/A'
+    }
+
+    puts "------------------------------------"
+    gdpir_country_url = 'https://www.dpi.global/globaldpi/allcountrydpi'
+    puts "Opening country page: #{gdpir_country_url}."
+
+    response = Faraday.get(gdpir_country_url)
+    puts "Country page response status: #{response.status}."
+    break unless response.status == 200
+
+    html_fragment = Nokogiri::HTML.fragment(response.body)
+    accordion_items = html_fragment.css('div.accordion-item')
+    accordion_items.each do |accordion_item|
+      accordion_header = accordion_item.at_css('h2.accordion-header')
+      country_name = accordion_header.text.strip
+
+      country_name_or_code = country_name
+      if country_name_to_code_hash.key?(country_name)
+        country_name_or_code = country_name_to_code_hash[country_name]
+      end
+
+      puts "Processing country name or code: #{country_name} -> #{country_name_or_code}."
+      country = Country.find_by(name: country_name_or_code)
+      country = Country.find_by(code: country_name_or_code) if country.nil?
+      if country.nil?
+        puts "  Unable to find country using name or code: #{country_name} -> #{country_name_or_code}."
+        next
+      end
+
+      dpi_products = accordion_item.css('div.accordion-body a')
+      dpi_products.each do |dpi_product|
+        dpi_product_url = dpi_product.attr('href')
+        process_dpi_product_country(dpi_product_url, country_name_or_code)
+      end
+    end
+
     tracking_task_finish(task_name)
+  end
+
+  def process_dpi_product_country(dpi_product_url, country_name_or_code)
+    response = Faraday.get(dpi_product_url)
+    puts "  Product url: #{dpi_product_url}."
+    puts "    Response status: #{response.status}."
+    return unless response.status == 200
+
+    html_fragment = Nokogiri::HTML.fragment(response.body)
+    dpi_product_title = html_fragment.at_css('h5').text.strip
+
+    task_name = 'Sync GDPIR Products'
+    tracking_task_log(task_name, "Processing country for: #{dpi_product_title}.")
+    puts "    Processing country for: #{dpi_product_title}."
+
+    name_products = Product.name_contains(dpi_product_title)
+    desc_products = Product.joins(:product_descriptions)
+                           .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{dpi_product_title}%")
+    alias_products = Product.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{dpi_product_title}%")
+    product = Product.find_by(id: (name_products.ids + desc_products.ids + alias_products.ids).uniq.first)
+
+    country = Country.find_by(name: country_name_or_code)
+    country = Country.find_by(code: country_name_or_code) if country.nil?
+    product.countries << country unless product.countries.include?(country)
+
+    if product.save
+      puts "    Country #{country_name_or_code} added to product: #{product.name}."
+    end
   end
 
   def process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
@@ -132,6 +208,79 @@ namespace :gdpir_sync do
 
     gdpir_origin = Origin.find_by(slug: 'gdpir')
     product.origins << gdpir_origin unless product.origins.include?(gdpir_origin) || gdpir_origin.nil?
+
+    # Processing website and repository section. This section usually have h5 as the title.
+    # Expected structure:
+    # <section>
+    #   <div>
+    #     <h5>Github</h5>
+    #     <ol>
+    #       <li>
+    #         <a>Link to github</a>
+    #       </li>
+    #     </ol>
+    #   </div>
+    #   <div>
+    #     <h5>Website</h5>
+    #     <ol>
+    #       <li>
+    #         <a>Link to website</a>
+    #       </li>
+    #     </ol>
+    #   </div>
+    # </section>
+    # Or different variation of the expected structure:
+    # <section>
+    #   <div>
+    #     <h5>Website</h5>
+    #     <ol>
+    #       <li>
+    #         <a>Link to website</a>
+    #       </li>
+    #     </ol>
+    #   </div>
+    # </section>
+
+    section_container = html_fragment.at_css('section')
+    repository_section_headers = section_container.css('section h5')
+    repository_section_headers.each do |repository_section_header|
+      next if repository_section_header.nil?
+
+      # Processing next element, which is the hr element.
+      repository_hr_element = repository_section_header.next_element
+
+      repository_list_element = repository_hr_element.next_element
+      repository_section_body = repository_list_element.at_css('li a')
+
+      puts "    Processing: #{repository_section_header.text.strip.gsub(':', '')}."
+      if repository_section_header.text.include?('Website') ||
+        repository_section_header.text.include?('Link')
+        product.website = cleanup_url(repository_section_body.attr('href'))
+      elsif repository_section_header.text.include?('Github') ||
+        repository_section_header.text.include?('Repository')
+
+        product_repository_name = "#{product.name} Repository"
+        product_repository = ProductRepository.find_by(slug: slug_em(product_repository_name))
+        if product_repository.nil?
+          product_repository = ProductRepository.new(slug: slug_em(product_repository_name))
+
+          product_repositories = ProductRepository.where(slug: product_repository.slug)
+          unless product_repositories.empty?
+            first_duplicate = ProductRepository.slug_simple_starts_with(product_repository.slug)
+                                               .order(slug: :desc)
+                                               .first
+            product_repository.slug += generate_offset(first_duplicate).to_s
+          end
+        end
+
+        product_repository.name = product_repository_name
+        product_repository.absolute_url = cleanup_url(repository_section_body.attr('href'))
+        product_repository.description = "Repository for #{product.name}."
+        product_repository.main_repository = false
+
+        product.product_repositories << product_repository
+      end
+    end
 
     successful_operation = false
     ActiveRecord::Base.transaction do
@@ -234,59 +383,6 @@ namespace :gdpir_sync do
             EOF
           end
         end
-      end
-
-      # Processing website and repository section. This section usually have h5 as the title.
-      # Expected structure:
-      # <section>
-      #   <div>
-      #     <h5>Github</h5>
-      #     <ol>
-      #       <li>
-      #         <a>Link to github</a>
-      #       </li>
-      #     </ol>
-      #   </div>
-      #   <div>
-      #     <h5>Website</h5>
-      #     <ol>
-      #       <li>
-      #         <a>Link to website</a>
-      #       </li>
-      #     </ol>
-      #   </div>
-      # </section>
-      # Or different variation of the expected structure:
-      # <section>
-      #   <div>
-      #     <h5>Website</h5>
-      #     <ol>
-      #       <li>
-      #         <a>Link to website</a>
-      #       </li>
-      #     </ol>
-      #   </div>
-      # </section>
-
-      repository_section_headers = section_container.css('section h5')
-      repository_section_headers.each do |repository_section_header|
-        next if repository_section_header.nil?
-
-        puts "    Processing: #{repository_section_header.text.strip.gsub(':', '')}."
-        description += <<~EOF
-          <h3>#{repository_section_header.text.strip.gsub(':', '')}</h3>
-        EOF
-
-        # Processing next element, which is the hr element.
-        repository_hr_element = repository_section_header.next_element
-
-        repository_list_element = repository_hr_element.next_element
-        repository_section_body = repository_list_element.at_css('li a')
-        description += <<~EOF
-          <a href='//#{cleanup_url(repository_section_body.attr('href'))}' target='_blank' rel='noreferrer'>
-            #{repository_section_body.attr('href')}
-          </a>
-        EOF
       end
 
       unless description.blank?
