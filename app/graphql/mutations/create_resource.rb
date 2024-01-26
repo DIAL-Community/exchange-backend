@@ -23,8 +23,7 @@ module Mutations
     argument :resource_topic, String, required: false, default_value: nil
     argument :source, String, required: false, default_value: nil
 
-    argument :author_name, String, required: true
-    argument :author_email, String, required: false, default_value: nil
+    argument :authors, [GraphQL::Types::JSON], required: false, default_value: []
 
     argument :show_in_exchange, Boolean, required: false
     argument :show_in_wizard, Boolean, required: false
@@ -38,9 +37,8 @@ module Mutations
 
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
-      show_in_exchange: false, show_in_wizard: false, featured: false,
-      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:,
-      author_name:, author_email:, organization_slug:
+      show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
+      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:
     )
       unless an_admin || a_content_editor
         return {
@@ -101,18 +99,20 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        unless author_name.blank?
-          resource_author = Author.find_by(name: author_name)
+        resource.authors = []
+        authors.each do |author|
+          resource_author = Author.find_by(name: author['name'])
           resource_author = Author.new if resource_author.nil?
 
-          resource_author.name = author_name
-          resource_author.slug = slug_em(author_name)
-          resource_author.email = author_email
+          resource_author.name = author['name']
+          resource_author.slug = reslug_em(author['name'])
+          resource_author.email = author['email']
+
           avatar_api = 'https://ui-avatars.com/api/?name='
           avatar_params = '&background=2e3192&color=fff&format=svg'
-          resource_author.picture = "#{avatar_api}#{name.gsub(/\s+/, '+')}#{avatar_params}"
+          resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-          resource.authors = [resource_author]
+          resource.authors << resource_author
         end
 
         assign_auditable_user(resource)
