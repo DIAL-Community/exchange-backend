@@ -39,10 +39,11 @@ type ApproveRejectCandidateRolePayload {
 }
 
 type Author {
-  email: String!
+  email: String
   id: ID!
   name: String!
   picture: String!
+  slug: String!
 }
 
 type Bookmark {
@@ -1426,6 +1427,8 @@ type Province {
 type Query {
   aggregator(slug: String!): Organization
   aggregators(search: String = ""): [Organization!]!
+  author(slug: String!): Author
+  authors(search: String = ""): [Author!]!
   bookmark(id: ID!): Bookmark
   buildingBlock(slug: String!): BuildingBlock
   buildingBlocks(search: String = ""): [BuildingBlock!]!
