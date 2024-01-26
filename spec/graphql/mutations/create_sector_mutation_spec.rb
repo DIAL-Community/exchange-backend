@@ -224,7 +224,12 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
     # The following create should add -duplicate-X to the slug when creating sector using the same name.
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some-name-duplicate-0", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some-name-duplicate-0",
+          "locale" => "en",
+          "isDisplayable" => false
+        }))
     end
 
     result = execute_graphql(
@@ -234,7 +239,12 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some-name-duplicate-1", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some-name-duplicate-1",
+          "locale" => "en",
+          "isDisplayable" => false
+        }))
     end
   end
 
