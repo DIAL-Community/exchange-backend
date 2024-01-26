@@ -45,7 +45,7 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
       expect(result['data']['createRubricCategory']['rubricCategory'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name", "weight" => 0.75,
+          "slug" => "some-name", "weight" => 0.75,
           "rubricCategoryDescription" => { "description" => "some description" }
         }))
       expect(result['data']['createRubricCategory']['errors'])
@@ -55,18 +55,18 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
 
   it 'updates a name without changing slug' do
     expect_any_instance_of(Mutations::CreateRubricCategory).to(receive(:an_admin).and_return(true))
-    create(:rubric_category, name: "Some name", slug: "some_name")
+    create(:rubric_category, name: "Some name", slug: "some-name")
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", weight: 0.6, description: "some description" }
+      variables: { name: "Some new name", slug: "some-name", weight: 0.6, description: "some description" }
     )
 
     aggregate_failures do
       expect(result['data']['createRubricCategory']['rubricCategory'])
         .to(eq({
           "name" => "Some new name",
-          "slug" => "some_name", "weight" => 0.6,
+          "slug" => "some-name", "weight" => 0.6,
           "rubricCategoryDescription" => { "description" => "some description" }
         }))
       expect(result['data']['createRubricCategory']['errors'])

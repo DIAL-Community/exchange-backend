@@ -57,7 +57,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(use_case)
-        use_case.save
+        use_case.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(use_case, image_file.original_filename, context[:current_user])
@@ -76,7 +76,7 @@ module Mutations
         use_case_desc.locale = I18n.locale
 
         assign_auditable_user(use_case_desc)
-        use_case_desc.save
+        use_case_desc.save!
 
         successful_operation = true
       end

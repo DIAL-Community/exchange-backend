@@ -60,7 +60,7 @@ module Mutations
         tag.name = name
 
         assign_auditable_user(tag)
-        tag.save
+        tag.save!
 
         tag_description = TagDescription.find_by(tag_id: tag.id, locale: I18n.locale)
         tag_description = TagDescription.new if tag_description.nil?
@@ -69,7 +69,7 @@ module Mutations
         tag_description.locale = I18n.locale
 
         assign_auditable_user(tag_description)
-        tag_description.save
+        tag_description.save!
 
         successful_operation = true
       end

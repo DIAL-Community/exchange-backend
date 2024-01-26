@@ -47,7 +47,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(use_case_step)
-        use_case_step.save
+        use_case_step.save!
 
         unless description.blank?
           use_case_step_desc = UseCaseStepDescription.find_by(id: use_case_step.id, locale: I18n.locale)
@@ -57,7 +57,7 @@ module Mutations
           use_case_step_desc.locale = I18n.locale
 
           assign_auditable_user(use_case_step_desc)
-          use_case_step_desc.save
+          use_case_step_desc.save!
         end
 
         successful_operation = true

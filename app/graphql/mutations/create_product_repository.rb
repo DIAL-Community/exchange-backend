@@ -49,13 +49,13 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(product_repository)
-        product_repository.save
+        product_repository.save!
 
         product = product_repository.product
 
         product.manual_update = true
         assign_auditable_user(product)
-        product.save
+        product.save!
 
         successful_operation = true
       end

@@ -44,7 +44,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(workflow)
-        workflow.save
+        workflow.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(workflow, image_file.original_filename, context[:current_user])
@@ -63,7 +63,7 @@ module Mutations
         workflow_desc.locale = I18n.locale
 
         assign_auditable_user(workflow_desc)
-        workflow_desc.save
+        workflow_desc.save!
 
         successful_operation = true
       end

@@ -45,7 +45,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(rubric_category)
-        rubric_category.save
+        rubric_category.save!
         rubric_category_desc = RubricCategoryDescription.find_by(rubric_category_id: rubric_category.id,
                                                                  locale: I18n.locale)
         rubric_category_desc = RubricCategoryDescription.new if rubric_category_desc.nil?
@@ -54,7 +54,7 @@ module Mutations
         rubric_category_desc.locale = I18n.locale
 
         assign_auditable_user(rubric_category)
-        rubric_category_desc.save
+        rubric_category_desc.save!
 
         successful_operation = true
       end

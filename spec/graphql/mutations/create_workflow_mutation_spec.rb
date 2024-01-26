@@ -40,7 +40,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createWorkflow']['workflow'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
+        .to(eq({ "name" => "Some name", "slug" => "some-name",
                  "workflowDescription" => { "description" => "some description" } }))
       expect(result['data']['createWorkflow']['errors'])
         .to(eq([]))
@@ -57,7 +57,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createWorkflow']['workflow'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name",
+        .to(eq({ "name" => "Some name", "slug" => "some-name",
                  "workflowDescription" => { "description" => "some description" } }))
       expect(result['data']['createWorkflow']['errors'])
         .to(eq([]))
@@ -66,16 +66,16 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
 
   it 'updates name for existing method matched by slug' do
     expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(true))
-    create(:workflow, name: "Some name", slug: "some_name")
+    create(:workflow, name: "Some name", slug: "some-name")
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", description: "some description" },
+      variables: { name: "Some new name", slug: "some-name", description: "some description" },
     )
 
     aggregate_failures do
       expect(result['data']['createWorkflow']['workflow'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name",
+        .to(eq({ "name" => "Some new name", "slug" => "some-name",
                  "workflowDescription" => { "description" => "some description" } }))
       expect(result['data']['createWorkflow']['errors'])
         .to(eq([]))
@@ -84,7 +84,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
 
   it 'generate offset for new use case with duplicated name' do
     expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(true))
-    create(:workflow, name: "Some name", slug: "some_name")
+    create(:workflow, name: "Some name", slug: "some-name")
 
     result = execute_graphql(
       mutation,
@@ -93,7 +93,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createWorkflow']['workflow'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name_dup0",
+        .to(eq({ "name" => "Some name", "slug" => "some-name-duplicate-0",
                  "workflowDescription" => { "description" => "some description" } }))
       expect(result['data']['createWorkflow']['errors'])
         .to(eq([]))

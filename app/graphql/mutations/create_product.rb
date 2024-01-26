@@ -69,7 +69,7 @@ module Mutations
       ActiveRecord::Base.transaction do
         assign_auditable_user(product)
         product.manual_update = true
-        product.save
+        product.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(product, image_file.original_filename, context[:current_user])
@@ -88,7 +88,7 @@ module Mutations
         product_desc.locale = I18n.locale
 
         assign_auditable_user(product_desc)
-        product_desc.save
+        product_desc.save!
 
         successful_operation = true
       end

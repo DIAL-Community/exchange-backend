@@ -72,7 +72,7 @@ module Mutations
         end
 
         assign_auditable_user(playbook)
-        playbook.save
+        playbook.save!
 
         playbook_desc = PlaybookDescription.find_by(playbook:, locale: I18n.locale)
         playbook_desc = PlaybookDescription.new if playbook_desc.nil?
@@ -83,7 +83,7 @@ module Mutations
         playbook_desc.outcomes = outcomes
 
         assign_auditable_user(playbook_desc)
-        playbook_desc.save
+        playbook_desc.save!
 
         successful_operation = true
       end

@@ -34,7 +34,7 @@ module Mutations
         contact.title = title
 
         assign_auditable_user(contact)
-        contact.save
+        contact.save!
 
         successful_operation = true
       end

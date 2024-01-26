@@ -238,7 +238,7 @@ namespace :opportunities_sync do
 
     successful_operation = false
     ActiveRecord::Base.transaction do
-      opportunity.save
+      opportunity.save!
 
       unless opportunity_structure['picture'].nil?
         logo_data = opportunity_structure['picture']['data']
@@ -446,7 +446,7 @@ namespace :opportunities_sync do
 
     successful_operation = false
     ActiveRecord::Base.transaction do
-      opportunity.save
+      opportunity.save!
 
       successful_operation = true
     end

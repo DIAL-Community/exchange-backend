@@ -57,7 +57,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -86,7 +86,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -109,7 +109,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "stepNumber" => 5,
           "useCase" => { "id" => "3" },
           "useCaseStepDescription" => nil
@@ -122,13 +122,13 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
   it 'updates name for existing method matched by slug' do
     expect_any_instance_of(Mutations::CreateUseCaseStep).to(receive(:an_admin).and_return(true))
     create(:use_case, id: 3)
-    create(:use_case_step, name: "Some name", slug: "some_name", step_number: 5)
+    create(:use_case_step, name: "Some name", slug: "some-name", step_number: 5)
 
     result = execute_graphql(
       mutation,
       variables: {
         name: "Some new name",
-        slug: "some_name",
+        slug: "some-name",
         description: "some description",
         stepNumber: 5,
         useCaseId: 3
@@ -139,7 +139,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(eq({
           "name" => "Some new name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }
@@ -152,7 +152,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
   it 'generate offset for new use case with duplicated name' do
     expect_any_instance_of(Mutations::CreateUseCaseStep).to(receive(:an_admin).and_return(true))
     create(:use_case, id: 5)
-    create(:use_case_step, name: "Some name", slug: "some_name", step_number: 5)
+    create(:use_case_step, name: "Some name", slug: "some-name", step_number: 5)
 
     result = execute_graphql(
       mutation,
@@ -169,7 +169,7 @@ RSpec.describe(Mutations::CreateUseCaseStep, type: :graphql) do
       expect(result['data']['createUseCaseStep']['useCaseStep'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name_dup0",
+          "slug" => "some-name-duplicate-0",
           "useCaseStepDescription" => { "description" => "some description" },
           "stepNumber" => 5,
           "useCase" => { "id" => "3" }

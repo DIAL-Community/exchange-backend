@@ -116,7 +116,7 @@ module Mutations
         end
 
         assign_auditable_user(resource)
-        resource.save
+        resource.save!
 
         unless image_file.nil?
           uploader = SimpleUploader.new(resource, image_file.original_filename, context[:current_user])
@@ -134,7 +134,7 @@ module Mutations
             uploader.store!(resource_file)
             # Update resource filename in the database
             resource.resource_filename = uploader.filename
-            resource.save
+            resource.save!
           rescue StandardError => e
             puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."
           end
@@ -142,7 +142,7 @@ module Mutations
 
         unless organization.nil?
           organization.resources << resource
-          organization.save
+          organization.save!
         end
 
         successful_operation = true

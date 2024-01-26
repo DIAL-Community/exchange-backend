@@ -54,7 +54,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         isDisplayable: false,
         originId: origin.id,
         parentSectorId: nil
@@ -63,7 +63,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
   end
 
@@ -76,14 +76,14 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Without Locale",
-        slug: "without_locale",
+        slug: "without-locale",
         isDisplayable: false
       }
     )
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Without Locale", "slug" => "without_locale", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Without Locale", "slug" => "without-locale", "locale" => "en", "isDisplayable" => false }))
     end
   end
 
@@ -96,7 +96,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "DE Locale",
-        slug: "de_locale",
+        slug: "de-locale",
         isDisplayable: false,
         locale: 'de'
       }
@@ -104,7 +104,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "DE Locale", "slug" => "de_locale", "locale" => "de", "isDisplayable" => false }))
+        .to(eq({ "name" => "DE Locale", "slug" => "de-locale", "locale" => "de", "isDisplayable" => false }))
     end
   end
 
@@ -117,7 +117,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Random Locale",
-        slug: "random_locale",
+        slug: "random-locale",
         isDisplayable: false,
         locale: 'some-non-locale-value'
       }
@@ -125,7 +125,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Random Locale", "slug" => "random_locale", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Random Locale", "slug" => "random-locale", "locale" => "en", "isDisplayable" => false }))
     end
   end
 
@@ -138,7 +138,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Random Origin",
-        slug: "random_origin",
+        slug: "random-origin",
         isDisplayable: false,
         originId: origin.id + 99
       }
@@ -146,19 +146,19 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Random Origin", "slug" => "random_origin", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Random Origin", "slug" => "random-origin", "locale" => "en", "isDisplayable" => false }))
     end
 
     query_result = execute_graphql(
       sector_query,
       variables: {
-        slug: "random_origin"
+        slug: "random-origin"
       }
     )
 
     aggregate_failures do
       expect(query_result['data']['sector'])
-        .to(eq({ "name" => "Random Origin", "slug" => "random_origin", "originId" => origin.id }))
+        .to(eq({ "name" => "Random Origin", "slug" => "random-origin", "originId" => origin.id }))
     end
   end
 
@@ -171,26 +171,26 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         isDisplayable: false
       }
     )
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
 
     query_result = execute_graphql(
       sector_query,
       variables: {
-        slug: "some_name"
+        slug: "some-name"
       }
     )
 
     aggregate_failures do
       expect(query_result['data']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "originId" => origin.id }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name", "originId" => origin.id }))
     end
   end
 
@@ -213,7 +213,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
     # First sector creation should use normal slug.
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
 
     result = execute_graphql(
@@ -221,10 +221,10 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       variables: graph_variables,
     )
 
-    # The following create should add _dupX to the slug when creating sector using the same name.
+    # The following create should add -duplicate-X to the slug when creating sector using the same name.
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name_dup0", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name-duplicate-0", "locale" => "en", "isDisplayable" => false }))
     end
 
     result = execute_graphql(
@@ -234,20 +234,20 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name_dup1", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name-duplicate-1", "locale" => "en", "isDisplayable" => false }))
     end
   end
 
   it 'is successful - admin can update sector name and slug remains the same' do
     origin = create(:origin, name: "Example Origin", slug: "example_origin")
-    create(:sector, name: "Some name", slug: "some_name", is_displayable: false, origin_id: origin.id, locale: 'en')
+    create(:sector, name: "Some name", slug: "some-name", is_displayable: false, origin_id: origin.id, locale: 'en')
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
       variables: {
         name: "Some new name",
-        slug: "some_name",
+        slug: "some-name",
         isDisplayable: false,
         originId: origin.id,
         parentSectorId: nil
@@ -256,7 +256,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createSector']['sector'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name", "locale" => "en", "isDisplayable" => false }))
+        .to(eq({ "name" => "Some new name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
   end
 
@@ -265,7 +265,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         isDisplayable: false,
         originId: 1,
         parentSectorId: nil
