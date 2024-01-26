@@ -143,6 +143,7 @@ namespace :resources_sync do
         avatar_params = '&background=2e3192&color=fff&format=svg'
         resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
+        puts "  Adding author: #{resource_author.name}."
         resource.authors = [resource_author]
       end
 
@@ -151,7 +152,7 @@ namespace :resources_sync do
     end
 
     if successful_operation
-      puts "  Resource '#{resource.name}' record saved."
+      puts "  Resource saved: #{resource.name}."
     end
   end
 end
