@@ -10,8 +10,9 @@ class Handbook < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
-  def to_param
-    slug
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def image_file

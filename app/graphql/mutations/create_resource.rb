@@ -59,7 +59,7 @@ module Mutations
 
       resource = Resource.find_by(slug:)
       if resource.nil?
-        resource = Resource.new(name:, slug: slug_em(name))
+        resource = Resource.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Resource.slug_simple_starts_with(resource.slug)
@@ -106,7 +106,7 @@ module Mutations
           resource_author = Author.new if resource_author.nil?
 
           resource_author.name = author_name
-          resource_author.slug = slug_em(author_name)
+          resource_author.slug = reslug_em(author_name)
           resource_author.email = author_email
           avatar_api = 'https://ui-avatars.com/api/?name='
           avatar_params = '&background=2e3192&color=fff&format=svg'

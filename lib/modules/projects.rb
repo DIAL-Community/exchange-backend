@@ -84,7 +84,7 @@ module Modules
           curr_project = Project.new
           curr_project.origin_id = project_origin.id
           curr_project.name = project_name
-          curr_project.slug = slug_em(project_name)
+          curr_project.slug = reslug_em(project_name)
           curr_project.organizations << curr_org
           curr_project.locations << curr_location
           curr_project.save
@@ -97,7 +97,7 @@ module Modules
       if project_origin.nil?
         project_origin = Origin.new
         project_origin.name = origin
-        project_origin.slug = slug_em(project_origin.name)
+        project_origin.slug = reslug_em(project_origin.name)
         project_origin.description = origin
 
         puts "#{project_origin.name} as origin is created." if project_origin.save

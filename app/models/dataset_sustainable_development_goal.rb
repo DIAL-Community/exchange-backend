@@ -13,9 +13,10 @@ class DatasetSustainableDevelopmentGoal < ApplicationRecord
     self.association_source = DatasetSustainableDevelopmentGoal.LEFT
   end
 
+  # overridden
   def generate_slug
     if !dataset.nil? && !sustainable_development_goal.nil?
-      self.slug = "#{dataset.slug}_#{sustainable_development_goal.number}"
+      self.slug = "#{dataset.slug}-#{sustainable_development_goal.number}"
     end
   end
 

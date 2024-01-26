@@ -39,7 +39,7 @@ module Mutations
 
       if product.nil?
         product = Product.new(name:)
-        product.slug = slug_em(name)
+        product.slug = reslug_em(name)
 
         if Product.where(slug: product.slug).count.positive?
           # Check if we need to add _dup to the slug.

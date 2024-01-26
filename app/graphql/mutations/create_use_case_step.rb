@@ -26,7 +26,7 @@ module Mutations
       use_case_step = UseCaseStep.find_by(slug:)
       if use_case_step.nil?
         use_case_step = UseCaseStep.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = UseCaseStep.slug_simple_starts_with(slug)

@@ -13,8 +13,8 @@ class CategoryIndicator < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
   # overridden
-  def to_param
-    slug
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def category_indicator_description_localized

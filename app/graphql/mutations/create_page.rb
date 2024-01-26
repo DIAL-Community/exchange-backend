@@ -18,7 +18,7 @@ module Mutations
     def resolve(name:, description:, phase:, order:, handbook_id:)
       handbook_page = HandbookPage.new(name:, description:, phase:, order:,
                                        handbook_id:)
-      handbook_page.slug = slug_em(name)
+      handbook_page.slug = reslug_em(name)
       if handbook_page.save
         # Successful creation, return the created object with no errors
         {

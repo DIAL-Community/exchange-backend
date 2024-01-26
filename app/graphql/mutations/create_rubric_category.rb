@@ -25,7 +25,7 @@ module Mutations
       rubric_category = RubricCategory.find_by(slug:)
       if rubric_category.nil?
         rubric_category = RubricCategory.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = RubricCategory.slug_simple_starts_with(slug)

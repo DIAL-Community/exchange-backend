@@ -80,7 +80,7 @@ module Mutations
 
       if organization.nil?
         organization = Organization.new(name:)
-        organization.slug = slug_em(name)
+        organization.slug = reslug_em(name)
 
         if Organization.where(slug: organization.slug).count.positive?
           # Check if we need to add _dup to the slug.

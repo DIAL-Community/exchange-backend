@@ -28,7 +28,7 @@ module Mutations
       play = Play.find_by(slug:)
       if play.nil?
         play = Play.new(name:)
-        play.slug = slug_em(name)
+        play.slug = reslug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -42,7 +42,7 @@ module Mutations
       # Re-slug if the name is updated (not the same with the one in the db).
       if play.name != name
         play.name = name
-        play.slug = slug_em(name)
+        play.slug = reslug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.

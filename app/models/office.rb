@@ -7,6 +7,11 @@ class Office < ApplicationRecord
   belongs_to :country
   belongs_to :province
 
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
+
   def self_url(options = {})
     record = City.find_by(name: city)
     return "#{options[:api_path]}/cities/" if options[:api_path].present? && record.nil?

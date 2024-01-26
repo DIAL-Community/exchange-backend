@@ -23,7 +23,7 @@ namespace :geocode do
     province_data['locations'].each do |province|
       province_record = Province.new
       province_record.name = province['attributes']['Region']
-      province_record.slug = slug_em(province_record.name)
+      province_record.slug = reslug_em(province_record.name)
       province_record.country_id = country.id
       province_record.latitude = province['location']['x']
       province_record.longitude = province['location']['y']
@@ -49,7 +49,7 @@ namespace :geocode do
     province_data['locations'].each do |province|
       province_record = District.new
       province_record.name = province['attributes']['Subregion']
-      province_record.slug = slug_em(province_record.name)
+      province_record.slug = reslug_em(province_record.name)
       province_record.country_id = country.id
       province_record.latitude = province['location']['x']
       province_record.longitude = province['location']['y']
@@ -66,7 +66,7 @@ namespace :geocode do
       country_record.code = country[0].strip
       # Hack to prevent error on initial load
       country_record.code_longer = ''
-      country_record.slug = slug_em(country_record.code)
+      country_record.slug = reslug_em(country_record.code)
 
       country_record.latitude = country[1].to_f
       country_record.longitude = country[2].to_f
@@ -265,7 +265,7 @@ namespace :geocode do
 
         address = "#{city_name}, #{province_name}, #{country_code}"
         office.name = address
-        office.slug = slug_em("#{organization.name} #{office.name}")
+        office.slug = reslug_em("#{organization.name} #{office.name}")
 
         if Office.find_by(slug: office.slug).nil?
           if office.save!
@@ -307,7 +307,7 @@ namespace :geocode do
 
           country.name = address_component['long_name']
           country.code = address_component['short_name']
-          country.slug = slug_em(country.code)
+          country.slug = reslug_em(country.code)
           country.code_longer = ''
         end
         country.latitude = country_result['geometry']['location']['lat']
@@ -343,7 +343,7 @@ namespace :geocode do
           next unless address_component['types'].include?(address_key)
 
           province.name = address_component['long_name']
-          province.slug = slug_em(province.name)
+          province.slug = reslug_em(province.name)
         end
         province.latitude = province_result['geometry']['location']['lat']
         province.longitude = province_result['geometry']['location']['lng']
@@ -386,7 +386,7 @@ namespace :geocode do
           next unless address_component['types'].include?(address_key)
 
           city.name = address_component['long_name']
-          city.slug = slug_em(address)
+          city.slug = reslug_em(address)
         end
         city.latitude = city_result['geometry']['location']['lat']
         city.longitude = city_result['geometry']['location']['lng']
@@ -461,7 +461,7 @@ namespace :geocode do
         # Location is a point
         office = Office.new
         office.name = location.name
-        office.slug = slug_em("#{organization.name} #{office.name}")
+        office.slug = reslug_em("#{organization.name} #{office.name}")
         office.city = location.city
 
         province_name = location.state
@@ -519,7 +519,7 @@ namespace :geocode do
 
             province_record = Province.new
             province_record.name = province['attributes']['Region']
-            province_record.slug = slug_em(province_record.name)
+            province_record.slug = reslug_em(province_record.name)
             province_record.country_id = org_country.id
             province_record.latitude = province['location']['x']
             province_record.longitude = province['location']['y']
@@ -557,7 +557,7 @@ namespace :geocode do
 
       unless country.nil?
         existing_provinces = Province.where('(slug = ? OR ? = ANY(aliases)) AND country_id = ?',
-                                        slug_em(province), province, country.id)
+                                        reslug_em(province), province, country.id)
         unless existing_provinces.empty?
           puts("Skipping existing record for #{province} in #{country.code}!")
           next

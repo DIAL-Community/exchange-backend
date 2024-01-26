@@ -13,8 +13,9 @@ class ProductBuildingBlock < ApplicationRecord
     self.association_source = ProductBuildingBlock.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{product.slug}_#{building_block.slug}" if !product.nil? && !building_block.nil?
+    self.slug = "#{product.slug}-#{building_block.slug}" if !product.nil? && !building_block.nil?
   end
 
   def audit_id_value

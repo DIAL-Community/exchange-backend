@@ -66,17 +66,6 @@ class ApplicationController < ActionController::Base
     I18n.with_locale(session[:locale], &action)
   end
 
-  def generate_offset(first_duplicate)
-    size = 1
-    unless first_duplicate.nil?
-      size = first_duplicate.slug
-                            .slice(/_dup\d+$/)
-                            .delete('^0-9')
-                            .to_i + 1
-    end
-    "_dup#{size}"
-  end
-
   def send_email
     AdminMailer
       .with(name: params[:name], email: params[:email], issue_type: params[:issue_type], issue: params[:issue])

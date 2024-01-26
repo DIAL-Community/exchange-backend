@@ -38,7 +38,7 @@ module Mutations
 
       if project.nil?
         project = Project.new(name:)
-        project.slug = slug_em(name)
+        project.slug = reslug_em(name)
 
         if Project.where(slug: project.slug).count.positive?
           # Check if we need to add _dup to the slug.

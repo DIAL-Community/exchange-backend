@@ -25,7 +25,7 @@ module Mutations
       workflow = Workflow.find_by(slug:)
       if workflow.nil?
         workflow = Workflow.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Workflow.slug_simple_starts_with(slug)

@@ -42,7 +42,7 @@ module Mutations
 
       if opportunity.nil?
         opportunity = Opportunity.new(name:)
-        opportunity.slug = slug_em(name)
+        opportunity.slug = reslug_em(name)
 
         if Opportunity.where(slug: opportunity.slug).count.positive?
           # Check if we need to add _dup to the slug.

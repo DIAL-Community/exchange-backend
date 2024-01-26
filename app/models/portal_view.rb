@@ -12,4 +12,9 @@ class PortalView < ApplicationRecord
                      plays: 'plays' }, _suffix: true
   scope :name_contains, ->(name) { where('LOWER(portal_views.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(portal_views.slug) like LOWER(?)', "#{slug}%\\_") }
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

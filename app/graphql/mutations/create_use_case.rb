@@ -30,7 +30,7 @@ module Mutations
       use_case = UseCase.find_by(slug:)
       if use_case.nil?
         use_case = UseCase.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = UseCase.slug_simple_starts_with(slug)

@@ -28,7 +28,7 @@ module Mutations
       end
 
       if tag.nil?
-        tag = Tag.new(name:, slug: slug_em(name))
+        tag = Tag.new(name:, slug: reslug_em(name))
       end
 
       # Not a new record and current name is different with the existing name.

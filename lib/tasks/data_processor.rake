@@ -98,7 +98,7 @@ namespace :data_processors do
   end
 
   def generate_product(json_data, obj_type)
-    slug = slug_em(json_data['name'])
+    slug = reslug_em(json_data['name'])
 
     product = Product.find_by(slug:) if obj_type == 'product'
     product = Dataset.find_by(slug:) unless obj_type == 'product'
@@ -121,7 +121,7 @@ namespace :data_processors do
     if json_data['sectors'].present? && !json_data['sectors'].empty?
       json_data['sectors'].each do |sector_list|
         sector_list['name'].split(';').each do |curr_sector|
-          sector = Sector.find_by(slug: slug_em(curr_sector.strip), locale: 'en')
+          sector = Sector.find_by(slug: reslug_em(curr_sector.strip), locale: 'en')
           sectors << sector unless sector.nil?
         end
       end
@@ -257,7 +257,7 @@ namespace :data_processors do
           obj_type = 'dataset'
         end
 
-        slug = slug_em(json_data['name'])
+        slug = reslug_em(json_data['name'])
 
         product = Product.find_by(slug:) if obj_type == 'product'
         product = Dataset.find_by(slug:) unless obj_type == 'product'
@@ -294,7 +294,7 @@ namespace :data_processors do
           obj_type = 'dataset'
         end
 
-        slug = slug_em(json_data['name'])
+        slug = reslug_em(json_data['name'])
 
         product = Product.find_by(slug:) if obj_type == 'product'
         product = Dataset.find_by(slug:) unless obj_type == 'product'
