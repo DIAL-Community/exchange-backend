@@ -11,6 +11,14 @@ class Resource < ApplicationRecord
   )
 
   has_and_belongs_to_many(
+    :products,
+    join_table: :products_resources,
+    after_add: :association_add,
+    before_remove: :association_remove,
+    dependent: :delete_all
+  )
+
+  has_and_belongs_to_many(
     :countries,
     join_table: :resources_countries,
     after_add: :association_add,
@@ -41,6 +49,10 @@ class Resource < ApplicationRecord
     if !resource_filename.nil? && File.exist?(File.join('public', 'assets', 'resources', resource_filename))
       "/assets/resources/#{resource_filename}"
     end
+  end
+
+  def products_ordered
+    products&.order('products.name ASC')
   end
 
   def countries_ordered
