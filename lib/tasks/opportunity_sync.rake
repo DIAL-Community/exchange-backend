@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'tempfile'
 require 'modules/slugger'
 
-namespace :opportunities_sync do
+namespace :opportunity_sync do
   desc 'Sync RFP data from Leverist.'
   task sync_leverist: :environment do
     task_name = 'Sync Leverist RFP'
