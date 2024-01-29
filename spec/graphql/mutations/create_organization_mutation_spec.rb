@@ -50,7 +50,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "website" => "some.website.com",
           "hasStorefront" => false
         }))
@@ -60,7 +60,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       admin,
       mutation,
       variables: {
-        slug: "some_name",
+        slug: "some-name",
         name: "Some updated name",
         website: "website.com"
       }
@@ -70,7 +70,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some updated name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "website" => "website.com",
           "hasStorefront" => false
         }))
@@ -78,14 +78,14 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   end
 
   it 'is successful - organization owner can update organization and slug stay the same' do
-    org = create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+    org = create(:organization, name: "Some name", slug: "some-name", website: "some.website.com")
     owner = create(:user, email: 'user@some.website.com', roles: ['user', 'org_user'], organization_id: org.id)
 
     result = execute_graphql_as_user(
       owner,
       mutation,
       variables: {
-        slug: "some_name",
+        slug: "some-name",
         name: "Some updated name",
         website: "website.com"
       }
@@ -95,7 +95,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some updated name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "website" => "website.com",
           "hasStorefront" => false
         }))
@@ -104,13 +104,13 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
   it 'is successful - admin can update organization name and slug stay the same' do
     admin = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+    create(:organization, name: "Some name", slug: "some-name", website: "some.website.com")
 
     result = execute_graphql_as_user(
       admin,
       mutation,
       variables: {
-        slug: "some_name",
+        slug: "some-name",
         name: "Some updated name",
         website: "website.com"
       }
@@ -120,7 +120,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some updated name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "website" => "website.com",
           "hasStorefront" => false
         }))
@@ -148,7 +148,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some storefront name",
-          "slug" => "some_storefront_name",
+          "slug" => "some-storefront-name",
           "website" => "website.com",
           "hasStorefront" => true
         }))
@@ -161,7 +161,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_storefront_name',
+        slug: 'some-storefront-name',
         name: "Some updated storefront name",
         website: "some.website.com",
         "hasStorefront": true
@@ -175,7 +175,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       expect(result['data']['createOrganization']['organization'])
         .to(eq({
           "name" => "Some updated storefront name",
-          "slug" => "some_storefront_name",
+          "slug" => "some-storefront-name",
           "website" => "some.website.com",
           "hasStorefront" => true
         }))
@@ -211,14 +211,14 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
   it 'is failed - standard user not allowed to edit existing record' do
     user = create(:user, email: 'user@website.com', roles: ['user'])
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+    create(:organization, name: "Some name", slug: "some-name", website: "some.website.com")
 
     # Editing standard organization and making storefront of it
     result = execute_graphql_as_user(
       user,
       mutation,
       variables: {
-        slug: 'some_name',
+        slug: 'some-name',
         name: "Some storefront name",
         website: "website.com",
         "hasStorefront": true
@@ -240,7 +240,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_name',
+        slug: 'some-name',
         name: "Some storefront name",
         website: "website.com"
       }
@@ -258,7 +258,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
   end
 
   it 'is failed - non-user is not allowed to create / edit organization' do
-    create(:organization, name: "Some name", slug: "some_name", website: "some.website.com")
+    create(:organization, name: "Some name", slug: "some-name", website: "some.website.com")
 
     result = execute_graphql(
       mutation,
@@ -278,7 +278,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     result = execute_graphql(
       mutation,
       variables: {
-        slug: 'some_name',
+        slug: 'some-name',
         name: "Some storefront name",
         website: "website.com",
         "hasStorefront": true

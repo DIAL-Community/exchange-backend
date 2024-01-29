@@ -67,7 +67,7 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(eq({
           "name" => "Test Name",
-          "slug" => "test_name",
+          "slug" => "test-name",
           "indicatorType" => "scale",
           "weight" => 0.2,
           "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,
@@ -102,7 +102,7 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(eq({
           "name" => "Test Name",
-          "slug" => "test_name",
+          "slug" => "test-name",
           "indicatorType" => "scale",
           "weight" => 0.2,
           "rubricCategoryId" => RubricCategory.find_by_slug("test_category").id,

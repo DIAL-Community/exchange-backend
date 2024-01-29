@@ -61,7 +61,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       expect(result['data']['createUseCase']['useCase'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "sector" => { "slug" => "sec_1" },
           "maturity" => "BETA",
           "govStackEntity" => true,
@@ -93,7 +93,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       expect(result['data']['createUseCase']['useCase'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "sector" => { "slug" => "sec_1" },
           "maturity" => "BETA",
           "govStackEntity" => false,
@@ -106,7 +106,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
 
   it 'updates a name without changing slug' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
-    create(:use_case, name: "Some name", slug: "some_name")
+    create(:use_case, name: "Some name", slug: "some-name")
     create(:sector, slug: 'sec_1', name: 'Sec 1')
 
     result = execute_graphql_as_user(
@@ -114,7 +114,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       mutation,
       variables: {
         name: "Some new name",
-        slug: "some_name",
+        slug: "some-name",
         sectorSlug: "sec_1",
         maturity: "BETA",
         description: "some description"
@@ -125,7 +125,7 @@ RSpec.describe(Mutations::CreateUseCase, type: :graphql) do
       expect(result['data']['createUseCase']['useCase'])
         .to(eq({
           "name" => "Some new name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "sector" => { "slug" => "sec_1" },
           "maturity" => "BETA",
           "govStackEntity" => false,

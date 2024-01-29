@@ -27,7 +27,7 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:use_case_step, name: 'Some Name', slug: 'some_name',
+    create(:use_case_step, name: 'Some Name', slug: 'some-name',
                            building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
@@ -35,19 +35,19 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepBuildingBlocks']['useCaseStep'])
-        .to(eq({ "slug" => "some_name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
+        .to(eq({ "slug" => "some-name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
       expect(result['data']['updateUseCaseStepBuildingBlocks']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:use_case_step, name: 'Some Name', slug: 'some_name',
+    create(:use_case_step, name: 'Some Name', slug: 'some-name',
                            building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
@@ -55,12 +55,12 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepBuildingBlocks']['useCaseStep'])
-        .to(eq({ "slug" => "some_name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
+        .to(eq({ "slug" => "some-name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
       expect(result['data']['updateUseCaseStepBuildingBlocks']['errors'])
         .to(eq([]))
     end
@@ -70,14 +70,14 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
     expect_any_instance_of(Mutations::UpdateUseCaseStepBuildingBlocks).to(receive(:an_admin).and_return(false))
     expect_any_instance_of(Mutations::UpdateUseCaseStepBuildingBlocks).to(receive(:a_content_editor).and_return(false))
 
-    create(:use_case_step, name: 'Some Name', slug: 'some_name',
+    create(:use_case_step, name: 'Some Name', slug: 'some-name',
                            building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
     )
 
     aggregate_failures do
@@ -89,14 +89,14 @@ RSpec.describe(Mutations::UpdateUseCaseStepBuildingBlocks, type: :graphql) do
   end
 
   it 'is fails - user is not logged in' do
-    create(:use_case_step, name: 'Some Name', slug: 'some_name',
+    create(:use_case_step, name: 'Some Name', slug: 'some-name',
                            building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
     )
 
     aggregate_failures do

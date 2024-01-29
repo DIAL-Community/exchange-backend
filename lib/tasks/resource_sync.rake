@@ -146,7 +146,7 @@ namespace :resource_sync do
         resource.authors = [resource_author]
       end
 
-      resource.save
+      resource.save!
       successful_operation = true
     end
 

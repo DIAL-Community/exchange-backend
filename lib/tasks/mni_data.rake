@@ -16,7 +16,7 @@ namespace :mni do
       if new_agg.nil?
         new_agg = Organization.new
         new_agg.name = aggregator
-        new_agg.slug = slug_em(aggregator)
+        new_agg.slug = reslug_em(aggregator)
         new_agg.is_mni = true
         new_agg.is_endorser = false
         new_agg.save
@@ -37,7 +37,7 @@ namespace :mni do
       #  location = Location.new
       #  location.name = country_name
       #  location.location_type = 'country'
-      #  location.slug = slug_em(country_name)
+      #  location.slug = reslug_em(country_name)
       #  location.save
       # end
       operator_service = OperatorService.where(name: operator, country_id: country.id, service: core_service).first
@@ -76,7 +76,7 @@ namespace :mni do
       if new_agg.nil?
         new_agg = Organization.new
         new_agg.name = aggregator
-        new_agg.slug = slug_em(aggregator)
+        new_agg.slug = reslug_em(aggregator)
         new_agg.is_mni = true
         new_agg.is_endorser = false
       else

@@ -30,7 +30,7 @@ module Mutations
       candidate_organization = CandidateOrganization.find_by(slug:)
       if candidate_organization.nil?
         candidate_params = { name: organization_name, website:, description: }
-        candidate_params[:slug] = slug_em(candidate_params[:name])
+        candidate_params[:slug] = reslug_em(candidate_params[:name])
 
         candidate_organizations = CandidateOrganization.where(slug: candidate_params[:slug])
         unless candidate_organizations.empty?
@@ -55,7 +55,7 @@ module Mutations
 
       unless name.blank? && email.blank?
         contact_params = { name:, email:, title: }
-        contact_params[:slug] = slug_em(contact_params[:name])
+        contact_params[:slug] = reslug_em(contact_params[:name])
 
         contact = Contact.find_by(slug: contact_params[:slug])
         contact = Contact.find_by(email: contact_params[:email]) if contact.nil?

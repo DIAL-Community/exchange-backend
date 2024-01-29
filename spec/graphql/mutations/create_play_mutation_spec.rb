@@ -52,7 +52,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Description",
         productSlugs: ["some_product"],
         buildingBlockSlugs: ["some_bb"]
@@ -63,7 +63,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       expect(result['data']['createPlay']['play'])
         .to(eq(
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playDescription" => { "description" => "Some Description" },
           "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
           "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
@@ -85,7 +85,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Description",
         playbookSlug: 'some_playbook',
         productSlugs: ["some_product"],
@@ -97,7 +97,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       expect(result['data']['createPlay']['play']).to(
         eq(
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playDescription" => { "description" => "Some Description" },
           "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
           "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
@@ -112,7 +112,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Updated Description",
         playbookSlug: 'some_playbook',
         productSlugs: ["some_product"],
@@ -125,7 +125,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       expect(result['data']['createPlay']['play']).to(
         eq(
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playDescription" => { "description" => "Some Updated Description" },
           "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
           "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
@@ -146,7 +146,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Description",
         productSlugs: ["some_product"],
         buildingBlockSlugs: ["some_bb"]
@@ -157,7 +157,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       expect(result['data']['createPlay']['play'])
         .to(eq(
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playDescription" => { "description" => "Some Description" },
           "products" => [{ "name" => "Some Product", "slug" => "some_product" }],
           "buildingBlocks" => [{ "name" => "Some BB", "slug" => "some_bb" }]
@@ -173,7 +173,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Description",
         productSlugs: ["some_product"],
         buildingBlockSlugs: ["some_bb"]
@@ -197,7 +197,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: "Some Description",
         productSlugs: ["some_product"],
         buildingBlockSlugs: ["some_bb"]

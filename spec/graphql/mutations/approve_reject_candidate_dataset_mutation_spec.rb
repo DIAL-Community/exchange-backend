@@ -24,7 +24,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
   end
 
   it 'approves candidate dataset - user is an admin' do
-    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some_random_candidate')
+    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some-random-candidate')
 
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
@@ -32,7 +32,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_random_candidate',
+        slug: 'some-random-candidate',
         action: 'APPROVE'
       }
     )
@@ -46,7 +46,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
   end
 
   it 'rejects candidate dataset - user is an admin' do
-    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some_random_candidate')
+    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some-random-candidate')
 
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
@@ -54,7 +54,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_random_candidate',
+        slug: 'some-random-candidate',
         action: 'REJECT'
       }
     )
@@ -68,7 +68,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
   end
 
   it 'fails - user is not an admin' do
-    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some_random_candidate')
+    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some-random-candidate')
 
     user = create(:user, email: 'user@gmail.com')
 
@@ -76,7 +76,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_random_candidate',
+        slug: 'some-random-candidate',
         action: 'REJECT'
       }
     )
@@ -90,12 +90,12 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some_random_candidate')
+    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some-random-candidate')
 
     result = execute_graphql(
       mutation,
       variables: {
-        slug: 'some_random_candidate',
+        slug: 'some-random-candidate',
         action: 'REJECT'
       }
     )
@@ -109,7 +109,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
   end
 
   it 'fails - wrong action provided' do
-    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some_random_candidate')
+    create(:candidate_dataset, name: 'Some Random Candidate', slug: 'some-random-candidate')
 
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
@@ -117,7 +117,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateDataset, type: :graphql) do
       user,
       mutation,
       variables: {
-        slug: 'some_random_candidate',
+        slug: 'some-random-candidate',
         action: 'UPDATE'
       }
     )

@@ -52,7 +52,7 @@ module Mutations
         next if country_code.nil?
 
         # Create new country if we can't find country by the name or slug.
-        country = Country.new(slug: slug_em(country_code)) if country.nil?
+        country = Country.new(slug: reslug_em(country_code)) if country.nil?
         # Always override the name and country code with value from geocode result.
         country.name = country_name
         country.code = country_code

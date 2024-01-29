@@ -23,6 +23,11 @@ class Project < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(projects.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('projects.name = ? OR projects.slug = ?', name, slug) }
 
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
+
   def sectors_localized
     sectors.where('locale = ?', I18n.locale)
   end
@@ -39,10 +44,6 @@ class Project < ApplicationRecord
 
   def project_website_decoded
     project_url
-  end
-
-  def to_param
-    slug
   end
 
   def image_file

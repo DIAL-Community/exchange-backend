@@ -13,8 +13,9 @@ class DatasetSector < ApplicationRecord
     self.association_source = DatasetSector.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{dataset.slug}_#{sector.slug}" if !dataset.nil? && !sector.nil?
+    self.slug = "#{dataset.slug}-#{sector.slug}" if !dataset.nil? && !sector.nil?
   end
 
   def audit_id_value

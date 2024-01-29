@@ -34,7 +34,7 @@ module Mutations
       play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
         play_move = PlayMove.new(name:)
-        play_move.slug = slug_em(name)
+        play_move.slug = reslug_em(name)
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -48,7 +48,7 @@ module Mutations
       # Re-slug if the name is updated (not the same with the one in the db).
       if play_move.name != name
         play_move.name = name
-        play_move.slug = slug_em(name)
+        play_move.slug = reslug_em(name)
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
