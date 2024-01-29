@@ -3,15 +3,15 @@ require 'modules/slugger'
 
 deleted_sector_names = ['Private Sector Engagement', 'Sustainable Development', 'Other']
 deleted_sector_names.each do |sector_name|
-  deleted_sectors = Sector.where(slug: slug_em(sector_name)).destroy_all
-  puts "#{deleted_sectors.size} #{'sector'.pluralize(deleted_sectors.size)} with slug: #{slug_em(sector_name)}."
+  deleted_sectors = Sector.where(slug: reslug_em(sector_name)).destroy_all
+  puts "#{deleted_sectors.size} #{'sector'.pluralize(deleted_sectors.size)} with slug: #{reslug_em(sector_name)}."
   unless deleted_sectors.size
     puts "#{'Sector'.pluralize(deleted_sectors.size)} deleted."
   end
 end
 
 translated_sector_names = {
-  slug_em('Energy').to_s => {
+  reslug_em('Energy').to_s => {
     'en' => 'Energy',
     'de' => 'Energie',
     'es' => 'Energía',
@@ -20,7 +20,7 @@ translated_sector_names = {
     'sw' => 'Nishati',
     'cs' => 'Energie'
   },
-  slug_em('Media and Culture').to_s => {
+  reslug_em('Media and Culture').to_s => {
     'en' => 'Media and Culture',
     'de' => 'Medien und Kultur',
     'es' => 'Medios y Cultura',
@@ -29,7 +29,7 @@ translated_sector_names = {
     'sw' => 'Vyombo vya habari na Utamaduni',
     'cs' => 'Média a kultura'
   },
-  slug_em('Tourism and Sports').to_s => {
+  reslug_em('Tourism and Sports').to_s => {
     'en' => 'Tourism and Sports',
     'de' => 'Tourismus und Sport',
     'es' => 'Turismo y Deportes',

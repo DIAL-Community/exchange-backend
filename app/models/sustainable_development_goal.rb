@@ -11,6 +11,11 @@ class SustainableDevelopmentGoal < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(sustainable_development_goals.name) like LOWER(?)', "%#{name}%") }
 
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
+
   def image_file
     return "/assets/sdgs/#{slug}.png" if File.exist?(File.join('public', 'assets', 'sdgs', "#{slug}.png"))
 

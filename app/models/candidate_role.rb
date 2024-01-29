@@ -14,4 +14,9 @@ class CandidateRole < ApplicationRecord
   def candidate_role_dataset
     Dataset.find(dataset_id) unless dataset_id.nil?
   end
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

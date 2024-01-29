@@ -21,13 +21,13 @@ module Mutations
         organization_owners = User.where(organization_id: id)
         organization_owners.each do |organization_owner|
           organization_owner.organization_id = nil
-          if organization_owner.save
+          if organization_owner.save!
             puts "Unassigning organization owner: '#{organization_owner.email}'."
           end
         end
 
         assign_auditable_user(organization)
-        organization.destroy
+        organization.destroy!
 
         successful_operation = true
       end

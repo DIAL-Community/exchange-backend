@@ -25,7 +25,7 @@ module Mutations
       workflow = Workflow.find_by(slug:)
       if workflow.nil?
         workflow = Workflow.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Workflow.slug_simple_starts_with(slug)
@@ -44,7 +44,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(workflow)
-        workflow.save
+        workflow.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(workflow, image_file.original_filename, context[:current_user])
@@ -63,7 +63,7 @@ module Mutations
         workflow_desc.locale = I18n.locale
 
         assign_auditable_user(workflow_desc)
-        workflow_desc.save
+        workflow_desc.save!
 
         successful_operation = true
       end

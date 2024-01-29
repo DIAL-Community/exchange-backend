@@ -59,7 +59,7 @@ module Mutations
 
       resource = Resource.find_by(slug:)
       if resource.nil?
-        resource = Resource.new(name:, slug: slug_em(name))
+        resource = Resource.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Resource.slug_simple_starts_with(resource.slug)
@@ -106,7 +106,7 @@ module Mutations
           resource_author = Author.new if resource_author.nil?
 
           resource_author.name = author_name
-          resource_author.slug = slug_em(author_name)
+          resource_author.slug = reslug_em(author_name)
           resource_author.email = author_email
           avatar_api = 'https://ui-avatars.com/api/?name='
           avatar_params = '&background=2e3192&color=fff&format=svg'
@@ -116,7 +116,7 @@ module Mutations
         end
 
         assign_auditable_user(resource)
-        resource.save
+        resource.save!
 
         unless image_file.nil?
           uploader = SimpleUploader.new(resource, image_file.original_filename, context[:current_user])
@@ -134,7 +134,7 @@ module Mutations
             uploader.store!(resource_file)
             # Update resource filename in the database
             resource.resource_filename = uploader.filename
-            resource.save
+            resource.save!
           rescue StandardError => e
             puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."
           end
@@ -142,7 +142,7 @@ module Mutations
 
         unless organization.nil?
           organization.resources << resource
-          organization.save
+          organization.save!
         end
 
         successful_operation = true

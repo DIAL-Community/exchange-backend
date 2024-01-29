@@ -29,7 +29,7 @@ RSpec.describe(Mutations::UpdateProductIndicators, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    product = create(:product, name: 'Some Name', slug: 'some_name')
+    product = create(:product, name: 'Some Name', slug: 'some-name')
     create(:rubric_category, name: 'RC', slug: 'rc', id: 1)
     ci_1 = create(:category_indicator, name: 'CI 1', slug: 'ci_1', rubric_category_id: 1)
     create(:category_indicator, name: 'CI 2', slug: 'ci_2', rubric_category_id: 1)
@@ -42,7 +42,7 @@ RSpec.describe(Mutations::UpdateProductIndicators, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { indicatorsData: indicators_data, slug: 'some_name' },
+      variables: { indicatorsData: indicators_data, slug: 'some-name' },
     )
 
     aggregate_failures do
@@ -55,7 +55,7 @@ RSpec.describe(Mutations::UpdateProductIndicators, type: :graphql) do
   end
 
   it 'fails - user has no proper rights' do
-    product = create(:product, name: 'Some Name', slug: 'some_name')
+    product = create(:product, name: 'Some Name', slug: 'some-name')
     create(:rubric_category, name: 'RC', slug: 'rc', id: 1)
     ci_1 = create(:category_indicator, name: 'CI 1', slug: 'ci_1', rubric_category_id: 1)
     create(:category_indicator, name: 'CI 2', slug: 'ci_2', rubric_category_id: 1)
@@ -68,7 +68,7 @@ RSpec.describe(Mutations::UpdateProductIndicators, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { indicatorsData: indicators_data, slug: 'some_name' },
+      variables: { indicatorsData: indicators_data, slug: 'some-name' },
     )
 
     aggregate_failures do

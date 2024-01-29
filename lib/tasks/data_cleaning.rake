@@ -452,7 +452,7 @@ namespace :data do
           puts 'Create Parent sector'
           curr_sector = Sector.new
           curr_sector.name = sector['Parent Sector'].strip
-          curr_sector.slug = slug_em(curr_sector.name)
+          curr_sector.slug = reslug_em(curr_sector.name)
           curr_sector.is_displayable = true
           curr_sector.origin_id = dial_origin.id
           curr_sector.locale = 'en'
@@ -474,7 +474,7 @@ namespace :data do
             puts 'Create Sub sector'
             curr_sector = Sector.new
             curr_sector.name = "#{sector['Parent Sector'].strip}: #{sector['Sub Sector'].strip}"
-            curr_sector.slug = slug_em(curr_sector.name, 64)
+            curr_sector.slug = reslug_em(curr_sector.name, 64)
             curr_sector.parent_sector_id = parent_sector.id
             curr_sector.is_displayable = true
             curr_sector.origin_id = dial_origin.id
@@ -482,7 +482,7 @@ namespace :data do
           else
             puts 'Sub Sector already exists - assign to parent'
             curr_sector.name = "#{sector['Parent Sector'].strip}: #{sector['Sub Sector'].strip}"
-            curr_sector.slug = slug_em(curr_sector.name, 64)
+            curr_sector.slug = reslug_em(curr_sector.name, 64)
             curr_sector.is_displayable = true
             curr_sector.parent_sector_id = parent_sector.id
             curr_sector.origin_id = dial_origin.id

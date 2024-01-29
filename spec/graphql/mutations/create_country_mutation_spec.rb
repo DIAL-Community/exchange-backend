@@ -107,7 +107,7 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
       mutation,
       variables: {
         name: "Some Name",
-        slug: "some_name"
+        slug: "some-name"
       }
     )
 
@@ -177,7 +177,7 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name"
+        slug: "some-name"
       }
     )
 

@@ -12,8 +12,9 @@ class OrganizationsContact < ApplicationRecord
     self.association_source = OrganizationsContact.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{organization.slug}_#{contact.slug}" if !organization.nil? && !contact.nil?
+    self.slug = "#{organization.slug}-#{contact.slug}" if !organization.nil? && !contact.nil?
   end
 
   def audit_id_value

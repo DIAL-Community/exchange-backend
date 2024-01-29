@@ -24,7 +24,7 @@ module Mutations
 
       region = Region.find_by(slug:)
       if region.nil?
-        region = Region.new(name:, slug: slug_em(name))
+        region = Region.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Region.slug_simple_starts_with(region.slug)

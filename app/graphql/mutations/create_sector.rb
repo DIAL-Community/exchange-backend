@@ -26,7 +26,7 @@ module Mutations
 
       sector = Sector.find_by(slug:)
       if sector.nil?
-        sector = Sector.new(name:, slug: slug_em(name))
+        sector = Sector.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Sector.slug_simple_starts_with(sector.slug)

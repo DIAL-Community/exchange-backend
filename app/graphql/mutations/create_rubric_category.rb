@@ -25,7 +25,7 @@ module Mutations
       rubric_category = RubricCategory.find_by(slug:)
       if rubric_category.nil?
         rubric_category = RubricCategory.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = RubricCategory.slug_simple_starts_with(slug)
@@ -45,7 +45,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(rubric_category)
-        rubric_category.save
+        rubric_category.save!
         rubric_category_desc = RubricCategoryDescription.find_by(rubric_category_id: rubric_category.id,
                                                                  locale: I18n.locale)
         rubric_category_desc = RubricCategoryDescription.new if rubric_category_desc.nil?
@@ -54,7 +54,7 @@ module Mutations
         rubric_category_desc.locale = I18n.locale
 
         assign_auditable_user(rubric_category)
-        rubric_category_desc.save
+        rubric_category_desc.save!
 
         successful_operation = true
       end

@@ -25,7 +25,7 @@ module Mutations
       # Prevent duplicating contact by the name of the contact.
       contact = Contact.find_by(slug:)
       contact = Contact.find_by(email:) if contact.nil?
-      contact = Contact.new(name:, email:, title:, slug: slug_em(name)) if contact.nil?
+      contact = Contact.new(name:, email:, title:, slug: reslug_em(name)) if contact.nil?
 
       successful_operation = false
       ActiveRecord::Base.transaction do
@@ -34,7 +34,7 @@ module Mutations
         contact.title = title
 
         assign_auditable_user(contact)
-        contact.save
+        contact.save!
 
         successful_operation = true
       end

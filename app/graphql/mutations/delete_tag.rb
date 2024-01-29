@@ -40,7 +40,7 @@ module Mutations
         UseCase.update_all(sanitized_sql)
         Resource.update_all(sanitized_sql)
 
-        tag.destroy
+        tag.destroy!
 
         successful_operation = true
       end

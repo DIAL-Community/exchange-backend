@@ -18,6 +18,11 @@ class PlayMove < ApplicationRecord
     description
   end
 
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
+
   def play_name
     play = Play.find(play_id)
     play.name

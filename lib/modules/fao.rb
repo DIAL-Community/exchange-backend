@@ -26,7 +26,7 @@ module Modules
 
       # Create new product or update existing product
       product_name = fao_product[0]
-      product_slug = slug_em(product_name, 64)
+      product_slug = reslug_em(product_name, 64)
 
       existing_product = Product.name_and_slug_search(product_name, product_slug).first
       existing_product = Product.new if existing_product.nil?
@@ -93,13 +93,13 @@ module Modules
         organization = Organization.find_by(
           "LOWER(name) = LOWER(?) OR slug = ? OR aliases @> ARRAY['#{organization_name}']::varchar[]",
           organization_name,
-          slug_em(organization_name)
+          reslug_em(organization_name)
         )
         if organization.nil?
           # Create a new organization and assign it as an owner
           organization = Organization.new
           organization.name = organization_name
-          organization.slug = slug_em(organization_name, 128)
+          organization.slug = reslug_em(organization_name, 128)
           organization.website = cleanup_url(organization['website'])
           organization.save
         end
