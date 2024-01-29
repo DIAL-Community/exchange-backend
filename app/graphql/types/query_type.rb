@@ -205,5 +205,8 @@ module Types
 
     field :starred_objects, resolver: Queries::StarredObjectsQuery
     field :starred_object, resolver: Queries::StarredObjectQuery
+
+    field :authors, resolver: Queries::AuthorsQuery
+    field :author, resolver: Queries::AuthorQuery
   end
 end
