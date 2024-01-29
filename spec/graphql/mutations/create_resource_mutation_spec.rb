@@ -19,8 +19,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $showInExchange: Boolean
         $showInWizard: Boolean
         $organizationSlug: String
-        $authorName: String!
-        $authorEmail: String
+        $authors: [JSON!]
       ) {
         createResource(
           name: $name
@@ -35,8 +34,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           showInExchange: $showInExchange
           showInWizard: $showInWizard
           organizationSlug: $organizationSlug
-          authorName: $authorName
-          authorEmail: $authorEmail
+          authors: $authors
         ) {
             resource {
               name
