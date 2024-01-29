@@ -28,9 +28,9 @@ module Mutations
       dataset = Dataset.find_by(slug:)
       if dataset.nil?
         dataset = Dataset.new(name:)
-        dataset.slug = slug_em(name)
+        dataset.slug = reslug_em(name)
 
-        if Dataset.where(slug: slug_em(name)).count.positive?
+        if Dataset.where(slug: reslug_em(name)).count.positive?
           # Check if we need to add _dup to the slug.
           first_duplicate = Dataset.slug_simple_starts_with(dataset.slug)
                                    .order(slug: :desc)

@@ -19,19 +19,24 @@ module Mutations
 
       building_block = BuildingBlock.find_by(slug:)
 
-      building_block.products = []
-      product_slugs&.each do |product_slug|
-        current_product = Product.find_by(slug: product_slug)
-        building_block.products << current_product unless current_product.nil?
-        # For every product assign the mapping status
-        current_building_block_product = ProductBuildingBlock.find_by(slug: "#{product_slug}_#{slug}")
-        unless current_building_block_product.nil?
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        building_block.product_building_blocks = []
+        product_slugs&.each do |product_slug|
+          product = Product.find_by(slug: product_slug)
+          current_building_block_product = ProductBuildingBlock.find_by(building_block:, product:)
+          if current_building_block_product.nil?
+            current_building_block_product = ProductBuildingBlock.new(building_block:, product:)
+          end
           current_building_block_product.mapping_status = mapping_status
-          current_building_block_product.save
+          building_block.product_building_blocks << current_building_block_product
         end
+
+        building_block.save!
+        successful_operation = true
       end
 
-      if building_block.save
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           building_block:,

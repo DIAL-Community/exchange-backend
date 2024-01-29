@@ -20,4 +20,9 @@ class Comment < ApplicationRecord
   def avatar_url
     "https://ui-avatars.com/api/name=" + author['username'] + "&background=2e3192&color=fff&format=svg"
   end
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

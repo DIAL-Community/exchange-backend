@@ -6,4 +6,9 @@ class Region < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(regions.name) like LOWER(?)', "%#{name}%") }
   scope :name_and_slug_search, -> (name, slug) { where('regions.name = ? OR regions.slug = ?', name, slug) }
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

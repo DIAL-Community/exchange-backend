@@ -143,7 +143,7 @@ namespace :sync do
         # Find by name, and then by aliases and then by slug.
         break unless existing_product.nil?
 
-        slug = slug_em(name_alias)
+        slug = reslug_em(name_alias)
         existing_product = Product.first_duplicate(name_alias, slug)
         # Check to see if both just have the same alias. In this case, it's not a duplicate
       end
@@ -416,7 +416,7 @@ namespace :sync do
       main_repository = ProductRepository.find_by(product_id: parent_product.id, name: repository_attrs[:name])
       if main_repository.nil?
         repository_attrs[:product] = parent_product
-        repository_attrs[:slug] = slug_em(repository_attrs[:name])
+        repository_attrs[:slug] = reslug_em(repository_attrs[:name])
         main_repository = ProductRepository.create!(repository_attrs)
         puts "Created main repository for: #{main_repository.name}."
       else
@@ -433,7 +433,7 @@ namespace :sync do
         secondary_repository = ProductRepository.find_by(product_id: parent_product.id, name: repository_attrs[:name])
         if secondary_repository.nil?
           repository_attrs[:product] = parent_product
-          repository_attrs[:slug] = slug_em(repository_attrs[:name])
+          repository_attrs[:slug] = reslug_em(repository_attrs[:name])
           secondary_repository = ProductRepository.create!(repository_attrs)
           puts "    Created secondary repository for: #{secondary_repository.name}."
         else
@@ -488,7 +488,7 @@ namespace :sync do
     if giz_origin.nil?
       giz_origin = Origin.new
       giz_origin.name = 'GIZ'
-      giz_origin.slug = slug_em(giz_origin.name)
+      giz_origin.slug = reslug_em(giz_origin.name)
       giz_origin.description = 'Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) GmbH'
 
       puts 'GIZ as origin is created.' if giz_origin.save!
@@ -549,7 +549,7 @@ namespace :sync do
     if dha_origin.nil?
       dha_origin = Origin.new
       dha_origin.name = 'Digital Health Atlas'
-      dha_origin.slug = slug_em(dha_origin.name)
+      dha_origin.slug = reslug_em(dha_origin.name)
       dha_origin.description = 'Digital Health Atlas Website'
 
       puts 'Digital health atlas as origin is created.' if dha_origin.save
@@ -574,7 +574,7 @@ namespace :sync do
 
     dha_data['results']['projects'].each do |project|
       project_name = project['name']
-      project_slug = slug_em(project_name, 64)
+      project_slug = reslug_em(project_name, 64)
       existing_project = Project.find_by(slug: project_slug, origin_id: dha_origin.id)
 
       tracking_task_log(task_name, "Processing project: #{project_name}.")
@@ -637,7 +637,7 @@ namespace :sync do
         next if product.nil?
 
         product_name = product['name']
-        product_slug = slug_em(product_name)
+        product_slug = reslug_em(product_name)
         product = Product.first_duplicate(product_name, product_slug)
         next if product.nil?
 

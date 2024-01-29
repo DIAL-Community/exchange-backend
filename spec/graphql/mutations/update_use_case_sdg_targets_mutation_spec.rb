@@ -27,7 +27,7 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:use_case, name: 'Some Name', slug: 'some_name',
+    create(:use_case, name: 'Some Name', slug: 'some-name',
                       sdg_targets: [create(:sdg_target, slug: 'sdg_targ_1', name: 'Sdg_targ 1', id: 1)])
     create(:sdg_target, slug: 'sdg_targ_2', name: 'Sdg_targ 2', id: 2)
     create(:sdg_target, slug: 'sdg_targ_3', name: 'Sdg_targ 3', id: 3)
@@ -35,19 +35,19 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseSdgTargets']['useCase'])
-        .to(eq({ "slug" => "some_name", "sdgTargets" => [{ "id" => "2" }, { "id" => "3" }] }))
+        .to(eq({ "slug" => "some-name", "sdgTargets" => [{ "id" => "2" }, { "id" => "3" }] }))
       expect(result['data']['updateUseCaseSdgTargets']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:use_case, name: 'Some Name', slug: 'some_name',
+    create(:use_case, name: 'Some Name', slug: 'some-name',
                       sdg_targets: [create(:sdg_target, slug: 'sdg_targ_1', name: 'Sdg_targ 1', id: 1)])
     create(:sdg_target, slug: 'sdg_targ_2', name: 'Sdg_targ 2', id: 2)
     create(:sdg_target, slug: 'sdg_targ_3', name: 'Sdg_targ 3', id: 3)
@@ -55,26 +55,26 @@ RSpec.describe(Mutations::UpdateUseCaseSdgTargets, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseSdgTargets']['useCase'])
-        .to(eq({ "slug" => "some_name", "sdgTargets" => [{ "id" => "2" }, { "id" => "3" }] }))
+        .to(eq({ "slug" => "some-name", "sdgTargets" => [{ "id" => "2" }, { "id" => "3" }] }))
       expect(result['data']['updateUseCaseSdgTargets']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:use_case, name: 'Some Name', slug: 'some_name',
+    create(:use_case, name: 'Some Name', slug: 'some-name',
                       sdg_targets: [create(:sdg_target, slug: 'sdg_targ_1', name: 'Sdg_targ 1', id: 1)])
     create(:sdg_target, slug: 'sdg_targ_2', name: 'Sdg_targ 2', id: 2)
     create(:sdg_target, slug: 'sdg_targ_3', name: 'Sdg_targ 3', id: 3)
 
     result = execute_graphql(
       mutation,
-      variables: { sdgTargetIds: [2, 3], slug: 'some_name' },
+      variables: { sdgTargetIds: [2, 3], slug: 'some-name' },
     )
 
     aggregate_failures do

@@ -30,7 +30,7 @@ module Mutations
       use_case = UseCase.find_by(slug:)
       if use_case.nil?
         use_case = UseCase.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = UseCase.slug_simple_starts_with(slug)
@@ -57,7 +57,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(use_case)
-        use_case.save
+        use_case.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(use_case, image_file.original_filename, context[:current_user])
@@ -76,7 +76,7 @@ module Mutations
         use_case_desc.locale = I18n.locale
 
         assign_auditable_user(use_case_desc)
-        use_case_desc.save
+        use_case_desc.save!
 
         successful_operation = true
       end

@@ -28,7 +28,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:organization, name: 'Some Name', slug: 'some_name', offices: [])
+    create(:organization, name: 'Some Name', slug: 'some-name', offices: [])
     country_1 = create(:country, name: "Country 1", code_longer: "C01", code: "C1", id: 1)
     country_2 = create(:country, name: "Country 2", code_longer: "C02", code: "C2", id: 2)
 
@@ -54,7 +54,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { offices: offices_data, slug: 'some_name' }
+      variables: { offices: offices_data, slug: 'some-name' }
     )
 
     aggregate_failures do
@@ -67,14 +67,14 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
             "city" => "City 2",
             "name" => "City 2, Region 2, C2"
           }],
-          "slug" => "some_name"
+          "slug" => "some-name"
         }))
       expect(result['data']['updateOrganizationOffices']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as organization owner' do
-    create(:organization, name: 'Some Name', slug: 'some_name', offices: [])
+    create(:organization, name: 'Some Name', slug: 'some-name', offices: [])
     country_3 = create(:country, name: "Country 3", code_longer: "C03", code: "C3", id: 3)
     country_4 = create(:country, name: "Country 4", code_longer: "C04", code: "C4", id: 4)
 
@@ -100,7 +100,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { offices: offices_data, slug: 'some_name' }
+      variables: { offices: offices_data, slug: 'some-name' }
     )
 
     aggregate_failures do
@@ -113,14 +113,14 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
             "city" => "City 4",
             "name" => "City 4, Region 4, C4"
           }],
-          "slug" => "some_name"
+          "slug" => "some-name"
         }))
       expect(result['data']['updateOrganizationOffices']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:organization, name: 'Some Name', slug: 'some_name', offices: [])
+    create(:organization, name: 'Some Name', slug: 'some-name', offices: [])
 
     offices_data = [{
       cityName: "City 1",
@@ -136,7 +136,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { offices: offices_data, slug: 'some_name' }
+      variables: { offices: offices_data, slug: 'some-name' }
     )
 
     aggregate_failures do
@@ -147,7 +147,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
   end
 
   it 'is fails - user has not proper rigths' do
-    create(:organization, name: 'Some Name', slug: 'some_name', offices: [])
+    create(:organization, name: 'Some Name', slug: 'some-name', offices: [])
     country_1 = create(:country, name: "Country 1", code_longer: "C01", code: "C1", id: 1)
     country_2 = create(:country, name: "Country 2", code_longer: "C02", code: "C1", id: 2)
 
@@ -175,7 +175,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { offices: offices_data, slug: 'some_name' }
+      variables: { offices: offices_data, slug: 'some-name' }
     )
 
     aggregate_failures do

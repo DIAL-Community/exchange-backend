@@ -23,7 +23,7 @@ module Types
     def parsed_description
       first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
       return first_paragraph.text unless first_paragraph.nil?
-      return object.description if first_paragraph.nil?
+      object.description if first_paragraph.nil?
     end
 
     field :show_in_exchange, Boolean, null: false
@@ -45,6 +45,7 @@ module Types
 
     field :organizations, [Types::OrganizationType], null: false
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
+    field :products, [Types::ProductType], null: false, method: :products_ordered
     field :authors, [Types::AuthorType], null: false, method: :authors_ordered
   end
 end

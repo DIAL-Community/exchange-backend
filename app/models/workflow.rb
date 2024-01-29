@@ -33,8 +33,8 @@ class Workflow < ApplicationRecord
   end
 
   # overridden
-  def to_param
-    slug
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def self_url(options = {})

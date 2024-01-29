@@ -27,7 +27,7 @@ RSpec.describe(Mutations::UpdateProductOrganizations, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:product, name: 'Some Name', slug: 'some_name',
+    create(:product, name: 'Some Name', slug: 'some-name',
                      organizations: [create(:organization, slug: 'org_1', name: 'Org 1')])
     create(:organization, slug: 'org_2', name: 'Org 2')
     create(:organization, slug: 'org_3', name: 'Org 3')
@@ -35,26 +35,26 @@ RSpec.describe(Mutations::UpdateProductOrganizations, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { organizationSlugs: ['org_2', 'org_3'], slug: 'some_name' },
+      variables: { organizationSlugs: ['org_2', 'org_3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateProductOrganizations']['product'])
-        .to(eq({ "slug" => "some_name", "organizations" => [{ "slug" => "org_2" }, { "slug" => "org_3" }] }))
+        .to(eq({ "slug" => "some-name", "organizations" => [{ "slug" => "org_2" }, { "slug" => "org_3" }] }))
       expect(result['data']['updateProductOrganizations']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:product, name: 'Some Name', slug: 'some_name',
+    create(:product, name: 'Some Name', slug: 'some-name',
                      organizations: [create(:organization, slug: 'org_1', name: 'Org 1')])
     create(:organization, slug: 'org_2', name: 'Org 2')
     create(:organization, slug: 'org_3', name: 'Org 3')
 
     result = execute_graphql(
       mutation,
-      variables: { organizationSlugs: ['org_2', 'org_3'], slug: 'some_name' },
+      variables: { organizationSlugs: ['org_2', 'org_3'], slug: 'some-name' },
     )
 
     aggregate_failures do

@@ -225,8 +225,8 @@ class HandbookPagesController < ApplicationController
   def duplicates
     @page = []
     if params[:current].present?
-      current_slug = slug_em(params[:current])
-      original_slug = slug_em(params[:original])
+      current_slug = reslug_em(params[:current])
+      original_slug = reslug_em(params[:original])
       @page = HandbookPage.where(slug: current_slug).to_a if current_slug != original_slug
     end
     authorize(Handbook, :view_allowed?)
@@ -368,7 +368,7 @@ class HandbookPagesController < ApplicationController
                   :editor_type, resources: %i[name description url])
           .tap do |attr|
             if params[:reslug].present?
-              attr[:slug] = slug_em(attr[:name])
+              attr[:slug] = reslug_em(attr[:name])
               if params[:duplicate].present?
                 first_duplicate = HandbookPage.slug_starts_with(attr[:slug]).order(slug: :desc).first
                 attr[:slug] = attr[:slug] + generate_offset(first_duplicate).to_s

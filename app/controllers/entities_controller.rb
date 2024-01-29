@@ -52,7 +52,7 @@ class EntitiesController < ApplicationController
   end
 
   def generate_product(json_data)
-    slug = slug_em(json_data[:name])
+    slug = reslug_em(json_data[:name])
     contacts = Product.where(slug:)
     unless contacts.empty?
       first_duplicate = Product.slug_starts_with(slug).order(slug: :desc).first
@@ -104,7 +104,7 @@ class EntitiesController < ApplicationController
   end
 
   def generate_project(json_data)
-    slug = slug_em(json_data[:name])
+    slug = reslug_em(json_data[:name])
     contacts = Project.where(slug:)
     unless contacts.empty?
       first_duplicate = Project.slug_starts_with(slug).order(slug: :desc).first

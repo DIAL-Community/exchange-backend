@@ -16,4 +16,9 @@ class SdgTarget < ApplicationRecord
       '/assets/sdg_targets/sdg_target_placeholder.png'
     end
   end
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

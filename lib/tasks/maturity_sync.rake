@@ -28,7 +28,7 @@ namespace :maturity_sync do
       logger.debug("Category Header: #{document_header.inner_html}")
 
       category_name = document_header.inner_html
-      category_slug = slug_em(category_name)
+      category_slug = reslug_em(category_name)
 
       duplicate_categories = RubricCategory.where(slug: category_slug)
                                            .order(slug: :desc)
@@ -93,7 +93,7 @@ namespace :maturity_sync do
         current_part = current_part.next_element
         indicator_type = current_part.inner_html
 
-        indicator_slug = slug_em(indicator_name)
+        indicator_slug = reslug_em(indicator_name)
         duplicate_indicators = CategoryIndicator.where(slug: indicator_slug)
                                                 .order(slug: :desc)
 
