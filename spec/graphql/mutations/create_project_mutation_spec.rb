@@ -46,7 +46,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "projectDescription" => { "description" => "some description" },
-          "slug" => "some_name"
+          "slug" => "some-name"
         }))
       expect(result['data']['createProject']['errors'])
         .to(eq([]))
@@ -54,13 +54,13 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   end
 
   it 'is successful - admin can update project name and slug remains the same' do
-    create(:project, name: "Some name", slug: "some_name")
+    create(:project, name: "Some name", slug: "some-name")
     create(:origin, slug: 'manually_entered')
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some_name", description: "some description" }
+      variables: { name: "Some new name", slug: "some-name", description: "some description" }
     )
 
     aggregate_failures do
@@ -68,7 +68,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
         .to(eq({
           "name" => "Some new name",
           "projectDescription" => { "description" => "some description" },
-          "slug" => "some_name"
+          "slug" => "some-name"
         }))
     end
   end
@@ -76,7 +76,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", description: "some description" }
+      variables: { name: "Some name", slug: "some-name", description: "some description" }
     )
 
     aggregate_failures do

@@ -38,7 +38,7 @@ module Mutations
 
       if project.nil?
         project = Project.new(name:)
-        project.slug = slug_em(name)
+        project.slug = reslug_em(name)
 
         if Project.where(slug: project.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -71,7 +71,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(project)
-        project.save
+        project.save!
 
         project_desc = ProjectDescription.find_by(project_id: project.id, locale: I18n.locale)
         project_desc = ProjectDescription.new if project_desc.nil?
@@ -80,7 +80,7 @@ module Mutations
         project_desc.locale = I18n.locale
 
         assign_auditable_user(project_desc)
-        project_desc.save
+        project_desc.save!
 
         successful_operation = true
       end

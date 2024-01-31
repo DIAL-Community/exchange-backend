@@ -28,7 +28,7 @@ module Mutations
 
       product_repository = ProductRepository.find_by(slug:)
       if product_repository.nil?
-        product_repository = ProductRepository.new(slug: slug_em(name))
+        product_repository = ProductRepository.new(slug: reslug_em(name))
 
         product_repositories = ProductRepository.where(slug: product_repository.slug)
         unless product_repositories.empty?
@@ -49,13 +49,13 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(product_repository)
-        product_repository.save
+        product_repository.save!
 
         product = product_repository.product
 
         product.manual_update = true
         assign_auditable_user(product)
-        product.save
+        product.save!
 
         successful_operation = true
       end

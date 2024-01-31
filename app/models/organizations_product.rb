@@ -15,8 +15,9 @@ class OrganizationsProduct < ApplicationRecord
     self.association_source = OrganizationsProduct.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{organization.slug}_#{product.slug}" if !organization.nil? && !product.nil?
+    self.slug = "#{organization.slug}-#{product.slug}" if !organization.nil? && !product.nil?
   end
 
   def set_default_type

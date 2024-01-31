@@ -32,7 +32,7 @@ module Mutations
 
       if category_indicator.nil?
         category_indicator = CategoryIndicator.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         first_duplicate = CategoryIndicator.slug_simple_starts_with(slug)
                                            .order(slug: :desc)

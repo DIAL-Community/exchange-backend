@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-namespace :opportunity do
+namespace :opportunity_task do
   desc 'Nightly task to close opportunities.'
   task :close_opportunities, [:path] => :environment do |_, _|
     task_name = 'Closing Leverist RFP'

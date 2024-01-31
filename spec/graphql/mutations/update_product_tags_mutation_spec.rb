@@ -27,28 +27,28 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
   it 'is successful - user is logged in as admin' do
     create(:tag, name: 'tag_2')
     create(:tag, name: 'tag_3')
-    create(:product, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
+    create(:product, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
     expect_any_instance_of(Mutations::UpdateProductTags).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' }
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' }
     )
 
     aggregate_failures do
       expect(result['data']['updateProductTags']['product'])
-        .to(eq({ "slug" => "some_name", "tags" => ["tag_2", "tag_3"] }))
+        .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
       expect(result['data']['updateProductTags']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:product, name: 'Some Name', slug: 'some_name', tags: ['tag_1'])
+    create(:product, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
 
     result = execute_graphql(
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some_name' },
+      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' },
     )
 
     aggregate_failures do

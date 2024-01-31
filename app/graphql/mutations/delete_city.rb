@@ -26,7 +26,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(city)
-        city.destroy
+        city.destroy!
         successful_operation = true
       end
 

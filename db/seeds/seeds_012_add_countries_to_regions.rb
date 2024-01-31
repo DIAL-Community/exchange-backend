@@ -219,7 +219,7 @@ european_countries = [
 # Create Africa region
 
 africa_region = Region.find_by(name: 'Africa') || Region.new(name: 'Africa')
-africa_region.slug = slug_em(africa_region.name)
+africa_region.slug = reslug_em(africa_region.name)
 africa_region.description = 'All Countries in Africa'
 africa_region.save
 
@@ -233,7 +233,7 @@ african_countries.each do |country|
 end
 
 asia_region = Region.find_by(name: 'Asia') || Region.new(name: 'Asia')
-asia_region.slug = slug_em(asia_region.name)
+asia_region.slug = reslug_em(asia_region.name)
 asia_region.description = 'All Countries in Asia'
 asia_region.save
 
@@ -247,7 +247,7 @@ asian_countries.each do |country|
 end
 
 europe_region = Region.find_by(name: 'Europe') || Region.new(name: 'Europe')
-europe_region.slug = slug_em(europe_region.name)
+europe_region.slug = reslug_em(europe_region.name)
 europe_region.description = 'All Countries in Europe'
 europe_region.save
 
@@ -261,7 +261,7 @@ european_countries.each do |country|
 end
 
 north_america_region = Region.find_by(name: 'North America') || Region.new(name: 'North America')
-north_america_region.slug = slug_em(north_america_region.name)
+north_america_region.slug = reslug_em(north_america_region.name)
 north_america_region.description = 'All Countries in North America'
 north_america_region.save
 
@@ -275,7 +275,7 @@ north_american_countries.each do |country|
 end
 
 south_america_region = Region.find_by(name: 'South America') || Region.new(name: 'South America')
-south_america_region.slug = slug_em(south_america_region.name)
+south_america_region.slug = reslug_em(south_america_region.name)
 south_america_region.description = 'All Countries in South America'
 south_america_region.save
 
@@ -289,7 +289,7 @@ south_american_countries.each do |country|
 end
 
 central_america_region = Region.find_by(name: 'Central America') || Region.new(name: 'Central America')
-central_america_region.slug = slug_em(central_america_region.name)
+central_america_region.slug = reslug_em(central_america_region.name)
 central_america_region.description = 'All Countries in Central America'
 central_america_region.save
 

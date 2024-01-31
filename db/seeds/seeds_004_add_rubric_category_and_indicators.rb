@@ -2,51 +2,51 @@
 
 require 'modules/slugger'
 
-active_maintenance_category = RubricCategory.find_by(slug: slug_em('Active Maintenance'))
+active_maintenance_category = RubricCategory.find_by(slug: reslug_em('Active Maintenance'))
 if active_maintenance_category.nil?
   active_maintenance_category = RubricCategory.new(
     name: 'Active Maintenance',
-    slug: slug_em('Active Maintenance'),
+    slug: reslug_em('Active Maintenance'),
     weight: 1
   )
   active_maintenance_category.save
 end
 
-software_usage_category = RubricCategory.find_by(slug: slug_em('Software Usage'))
+software_usage_category = RubricCategory.find_by(slug: reslug_em('Software Usage'))
 if software_usage_category.nil?
   software_usage_category = RubricCategory.new(
     name: 'Software Usage',
-    slug: slug_em('Software Usage'),
+    slug: reslug_em('Software Usage'),
     weight: 1
   )
   software_usage_category.save
 end
 
-community_health_category = RubricCategory.find_by(slug: slug_em('Community Health'))
+community_health_category = RubricCategory.find_by(slug: reslug_em('Community Health'))
 if community_health_category.nil?
   community_health_category = RubricCategory.new(
     name: 'Community Health',
-    slug: slug_em('Community Health'),
+    slug: reslug_em('Community Health'),
     weight: 1
   )
   community_health_category.save
 end
 
-review_category = RubricCategory.find_by(slug: slug_em('Code Review'))
+review_category = RubricCategory.find_by(slug: reslug_em('Code Review'))
 if review_category.nil?
   review_category = RubricCategory.new(
     name: 'Code Review',
-    slug: slug_em('Code Review'),
+    slug: reslug_em('Code Review'),
     weight: 1
   )
   review_category.save
 end
 
-community_support_category = RubricCategory.find_by(slug: slug_em('Community Support'))
+community_support_category = RubricCategory.find_by(slug: reslug_em('Community Support'))
 if community_support_category.nil?
   community_support_category = RubricCategory.new(
     name: 'Community Support',
-    slug: slug_em('Community Support'),
+    slug: reslug_em('Community Support'),
     weight: 1
   )
   community_support_category.save
@@ -54,11 +54,11 @@ end
 
 # Add indicators to each category
 
-open_pr_indicator = CategoryIndicator.find_by(slug: slug_em('Pull Requests'))
+open_pr_indicator = CategoryIndicator.find_by(slug: reslug_em('Pull Requests'))
 if open_pr_indicator.nil?
   open_pr_indicator = CategoryIndicator.new(
     name: 'Pull Requests',
-    slug: slug_em('Pull Requests'),
+    slug: reslug_em('Pull Requests'),
     indicator_type: 'scale',
     weight: 0.34,
     rubric_category_id: active_maintenance_category.id,
@@ -75,11 +75,11 @@ if open_pr_indicator.nil?
   end
 end
 
-open_issues_indicator = CategoryIndicator.find_by(slug: slug_em('Issues'))
+open_issues_indicator = CategoryIndicator.find_by(slug: reslug_em('Issues'))
 if open_issues_indicator.nil?
   open_issues_indicator = CategoryIndicator.new(
     name: 'Issues',
-    slug: slug_em('Issues'),
+    slug: reslug_em('Issues'),
     indicator_type: 'scale',
     weight: 0.34,
     rubric_category_id: active_maintenance_category.id,
@@ -96,11 +96,11 @@ if open_issues_indicator.nil?
   end
 end
 
-last_repo_activity_indicator = CategoryIndicator.find_by(slug: slug_em('Last Repository Activity'))
+last_repo_activity_indicator = CategoryIndicator.find_by(slug: reslug_em('Last Repository Activity'))
 if last_repo_activity_indicator.nil?
   last_repo_activity_indicator = CategoryIndicator.new(
     name: 'Last Repository Activity',
-    slug: slug_em('Last Repository Activity'),
+    slug: reslug_em('Last Repository Activity'),
     indicator_type: 'scale',
     weight: 0.34,
     rubric_category_id: active_maintenance_category.id,
@@ -118,11 +118,11 @@ if last_repo_activity_indicator.nil?
   end
 end
 
-releases_indicator = CategoryIndicator.find_by(slug: slug_em('Releases'))
+releases_indicator = CategoryIndicator.find_by(slug: reslug_em('Releases'))
 if releases_indicator.nil?
   releases_indicator = CategoryIndicator.new(
     name: 'Releases',
-    slug: slug_em('Releases'),
+    slug: reslug_em('Releases'),
     indicator_type: 'scale',
     weight: 0.15,
     rubric_category_id: software_usage_category.id,
@@ -139,11 +139,11 @@ if releases_indicator.nil?
   end
 end
 
-downloads_indicator = CategoryIndicator.find_by(slug: slug_em('Downloads'))
+downloads_indicator = CategoryIndicator.find_by(slug: reslug_em('Downloads'))
 if downloads_indicator.nil?
   downloads_indicator = CategoryIndicator.new(
     name: 'Downloads',
-    slug: slug_em('Downloads'),
+    slug: reslug_em('Downloads'),
     indicator_type: 'scale',
     weight: 0.1,
     rubric_category_id: software_usage_category.id,
@@ -160,11 +160,11 @@ if downloads_indicator.nil?
   end
 end
 
-forks_indicator = CategoryIndicator.find_by(slug: slug_em('Forks'))
+forks_indicator = CategoryIndicator.find_by(slug: reslug_em('Forks'))
 if forks_indicator.nil?
   forks_indicator = CategoryIndicator.new(
     name: 'Forks',
-    slug: slug_em('Forks'),
+    slug: reslug_em('Forks'),
     indicator_type: 'scale',
     weight: 0.25,
     rubric_category_id: software_usage_category.id,
@@ -181,11 +181,11 @@ if forks_indicator.nil?
   end
 end
 
-stars_indicator = CategoryIndicator.find_by(slug: slug_em('Stars'))
+stars_indicator = CategoryIndicator.find_by(slug: reslug_em('Stars'))
 if stars_indicator.nil?
   stars_indicator = CategoryIndicator.new(
     name: 'Stars',
-    slug: slug_em('Stars'),
+    slug: reslug_em('Stars'),
     indicator_type: 'scale',
     weight: 0.25,
     rubric_category_id: software_usage_category.id,
@@ -202,11 +202,11 @@ if stars_indicator.nil?
   end
 end
 
-watchers_indicator = CategoryIndicator.find_by(slug: slug_em('Watchers'))
+watchers_indicator = CategoryIndicator.find_by(slug: reslug_em('Watchers'))
 if watchers_indicator.nil?
   watchers_indicator = CategoryIndicator.new(
     name: 'Watchers',
-    slug: slug_em('Watchers'),
+    slug: reslug_em('Watchers'),
     indicator_type: 'scale',
     weight: 0.25,
     rubric_category_id: software_usage_category.id,
@@ -223,11 +223,11 @@ if watchers_indicator.nil?
   end
 end
 
-commits_indicator = CategoryIndicator.find_by(slug: slug_em('Commits'))
+commits_indicator = CategoryIndicator.find_by(slug: reslug_em('Commits'))
 if commits_indicator.nil?
   commits_indicator = CategoryIndicator.new(
     name: 'Commits',
-    slug: slug_em('Commits'),
+    slug: reslug_em('Commits'),
     indicator_type: 'scale',
     weight: 0.5,
     rubric_category_id: community_health_category.id,
@@ -244,11 +244,11 @@ if commits_indicator.nil?
   end
 end
 
-contributors_indicator = CategoryIndicator.find_by(slug: slug_em('Contributors'))
+contributors_indicator = CategoryIndicator.find_by(slug: reslug_em('Contributors'))
 if contributors_indicator.nil?
   contributors_indicator = CategoryIndicator.new(
     name: 'Contributors',
-    slug: slug_em('Contributors'),
+    slug: reslug_em('Contributors'),
     indicator_type: 'scale',
     weight: 0.5,
     rubric_category_id: community_health_category.id,
@@ -266,11 +266,11 @@ locale: 'en')
   end
 end
 
-language_indicator = CategoryIndicator.find_by(slug: slug_em('Language'))
+language_indicator = CategoryIndicator.find_by(slug: reslug_em('Language'))
 if language_indicator.nil?
   language_indicator = CategoryIndicator.new(
     name: 'Language',
-    slug: slug_em('Language'),
+    slug: reslug_em('Language'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: review_category.id,
@@ -288,11 +288,11 @@ if language_indicator.nil?
   end
 end
 
-documentation_indicator = CategoryIndicator.find_by(slug: slug_em('Documentation'))
+documentation_indicator = CategoryIndicator.find_by(slug: reslug_em('Documentation'))
 if documentation_indicator.nil?
   documentation_indicator = CategoryIndicator.new(
     name: 'Documentation',
-    slug: slug_em('Documentation'),
+    slug: reslug_em('Documentation'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: review_category.id,
@@ -311,11 +311,11 @@ if documentation_indicator.nil?
   end
 end
 
-containerized_indicator = CategoryIndicator.find_by(slug: slug_em('Containerized'))
+containerized_indicator = CategoryIndicator.find_by(slug: reslug_em('Containerized'))
 if containerized_indicator.nil?
   containerized_indicator = CategoryIndicator.new(
     name: 'Containerized',
-    slug: slug_em('Containerized'),
+    slug: reslug_em('Containerized'),
     indicator_type: 'boolean',
     weight: 0.2,
     rubric_category_id: review_category.id,
@@ -333,11 +333,11 @@ if containerized_indicator.nil?
   end
 end
 
-license_indicator = CategoryIndicator.find_by(slug: slug_em('License'))
+license_indicator = CategoryIndicator.find_by(slug: reslug_em('License'))
 if license_indicator.nil?
   license_indicator = CategoryIndicator.new(
     name: 'License',
-    slug: slug_em('License'),
+    slug: reslug_em('License'),
     indicator_type: 'boolean',
     weight: 0.2,
     rubric_category_id: review_category.id,
@@ -354,11 +354,11 @@ if license_indicator.nil?
   end
 end
 
-api_docs_indicator = CategoryIndicator.find_by(slug: slug_em('API Documentation'))
+api_docs_indicator = CategoryIndicator.find_by(slug: reslug_em('API Documentation'))
 if api_docs_indicator.nil?
   api_docs_indicator = CategoryIndicator.new(
     name: 'API Documentation',
-    slug: slug_em('API Documentation'),
+    slug: reslug_em('API Documentation'),
     indicator_type: 'boolean',
     weight: 0.2,
     rubric_category_id: review_category.id,
@@ -376,11 +376,11 @@ if api_docs_indicator.nil?
 end
 
 # rubocop:disable Layout/LineLength
-developer_indicator = CategoryIndicator.find_by(slug: slug_em('Developer, Contributor and Implementor Community Engagement'))
+developer_indicator = CategoryIndicator.find_by(slug: reslug_em('Developer, Contributor and Implementor Community Engagement'))
 if developer_indicator.nil?
   developer_indicator = CategoryIndicator.new(
     name: 'Developer, Contributor and Implementor Community Engagement',
-    slug: slug_em('Developer, Contributor and Implementor Community Engagement'),
+    slug: reslug_em('Developer, Contributor and Implementor Community Engagement'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
@@ -397,11 +397,11 @@ if developer_indicator.nil?
   end
 end
 
-governance_indicator = CategoryIndicator.find_by(slug: slug_em('Community Governance'))
+governance_indicator = CategoryIndicator.find_by(slug: reslug_em('Community Governance'))
 if governance_indicator.nil?
   governance_indicator = CategoryIndicator.new(
     name: 'Community Governance',
-    slug: slug_em('Community Governance'),
+    slug: reslug_em('Community Governance'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
@@ -418,11 +418,11 @@ if governance_indicator.nil?
   end
 end
 
-roadmap_indicator = CategoryIndicator.find_by(slug: slug_em('Software Roadmap'))
+roadmap_indicator = CategoryIndicator.find_by(slug: reslug_em('Software Roadmap'))
 if roadmap_indicator.nil?
   roadmap_indicator = CategoryIndicator.new(
     name: 'Software Roadmap',
-    slug: slug_em('Software Roadmap'),
+    slug: reslug_em('Software Roadmap'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
@@ -439,11 +439,11 @@ if roadmap_indicator.nil?
   end
 end
 
-user_doc_indicator = CategoryIndicator.find_by(slug: slug_em('User Documentation'))
+user_doc_indicator = CategoryIndicator.find_by(slug: reslug_em('User Documentation'))
 if user_doc_indicator.nil?
   user_doc_indicator = CategoryIndicator.new(
     name: 'User Documentation',
-    slug: slug_em('User Documentation'),
+    slug: reslug_em('User Documentation'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,
@@ -460,11 +460,11 @@ if user_doc_indicator.nil?
   end
 end
 
-multi_lingual_indicator = CategoryIndicator.find_by(slug: slug_em('Multi-Lingual Support'))
+multi_lingual_indicator = CategoryIndicator.find_by(slug: reslug_em('Multi-Lingual Support'))
 if multi_lingual_indicator.nil?
   multi_lingual_indicator = CategoryIndicator.new(
     name: 'Multi-Lingual Support',
-    slug: slug_em('Multi-Lingual Support'),
+    slug: reslug_em('Multi-Lingual Support'),
     indicator_type: 'scale',
     weight: 0.2,
     rubric_category_id: community_support_category.id,

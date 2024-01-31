@@ -15,8 +15,9 @@ class OrganizationsDataset < ApplicationRecord
     self.association_source = OrganizationsDataset.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{organization.slug}_#{dataset.slug}" if !organization.nil? && !dataset.nil?
+    self.slug = "#{organization.slug}-#{dataset.slug}" if !organization.nil? && !dataset.nil?
   end
 
   def set_default_type

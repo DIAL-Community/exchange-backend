@@ -35,14 +35,14 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", overview: "Some Overview" }
+      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
     )
 
     aggregate_failures do
       expect(result['data']['createPlaybook']['playbook'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playbookDescription" => {
             "overview" => "Some Overview"
           },
@@ -56,14 +56,14 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", overview: "Some Overview" }
+      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
     )
 
     aggregate_failures do
       expect(result['data']['createPlaybook']['playbook'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "playbookDescription" => { "overview" => "Some Overview" },
           "author" => "Some Author"
         }))
@@ -73,7 +73,7 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", overview: "Some Overview" }
+      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
     )
 
     aggregate_failures do
@@ -88,7 +88,7 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some_name", overview: "Some Overview" }
+      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
     )
 
     aggregate_failures do

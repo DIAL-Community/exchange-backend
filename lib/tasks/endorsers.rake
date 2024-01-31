@@ -57,7 +57,7 @@ namespace :endorsers do
 
       tracking_task_log(task_name, "Processing: #{organization_name}.")
 
-      organization_slug = slug_em(organization_name)
+      organization_slug = reslug_em(organization_name)
       organization = Organization.find_by(slug: organization_slug)
       if organization.nil?
         organization = Organization.new(name: organization_name, slug: organization_slug)
@@ -87,7 +87,7 @@ namespace :endorsers do
         existing_contact = Contact.new(name: contact_name, email: contact_email, title: contact_title) \
           if existing_contact.nil?
       end
-      existing_contact.slug = slug_em(existing_contact.name)
+      existing_contact.slug = reslug_em(existing_contact.name)
       organization.contacts << existing_contact
 
       assigned_sectors = []
@@ -117,9 +117,9 @@ namespace :endorsers do
         existing_office_name = "#{existing_office_name} #{existing_province.name}" unless existing_province.nil?
         existing_office_name = "#{existing_office_name} #{existing_country.code}" unless existing_country.nil?
 
-        existing_office = Office.find_by(slug: slug_em(existing_office_name))
+        existing_office = Office.find_by(slug: reslug_em(existing_office_name))
         if existing_office.nil?
-          existing_office = Office.new(name: existing_office_name, slug: slug_em(existing_office_name))
+          existing_office = Office.new(name: existing_office_name, slug: reslug_em(existing_office_name))
           existing_office.latitude = existing_city.latitude
           existing_office.longitude = existing_city.longitude
           existing_office.city = existing_city.name
@@ -137,16 +137,5 @@ namespace :endorsers do
     end
 
     tracking_task_finish(task_name)
-  end
-
-  def generate_offset(first_duplicate)
-    size = 0
-    if !first_duplicate.nil? && first_duplicate.slug.include?('_dup')
-      size = first_duplicate.slug
-                            .slice(/_dup\d+$/)
-                            .delete('^0-9')
-                            .to_i + 1
-    end
-    "_dup#{size}"
   end
 end

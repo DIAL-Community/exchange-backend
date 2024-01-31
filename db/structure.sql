@@ -472,7 +472,8 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'SECTOR',
     'COUNTRY',
     'CITY',
-    'CONTACT'
+    'CONTACT',
+    'RESOURCE'
 );
 
 
@@ -3263,6 +3264,16 @@ CREATE TABLE fao.products_origins (
 
 
 --
+-- Name: products_resources; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.products_resources (
+    product_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
 -- Name: project_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3535,7 +3546,6 @@ CREATE TABLE fao.resources (
     resource_topic character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
-    spotlight boolean DEFAULT false NOT NULL,
     source character varying,
     resource_filename character varying
 );
@@ -7075,6 +7085,16 @@ CREATE TABLE public.products_origins (
 
 
 --
+-- Name: products_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products_resources (
+    product_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
 -- Name: project_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7347,7 +7367,6 @@ CREATE TABLE public.resources (
     resource_topic character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
-    spotlight boolean DEFAULT false NOT NULL,
     source character varying,
     resource_filename character varying
 );
@@ -12168,6 +12187,20 @@ CREATE UNIQUE INDEX index_products_on_slug ON fao.products USING btree (slug);
 
 
 --
+-- Name: index_products_resources_on_product_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_product_id ON fao.products_resources USING btree (product_id);
+
+
+--
+-- Name: index_products_resources_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_resource_id ON fao.products_resources USING btree (resource_id);
+
+
+--
 -- Name: index_project_descriptions_on_project_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13369,6 +13402,20 @@ CREATE INDEX index_products_endorsers_on_product_id ON public.products_endorsers
 --
 
 CREATE UNIQUE INDEX index_products_on_slug ON public.products USING btree (slug);
+
+
+--
+-- Name: index_products_resources_on_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_product_id ON public.products_resources USING btree (product_id);
+
+
+--
+-- Name: index_products_resources_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_resource_id ON public.products_resources USING btree (resource_id);
 
 
 --
@@ -16384,6 +16431,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20231209110335'),
 ('20231211144224'),
 ('20240104215749'),
-('20240109024648');
+('20240109024648'),
+('20240118161746'),
+('20240121042516'),
+('20240123162741');
 
 

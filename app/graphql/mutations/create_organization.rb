@@ -80,7 +80,7 @@ module Mutations
 
       if organization.nil?
         organization = Organization.new(name:)
-        organization.slug = slug_em(name)
+        organization.slug = reslug_em(name)
 
         if Organization.where(slug: organization.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -112,14 +112,14 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(organization)
-        organization.save
+        organization.save!
 
         current_user = context[:current_user]
         # Only assigning ownership when the user is creating organization and not yet owning organization
         if creating_record && has_storefront && !an_admin && !an_org_owner(organization&.id)
           current_user.organization_id = organization.id
           current_user.roles << User.user_roles[:org_user]
-          if current_user.save
+          if current_user.save!
             puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
           end
         end
@@ -157,7 +157,7 @@ module Mutations
         end
 
         assign_auditable_user(organization_desc)
-        organization_desc.save
+        organization_desc.save!
 
         successful_operation = true
       end

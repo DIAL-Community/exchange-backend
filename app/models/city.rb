@@ -5,8 +5,9 @@ class City < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
 
-  def to_param
-    slug
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def self_url(options = {})

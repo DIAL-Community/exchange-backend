@@ -13,8 +13,9 @@ class ProductSector < ApplicationRecord
     self.association_source = ProductSector.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{product.slug}_#{sector.slug}" if !product.nil? && !sector.nil?
+    self.slug = "#{product.slug}-#{sector.slug}" if !product.nil? && !sector.nil?
   end
 
   def audit_id_value

@@ -78,7 +78,7 @@ namespace :projects do
     if dgpt_origin.nil?
       dgpt_origin = Origin.new
       dgpt_origin.name = 'Digital Government Platform Tracker'
-      dgpt_origin.slug = slug_em(dgpt_origin.name)
+      dgpt_origin.slug = reslug_em(dgpt_origin.name)
       dgpt_origin.description = 'The Digital Government Platform Tracker is a catalogue of '\
                                 'digital government platforms that strengthen public institutions. '\
                                 'The examples represent the work of different jurisdictions and '\
@@ -120,7 +120,7 @@ namespace :projects do
       if existing_project.nil?
         existing_project = Project.new
         existing_project.name = project_name
-        existing_project.slug = slug_em(existing_project.name)
+        existing_project.slug = reslug_em(existing_project.name)
         existing_project.origin = dgpt_origin
       end
       description_template = description_template.sub('{{_description_}}', data['Description'])
@@ -298,7 +298,7 @@ namespace :projects do
         curr_proj = Project.new
         curr_proj.origin = dsq_origin
         curr_proj.name = proj_name
-        curr_proj.slug = slug_em(proj_name)
+        curr_proj.slug = reslug_em(proj_name)
       else
         puts "Project exists: #{proj_name}"
         puts "New Description: #{mm_proj['tool_description']}"
@@ -316,7 +316,7 @@ namespace :projects do
       end
       curr_proj.save
       mm_proj['funder']&.split(',')&.each do |funder|
-        funder_org = Organization.first_duplicate(funder.strip, slug_em(funder.strip))
+        funder_org = Organization.first_duplicate(funder.strip, reslug_em(funder.strip))
         if funder_org.nil?
           puts "Can't find Org: #{funder}"
         else
@@ -331,7 +331,7 @@ namespace :projects do
         end
       end
       mm_proj['implementer']&.split(',')&.each do |implementer|
-        impl_org = Organization.first_duplicate(implementer.strip, slug_em(implementer.strip))
+        impl_org = Organization.first_duplicate(implementer.strip, reslug_em(implementer.strip))
         next if impl_org.nil?
 
         existing_org = ProjectsOrganization.find_by(project: curr_proj, organization: impl_org)
@@ -553,9 +553,9 @@ namespace :projects do
           proj_descriptions.each(&:destroy!)
           slug_project.destroy!
         else
-          slug_project.slug = slug_em(slug_project.name, 64)
+          slug_project.slug = reslug_em(slug_project.name, 64)
           if slug_project.slug == project.slug
-            slug_project.slug = project.slug + "_dup" + index.to_s
+            slug_project.slug = project.slug + "-duplicate-" + index.to_s
           end
           puts "UPDATING slug to: " + slug_project.slug
           slug_project.save!

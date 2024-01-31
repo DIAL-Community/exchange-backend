@@ -30,46 +30,70 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:building_block, name: 'Some Name', slug: 'some_name',
-                      products: [create(:product, slug: 'prod_1', name: 'Prod 1')])
-    create(:product, slug: 'prod_2', name: 'Prod 2')
-    create(:product, slug: 'prod_3', name: 'Prod 3')
+    user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+    create(
+      :building_block,
+      name: 'Some Name',
+      slug: 'some-name',
+      products: [create(:product, slug: 'product-1', name: 'Product 1')]
+    )
+    create(:product, slug: 'product-2', name: 'Product 2')
+    create(:product, slug: 'product-3', name: 'Product 3')
     expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
-      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
+
+    puts "Result: #{result.inspect}"
 
     aggregate_failures do
       expect(result['data']['updateBuildingBlockProducts']['buildingBlock'])
-        .to(eq({ "slug" => "some_name",
-                 "products" => [{ "slug" => "prod_2", "buildingBlocksMappingStatus" => "VALIDATED" },
-                                { "slug" => "prod_3", "buildingBlocksMappingStatus" => "VALIDATED" }] }))
-      expect(result['data']['updateBuildingBlockProducts']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "slug" => "some-name",
+          "products" => [{
+            "slug" => "product-2",
+            "buildingBlocksMappingStatus" => "VALIDATED"
+          }, {
+            "slug" => "product-3",
+            "buildingBlocksMappingStatus" => "VALIDATED"
+          }]
+        }))
+      expect(result['data']['updateBuildingBlockProducts']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:building_block, name: 'Some Name', slug: 'some_name',
-                      products: [create(:product, slug: 'prod_1', name: 'Prod 1')])
-    create(:product, slug: 'prod_2', name: 'Prod 2')
-    create(:product, slug: 'prod_3', name: 'Prod 3')
+    create(
+      :building_block,
+      name: 'Some Name',
+      slug: 'some-name',
+      products: [create(:product, slug: 'product-1', name: 'Product 1')]
+    )
+    create(:product, slug: 'product-2', name: 'Product 2')
+    create(:product, slug: 'product-3', name: 'Product 3')
     expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:a_content_editor).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name', mappingStatus: 'BETA' },
+      variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'BETA' },
     )
 
     aggregate_failures do
       expect(result['data']['updateBuildingBlockProducts']['buildingBlock'])
-        .to(eq({ "slug" => "some_name",
-                 "products" => [{ "slug" => "prod_2", "buildingBlocksMappingStatus" => "BETA" },
-                                { "slug" => "prod_3", "buildingBlocksMappingStatus" => "BETA" }] }))
-      expect(result['data']['updateBuildingBlockProducts']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "slug" => "some-name",
+          "products" => [{
+            "slug" => "product-2",
+            "buildingBlocksMappingStatus" => "BETA"
+          }, {
+            "slug" => "product-3",
+            "buildingBlocksMappingStatus" => "BETA"
+          }]
+        }))
+      expect(result['data']['updateBuildingBlockProducts']['errors']).to(eq([]))
     end
   end
 
@@ -77,38 +101,40 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
     expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:an_admin).and_return(false))
     expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:a_content_editor).and_return(false))
 
-    create(:building_block, name: 'Some Name', slug: 'some_name',
-                     products: [create(:product, slug: 'prod_1', name: 'Prod 1')])
-    create(:product, slug: 'prod_2', name: 'Prod 2')
-    create(:product, slug: 'prod_3', name: 'Prod 3')
+    create(
+      :building_block,
+      name: 'Some Name',
+      slug: 'some-name',
+      products: [create(:product, slug: 'product-1', name: 'Prod 1')]
+    )
+    create(:product, slug: 'product-2', name: 'Product 2')
+    create(:product, slug: 'product-3', name: 'Product 3')
 
     result = execute_graphql(
       mutation,
-      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name', mappingStatus: 'BETA' },
+      variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'BETA' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateBuildingBlockProducts']['buildingBlock'])
-        .to(eq(nil))
+      expect(result['data']['updateBuildingBlockProducts']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockProducts']['errors'])
         .to(eq(['Must be admin or content editor to update building block']))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:building_block, name: 'Some Name', slug: 'some_name',
+    create(:building_block, name: 'Some Name', slug: 'some-name',
                      products: [create(:product, slug: 'prod_1', name: 'Prod 1')])
-    create(:product, slug: 'prod_2', name: 'Prod 2')
-    create(:product, slug: 'prod_3', name: 'Prod 3')
+    create(:product, slug: 'product-2', name: 'Product 2')
+    create(:product, slug: 'product-3', name: 'Product 3')
 
     result = execute_graphql(
       mutation,
-      variables: { productSlugs: ['prod_2', 'prod_3'], slug: 'some_name', mappingStatus: 'BETA' },
+      variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'BETA' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateBuildingBlockProducts']['buildingBlock'])
-        .to(eq(nil))
+      expect(result['data']['updateBuildingBlockProducts']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockProducts']['errors'])
         .to(eq(['Must be admin or content editor to update building block']))
     end

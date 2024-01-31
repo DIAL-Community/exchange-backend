@@ -23,8 +23,7 @@ module Mutations
     argument :resource_topic, String, required: false, default_value: nil
     argument :source, String, required: false, default_value: nil
 
-    argument :author_name, String, required: true
-    argument :author_email, String, required: false, default_value: nil
+    argument :authors, [GraphQL::Types::JSON], required: false, default_value: []
 
     argument :show_in_exchange, Boolean, required: false
     argument :show_in_wizard, Boolean, required: false
@@ -38,9 +37,8 @@ module Mutations
 
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
-      show_in_exchange: false, show_in_wizard: false, featured: false,
-      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:,
-      author_name:, author_email:, organization_slug:
+      show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
+      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:
     )
       unless an_admin || a_content_editor
         return {
@@ -59,7 +57,7 @@ module Mutations
 
       resource = Resource.find_by(slug:)
       if resource.nil?
-        resource = Resource.new(name:, slug: slug_em(name))
+        resource = Resource.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Resource.slug_simple_starts_with(resource.slug)
@@ -101,22 +99,24 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        unless author_name.blank?
-          resource_author = Author.find_by(name: author_name)
+        resource.authors = []
+        authors.each do |author|
+          resource_author = Author.find_by(name: author['name'])
           resource_author = Author.new if resource_author.nil?
 
-          resource_author.name = author_name
-          resource_author.slug = slug_em(author_name)
-          resource_author.email = author_email
+          resource_author.name = author['name']
+          resource_author.slug = reslug_em(author['name'])
+          resource_author.email = author['email']
+
           avatar_api = 'https://ui-avatars.com/api/?name='
           avatar_params = '&background=2e3192&color=fff&format=svg'
-          resource_author.picture = "#{avatar_api}#{name.gsub(/\s+/, '+')}#{avatar_params}"
+          resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-          resource.authors = [resource_author]
+          resource.authors << resource_author
         end
 
         assign_auditable_user(resource)
-        resource.save
+        resource.save!
 
         unless image_file.nil?
           uploader = SimpleUploader.new(resource, image_file.original_filename, context[:current_user])
@@ -134,7 +134,7 @@ module Mutations
             uploader.store!(resource_file)
             # Update resource filename in the database
             resource.resource_filename = uploader.filename
-            resource.save
+            resource.save!
           rescue StandardError => e
             puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."
           end
@@ -142,7 +142,7 @@ module Mutations
 
         unless organization.nil?
           organization.resources << resource
-          organization.save
+          organization.save!
         end
 
         successful_operation = true
