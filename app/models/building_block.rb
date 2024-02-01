@@ -6,6 +6,10 @@ class BuildingBlock < ApplicationRecord
   include EntityStatusType
   include Auditable
 
+  amoeba do
+    enable
+  end
+
   enum category_type: {
     DPI: 'DPI',
     FUNCTIONAL: 'FUNCTIONAL'
