@@ -107,6 +107,33 @@ class Product < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
 
+  amoeba do
+    enable
+
+    exclude_association :endorsers
+    exclude_association :include_relationships
+    exclude_association :interop_relationships
+    exclude_association :organizations_products
+    exclude_association :product_building_blocks
+    exclude_association :product_classifications
+    exclude_association :projects
+    exclude_association :references
+    exclude_association :resources
+  end
+
+  def sync_record(copy_of_product)
+    ActiveRecord::Base.transaction do
+      self.product_descriptions = copy_of_product.product_descriptions
+      self.countries = copy_of_product.countries
+      self.product_indicators = copy_of_product.product_indicators
+      self.product_repositories = copy_of_product.product_repositories
+      self.sustainable_development_goals = copy_of_product.sustainable_development_goals
+      save!
+
+      update!(copy_of_product.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def self.first_duplicate(name, slug)
     find_by('name = ? OR slug = ? OR ? = ANY(aliases)', name, slug, name)
   end

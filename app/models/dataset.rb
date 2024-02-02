@@ -45,7 +45,7 @@ class Dataset < ApplicationRecord
   amoeba do
     enable
 
-    clone [:organizations]
+    exclude_association :organizations
   end
 
   def sync_record(copy_of_dataset)
@@ -54,14 +54,6 @@ class Dataset < ApplicationRecord
       self.dataset_descriptions = copy_of_dataset.dataset_descriptions
       self.dataset_sectors = copy_of_dataset.dataset_sectors
       self.dataset_sustainable_development_goals = copy_of_dataset.dataset_sustainable_development_goals
-
-      # Special handling for organizations, as they are not in the original tenant.
-      self.organizations = []
-      copy_of_dataset.organizations.each do |organization_dataset|
-        organization = Organization.find_by(slug: organization_dataset.slug)
-        organizations << organization unless organization.nil?
-      end
-
       self.origins = copy_of_dataset.origins
       save!
 

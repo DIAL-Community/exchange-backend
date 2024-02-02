@@ -62,35 +62,56 @@ module Mutations
 
         product_slugs.each do |slug|
           Apartment::Tenant.switch!(source_tenant)
-          existing_product = Product.find_by(slug:)
-          next if existing_product.nil?
+          source_product = Product.find_by(slug:)
+          next if source_product.nil?
 
-          puts "Syncing product '#{slug}'..."
-          duplicate_product = existing_product.amoeba_dup
+          amoeba_product = source_product.amoeba_dup
+
+          puts "Syncing building block '#{slug}'..."
           Apartment::Tenant.switch!(destination_tenant)
-          duplicate_product.save!
+          destination_product = Product.find_by(slug:)
+          if destination_product.nil?
+            destination_product = amoeba_product
+            destination_product.save!
+          else
+            destination_product.sync_record(amoeba_product)
+          end
         end
 
         project_slugs.each do |slug|
           Apartment::Tenant.switch!(source_tenant)
-          existing_project = Project.find_by(slug:)
-          next if existing_project.nil?
+          source_project = Project.find_by(slug:)
+          next if source_project.nil?
 
-          puts "Syncing project '#{slug}'..."
-          duplicate_project = existing_project.amoeba_dup
+          amoeba_project = source_project.amoeba_dup
+
+          puts "Syncing building block '#{slug}'..."
           Apartment::Tenant.switch!(destination_tenant)
-          duplicate_project.save!
+          destination_project = Project.find_by(slug:)
+          if destination_project.nil?
+            destination_project = amoeba_project
+            destination_project.save!
+          else
+            destination_project.sync_record(amoeba_project)
+          end
         end
 
         use_case_slugs.each do |slug|
           Apartment::Tenant.switch!(source_tenant)
-          existing_use_case = UseCase.find_by(slug:)
-          next if existing_use_case.nil?
+          source_use_case = UseCase.find_by(slug:)
+          next if source_use_case.nil?
 
-          puts "Syncing use case '#{slug}'..."
-          duplicate_use_case = existing_use_case.amoeba_dup
+          amoeba_use_case = source_use_case.amoeba_dup
+
+          puts "Syncing building block '#{slug}'..."
           Apartment::Tenant.switch!(destination_tenant)
-          duplicate_use_case.save!
+          destination_use_case = UseCase.find_by(slug:)
+          if destination_use_case.nil?
+            destination_use_case = amoeba_use_case
+            destination_use_case.save!
+          else
+            destination_use_case.sync_record(amoeba_use_case)
+          end
         end
 
         successful_operation = true

@@ -23,6 +23,29 @@ class Project < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(projects.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('projects.name = ? OR projects.slug = ?', name, slug) }
 
+  amoeba do
+    enable
+
+    exclude_association :digital_principles
+    exclude_association :organizations
+    exclude_association :products
+  end
+
+  def sync_record(copy_of_project)
+    ActiveRecord::Base.transaction do
+      self.project_descriptions = copy_of_project.project_descriptions
+
+      self.countries = copy_of_project.countries
+      self.origin = copy_of_project.origin
+      self.sectors = copy_of_project.dataset_sectors
+      self.sustainable_development_goals = copy_of_project.sustainable_development_goals
+
+      save!
+
+      update!(copy_of_project.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   # overridden
   def generate_slug
     self.slug = reslug_em(name, 64)
