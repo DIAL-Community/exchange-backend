@@ -26,13 +26,20 @@ module Mutations
       ActiveRecord::Base.transaction do
         building_block_slugs.each do |slug|
           Apartment::Tenant.switch!(source_tenant)
-          existing_building_block = BuildingBlock.find_by(slug:)
-          next if existing_building_block.nil?
+          source_building_block = BuildingBlock.find_by(slug:)
+          next if source_building_block.nil?
+
+          amoeba_building_block = source_building_block.amoeba_dup
 
           puts "Syncing building block '#{slug}'..."
-          duplicate_building_block = existing_building_block.amoeba_dup
           Apartment::Tenant.switch!(destination_tenant)
-          duplicate_building_block.save!
+          destination_building_block = BuildingBlock.find_by(slug:)
+          if destination_building_block.nil?
+            destination_building_block = amoeba_building_block
+            destination_building_block.save!
+          else
+            destination_building_block.sync_record(amoeba_building_block)
+          end
         end
 
         dataset_slugs.each do |slug|
@@ -40,14 +47,16 @@ module Mutations
           source_dataset = Dataset.find_by(slug:)
           next if source_dataset.nil? || source_dataset.manual_update
 
+          amoeba_dataset = source_dataset.amoeba_dup
+
           puts "Syncing dataset '#{slug}'..."
           Apartment::Tenant.switch!(destination_tenant)
           destination_dataset = Dataset.find_by(slug:)
           if destination_dataset.nil?
-            destination_dataset = source_dataset.amoeba_dup
+            destination_dataset = amoeba_dataset
             destination_dataset.save!
           else
-            duplicate_dataset.update!(source_dataset.attributes.except('id', 'created_at', 'updated_at'))
+            destination_dataset.sync_record(amoeba_dataset)
           end
         end
 

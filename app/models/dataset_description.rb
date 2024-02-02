@@ -3,8 +3,4 @@
 class DatasetDescription < ApplicationRecord
   include Auditable
   belongs_to :dataset
-
-  amoeba do
-    enable
-  end
 end

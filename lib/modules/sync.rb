@@ -276,7 +276,7 @@ module Modules
 
     def sync_digisquare_product(digi_product, digisquare_maturity)
       dsq_endorser = Endorser.find_by(slug: 'dsq')
-      digisquare_origin = Origin.find_by(slug: 'digital_square')
+      digisquare_origin = Origin.find_by(slug: 'digital-square')
 
       name_aliases = [digi_product['name']]
       digi_product['aliases']&.each do |name_alias|

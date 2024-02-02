@@ -133,7 +133,8 @@ CREATE TYPE fao.comment_object_type AS ENUM (
     'SECTOR',
     'COUNTRY',
     'CITY',
-    'CONTACT'
+    'CONTACT',
+    'RESOURCE'
 );
 
 

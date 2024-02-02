@@ -29,18 +29,16 @@ class BuildingBlock < ApplicationRecord
     before_remove: :association_remove
   )
 
-  has_many :building_block_descriptions
-
   has_and_belongs_to_many(
-    :workflows,
-    join_table: :workflows_building_blocks,
+    :use_case_steps,
+    join_table: :use_case_steps_building_blocks,
     after_add: :association_add,
     before_remove: :association_remove
   )
 
   has_and_belongs_to_many(
-    :use_case_steps,
-    join_table: :use_case_steps_building_blocks,
+    :workflows,
+    join_table: :workflows_building_blocks,
     after_add: :association_add,
     before_remove: :association_remove
   )
@@ -50,6 +48,25 @@ class BuildingBlock < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(building_blocks.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(building_blocks.slug) like LOWER(?)', "#{slug}\\_%") }
+
+  amoeba do
+    enable
+
+    clone [:products, :workflows]
+  end
+
+  def sync_record(copy_of_building_block)
+    ActiveRecord::Base.transaction do
+      self.building_block_descriptions = copy_of_building_block.building_block_descriptions
+      self.products = copy_of_building_block.products
+      self.use_case_steps = copy_of_building_block.use_case_steps
+      self.opportunities = copy_of_building_block.opportunities
+      self.workflows = copy_of_building_block.workflows
+      save!
+
+      update!(copy_of_building_block.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
 
   attr_accessor :bb_desc
 

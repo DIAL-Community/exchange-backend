@@ -44,7 +44,29 @@ class Dataset < ApplicationRecord
 
   amoeba do
     enable
-    clone [:dataset_descriptions]
+
+    clone [:organizations]
+  end
+
+  def sync_record(copy_of_dataset)
+    ActiveRecord::Base.transaction do
+      self.countries = copy_of_dataset.countries
+      self.dataset_descriptions = copy_of_dataset.dataset_descriptions
+      self.dataset_sectors = copy_of_dataset.dataset_sectors
+      self.dataset_sustainable_development_goals = copy_of_dataset.dataset_sustainable_development_goals
+
+      # Special handling for organizations, as they are not in the original tenant.
+      self.organizations = []
+      copy_of_dataset.organizations.each do |organization_dataset|
+        organization = Organization.find_by(slug: organization_dataset.slug)
+        organizations << organization unless organization.nil?
+      end
+
+      self.origins = copy_of_dataset.origins
+      save!
+
+      update!(copy_of_dataset.attributes.except('id', 'created_at', 'updated_at'))
+    end
   end
 
   def self.first_duplicate(name, slug)

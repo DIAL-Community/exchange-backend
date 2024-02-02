@@ -34,7 +34,7 @@ class Sector < ApplicationRecord
 
   def self.build_list(origin_name)
     origin = Origin.find_by(name: origin_name)
-    origin = Origin.find_by(name: Setting.find_by(slug: 'default_sector_list').value) if origin.nil?
+    origin = Origin.find_by(name: Setting.find_by(slug: 'default-sector-list').value) if origin.nil?
     sector_list = Sector.where(origin_id: origin.id, parent_sector_id: nil, locale: I18n.locale,
                                is_displayable: true).order(:name).as_json
     child_sectors = Sector.where(
