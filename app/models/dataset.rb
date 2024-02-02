@@ -7,10 +7,6 @@ class Dataset < ApplicationRecord
   include Auditable
   include Modules::MaturitySync
 
-  amoeba do
-    enable
-  end
-
   attr_accessor :dataset_description
 
   has_many :dataset_descriptions, dependent: :delete_all
@@ -45,6 +41,11 @@ class Dataset < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(datasets.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(datasets.slug) like LOWER(?)', "#{slug}%\\_") }
+
+  amoeba do
+    enable
+    clone [:dataset_descriptions]
+  end
 
   def self.first_duplicate(name, slug)
     find_by('name = ? OR slug = ? OR ? = ANY(aliases)', name, slug, name)

@@ -37,17 +37,17 @@ module Mutations
 
         dataset_slugs.each do |slug|
           Apartment::Tenant.switch!(source_tenant)
-          existing_dataset = Dataset.find_by(slug:)
-          next if existing_dataset.nil? || existing_dataset.manual_update
+          source_dataset = Dataset.find_by(slug:)
+          next if source_dataset.nil? || source_dataset.manual_update
 
           puts "Syncing dataset '#{slug}'..."
           Apartment::Tenant.switch!(destination_tenant)
-          duplicate_dataset = Dataset.find_by(slug:)
-          if duplicate_dataset.nil?
-            duplicate_dataset = existing_dataset.amoeba_dup
-            duplicate_dataset.save!
+          destination_dataset = Dataset.find_by(slug:)
+          if destination_dataset.nil?
+            destination_dataset = source_dataset.amoeba_dup
+            destination_dataset.save!
           else
-            duplicate_dataset.update!(existing_dataset.amoeba_dup)
+            duplicate_dataset.update!(source_dataset.attributes.except('id', 'created_at', 'updated_at'))
           end
         end
 
