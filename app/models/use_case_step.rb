@@ -19,6 +19,24 @@ class UseCaseStep < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
+  amoeba do
+    enable
+
+    exclude_association :building_blocks
+    exclude_association :datasets
+    exclude_association :products
+    exclude_association :workflows
+  end
+
+  def sync_record(copy_of_use_case_step)
+    ActiveRecord::Base.transaction do
+      self.use_case_step_descriptions = copy_of_use_case_step.use_case_step_descriptions
+      save!
+
+      update!(copy_of_use_case_step.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def use_case_step_description_localized
     description = use_case_step_descriptions.order(Arel.sql('LENGTH(description) DESC'))
                                             .find_by(locale: I18n.locale)
