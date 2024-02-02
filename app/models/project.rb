@@ -50,7 +50,7 @@ class Project < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/projects/#{slug}.png"
     else
-      'project_placeholder.png'
+      '/assets/projects/project-placeholder.png'
     end
   end
 

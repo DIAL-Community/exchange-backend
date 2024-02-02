@@ -9,11 +9,11 @@ class SdgTarget < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
   def image_file
-    png_filename = "goal_#{sdg_number}_target_#{target_number}.png"
-    if File.exist?(File.join('public', 'assets', 'sdg_targets', png_filename))
-      "/assets/sdg_targets/#{png_filename}"
+    png_filename = "goal-#{sdg_number}-target-#{target_number}.png"
+    if File.exist?(File.join('public', 'assets', 'sdg-targets', png_filename))
+      "/assets/sdg-targets/#{png_filename}"
     else
-      '/assets/sdg_targets/sdg_target_placeholder.png'
+      '/assets/sdg-targets/sdg-target-placeholder.png'
     end
   end
 

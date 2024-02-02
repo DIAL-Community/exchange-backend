@@ -46,7 +46,7 @@ class Resource < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
       "/assets/resources/#{slug}.png"
     else
-      '/assets/resources/resource_placeholder.png'
+      '/assets/resources/resource-placeholder.png'
     end
   end
 

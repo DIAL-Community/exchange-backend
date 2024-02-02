@@ -24,10 +24,10 @@ class UseCase < ApplicationRecord
   attr_accessor :uc_desc, :ucs_header, :building_blocks, :workflows
 
   def image_file
-    if File.exist?(File.join('public', 'assets', 'use_cases', "#{slug}.svg"))
-      "/assets/use_cases/#{slug}.svg"
+    if File.exist?(File.join('public', 'assets', 'use-cases', "#{slug}.svg"))
+      "/assets/use-cases/#{slug}.svg"
     else
-      '/assets/use_cases/use_case_placeholder.svg'
+      '/assets/use-cases/use-case-placeholder.svg'
     end
   end
 

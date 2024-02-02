@@ -115,7 +115,7 @@ class Product < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/products/#{slug}.png"
     else
-      '/assets/products/product_placeholder.svg'
+      '/assets/products/product-placeholder.svg'
     end
   end
 

@@ -68,7 +68,7 @@ class Opportunity < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'opportunities', "#{slug}.png"))
       "/assets/opportunities/#{slug}.png"
     else
-      '/assets/opportunities/opportunity_placeholder.png'
+      '/assets/opportunities/opportunity-placeholder.png'
     end
   end
 
