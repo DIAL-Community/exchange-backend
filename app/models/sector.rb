@@ -5,22 +5,18 @@ class Sector < ApplicationRecord
 
   attr_accessor :parent_sector_name
 
-  has_and_belongs_to_many :organizations
-
-  has_many :product_sectors
-  has_many :products, through: :product_sectors, dependent: :destroy
-
-  has_many :dataset_sectors
-  has_many :datasets, through: :dataset_sectors, dependent: :destroy
-
-  has_and_belongs_to_many :projects, join_table: :projects_sectors
-  has_and_belongs_to_many :opportunities, join_table: :opportunities_sectors
-
-  belongs_to :parent_sector, class_name: :Sector, optional: true
   has_many :sectors, foreign_key: :parent_sector_id, dependent: :destroy
-
   has_many :use_cases, dependent: :destroy
+
+  has_and_belongs_to_many :datasets, join_table: :dataset_sectors
+  has_and_belongs_to_many :products, join_table: :product_sectors
+
+  has_and_belongs_to_many :opportunities, join_table: :opportunities_sectors
+  has_and_belongs_to_many :organizations, join_table: :organizations_sectors
+  has_and_belongs_to_many :projects, join_table: :projects_sectors
+
   belongs_to :origin
+  belongs_to :parent_sector, class_name: :Sector, optional: true
 
   validates :name, presence: true, length: { maximum: 300 }
 

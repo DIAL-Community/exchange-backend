@@ -59,7 +59,7 @@ datasets.each do |dataset|
 
   if !dataset.organizations_products.nil? && !dataset.organizations_products.empty?
     dataset.organizations_products.each do |organization_product|
-      organization_dataset = OrganizationsDataset.new
+      organization_dataset = OrganizationDataset.new
       organization_dataset.organization_id = organization_product.organization.id
       organization_dataset.organization_type = organization_product.org_type
 

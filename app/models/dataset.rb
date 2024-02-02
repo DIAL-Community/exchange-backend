@@ -11,31 +11,45 @@ class Dataset < ApplicationRecord
 
   has_many :dataset_descriptions, dependent: :delete_all
 
-  has_many :organizations_datasets, dependent: :delete_all,
-                                    after_add: :association_add,
-                                    before_remove: :association_remove
-  has_many :organizations, through: :organizations_datasets,
-                           dependent: :delete_all,
-                           after_add: :association_add,
-                           before_remove: :association_remove
+  has_many :organization_datasets,
+           join_table: :organization_datasets,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :organizations,
+           through: :organization_datasets,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many :dataset_sectors, dependent: :delete_all,
-                             after_add: :association_add, before_remove: :association_remove
-  has_many :sectors, through: :dataset_sectors,
-                     after_add: :association_add, before_remove: :association_remove
+  has_many :dataset_sectors,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :sectors,
+           through: :dataset_sectors,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_and_belongs_to_many :countries, join_table: :datasets_countries,
-                     dependent: :delete_all
+  has_many :dataset_sustainable_development_goals,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :sustainable_development_goals,
+           through: :dataset_sustainable_development_goals,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_and_belongs_to_many :origins, join_table: :datasets_origins,
-                                    dependent: :delete_all,
-                                    after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :countries,
+                          join_table: :datasets_countries,
+                          dependent: :delete_all
 
-  has_many :dataset_sustainable_development_goals, dependent: :delete_all,
-                             after_add: :association_add, before_remove: :association_remove
-  has_many :sustainable_development_goals, through: :dataset_sustainable_development_goals,
-                                           dependent: :delete_all,
-                                           after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :origins,
+                          join_table: :datasets_origins,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
   validates :name, presence: true, length: { maximum: 300 }
 
@@ -45,7 +59,16 @@ class Dataset < ApplicationRecord
   amoeba do
     enable
 
-    exclude_association :organizations
+    exclude_association :organization_datasets
+  end
+
+  def sync_associations(source_dataset)
+    destination_organizations = []
+    source_dataset.organizations.each do |source_organization|
+      organization = Organization.find_by(slug: source_organization.slug)
+      destination_organizations << organization unless organization.nil?
+    end
+    self.organizations = destination_organizations
   end
 
   def sync_record(copy_of_dataset)

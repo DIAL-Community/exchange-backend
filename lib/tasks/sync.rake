@@ -177,7 +177,7 @@ namespace :sync do
 
       puts "Deleting product: #{blacklist_product.name}!"
       blacklist_product.organizations.each do |organization|
-        org_products = OrganizationsProduct.where(organization_id: organization.id)
+        org_products = OrganizationProduct.where(organization_id: organization.id)
         if org_products.count == 1 && organization.is_endorser != true && organization.is_mni != true
           puts "Deleting organization: #{organization.name}." if organization.destroy
         elsif org_products.count > 1
@@ -654,7 +654,7 @@ namespace :sync do
       organizations = Organization.name_contains(organization_name['name']) unless organization_name.nil?
 
       if !organizations.nil? && !organizations.empty? && !existing_project.organizations.include?(organizations.first)
-        project_organization = ProjectsOrganization.new
+        project_organization = ProjectOrganization.new
         project_organization.org_type = 'owner'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = organizations.first.id
@@ -670,7 +670,7 @@ namespace :sync do
         next if donor_organizations.nil? || donor_organizations.empty? ||
           existing_project.organizations.include?(donor_organizations.first)
 
-        project_organization = ProjectsOrganization.new
+        project_organization = ProjectOrganization.new
         project_organization.org_type = 'funder'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = donor_organizations.first.id
@@ -685,7 +685,7 @@ namespace :sync do
         next if implementer_organizations.empty? ||
           existing_project.organizations.include?(implementer_organizations.first)
 
-        project_organization = ProjectsOrganization.new
+        project_organization = ProjectOrganization.new
         project_organization.org_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectsSector < ApplicationRecord
+class ProjectProduct < ApplicationRecord
   belongs_to :project
   belongs_to :sector
 end

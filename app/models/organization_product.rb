@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrganizationsProduct < ApplicationRecord
+class OrganizationProduct < ApplicationRecord
   include AssociationSource
 
   belongs_to :organization
@@ -12,7 +12,7 @@ class OrganizationsProduct < ApplicationRecord
   after_initialize :default_association_source, if: :auditable_association_object
 
   def default_association_source
-    self.association_source = OrganizationsProduct.LEFT
+    self.association_source = OrganizationProduct.LEFT
   end
 
   # overridden
@@ -25,7 +25,7 @@ class OrganizationsProduct < ApplicationRecord
   end
 
   def audit_id_value
-    if association_source == OrganizationsProduct.LEFT
+    if association_source == OrganizationProduct.LEFT
       product&.slug
     else
       organization&.slug
@@ -33,7 +33,7 @@ class OrganizationsProduct < ApplicationRecord
   end
 
   def audit_field_name
-    if association_source == OrganizationsProduct.LEFT
+    if association_source == OrganizationProduct.LEFT
       Product.name.pluralize.downcase
     else
       Organization.name.pluralize.downcase

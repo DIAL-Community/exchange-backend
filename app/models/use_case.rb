@@ -12,9 +12,12 @@ class UseCase < ApplicationRecord
   has_many :use_case_headers, dependent: :destroy
   has_many :use_case_descriptions, dependent: :destroy
 
-  has_and_belongs_to_many :opportunities, join_table: :opportunities_use_cases
-  has_and_belongs_to_many :sdg_targets, join_table: :use_cases_sdg_targets,
-                                        after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :opportunities,
+                          join_table: :opportunities_use_cases
+  has_and_belongs_to_many :sdg_targets,
+                          join_table: :use_cases_sdg_targets,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
   scope :name_contains, ->(name) { where('LOWER(use_cases.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(use_cases.slug) like LOWER(?)', "#{slug}\\_%") }

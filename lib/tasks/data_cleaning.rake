@@ -642,7 +642,7 @@ namespace :data do
       end
     end
 
-    ProjectsSector.all.each do |proj_sector|
+    ProjectProduct.all.each do |proj_sector|
       sector = Sector.find_by(id: proj_sector.sector_id, locale: 'en')
       project = Project.find_by(id: proj_sector.project_id)
 

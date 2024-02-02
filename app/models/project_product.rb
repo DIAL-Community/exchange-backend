@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectsProduct < ApplicationRecord
+class ProjectProduct < ApplicationRecord
   belongs_to :product
   belongs_to :project
 end
