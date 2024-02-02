@@ -8,12 +8,12 @@ require 'modules/url_sanitizer'
 
 namespace :gdpir_sync do
   desc 'Scrape the GDPIR website for products.'
-  task sync_products: :environment do
+  task :sync_products, [:base_path] => :environment do |_, params|
     task_name = 'Sync GDPIR Products'
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    gdpir_dpi_url = 'https://www.dpi.global/globaldpi/dpicatedata'
+    # gdpir_dpi_url = 'https://www.dpi.global/globaldpi/dpicatedata'
 
     gdpir_name = 'Global Digital Public Infrastructure Repository'
     gdpir_origin = Origin.find_by(slug: 'gdpir')
@@ -33,17 +33,18 @@ namespace :gdpir_sync do
 
     puts 'GDPIR as origin is created.' if gdpir_origin.save!
 
-    puts "Opening: #{gdpir_dpi_url}."
-    response = Faraday.get(gdpir_dpi_url)
-    puts "Response status: #{response.status}."
-    break unless response.status == 200
+    # puts "Opening: #{gdpir_dpi_url}."
+    # response = Faraday.get(gdpir_dpi_url)
+    # puts "Response status: #{response.status}."
+    # break unless response.status == 200
 
     category_to_building_block_map = {
       'Payment' => 'Payments',
       'Data Exchange' => 'Information Mediator'
     }
 
-    html_fragment = Nokogiri::HTML.fragment(response.body)
+    base_file = File.read("#{params[:base_path]}/globaldpi/dpicatedata.html")
+    html_fragment = Nokogiri::HTML.fragment(base_file)
 
     # The structure for the DPI accordion is a bit strange.
     # accordion
@@ -77,7 +78,7 @@ namespace :gdpir_sync do
     dpi_body_links.each do |dpi_body_link|
       dpi_product_url = dpi_body_link.attr('href')
       dpi_product_logo_url = dpi_body_link.at_css('img')
-      process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
+      process_dpi_product(params[:base_path], dpi_product_url, dpi_product_logo_url, building_block)
     end
 
     dpi_accordion_items = outer_dpi_accordion_item.css('div.accordion-item')
@@ -97,7 +98,7 @@ namespace :gdpir_sync do
       dpi_body_links.each do |dpi_body_link|
         dpi_product_url = dpi_body_link.attr('href')
         dpi_product_logo_url = dpi_body_link.at_css('img')
-        process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
+        process_dpi_product(params[:base_path], dpi_product_url, dpi_product_logo_url, building_block)
       end
     end
 
@@ -108,14 +109,15 @@ namespace :gdpir_sync do
     }
 
     puts "------------------------------------"
-    gdpir_country_url = 'https://www.dpi.global/globaldpi/allcountrydpi'
-    puts "Opening country page: #{gdpir_country_url}."
+    # gdpir_country_url = 'https://www.dpi.global/globaldpi/allcountrydpi'
+    # puts "Opening country page: #{gdpir_country_url}."
 
-    response = Faraday.get(gdpir_country_url)
-    puts "Country page response status: #{response.status}."
-    break unless response.status == 200
+    # response = Faraday.get(gdpir_country_url)
+    # puts "Country page response status: #{response.status}."
+    # break unless response.status == 200
 
-    html_fragment = Nokogiri::HTML.fragment(response.body)
+    base_file = File.read("#{params[:base_path]}/globaldpi/allcountrydpi.html")
+    html_fragment = Nokogiri::HTML.fragment(base_file)
     accordion_items = html_fragment.css('div.accordion-item')
     accordion_items.each do |accordion_item|
       accordion_header = accordion_item.at_css('h2.accordion-header')
@@ -137,20 +139,21 @@ namespace :gdpir_sync do
       dpi_products = accordion_item.css('div.accordion-body a')
       dpi_products.each do |dpi_product|
         dpi_product_url = dpi_product.attr('href')
-        process_dpi_product_country(dpi_product_url, country_name_or_code)
+        process_dpi_product_country(params[:base_path], dpi_product_url, country_name_or_code)
       end
     end
 
     tracking_task_finish(task_name)
   end
 
-  def process_dpi_product_country(dpi_product_url, country_name_or_code)
-    response = Faraday.get(dpi_product_url)
-    puts "  Product url: #{dpi_product_url}."
-    puts "    Response status: #{response.status}."
-    return unless response.status == 200
+  def process_dpi_product_country(base_path, dpi_product_url, country_name_or_code)
+    # response = Faraday.get(dpi_product_url)
+    # puts "  Product url: #{dpi_product_url}."
+    # puts "    Response status: #{response.status}."
+    # return unless response.status == 200
 
-    html_fragment = Nokogiri::HTML.fragment(response.body)
+    base_file = File.read("#{base_path}/globaldpi/#{dpi_product_url}")
+    html_fragment = Nokogiri::HTML.fragment(base_file)
     dpi_product_title = html_fragment.at_css('h5').text.strip
 
     task_name = 'Sync GDPIR Products'
@@ -172,13 +175,14 @@ namespace :gdpir_sync do
     end
   end
 
-  def process_dpi_product(dpi_product_url, dpi_product_logo_url, building_block)
-    response = Faraday.get(dpi_product_url)
-    puts "  Product url: #{dpi_product_url}."
-    puts "    Response status: #{response.status}."
-    return unless response.status == 200
+  def process_dpi_product(base_path, dpi_product_url, dpi_product_logo_url, building_block)
+    # response = Faraday.get(dpi_product_url)
+    # puts "  Product url: #{dpi_product_url}."
+    # puts "    Response status: #{response.status}."
+    # return unless response.status == 200
 
-    html_fragment = Nokogiri::HTML.fragment(response.body)
+    base_file = File.read("#{base_path}/globaldpi/#{dpi_product_url}")
+    html_fragment = Nokogiri::HTML.fragment(base_file)
     dpi_product_title = html_fragment.at_css('h5').text.strip
 
     task_name = 'Sync GDPIR Products'
@@ -395,14 +399,15 @@ namespace :gdpir_sync do
       end
 
       unless dpi_product_logo_url.nil?
-        faraday_downloader = Faraday.new do |builder|
-          builder.adapter(Faraday.default_adapter)
-        end
-        response = faraday_downloader.get(dpi_product_logo_url.attr('src'))
+        # faraday_downloader = Faraday.new do |builder|
+        #   builder.adapter(Faraday.default_adapter)
+        # end
+        # response = faraday_downloader.get(dpi_product_logo_url.attr('src'))
 
+        logo_file = File.read("#{base_path}/globaldpi/#{dpi_product_logo_url.attr('src')}")
         temp_file = Tempfile.new([product.slug, '.png'], binmode: true)
         begin
-          temp_file.write(response.body)
+          temp_file.write(logo_file)
           temp_file.close
 
           unless File.exist?(File.join('public', 'assets', 'products', "#{product.slug}.png"))
