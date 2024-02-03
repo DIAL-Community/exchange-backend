@@ -120,7 +120,7 @@ module Modules
             next if organization.nil?
 
             unless is_new
-              organization_dataset = OrganizationsDataset.find_by(
+              organization_dataset = OrganizationDataset.find_by(
                 dataset_id: existing_dataset.id,
                 organization_id: organization.id,
                 organization_type: organization_entry['org_type']
@@ -128,7 +128,7 @@ module Modules
               next unless organization_dataset.nil?
             end
 
-            organization_dataset = OrganizationsDataset.new
+            organization_dataset = OrganizationDataset.new
             organization_dataset.organization_id = organization.id
             organization_dataset.organization_type = organization_entry['org_type']
 
@@ -276,7 +276,7 @@ module Modules
 
     def sync_digisquare_product(digi_product, digisquare_maturity)
       dsq_endorser = Endorser.find_by(slug: 'dsq')
-      digisquare_origin = Origin.find_by(slug: 'digital_square')
+      digisquare_origin = Origin.find_by(slug: 'digital-square')
 
       name_aliases = [digi_product['name']]
       digi_product['aliases']&.each do |name_alias|
@@ -555,7 +555,7 @@ module Modules
             organization.website = cleanup_url(organization['website'])
             organization.save
 
-            organization_product = OrganizationsProduct.new
+            organization_product = OrganizationProduct.new
             organization_product.org_type = organization['org_type']
             organization_product.organization_id = organization.id
             organization_product.product_id = existing_product.id
@@ -569,7 +569,7 @@ module Modules
           next if existing_product.organizations.include?(organization)
 
           puts "  Adding organization to product: #{organization.name}."
-          organization_product = OrganizationsProduct.new
+          organization_product = OrganizationProduct.new
           organization_product.org_type = organization['org_type']
           organization_product.organization_id = organization.id
           organization_product.product_id = existing_product.id
@@ -651,7 +651,7 @@ module Modules
       implementer_organizations = Organization.name_contains(english_project[5])
 
       if !implementer_organizations.empty? && !existing_project.organizations.include?(implementer_organizations.first)
-        project_organization = ProjectsOrganization.new
+        project_organization = ProjectOrganization.new
         project_organization.org_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id

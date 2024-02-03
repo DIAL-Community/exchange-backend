@@ -6,19 +6,14 @@ class Playbook < ApplicationRecord
   attr_accessor :playbook_overview, :playbook_audience, :playbook_outcomes, :playbook_cover
 
   has_many :playbook_descriptions, dependent: :destroy
+  has_many :playbook_plays,
+            -> { order('playbook_plays.play_order ASC') }
+
   has_and_belongs_to_many :sectors, join_table: :playbooks_sectors
-
-  has_and_belongs_to_many(
-    :plays,
-    -> { order('playbook_plays.play_order') },
-    dependent: :destroy,
-    join_table: :playbook_plays
-  )
-
-  has_many(
-    :playbook_plays,
-    -> { order('playbook_plays.play_order ASC') }
-  )
+  has_and_belongs_to_many :plays,
+                          -> { order('playbook_plays.play_order') },
+                          dependent: :destroy,
+                          join_table: :playbook_plays
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
@@ -54,7 +49,7 @@ class Playbook < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'playbooks', "#{slug}.png"))
       "/assets/playbooks/#{slug}.png"
     else
-      '/assets/playbooks/playbook_placeholder.svg'
+      '/assets/playbooks/playbook-placeholder.svg'
     end
   end
 end

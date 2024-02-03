@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class OrganizationsContact < ApplicationRecord
+class OrganizationContact < ApplicationRecord
   include AssociationSource
 
   belongs_to :contact
@@ -9,7 +9,7 @@ class OrganizationsContact < ApplicationRecord
   after_initialize :default_association_source, if: :auditable_association_object
 
   def default_association_source
-    self.association_source = OrganizationsContact.LEFT
+    self.association_source = OrganizationContact.LEFT
   end
 
   # overridden
@@ -18,7 +18,7 @@ class OrganizationsContact < ApplicationRecord
   end
 
   def audit_id_value
-    if association_source == OrganizationsContact.LEFT
+    if association_source == OrganizationContact.LEFT
       contact&.slug
     else
       organization&.slug
@@ -26,7 +26,7 @@ class OrganizationsContact < ApplicationRecord
   end
 
   def audit_field_name
-    if association_source == OrganizationsContact.LEFT
+    if association_source == OrganizationContact.LEFT
       Contact.name.pluralize.downcase
     else
       Organization.name.pluralize.downcase

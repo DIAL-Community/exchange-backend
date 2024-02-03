@@ -69,7 +69,7 @@ module Types
         object.contacts.each do |contact|
           current_contact = contact.as_json
 
-          organization_contact = OrganizationsContact.where(ended_at: nil)
+          organization_contact = OrganizationContact.where(ended_at: nil)
           organization_contact = organization_contact.where(organization_id: object.id)
           organization_contact = organization_contact.where(contact_id: contact.id)
           organization_contact = organization_contact.order(started_at: :desc)

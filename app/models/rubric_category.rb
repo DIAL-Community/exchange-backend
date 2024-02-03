@@ -4,7 +4,6 @@ class RubricCategory < ApplicationRecord
   attr_accessor :rc_desc
 
   has_many :category_indicators, dependent: :destroy
-
   has_many :rubric_category_descriptions, dependent: :destroy
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }

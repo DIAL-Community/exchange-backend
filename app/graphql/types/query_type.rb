@@ -203,6 +203,11 @@ module Types
     field :paginated_regions, resolver: Paginated::PaginatedRegions
     field :pagination_attribute_region, resolver: Paginated::PaginationAttributeRegion
 
+    field :syncs, resolver: Queries::SyncsQuery
+    field :sync, resolver: Queries::SyncQuery
+    field :paginated_syncs, resolver: Paginated::PaginatedSyncs
+    field :pagination_attribute_sync, resolver: Paginated::PaginationAttributeSync
+
     field :starred_objects, resolver: Queries::StarredObjectsQuery
     field :starred_object, resolver: Queries::StarredObjectQuery
 

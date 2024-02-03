@@ -10,91 +10,111 @@ class Organization < ApplicationRecord
 
   attr_accessor :organization_description
 
-  has_and_belongs_to_many(
-    :datasets,
-    join_table: :organizations_datasets,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :organization_descriptions,
+           dependent: :destroy
 
-  has_and_belongs_to_many(
-    :countries,
-    join_table: :organizations_countries,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :aggregator_capabilities,
+           join_table: :aggregator_capabilities,
+           foreign_key: 'aggregator_id',
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :sectors,
-    join_table: :organizations_sectors,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :organization_contacts,
+           after_add: :association_add,
+           before_remove: :association_remove,
+           dependent: :delete_all
+  has_many :contacts,
+           through: :organization_contacts,
+           after_add: :association_add,
+           before_remove: :association_remove,
+           dependent: :delete_all
 
-  has_and_belongs_to_many(
-    :projects,
-    join_table: :projects_organizations,
-    dependent: :delete_all,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :organization_products,
+           after_add: :association_add,
+          before_remove: :association_remove
+  has_many :products,
+           through: :organization_products,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many(
-    :aggregator_capabilities,
-    join_table: :aggregator_capabilities,
-    foreign_key: 'aggregator_id',
-    dependent: :delete_all,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :organization_datasets,
+           after_add: :association_add,
+          before_remove: :association_remove
+  has_many :datasets,
+           through: :organization_datasets,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many(
-    :organizations_contacts,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_many :offices,
+           dependent: :destroy,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many(
-    :contacts,
-    through: :organizations_contacts,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :countries,
+                          join_table: :organizations_countries,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :resources,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :projects,
+                          join_table: :projects_organizations,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many :opportunities, join_table: :opportunities_organizations
+  has_and_belongs_to_many :sectors,
+                          join_table: :organizations_sectors,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_many :organizations_products, after_add: :association_add, before_remove: :association_remove
-  has_many :products, through: :organizations_products,
-                      after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :resources,
+                          after_add: :association_add,
+                          before_remove: :association_remove,
+                          dependent: :delete_all
 
-  has_many :organization_descriptions, dependent: :destroy
-  has_many :offices, dependent: :destroy, after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :opportunities,
+                          join_table: :opportunities_organizations
 
   validates :name, presence: true, length: { maximum: 300 }
 
   scope :name_contains, ->(name) { where('LOWER(organizations.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(organizations.slug) like LOWER(?)', "#{slug}\\_%") }
 
+  amoeba do
+    enable
+
+    exclude_association :aggregator_capabilities
+    exclude_association :offices
+    exclude_association :opportunities
+    exclude_association :organization_contacts
+    exclude_association :organization_datasets
+    exclude_association :organization_products
+    exclude_association :projects
+    exclude_association :resources
+  end
+
+  def sync_record(copy_of_organization)
+    ActiveRecord::Base.transaction do
+      self.organization_descriptions = copy_of_organization.organization_descriptions
+      self.countries = copy_of_organization.countries
+      self.sectors = copy_of_organization.sectors
+      save!
+
+      update!(copy_of_organization.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def image_file
     if File.exist?(File.join('public', 'assets', 'organizations', "#{slug}.png"))
       "/assets/organizations/#{slug}.png"
     else
-      '/assets/organizations/organization_placeholder.png'
+      '/assets/organizations/organization-placeholder.png'
     end
   end
 
   def hero_file
     if File.exist?(File.join('public', 'assets', 'organizations', 'hero', "hero_#{slug}.png"))
-      "/assets/organizations/hero/hero_#{slug}.png"
+      "/assets/organizations/hero/hero-#{slug}.png"
     end
   end
 

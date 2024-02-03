@@ -3,10 +3,10 @@
 module Modules
   module WizardHelpers
     def get_project_list(sector_ids, countries, tags, sort_hint, offset_params = {})
-      sector_projects = ProjectsSector.where(sector_id: sector_ids).map(&:project_id)
+      sector_projects = ProjectProduct.where(sector_id: sector_ids).map(&:project_id)
 
       unless countries.nil?
-        country_projects = ProjectsCountry.joins(:country).where(countries: { name: countries }).map(&:project_id)
+        country_projects = ProjectCountry.joins(:country).where(countries: { name: countries }).map(&:project_id)
       end
 
       unless tags.nil?

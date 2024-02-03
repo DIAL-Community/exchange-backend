@@ -18,4 +18,8 @@ class AboutController < ApplicationController
       "tenant": current_tenant.nil? ? 'default' : current_tenant.tenant_name
     })
   end
+
+  def tenants
+    render(json: { "tenants": ExchangeTenant.distinct.pluck(:tenant_name) })
+  end
 end

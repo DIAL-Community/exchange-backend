@@ -161,5 +161,9 @@ module Types
     field :create_region, mutation: Mutations::CreateRegion
     field :delete_region, mutation: Mutations::DeleteRegion
     field :update_region_countries, mutation: Mutations::UpdateRegionCountries
+
+    field :create_sync, mutation: Mutations::CreateSync
+    field :delete_sync, mutation: Mutations::DeleteSync
+    field :sync_tenants, mutation: Mutations::SyncTenants
   end
 end
