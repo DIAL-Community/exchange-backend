@@ -29,6 +29,6 @@ rake opportunity_sync:sync_ungm                     || exit_code+=" 19"
 rake opportunity_task:close_opportunities           || exit_code+=" 20"
 rake govstack:sync_govstack_procurements            || exit_code+=" 21"
 rake product_sync:digital_square_implementation     || exit_code+=" 22"
-rake gdpir_sync:sync_products                       || exit_code+=" 23"
+rake gdpir_sync:sync_products\[../www.dpi.global\]  || exit_code+=" 23"
 
 echo $exit_code
