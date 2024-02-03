@@ -6,14 +6,11 @@ class BuildingBlock < ApplicationRecord
   include EntityStatusType
   include Auditable
 
-  amoeba do
-    enable
-  end
-
   enum category_type: {
     DPI: 'DPI',
     FUNCTIONAL: 'FUNCTIONAL'
   }
+
   has_many :building_block_descriptions, dependent: :destroy
 
   has_many :product_building_blocks,
