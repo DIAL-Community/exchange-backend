@@ -133,7 +133,8 @@ CREATE TYPE fao.comment_object_type AS ENUM (
     'SECTOR',
     'COUNTRY',
     'CITY',
-    'CONTACT'
+    'CONTACT',
+    'RESOURCE'
 );
 
 
@@ -2183,6 +2184,72 @@ CREATE TABLE fao.opportunities_use_cases (
 
 
 --
+-- Name: organization_contacts; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.organization_contacts (
+    organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    main_contact boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.organization_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.organization_contacts_id_seq OWNED BY fao.organization_contacts.id;
+
+
+--
+-- Name: organization_datasets; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.organization_datasets (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    organization_type fao.org_type DEFAULT 'owner'::fao.org_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.organization_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.organization_datasets_id_seq OWNED BY fao.organization_datasets.id;
+
+
+--
 -- Name: organization_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2216,6 +2283,38 @@ ALTER SEQUENCE fao.organization_descriptions_id_seq OWNED BY fao.organization_de
 
 
 --
+-- Name: organization_products; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.organization_products (
+    organization_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    org_type fao.org_type DEFAULT 'owner'::fao.org_type
+);
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.organization_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.organization_products_id_seq OWNED BY fao.organization_products.id;
+
+
+--
 -- Name: organizations; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2237,40 +2336,6 @@ CREATE TABLE fao.organizations (
     certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
     building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
 );
-
-
---
--- Name: organizations_contacts; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.organizations_contacts (
-    organization_id bigint NOT NULL,
-    contact_id bigint NOT NULL,
-    started_at timestamp without time zone,
-    ended_at timestamp without time zone,
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    main_contact boolean DEFAULT false NOT NULL
-);
-
-
---
--- Name: organizations_contacts_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.organizations_contacts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.organizations_contacts_id_seq OWNED BY fao.organizations_contacts.id;
 
 
 --
@@ -2304,38 +2369,6 @@ ALTER SEQUENCE fao.organizations_countries_id_seq OWNED BY fao.organizations_cou
 
 
 --
--- Name: organizations_datasets; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.organizations_datasets (
-    id bigint NOT NULL,
-    organization_id bigint NOT NULL,
-    dataset_id bigint NOT NULL,
-    organization_type fao.org_type DEFAULT 'owner'::fao.org_type NOT NULL,
-    slug character varying NOT NULL
-);
-
-
---
--- Name: organizations_datasets_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.organizations_datasets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.organizations_datasets_id_seq OWNED BY fao.organizations_datasets.id;
-
-
---
 -- Name: organizations_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
 --
 
@@ -2352,38 +2385,6 @@ CREATE SEQUENCE fao.organizations_id_seq
 --
 
 ALTER SEQUENCE fao.organizations_id_seq OWNED BY fao.organizations.id;
-
-
---
--- Name: organizations_products; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.organizations_products (
-    organization_id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    org_type fao.org_type DEFAULT 'owner'::fao.org_type
-);
-
-
---
--- Name: organizations_products_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.organizations_products_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_products_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.organizations_products_id_seq OWNED BY fao.organizations_products.id;
 
 
 --
@@ -2934,36 +2935,6 @@ ALTER SEQUENCE fao.product_classifications_id_seq OWNED BY fao.product_classific
 
 
 --
--- Name: product_countries; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.product_countries (
-    id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    country_id bigint NOT NULL
-);
-
-
---
--- Name: product_countries_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.product_countries_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: product_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.product_countries_id_seq OWNED BY fao.product_countries.id;
-
-
---
 -- Name: product_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3202,6 +3173,36 @@ CREATE TABLE fao.products (
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '{}'::jsonb
 );
+
+
+--
+-- Name: products_countries; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.products_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.products_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.products_countries_id_seq OWNED BY fao.products_countries.id;
 
 
 --
@@ -6004,6 +6005,72 @@ CREATE TABLE public.opportunities_use_cases (
 
 
 --
+-- Name: organization_contacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organization_contacts (
+    organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    main_contact boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organization_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organization_contacts_id_seq OWNED BY public.organization_contacts.id;
+
+
+--
+-- Name: organization_datasets; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organization_datasets (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    organization_type public.org_type DEFAULT 'owner'::public.org_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organization_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organization_datasets_id_seq OWNED BY public.organization_datasets.id;
+
+
+--
 -- Name: organization_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6037,6 +6104,38 @@ ALTER SEQUENCE public.organization_descriptions_id_seq OWNED BY public.organizat
 
 
 --
+-- Name: organization_products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.organization_products (
+    organization_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    org_type public.org_type DEFAULT 'owner'::public.org_type
+);
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.organization_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.organization_products_id_seq OWNED BY public.organization_products.id;
+
+
+--
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6058,40 +6157,6 @@ CREATE TABLE public.organizations (
     certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
     building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
 );
-
-
---
--- Name: organizations_contacts; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.organizations_contacts (
-    organization_id bigint NOT NULL,
-    contact_id bigint NOT NULL,
-    started_at timestamp without time zone,
-    ended_at timestamp without time zone,
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    main_contact boolean DEFAULT false NOT NULL
-);
-
-
---
--- Name: organizations_contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.organizations_contacts_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.organizations_contacts_id_seq OWNED BY public.organizations_contacts.id;
 
 
 --
@@ -6125,38 +6190,6 @@ ALTER SEQUENCE public.organizations_countries_id_seq OWNED BY public.organizatio
 
 
 --
--- Name: organizations_datasets; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.organizations_datasets (
-    id bigint NOT NULL,
-    organization_id bigint NOT NULL,
-    dataset_id bigint NOT NULL,
-    organization_type public.org_type DEFAULT 'owner'::public.org_type NOT NULL,
-    slug character varying NOT NULL
-);
-
-
---
--- Name: organizations_datasets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.organizations_datasets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.organizations_datasets_id_seq OWNED BY public.organizations_datasets.id;
-
-
---
 -- Name: organizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -6173,38 +6206,6 @@ CREATE SEQUENCE public.organizations_id_seq
 --
 
 ALTER SEQUENCE public.organizations_id_seq OWNED BY public.organizations.id;
-
-
---
--- Name: organizations_products; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.organizations_products (
-    organization_id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    org_type public.org_type DEFAULT 'owner'::public.org_type
-);
-
-
---
--- Name: organizations_products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.organizations_products_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: organizations_products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.organizations_products_id_seq OWNED BY public.organizations_products.id;
 
 
 --
@@ -6755,36 +6756,6 @@ ALTER SEQUENCE public.product_classifications_id_seq OWNED BY public.product_cla
 
 
 --
--- Name: product_countries; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.product_countries (
-    id bigint NOT NULL,
-    product_id bigint NOT NULL,
-    country_id bigint NOT NULL
-);
-
-
---
--- Name: product_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.product_countries_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: product_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.product_countries_id_seq OWNED BY public.product_countries.id;
-
-
---
 -- Name: product_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -7023,6 +6994,36 @@ CREATE TABLE public.products (
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '{}'::jsonb
 );
+
+
+--
+-- Name: products_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.products_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.products_countries_id_seq OWNED BY public.products_countries.id;
 
 
 --
@@ -7345,6 +7346,71 @@ CREATE SEQUENCE public.regions_id_seq
 --
 
 ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
+
+
+--
+-- Name: resource_topic_descriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resource_topic_descriptions (
+    id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    resource_topic_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.resource_topic_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.resource_topic_descriptions_id_seq OWNED BY public.resource_topic_descriptions.id;
+
+
+--
+-- Name: resource_topics; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resource_topics (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.resource_topics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.resource_topics_id_seq OWNED BY public.resource_topics.id;
 
 
 --
@@ -8622,10 +8688,31 @@ ALTER TABLE ONLY fao.opportunities ALTER COLUMN id SET DEFAULT nextval('fao.oppo
 
 
 --
+-- Name: organization_contacts id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.organization_contacts ALTER COLUMN id SET DEFAULT nextval('fao.organization_contacts_id_seq'::regclass);
+
+
+--
+-- Name: organization_datasets id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.organization_datasets ALTER COLUMN id SET DEFAULT nextval('fao.organization_datasets_id_seq'::regclass);
+
+
+--
 -- Name: organization_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.organization_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.organization_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: organization_products id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.organization_products ALTER COLUMN id SET DEFAULT nextval('fao.organization_products_id_seq'::regclass);
 
 
 --
@@ -8636,31 +8723,10 @@ ALTER TABLE ONLY fao.organizations ALTER COLUMN id SET DEFAULT nextval('fao.orga
 
 
 --
--- Name: organizations_contacts id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.organizations_contacts ALTER COLUMN id SET DEFAULT nextval('fao.organizations_contacts_id_seq'::regclass);
-
-
---
 -- Name: organizations_countries id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.organizations_countries ALTER COLUMN id SET DEFAULT nextval('fao.organizations_countries_id_seq'::regclass);
-
-
---
--- Name: organizations_datasets id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.organizations_datasets ALTER COLUMN id SET DEFAULT nextval('fao.organizations_datasets_id_seq'::regclass);
-
-
---
--- Name: organizations_products id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.organizations_products ALTER COLUMN id SET DEFAULT nextval('fao.organizations_products_id_seq'::regclass);
 
 
 --
@@ -8776,13 +8842,6 @@ ALTER TABLE ONLY fao.product_classifications ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: product_countries id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_countries ALTER COLUMN id SET DEFAULT nextval('fao.product_countries_id_seq'::regclass);
-
-
---
 -- Name: product_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -8829,6 +8888,13 @@ ALTER TABLE ONLY fao.product_sustainable_development_goals ALTER COLUMN id SET D
 --
 
 ALTER TABLE ONLY fao.products ALTER COLUMN id SET DEFAULT nextval('fao.products_id_seq'::regclass);
+
+
+--
+-- Name: products_countries id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.products_countries ALTER COLUMN id SET DEFAULT nextval('fao.products_countries_id_seq'::regclass);
 
 
 --
@@ -9350,10 +9416,31 @@ ALTER TABLE ONLY public.opportunities ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: organization_contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organization_contacts ALTER COLUMN id SET DEFAULT nextval('public.organization_contacts_id_seq'::regclass);
+
+
+--
+-- Name: organization_datasets id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organization_datasets ALTER COLUMN id SET DEFAULT nextval('public.organization_datasets_id_seq'::regclass);
+
+
+--
 -- Name: organization_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.organization_descriptions ALTER COLUMN id SET DEFAULT nextval('public.organization_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: organization_products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organization_products ALTER COLUMN id SET DEFAULT nextval('public.organization_products_id_seq'::regclass);
 
 
 --
@@ -9364,31 +9451,10 @@ ALTER TABLE ONLY public.organizations ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- Name: organizations_contacts id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_contacts ALTER COLUMN id SET DEFAULT nextval('public.organizations_contacts_id_seq'::regclass);
-
-
---
 -- Name: organizations_countries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.organizations_countries ALTER COLUMN id SET DEFAULT nextval('public.organizations_countries_id_seq'::regclass);
-
-
---
--- Name: organizations_datasets id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_datasets ALTER COLUMN id SET DEFAULT nextval('public.organizations_datasets_id_seq'::regclass);
-
-
---
--- Name: organizations_products id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_products ALTER COLUMN id SET DEFAULT nextval('public.organizations_products_id_seq'::regclass);
 
 
 --
@@ -9504,13 +9570,6 @@ ALTER TABLE ONLY public.product_classifications ALTER COLUMN id SET DEFAULT next
 
 
 --
--- Name: product_countries id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.product_countries ALTER COLUMN id SET DEFAULT nextval('public.product_countries_id_seq'::regclass);
-
-
---
 -- Name: product_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9560,6 +9619,13 @@ ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.pro
 
 
 --
+-- Name: products_countries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_countries ALTER COLUMN id SET DEFAULT nextval('public.products_countries_id_seq'::regclass);
+
+
+--
 -- Name: products_endorsers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -9606,6 +9672,20 @@ ALTER TABLE ONLY public.provinces ALTER COLUMN id SET DEFAULT nextval('public.pr
 --
 
 ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_topic_descriptions ALTER COLUMN id SET DEFAULT nextval('public.resource_topic_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topics id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_topics ALTER COLUMN id SET DEFAULT nextval('public.resource_topics_id_seq'::regclass);
 
 
 --
@@ -10126,6 +10206,22 @@ ALTER TABLE ONLY fao.opportunities
 
 
 --
+-- Name: organization_contacts organization_contacts_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.organization_contacts
+    ADD CONSTRAINT organization_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_datasets organization_datasets_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.organization_datasets
+    ADD CONSTRAINT organization_datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: organization_descriptions organization_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -10134,11 +10230,11 @@ ALTER TABLE ONLY fao.organization_descriptions
 
 
 --
--- Name: organizations_contacts organizations_contacts_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_products organization_products_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_contacts
-    ADD CONSTRAINT organizations_contacts_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY fao.organization_products
+    ADD CONSTRAINT organization_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -10150,27 +10246,11 @@ ALTER TABLE ONLY fao.organizations_countries
 
 
 --
--- Name: organizations_datasets organizations_datasets_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.organizations_datasets
-    ADD CONSTRAINT organizations_datasets_pkey PRIMARY KEY (id);
-
-
---
 -- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.organizations
     ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
-
-
---
--- Name: organizations_products organizations_products_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.organizations_products
-    ADD CONSTRAINT organizations_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -10302,14 +10382,6 @@ ALTER TABLE ONLY fao.product_classifications
 
 
 --
--- Name: product_countries product_countries_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_countries
-    ADD CONSTRAINT product_countries_pkey PRIMARY KEY (id);
-
-
---
 -- Name: product_descriptions product_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -10355,6 +10427,14 @@ ALTER TABLE ONLY fao.product_sectors
 
 ALTER TABLE ONLY fao.product_sustainable_development_goals
     ADD CONSTRAINT product_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_countries products_countries_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.products_countries
+    ADD CONSTRAINT products_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -10974,6 +11054,22 @@ ALTER TABLE ONLY public.opportunities
 
 
 --
+-- Name: organization_contacts organization_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organization_contacts
+    ADD CONSTRAINT organization_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_datasets organization_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.organization_datasets
+    ADD CONSTRAINT organization_datasets_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: organization_descriptions organization_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -10982,11 +11078,11 @@ ALTER TABLE ONLY public.organization_descriptions
 
 
 --
--- Name: organizations_contacts organizations_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_products organization_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_contacts
-    ADD CONSTRAINT organizations_contacts_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.organization_products
+    ADD CONSTRAINT organization_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -10998,27 +11094,11 @@ ALTER TABLE ONLY public.organizations_countries
 
 
 --
--- Name: organizations_datasets organizations_datasets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_datasets
-    ADD CONSTRAINT organizations_datasets_pkey PRIMARY KEY (id);
-
-
---
 -- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.organizations
     ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
-
-
---
--- Name: organizations_products organizations_products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.organizations_products
-    ADD CONSTRAINT organizations_products_pkey PRIMARY KEY (id);
 
 
 --
@@ -11150,14 +11230,6 @@ ALTER TABLE ONLY public.product_classifications
 
 
 --
--- Name: product_countries product_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.product_countries
-    ADD CONSTRAINT product_countries_pkey PRIMARY KEY (id);
-
-
---
 -- Name: product_descriptions product_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11203,6 +11275,14 @@ ALTER TABLE ONLY public.product_sectors
 
 ALTER TABLE ONLY public.product_sustainable_development_goals
     ADD CONSTRAINT product_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_countries products_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products_countries
+    ADD CONSTRAINT products_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -11267,6 +11347,22 @@ ALTER TABLE ONLY public.provinces
 
 ALTER TABLE ONLY public.regions
     ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_topic_descriptions
+    ADD CONSTRAINT resource_topic_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topics resource_topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_topics
+    ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
 
 
 --
@@ -11567,7 +11663,7 @@ CREATE UNIQUE INDEX classifications_products_idx ON fao.product_classifications 
 -- Name: countries_product_idx; Type: INDEX; Schema: fao; Owner: -
 --
 
-CREATE UNIQUE INDEX countries_product_idx ON fao.product_countries USING btree (country_id, product_id);
+CREATE UNIQUE INDEX countries_product_idx ON fao.products_countries USING btree (country_id, product_id);
 
 
 --
@@ -11970,10 +12066,38 @@ CREATE INDEX index_opportunities_use_cases_on_use_case_id ON fao.opportunities_u
 
 
 --
+-- Name: index_organization_datasets_on_dataset_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_dataset_id ON fao.organization_datasets USING btree (dataset_id);
+
+
+--
+-- Name: index_organization_datasets_on_organization_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_organization_id ON fao.organization_datasets USING btree (organization_id);
+
+
+--
 -- Name: index_organization_descriptions_on_organization_id; Type: INDEX; Schema: fao; Owner: -
 --
 
 CREATE INDEX index_organization_descriptions_on_organization_id ON fao.organization_descriptions USING btree (organization_id);
+
+
+--
+-- Name: index_organization_products_on_organization_id_and_product_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_organization_id_and_product_id ON fao.organization_products USING btree (organization_id, product_id);
+
+
+--
+-- Name: index_organization_products_on_product_id_and_organization_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_product_id_and_organization_id ON fao.organization_products USING btree (product_id, organization_id);
 
 
 --
@@ -11991,38 +12115,10 @@ CREATE INDEX index_organizations_countries_on_organization_id ON fao.organizatio
 
 
 --
--- Name: index_organizations_datasets_on_dataset_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_organizations_datasets_on_dataset_id ON fao.organizations_datasets USING btree (dataset_id);
-
-
---
--- Name: index_organizations_datasets_on_organization_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_organizations_datasets_on_organization_id ON fao.organizations_datasets USING btree (organization_id);
-
-
---
 -- Name: index_organizations_on_slug; Type: INDEX; Schema: fao; Owner: -
 --
 
 CREATE UNIQUE INDEX index_organizations_on_slug ON fao.organizations USING btree (slug);
-
-
---
--- Name: index_organizations_products_on_organization_id_and_product_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX index_organizations_products_on_organization_id_and_product_id ON fao.organizations_products USING btree (organization_id, product_id);
-
-
---
--- Name: index_organizations_products_on_product_id_and_organization_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX index_organizations_products_on_product_id_and_organization_id ON fao.organizations_products USING btree (product_id, organization_id);
 
 
 --
@@ -12519,7 +12615,7 @@ CREATE UNIQUE INDEX prod_sdgs ON fao.product_sustainable_development_goals USING
 -- Name: product_countries_idx; Type: INDEX; Schema: fao; Owner: -
 --
 
-CREATE UNIQUE INDEX product_countries_idx ON fao.product_countries USING btree (product_id, country_id);
+CREATE UNIQUE INDEX product_countries_idx ON fao.products_countries USING btree (product_id, country_id);
 
 
 --
@@ -12785,7 +12881,7 @@ CREATE UNIQUE INDEX classifications_products_idx ON public.product_classificatio
 -- Name: countries_product_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX countries_product_idx ON public.product_countries USING btree (country_id, product_id);
+CREATE UNIQUE INDEX countries_product_idx ON public.products_countries USING btree (country_id, product_id);
 
 
 --
@@ -13188,10 +13284,38 @@ CREATE INDEX index_opportunities_use_cases_on_use_case_id ON public.opportunitie
 
 
 --
+-- Name: index_organization_datasets_on_dataset_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_dataset_id ON public.organization_datasets USING btree (dataset_id);
+
+
+--
+-- Name: index_organization_datasets_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_organization_id ON public.organization_datasets USING btree (organization_id);
+
+
+--
 -- Name: index_organization_descriptions_on_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_organization_descriptions_on_organization_id ON public.organization_descriptions USING btree (organization_id);
+
+
+--
+-- Name: index_organization_products_on_organization_id_and_product_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_organization_id_and_product_id ON public.organization_products USING btree (organization_id, product_id);
+
+
+--
+-- Name: index_organization_products_on_product_id_and_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_product_id_and_organization_id ON public.organization_products USING btree (product_id, organization_id);
 
 
 --
@@ -13209,38 +13333,10 @@ CREATE INDEX index_organizations_countries_on_organization_id ON public.organiza
 
 
 --
--- Name: index_organizations_datasets_on_dataset_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_datasets_on_dataset_id ON public.organizations_datasets USING btree (dataset_id);
-
-
---
--- Name: index_organizations_datasets_on_organization_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_organizations_datasets_on_organization_id ON public.organizations_datasets USING btree (organization_id);
-
-
---
 -- Name: index_organizations_on_slug; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_organizations_on_slug ON public.organizations USING btree (slug);
-
-
---
--- Name: index_organizations_products_on_organization_id_and_product_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_organizations_products_on_organization_id_and_product_id ON public.organizations_products USING btree (organization_id, product_id);
-
-
---
--- Name: index_organizations_products_on_product_id_and_organization_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_organizations_products_on_product_id_and_organization_id ON public.organizations_products USING btree (product_id, organization_id);
 
 
 --
@@ -13479,6 +13575,20 @@ CREATE UNIQUE INDEX index_regions_countries ON public.regions_countries USING bt
 --
 
 CREATE UNIQUE INDEX index_regions_on_slug ON public.regions USING btree (slug);
+
+
+--
+-- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resource_topic_descriptions_on_resource_topic_id ON public.resource_topic_descriptions USING btree (resource_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_slug; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_topics_on_slug ON public.resource_topics USING btree (slug);
 
 
 --
@@ -13737,7 +13847,7 @@ CREATE UNIQUE INDEX prod_sdgs ON public.product_sustainable_development_goals US
 -- Name: product_countries_idx; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX product_countries_idx ON public.product_countries USING btree (product_id, country_id);
+CREATE UNIQUE INDEX product_countries_idx ON public.products_countries USING btree (product_id, country_id);
 
 
 --
@@ -13857,6 +13967,13 @@ CREATE UNIQUE INDEX sectors_playbooks_idx ON public.playbooks_sectors USING btre
 --
 
 CREATE UNIQUE INDEX sectors_projects_idx ON public.projects_sectors USING btree (sector_id, project_id);
+
+
+--
+-- Name: unique_on_resource_topic_id_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_on_resource_topic_id_and_locale ON public.resource_topic_descriptions USING btree (resource_topic_id, locale);
 
 
 --
@@ -14130,10 +14247,10 @@ ALTER TABLE ONLY fao.candidate_roles
 
 
 --
--- Name: organizations_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_datasets
+ALTER TABLE ONLY fao.organization_datasets
     ADD CONSTRAINT fk_rails_37920930c1 FOREIGN KEY (dataset_id) REFERENCES fao.datasets(id);
 
 
@@ -14538,10 +14655,10 @@ ALTER TABLE ONLY fao.opportunities_countries
 
 
 --
--- Name: organizations_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_datasets
+ALTER TABLE ONLY fao.organization_datasets
     ADD CONSTRAINT fk_rails_c82c326076 FOREIGN KEY (organization_id) REFERENCES fao.organizations(id);
 
 
@@ -14690,34 +14807,34 @@ ALTER TABLE ONLY fao.product_product_relationships
 
 
 --
--- Name: organizations_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_contacts
+ALTER TABLE ONLY fao.organization_contacts
     ADD CONSTRAINT organizations_contacts_contact_fk FOREIGN KEY (contact_id) REFERENCES fao.contacts(id);
 
 
 --
--- Name: organizations_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_contacts
+ALTER TABLE ONLY fao.organization_contacts
     ADD CONSTRAINT organizations_contacts_organization_fk FOREIGN KEY (organization_id) REFERENCES fao.organizations(id);
 
 
 --
--- Name: organizations_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_products
+ALTER TABLE ONLY fao.organization_products
     ADD CONSTRAINT organizations_products_organization_fk FOREIGN KEY (organization_id) REFERENCES fao.organizations(id);
 
 
 --
--- Name: organizations_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: organization_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.organizations_products
+ALTER TABLE ONLY fao.organization_products
     ADD CONSTRAINT organizations_products_product_fk FOREIGN KEY (product_id) REFERENCES fao.products(id);
 
 
@@ -14794,18 +14911,18 @@ ALTER TABLE ONLY fao.product_classifications
 
 
 --
--- Name: product_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: products_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.product_countries
+ALTER TABLE ONLY fao.products_countries
     ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES fao.countries(id);
 
 
 --
--- Name: product_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: products_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.product_countries
+ALTER TABLE ONLY fao.products_countries
     ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES fao.products(id);
 
 
@@ -15250,10 +15367,10 @@ ALTER TABLE ONLY public.candidate_roles
 
 
 --
--- Name: organizations_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_datasets
+ALTER TABLE ONLY public.organization_datasets
     ADD CONSTRAINT fk_rails_37920930c1 FOREIGN KEY (dataset_id) REFERENCES public.datasets(id);
 
 
@@ -15634,6 +15751,14 @@ ALTER TABLE ONLY public.aggregator_capabilities
 
 
 --
+-- Name: resource_topic_descriptions fk_rails_ae0fcdfa4b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_topic_descriptions
+    ADD CONSTRAINT fk_rails_ae0fcdfa4b FOREIGN KEY (resource_topic_id) REFERENCES public.resource_topics(id);
+
+
+--
 -- Name: opportunities_building_blocks fk_rails_bd7e32857c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15658,10 +15783,10 @@ ALTER TABLE ONLY public.opportunities_countries
 
 
 --
--- Name: organizations_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_datasets
+ALTER TABLE ONLY public.organization_datasets
     ADD CONSTRAINT fk_rails_c82c326076 FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
 
 
@@ -15810,34 +15935,34 @@ ALTER TABLE ONLY public.product_product_relationships
 
 
 --
--- Name: organizations_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_contacts
+ALTER TABLE ONLY public.organization_contacts
     ADD CONSTRAINT organizations_contacts_contact_fk FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
 
 
 --
--- Name: organizations_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_contacts
+ALTER TABLE ONLY public.organization_contacts
     ADD CONSTRAINT organizations_contacts_organization_fk FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
 
 
 --
--- Name: organizations_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_products
+ALTER TABLE ONLY public.organization_products
     ADD CONSTRAINT organizations_products_organization_fk FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
 
 
 --
--- Name: organizations_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: organization_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.organizations_products
+ALTER TABLE ONLY public.organization_products
     ADD CONSTRAINT organizations_products_product_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
@@ -15914,18 +16039,18 @@ ALTER TABLE ONLY public.product_classifications
 
 
 --
--- Name: product_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: products_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.product_countries
+ALTER TABLE ONLY public.products_countries
     ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES public.countries(id);
 
 
 --
--- Name: product_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: products_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.product_countries
+ALTER TABLE ONLY public.products_countries
     ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES public.products(id);
 
 
@@ -16434,6 +16559,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240109024648'),
 ('20240118161746'),
 ('20240121042516'),
-('20240123162741');
+('20240123162741'),
+('20240202213701'),
+('20240203165039'),
+('20240203165141');
 
 
