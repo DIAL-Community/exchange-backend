@@ -3528,6 +3528,71 @@ ALTER SEQUENCE fao.regions_id_seq OWNED BY fao.regions.id;
 
 
 --
+-- Name: resource_topic_descriptions; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resource_topic_descriptions (
+    id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    resource_topic_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resource_topic_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resource_topic_descriptions_id_seq OWNED BY fao.resource_topic_descriptions.id;
+
+
+--
+-- Name: resource_topics; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resource_topics (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resource_topics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resource_topics_id_seq OWNED BY fao.resource_topics.id;
+
+
+--
 -- Name: resources; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -7430,11 +7495,11 @@ CREATE TABLE public.resources (
     link_description character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     resource_type character varying,
-    resource_topic character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
     source character varying,
-    resource_filename character varying
+    resource_filename character varying,
+    resource_topics character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -8944,6 +9009,20 @@ ALTER TABLE ONLY fao.provinces ALTER COLUMN id SET DEFAULT nextval('fao.province
 --
 
 ALTER TABLE ONLY fao.regions ALTER COLUMN id SET DEFAULT nextval('fao.regions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_topic_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.resource_topic_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topics id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_topics ALTER COLUMN id SET DEFAULT nextval('fao.resource_topics_id_seq'::regclass);
 
 
 --
@@ -10499,6 +10578,22 @@ ALTER TABLE ONLY fao.provinces
 
 ALTER TABLE ONLY fao.regions
     ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_topic_descriptions
+    ADD CONSTRAINT resource_topic_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topics resource_topics_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_topics
+    ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
 
 
 --
@@ -12360,6 +12455,20 @@ CREATE UNIQUE INDEX index_regions_on_slug ON fao.regions USING btree (slug);
 
 
 --
+-- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resource_topic_descriptions_on_resource_topic_id ON fao.resource_topic_descriptions USING btree (resource_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_slug; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_topics_on_slug ON fao.resource_topics USING btree (slug);
+
+
+--
 -- Name: index_resources_authors_on_author_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -12735,6 +12844,13 @@ CREATE UNIQUE INDEX sectors_playbooks_idx ON fao.playbooks_sectors USING btree (
 --
 
 CREATE UNIQUE INDEX sectors_projects_idx ON fao.projects_sectors USING btree (sector_id, project_id);
+
+
+--
+-- Name: unique_on_resource_topic_id_and_locale; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_on_resource_topic_id_and_locale ON fao.resource_topic_descriptions USING btree (resource_topic_id, locale);
 
 
 --
@@ -14628,6 +14744,14 @@ ALTER TABLE ONLY fao.plays_products
 
 ALTER TABLE ONLY fao.aggregator_capabilities
     ADD CONSTRAINT fk_rails_aa5b2f5e59 FOREIGN KEY (operator_services_id) REFERENCES fao.operator_services(id);
+
+
+--
+-- Name: resource_topic_descriptions fk_rails_ae0fcdfa4b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_topic_descriptions
+    ADD CONSTRAINT fk_rails_ae0fcdfa4b FOREIGN KEY (resource_topic_id) REFERENCES fao.resource_topics(id);
 
 
 --
@@ -16562,6 +16686,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240123162741'),
 ('20240202213701'),
 ('20240203165039'),
-('20240203165141');
+('20240203165141'),
+('20240203190751');
 
 

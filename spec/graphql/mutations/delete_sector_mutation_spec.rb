@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteSector, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:sector, id: 1000, name: 'Some Sector', slug: 'some_sector')
+    create(:sector, id: 1000, name: 'Some Sector', slug: 'some-sector')
     expect_any_instance_of(Mutations::DeleteSector).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteSector, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:sector, id: 1000, name: 'Some Sector', slug: 'some_sector')
+    create(:sector, id: 1000, name: 'Some Sector', slug: 'some-sector')
 
     result = execute_graphql(
       mutation,

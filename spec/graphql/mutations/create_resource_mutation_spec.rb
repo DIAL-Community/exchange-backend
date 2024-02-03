@@ -14,7 +14,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $featured: Boolean
         $resourceLink: String
         $resourceType: String
-        $resourceTopic: String
+        $resourceTopics: [String!]
         $source: String
         $showInExchange: Boolean
         $showInWizard: Boolean
@@ -29,7 +29,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           featured: $featured
           resourceLink: $resourceLink
           resourceType: $resourceType
-          resourceTopic: $resourceTopic
+          resourceTopics: $resourceTopics
           source: $source
           showInExchange: $showInExchange
           showInWizard: $showInWizard
@@ -63,6 +63,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       }
     )
 
+    puts "Result: #{result.inspect}"
+
     aggregate_failures do
       expect(result['data']['createResource']['resource'])
         .to(eq({ "name" => "Some Name", "slug" => "some-name", "showInExchange" => false, "showInWizard" => true }))
@@ -71,13 +73,13 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
 
   it 'is successful - user editing data.' do
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
-    create(:resource, id: 1000, name: 'Some Resource', slug: 'some_resource')
+    create(:resource, id: 1000, name: 'Some Resource', slug: 'some-resource')
     result = execute_graphql_as_user(
       admin_user,
       mutation,
       variables: {
         name: "Updated name",
-        slug: "some_resource",
+        slug: "some-resource",
         publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
@@ -89,7 +91,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       expect(result['data']['createResource']['resource'])
         .to(eq({
           "name" => "Updated name",
-          "slug" => "some_resource",
+          "slug" => "some-resource",
           "showInExchange" => false,
           "showInWizard" => true
         }))

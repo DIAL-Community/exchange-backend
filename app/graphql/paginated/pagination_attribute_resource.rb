@@ -42,8 +42,12 @@ module Paginated
         resources = resources.where(resource_type: resource_types)
       end
 
-      unless resource_topics.empty?
-        resources = resources.where(resource_topic: resource_topics)
+      filtered_resource_topics = resource_topics.reject { |x| x.nil? || x.blank? }
+      unless filtered_tags.empty?
+        resources = resources.where(
+          "resources.resource_topics @> '{#{filtered_resource_topics.join(',').downcase}}'::varchar[] or " \
+          "resources.resource_topics @> '{#{filtered_resource_topics.join(',')}}'::varchar[] "
+        )
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }

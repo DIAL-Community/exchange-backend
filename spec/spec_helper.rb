@@ -97,8 +97,8 @@ RSpec.configure do |config|
   # Silencing output of the rspec tests. Disabling this as we're changing the output to
   # documentation style.
 
-  config.before(:all, &:supress_puts)
-  config.after(:all,  &:allow_puts)
+  # config.before(:all, &:supress_puts)
+  # config.after(:all,  &:allow_puts)
 end
 
 public

@@ -213,5 +213,10 @@ module Types
 
     field :authors, resolver: Queries::AuthorsQuery
     field :author, resolver: Queries::AuthorQuery
+
+    field :resource_topics, resolver: Queries::ResourceTopicsQuery
+    field :resource_topic, resolver: Queries::ResourceTopicQuery
+    field :paginated_resource_topics, resolver: Paginated::PaginatedResourceTopics
+    field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
   end
 end

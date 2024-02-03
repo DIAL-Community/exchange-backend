@@ -18,11 +18,11 @@ RSpec.describe(Queries::CountriesQuery, type: :graphql) do
   end
 
   it 'pulling correct country by the slug of the country.' do
-    create(:country, id: 1000, name: 'Some Country', slug: 'some_country')
+    create(:country, id: 1000, name: 'Some Country', slug: 'some-country')
     result = execute_graphql(
       country_query,
       variables: {
-        slug: "some_country"
+        slug: "some-country"
       }
     )
 
@@ -32,11 +32,11 @@ RSpec.describe(Queries::CountriesQuery, type: :graphql) do
   end
 
   it 'pulling random slug will return invalid data.' do
-    create(:country, id: 1000, name: 'Some Country', slug: 'some_country')
+    create(:country, id: 1000, name: 'Some Country', slug: 'some-country')
     result = execute_graphql(
       country_query,
       variables: {
-        slug: "some_country_with_wrong_slug"
+        slug: "some-country_with_wrong_slug"
       }
     )
 

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ResourceTopic < ApplicationRecord
+  include Auditable
+
   has_many(:resource_topic_descriptions, dependent: :destroy)
 
   scope :name_contains,

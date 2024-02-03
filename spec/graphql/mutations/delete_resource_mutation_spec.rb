@@ -19,7 +19,7 @@ RSpec.describe(Mutations::DeleteResource, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
-    create(:resource, id: 1000, name: 'Some Resource', slug: 'some_resource')
+    create(:resource, id: 1000, name: 'Some Resource', slug: 'some-resource')
 
     result = execute_graphql_as_user(
       admin_user,
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteResource, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:resource, id: 1000, name: 'Some Resource', slug: 'some_resource')
+    create(:resource, id: 1000, name: 'Some Resource', slug: 'some-resource')
 
     result = execute_graphql(
       mutation,

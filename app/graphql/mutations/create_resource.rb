@@ -20,7 +20,7 @@ module Mutations
     argument :resource_link, String, required: false, default_value: nil
 
     argument :resource_type, String, required: false, default_value: nil
-    argument :resource_topic, String, required: false, default_value: nil
+    argument :resource_topics, [String], required: false, default_value: []
     argument :source, String, required: false, default_value: nil
 
     argument :authors, [GraphQL::Types::JSON], required: false, default_value: []
@@ -38,7 +38,7 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
-      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topic:, source:
+      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:, source:
     )
       unless an_admin || a_content_editor
         return {
@@ -75,7 +75,16 @@ module Mutations
       resource.resource_link = resource_link
       resource.link_description = link_description
       resource.resource_type = resource_type
-      resource.resource_topic = resource_topic
+
+      validated_resource_topics = []
+      resource_topics.each do |resource_topic|
+        resource_topic = ResourceTopic.find_by(name: resource_topic)
+        next if resource_topic.nil?
+
+        validated_resource_topics << resource_topic
+      end
+      resource.resource_topics = validated_resource_topics
+
       resource.source = source
 
       resource.featured = featured
