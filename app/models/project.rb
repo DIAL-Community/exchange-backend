@@ -36,6 +36,22 @@ class Project < ApplicationRecord
     exclude_association :products
   end
 
+  def sync_associations(source_project)
+    destination_organizations = []
+    source_project.organizations.each do |source_organization|
+      organization = Organization.find_by(slug: source_organization.slug)
+      destination_organizations << organization unless organization.nil?
+    end
+    self.organizations = destination_organizations
+
+    destination_products = []
+    source_project.products.each do |source_product|
+      product = Product.find_by(slug: source_product.slug)
+      destination_products << product unless product.nil?
+    end
+    self.products = destination_products
+  end
+
   def sync_record(copy_of_project)
     ActiveRecord::Base.transaction do
       self.project_descriptions = copy_of_project.project_descriptions

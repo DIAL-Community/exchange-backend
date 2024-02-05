@@ -179,6 +179,12 @@ module Mutations
         source_project = Project.find_by(slug:)
         next if source_project.nil?
 
+        product_slugs = source_project.products.map(&:slug)
+        sync_products(source_tenant, destination_tenant, product_slugs)
+
+        organization_slugs = source_project.organizations.map(&:slug)
+        sync_organizations(source_tenant, destination_tenant, organization_slugs)
+
         amoeba_project = source_project.amoeba_dup
 
         puts "Syncing building block '#{slug}'..."
@@ -186,9 +192,36 @@ module Mutations
         destination_project = Project.find_by(slug:)
         if destination_project.nil?
           destination_project = amoeba_project
+          destination_project.sync_associations(source_project)
           destination_project.save!
         else
+          destination_project.sync_associations(source_project)
           destination_project.sync_record(amoeba_project)
+        end
+      end
+      Apartment::Tenant.switch!
+    end
+
+    def sync_use_case_steps(source_tenant, destination_tenant, destination_use_case, use_case_step_slugs)
+      Apartment::Tenant.switch!
+      use_case_step_slugs.each do |slug|
+        Apartment::Tenant.switch!(source_tenant)
+        source_use_case_step = UseCaseStep.find_by(slug:)
+        next if source_use_case_step.nil?
+
+        amoeba_use_case_step = source_use_case_step.amoeba_dup
+
+        Apartment::Tenant.switch!(destination_tenant)
+        destination_use_case_step = UseCaseStep.find_by(slug:)
+        if destination_use_case_step.nil?
+          destination_use_case_step = amoeba_use_case_step
+          destination_use_case_step.use_case = destination_use_case
+          destination_use_case_step.sync_associations(source_use_case_step)
+          destination_use_case_step.save!
+        else
+          destination_use_case_step.use_case = destination_use_case
+          destination_use_case_step.sync_associations(source_use_case_step)
+          destination_use_case_step.sync_record(amoeba_use_case_step)
         end
       end
       Apartment::Tenant.switch!
@@ -203,7 +236,21 @@ module Mutations
 
         amoeba_use_case = source_use_case.amoeba_dup
 
-        puts "Syncing building block '#{slug}'..."
+        source_use_case.use_case_steps.each do |source_use_case_step|
+          building_block_slugs = source_use_case_step.building_blocks.map(&:slug)
+          sync_building_blocks(source_tenant, destination_tenant, building_block_slugs)
+
+          dataset_slugs = source_use_case_step.datasets.map(&:slug)
+          sync_datasets(source_tenant, destination_tenant, dataset_slugs)
+
+          product_slugs = source_use_case_step.products.map(&:slug)
+          sync_products(source_tenant, destination_tenant, product_slugs)
+
+          workflow_slugs = source_use_case_step.workflows.map(&:slug)
+          sync_workflows(source_tenant, destination_tenant, workflow_slugs)
+        end
+
+        puts "Syncing use case '#{slug}'..."
         Apartment::Tenant.switch!(destination_tenant)
         destination_use_case = UseCase.find_by(slug:)
         if destination_use_case.nil?
@@ -212,6 +259,9 @@ module Mutations
         else
           destination_use_case.sync_record(amoeba_use_case)
         end
+
+        use_case_step_slugs = source_use_case.use_case_steps.map(&:slug)
+        sync_use_case_steps(source_tenant, destination_tenant, destination_use_case, use_case_step_slugs)
       end
       Apartment::Tenant.switch!
     end
