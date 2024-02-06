@@ -5,7 +5,7 @@ require('csv')
 class Workflow < ApplicationRecord
   include Auditable
   has_and_belongs_to_many :use_case_steps, join_table: :use_case_steps_workflows, dependent: :destroy
-  has_and_belongs_to_many :building_blocks, join_table: :workflows_building_blocks
+  has_and_belongs_to_many :building_blocks, join_table: :workflows_building_blocks, dependent: :destroy
 
   has_many :workflow_descriptions, dependent: :destroy
 
@@ -14,11 +14,27 @@ class Workflow < ApplicationRecord
 
   attr_accessor :wf_desc
 
+  amoeba do
+    enable
+
+    exclude_association :building_blocks
+    exclude_association :use_case_steps
+  end
+
+  def sync_record(copy_of_workflow)
+    ActiveRecord::Base.transaction do
+      self.workflow_descriptions = copy_of_workflow.workflow_descriptions
+      save!
+
+      update!(copy_of_workflow.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def image_file
     if File.exist?(File.join('public', 'assets', 'workflows', "#{slug}.svg"))
       "/assets/workflows/#{slug}.svg"
     else
-      '/assets/workflows/workflow_placeholder.svg'
+      '/assets/workflows/workflow-placeholder.svg'
     end
   end
 

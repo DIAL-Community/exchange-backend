@@ -3,6 +3,19 @@
 namespace :data_refresh do
   desc 'Process dataset spreadsheet and populate the json file.'
   task refresh_slug: :environment do
+    tenant_names = ExchangeTenant.distinct.pluck(:tenant_name)
+    # Execute on default tenant
+    refresh_slugs
+    # Execute on all other tenants
+    tenant_names.each do |tenant_name|
+      Apartment::Tenant.switch!(tenant_name)
+      refresh_slugs
+    end
+    # Reset to default tenant
+    Apartment::Tenant.switch!
+  end
+
+  def refresh_slugs
     Rails.application.eager_load!
 
     classes = ActiveRecord::Base.descendants

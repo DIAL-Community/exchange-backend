@@ -24,10 +24,10 @@ module Mutations
           organization = Organization.find_by(slug: organization_slug)
           next if organization.nil?
 
-          organization_dataset = OrganizationsDataset.new
+          organization_dataset = OrganizationDataset.new
           organization_dataset.organization = organization
           organization_dataset.dataset = dataset
-          organization_dataset.association_source = OrganizationsProduct.RIGHT
+          organization_dataset.association_source = OrganizationProduct.RIGHT
 
           dataset.organizations_datasets << organization_dataset
         end

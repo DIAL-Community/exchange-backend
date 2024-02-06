@@ -77,6 +77,8 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
+    amoeba (3.3.0)
+      activerecord (>= 5.2.0)
     apollo_upload_server (2.1.0)
       actionpack (>= 4.2)
       graphql (>= 1.8)
@@ -516,6 +518,7 @@ DEPENDENCIES
   Dhalang!
   actionpack-page_caching
   addressable
+  amoeba
   apollo_upload_server (= 2.1)
   bootsnap (>= 1.1.0)
   byebug

@@ -3,36 +3,28 @@
 class Resource < ApplicationRecord
   include Auditable
 
-  has_and_belongs_to_many(
-    :organizations,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :organizations,
+                          after_add: :association_add,
+                          before_remove: :association_remove,
+                          dependent: :delete_all
 
-  has_and_belongs_to_many(
-    :products,
-    join_table: :products_resources,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :products,
+                          join_table: :products_resources,
+                          after_add: :association_add,
+                          before_remove: :association_remove,
+                          dependent: :delete_all
 
-  has_and_belongs_to_many(
-    :countries,
-    join_table: :resources_countries,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :countries,
+                          join_table: :resources_countries,
+                          after_add: :association_add,
+                          before_remove: :association_remove,
+                          dependent: :delete_all
 
-  has_and_belongs_to_many(
-    :authors,
-    join_table: :resources_authors,
-    after_add: :association_add,
-    before_remove: :association_remove,
-    dependent: :delete_all
-  )
+  has_and_belongs_to_many :authors,
+                          join_table: :resources_authors,
+                          after_add: :association_add,
+                          before_remove: :association_remove,
+                          dependent: :delete_all
 
   scope :name_contains, ->(name) { where('LOWER(resources.name) like LOWER(?)', "%#{name}%") }
   scope :name_and_slug_search, -> (name, slug) { where('resources.name = ? OR resources.slug = ?', name, slug) }
@@ -46,7 +38,7 @@ class Resource < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
       "/assets/resources/#{slug}.png"
     else
-      '/assets/resources/resource_placeholder.png'
+      '/assets/resources/resource-placeholder.png'
     end
   end
 
