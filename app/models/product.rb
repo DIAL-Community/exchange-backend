@@ -13,99 +13,158 @@ class Product < ApplicationRecord
   has_many :product_repositories, dependent: :delete_all
   has_many :product_descriptions, dependent: :delete_all
 
-  has_and_belongs_to_many :use_case_steps, join_table: :use_case_steps_products,
-                                           dependent: :delete_all,
-                                           after_add: :association_add,
-                                           before_remove: :association_remove
-  has_many :product_classifications, dependent: :delete_all
-  has_many :classifications, through: :product_classifications,
-                             dependent: :delete_all
+  has_many :product_classifications,
+           dependent: :delete_all
+  has_many :classifications,
+           through: :product_classifications,
+           dependent: :delete_all
 
-  has_many :organizations_products, dependent: :delete_all,
-                                    after_add: :association_add,
-                                    before_remove: :association_remove
-  has_many :organizations, through: :organizations_products,
-                           dependent: :delete_all,
-                           after_add: :association_add,
-                           before_remove: :association_remove
+  has_many :organization_products,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :organizations,
+           through: :organization_products,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many :product_sectors, dependent: :delete_all,
-                             after_add: :association_add, before_remove: :association_remove
-  has_many :sectors, through: :product_sectors,
-                     after_add: :association_add, before_remove: :association_remove
+  has_many :product_sectors,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :sectors,
+           through: :product_sectors,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many(
-    :product_building_blocks,
-    dependent: :delete_all,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_many :product_building_blocks,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :building_blocks,
+            through: :product_building_blocks,
+            dependent: :delete_all,
+            after_add: :association_add,
+            before_remove: :association_remove
 
-  has_many(
-    :building_blocks,
-    through: :product_building_blocks,
-    dependent: :delete_all,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
-
-  has_and_belongs_to_many(
-    :plays,
-    join_table: :plays_products,
-    dependent: :delete_all
-  )
-
-  has_and_belongs_to_many :origins, join_table: :products_origins,
-                                    dependent: :delete_all,
-                                    after_add: :association_add, before_remove: :association_remove
-
-  has_and_belongs_to_many :projects, join_table: :projects_products,
-                                     dependent: :delete_all,
-                                     after_add: :association_add,
-                                     before_remove: :association_remove
-
-  has_and_belongs_to_many :endorsers, join_table: :products_endorsers,
-                                      dependent: :delete_all
-
-  has_many :product_sustainable_development_goals, dependent: :delete_all,
-                                                   after_add: :association_add, before_remove: :association_remove
-  has_many :sustainable_development_goals, through: :product_sustainable_development_goals,
-                                           dependent: :delete_all,
-                                           after_add: :association_add, before_remove: :association_remove
+  has_many :product_sustainable_development_goals,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :sustainable_development_goals,
+           through: :product_sustainable_development_goals,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
   has_many :include_relationships, -> { where(relationship_type: 'composed') },
-           foreign_key: :from_product_id, class_name: 'ProductProductRelationship',
-           after_add: :association_add, before_remove: :association_remove
-  has_many :includes, through: :include_relationships, source: :to_product,
-                      after_add: :association_add, before_remove: :association_remove
+           foreign_key: :from_product_id,
+           class_name: 'ProductProductRelationship',
+           after_add: :association_add,
+           before_remove: :association_remove
+  has_many :includes,
+           through: :include_relationships,
+           source: :to_product,
+           after_add: :association_add,
+           before_remove: :association_remove
 
   has_many :interop_relationships, -> { where(relationship_type: 'interoperates') },
            foreign_key: :from_product_id, class_name: 'ProductProductRelationship',
            after_add: :association_add, before_remove: :association_remove
-  has_many :interoperates_with, through: :interop_relationships, source: :to_product,
-                                dependent: :delete_all,
-                                after_add: :association_add, before_remove: :association_remove
+  has_many :interoperates_with,
+           through: :interop_relationships, source: :to_product,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many :references, foreign_key: :to_product_id, class_name: 'ProductProductRelationship',
-                        dependent: :delete_all,
-                        after_add: :association_add, before_remove: :association_remove
+  has_many :references,
+           foreign_key: :to_product_id,
+           class_name: 'ProductProductRelationship',
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
-  has_many :product_countries
-  has_many :countries, through: :product_countries
+  has_and_belongs_to_many :use_case_steps,
+                          join_table: :use_case_steps_products,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :resources,
-     join_table: :products_resources,
-     dependent: :delete_all,
-     after_add: :association_add,
-     before_remove: :association_remove
-  )
+  has_and_belongs_to_many :plays,
+                          join_table: :plays_products,
+                          dependent: :delete_all
+
+  has_and_belongs_to_many :origins,
+                          join_table: :products_origins,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+
+  has_and_belongs_to_many :projects,
+                          join_table: :projects_products,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+
+  has_and_belongs_to_many :endorsers,
+                          join_table: :products_endorsers,
+                          dependent: :delete_all
+
+  has_and_belongs_to_many :countries,
+                          join_table: :products_countries,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+
+  has_and_belongs_to_many :resources,
+                          join_table: :products_resources,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
   validates :name, presence: true, length: { maximum: 300 }
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
+
+  amoeba do
+    enable
+
+    exclude_association :endorsers
+    exclude_association :include_relationships
+    exclude_association :interop_relationships
+    exclude_association :organization_products
+    exclude_association :product_building_blocks
+    exclude_association :product_classifications
+    exclude_association :projects
+    exclude_association :references
+    exclude_association :resources
+    exclude_association :use_case_steps
+  end
+
+  def sync_associations(source_product)
+    destination_organizations = []
+    source_product.organizations.each do |source_organization|
+      organization = Organization.find_by(slug: source_organization.slug)
+      destination_organizations << organization unless organization.nil?
+    end
+    self.organizations = destination_organizations
+  end
+
+  def sync_record(copy_of_product)
+    ActiveRecord::Base.transaction do
+      self.product_descriptions = copy_of_product.product_descriptions
+      self.countries = copy_of_product.countries
+      self.product_indicators = copy_of_product.product_indicators
+      self.product_repositories = copy_of_product.product_repositories
+      self.sectors = copy_of_product.sectors
+      self.sustainable_development_goals = copy_of_product.sustainable_development_goals
+      save!
+
+      update!(copy_of_product.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
 
   def self.first_duplicate(name, slug)
     find_by('name = ? OR slug = ? OR ? = ANY(aliases)', name, slug, name)
@@ -115,7 +174,7 @@ class Product < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/products/#{slug}.png"
     else
-      '/assets/products/product_placeholder.svg'
+      '/assets/products/product-placeholder.svg'
     end
   end
 

@@ -68,4 +68,44 @@ namespace :tenants do
       end
     end
   end
+
+  task sync_between_tenants: :environment do
+    task_name = 'Sync Tenants Data'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    TenantSyncConfiguration.all.each do |tenant_sync|
+      puts "Source tenant: '#{tenant_sync.tenant_source}'."
+      puts "Destination tenant: '#{tenant_sync.tenant_destination}'."
+
+      Apartment::Tenant.switch!
+      tracking_task_log(task_name, "Processing tenant sync: '#{tenant_sync.name}'.")
+
+      tenant_sync.sync_configuration['models'].each do |synchronized_model_name|
+        Apartment::Tenant.switch!(tenant_sync.tenant_source)
+        sync_object_model = synchronized_model_name.constantize
+        puts "#{sync_object_model.name}: Syncing #{sync_object_model.count} records."
+        puts "---------------------------------------"
+
+        sync_object_model.all.each do |source_model|
+          Apartment::Tenant.switch!(tenant_sync.tenant_destination)
+          puts "  #{sync_object_model.name}: Finding in destination with slug: '#{source_model.slug}'."
+
+          destination_object = sync_object_model.find_by(slug: source_model.slug)
+          if destination_object.nil?
+            puts "  #{sync_object_model.name}: Not found using slug: '#{source_model.slug}', creating."
+            destination_object = source_model.amoeba_dup
+          end
+
+          if destination_object.save
+            puts "  #{sync_object_model.name}: Synced '#{source_model.slug}' as '#{destination_object.slug}'."
+          end
+          puts "---------------------------------------"
+        end
+      end
+    end
+
+    Apartment::Tenant.switch!
+    tracking_task_finish(task_name)
+  end
 end

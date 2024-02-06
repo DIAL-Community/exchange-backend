@@ -236,7 +236,7 @@ namespace :projects do
         next if owner_org.nil?
         next if existing_project.organizations.include?(owner_org)
 
-        project_owner = ProjectsOrganization.new
+        project_owner = ProjectOrganization.new
         project_owner.org_type = 'owner'
         project_owner.project_id = existing_project.id
         project_owner.organization_id = owner_org.id
@@ -250,7 +250,7 @@ namespace :projects do
         next if partner_org.nil?
         next if existing_project.organizations.include?(partner_org)
 
-        project_partner = ProjectsOrganization.new
+        project_partner = ProjectOrganization.new
         project_partner.org_type = 'implementer'
         project_partner.project_id = existing_project.id
         project_partner.organization_id = partner_org.id
@@ -311,7 +311,7 @@ namespace :projects do
 
       country = Country.find_by(name: mm_proj['country'])
       unless country.nil?
-        existing_country = ProjectsCountry.find_by(project: curr_proj, country:)
+        existing_country = ProjectCountry.find_by(project: curr_proj, country:)
         curr_proj.countries << country if existing_country.nil?
       end
       curr_proj.save
@@ -320,9 +320,9 @@ namespace :projects do
         if funder_org.nil?
           puts "Can't find Org: #{funder}"
         else
-          existing_org = ProjectsOrganization.find_by(project: curr_proj, organization: funder_org)
+          existing_org = ProjectOrganization.find_by(project: curr_proj, organization: funder_org)
           if existing_org.nil?
-            proj_org = ProjectsOrganization.new
+            proj_org = ProjectOrganization.new
             proj_org.project = curr_proj
             proj_org.organization = funder_org
             proj_org.org_type = 'funder'
@@ -334,10 +334,10 @@ namespace :projects do
         impl_org = Organization.first_duplicate(implementer.strip, reslug_em(implementer.strip))
         next if impl_org.nil?
 
-        existing_org = ProjectsOrganization.find_by(project: curr_proj, organization: impl_org)
+        existing_org = ProjectOrganization.find_by(project: curr_proj, organization: impl_org)
         next unless existing_org.nil?
 
-        proj_org = ProjectsOrganization.new
+        proj_org = ProjectOrganization.new
         proj_org.project = curr_proj
         proj_org.organization = impl_org
         proj_org.org_type = 'implementer'

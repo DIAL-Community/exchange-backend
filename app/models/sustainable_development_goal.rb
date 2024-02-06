@@ -19,7 +19,7 @@ class SustainableDevelopmentGoal < ApplicationRecord
   def image_file
     return "/assets/sdgs/#{slug}.png" if File.exist?(File.join('public', 'assets', 'sdgs', "#{slug}.png"))
 
-    '/assets/sdgs/sdg_placeholder.png'
+    '/assets/sdgs/sdg-placeholder.png'
   end
 
   def option_label
