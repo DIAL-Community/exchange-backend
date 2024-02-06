@@ -11,7 +11,7 @@ namespace :govstack do
     if govstack_origin.nil?
       govstack_origin = Origin.new
       govstack_origin.name = 'GovStack'
-      govstack_origin.slug = slug_em(govstack_origin.name)
+      govstack_origin.slug = reslug_em(govstack_origin.name)
       govstack_origin.description = <<-govstack_description
         GovStack offers governments with essential tools for digital services, including building block
         specifications, a sandbox for testing (upcoming), communities of practices, and more. GovStack
@@ -40,7 +40,7 @@ namespace :govstack do
       next if opportunity_node_header.nil? || !opportunity_node_header.text.include?('Active')
 
       opportunity_name = opportunity_node_header.text.gsub('Active: ', '').strip
-      opportunity_slug = slug_em(opportunity_name, 128)
+      opportunity_slug = reslug_em(opportunity_name, 128)
 
       puts "Processing: #{opportunity_slug}."
       opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first

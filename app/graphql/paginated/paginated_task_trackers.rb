@@ -8,6 +8,10 @@ module Paginated
     type [Types::TaskTrackerType], null: false
 
     def resolve(search:, show_failed_only:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       return [] unless an_admin
 
       task_trackers = TaskTracker.order(last_started_date: :desc)

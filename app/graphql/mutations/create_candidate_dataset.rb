@@ -28,7 +28,7 @@ module Mutations
 
       candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
-        slug = slug_em(name)
+        slug = reslug_em(name)
         candidate_dataset = CandidateDataset.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.

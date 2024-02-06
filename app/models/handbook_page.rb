@@ -9,4 +9,9 @@ class HandbookPage < ApplicationRecord
   has_many :page_contents, dependent: :destroy
 
   scope :slug_starts_with, ->(slug) { where('LOWER(handbook_pages.slug) like LOWER(?)', "#{slug}%\\_") }
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 end

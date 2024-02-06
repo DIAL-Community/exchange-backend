@@ -13,9 +13,10 @@ class ProductSustainableDevelopmentGoal < ApplicationRecord
     self.association_source = ProductSustainableDevelopmentGoal.LEFT
   end
 
+  # overridden
   def generate_slug
     if !product.nil? && !sustainable_development_goal.nil?
-      self.slug = "#{product.slug}_#{sustainable_development_goal.number}"
+      self.slug = "#{product.slug}-#{sustainable_development_goal.number}"
     end
   end
 

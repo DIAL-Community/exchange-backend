@@ -12,7 +12,6 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $description: String
         $publishedDate: ISO8601Date!
         $featured: Boolean
-        $spotlight: Boolean
         $resourceLink: String
         $resourceType: String
         $resourceTopic: String
@@ -20,8 +19,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $showInExchange: Boolean
         $showInWizard: Boolean
         $organizationSlug: String
-        $authorName: String!
-        $authorEmail: String
+        $authors: [JSON!]
       ) {
         createResource(
           name: $name
@@ -29,7 +27,6 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           description: $description
           publishedDate: $publishedDate
           featured: $featured
-          spotlight: $spotlight
           resourceLink: $resourceLink
           resourceType: $resourceType
           resourceTopic: $resourceTopic
@@ -37,8 +34,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           showInExchange: $showInExchange
           showInWizard: $showInWizard
           organizationSlug: $organizationSlug
-          authorName: $authorName
-          authorEmail: $authorEmail
+          authors: $authors
         ) {
             resource {
               name
@@ -59,7 +55,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       mutation,
       variables: {
         name: "Some Name",
-        slug: "some_name",
+        slug: "some-name",
         publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
@@ -69,7 +65,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createResource']['resource'])
-        .to(eq({ "name" => "Some Name", "slug" => "some_name", "showInExchange" => false, "showInWizard" => true }))
+        .to(eq({ "name" => "Some Name", "slug" => "some-name", "showInExchange" => false, "showInWizard" => true }))
     end
   end
 
@@ -105,7 +101,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       mutation,
       variables: {
         name: "Some Name",
-        slug: "some_name",
+        slug: "some-name",
         publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,
@@ -128,7 +124,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       mutation,
       variables: {
         name: "Some Name",
-        slug: "some_name",
+        slug: "some-name",
         publishedDate: '2023-10-10T00:00:00.000Z',
         authorName: 'Nyoman Ribeka',
         showInExchange: false,

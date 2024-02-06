@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'tempfile'
 require 'modules/slugger'
 
-namespace :opportunities_sync do
+namespace :opportunity_sync do
   desc 'Sync RFP data from Leverist.'
   task sync_leverist: :environment do
     task_name = 'Sync Leverist RFP'
@@ -66,11 +66,11 @@ namespace :opportunities_sync do
 
   def create_opportunity_record(opportunity_structure, leverist_sector_mapping)
     opportunity_name = opportunity_structure['title']
-    opportunity_slug = slug_em(opportunity_structure['title'])
+    opportunity_slug = reslug_em(opportunity_structure['title'])
     opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first
     if opportunity.nil?
       opportunity = Opportunity.new(name: opportunity_name)
-      opportunity.slug = slug_em(opportunity_structure['title'])
+      opportunity.slug = reslug_em(opportunity_structure['title'])
 
       if Opportunity.where(slug: opportunity.slug).count.positive?
         # Check if we need to add _dup to the slug.
@@ -212,7 +212,7 @@ namespace :opportunities_sync do
           organization_name = partner_structure['name']
 
           candidate_params = { name: organization_name, website:, description: }
-          candidate_params[:slug] = slug_em(organization_name)
+          candidate_params[:slug] = reslug_em(organization_name)
           candidate_organization = CandidateOrganization.find_by(slug: candidate_params[:slug])
           unless candidate_organization.nil?
             puts "    Skipping, existing candidate organization record found."
@@ -238,7 +238,7 @@ namespace :opportunities_sync do
 
     successful_operation = false
     ActiveRecord::Base.transaction do
-      opportunity.save
+      opportunity.save!
 
       unless opportunity_structure['picture'].nil?
         logo_data = opportunity_structure['picture']['data']
@@ -289,7 +289,7 @@ namespace :opportunities_sync do
     if ungm_origin.nil?
       ungm_origin = Origin.new
       ungm_origin.name = 'United Nations Global Marketplace'
-      ungm_origin.slug = slug_em('United Nations Global Marketplace', 64)
+      ungm_origin.slug = reslug_em('United Nations Global Marketplace', 64)
       ungm_origin.description = %{
         The United Nations Global Marketplace (UNGM) is the official procurement portal of the United Nations
         System. The UNGM portal brings together UN procurement staff and suppliers interested in doing business
@@ -377,7 +377,7 @@ namespace :opportunities_sync do
     puts "  Notice title: #{notice_title}"
 
     opportunity_name = notice_title
-    opportunity_slug = slug_em(notice_title)
+    opportunity_slug = reslug_em(notice_title)
     opportunity = Opportunity.name_and_slug_search(opportunity_name, opportunity_slug).first
     if opportunity.nil?
       opportunity = Opportunity.new(name: opportunity_name, slug: opportunity_slug)
@@ -446,7 +446,7 @@ namespace :opportunities_sync do
 
     successful_operation = false
     ActiveRecord::Base.transaction do
-      opportunity.save
+      opportunity.save!
 
       successful_operation = true
     end

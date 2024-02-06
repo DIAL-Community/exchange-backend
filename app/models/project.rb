@@ -5,23 +5,72 @@ require('csv')
 class Project < ApplicationRecord
   include Auditable
   attr_accessor :project_description
+  has_many :project_descriptions
 
   has_and_belongs_to_many :countries, join_table: :projects_countries
-
-  has_and_belongs_to_many :organizations, join_table: :projects_organizations,
-                                          after_add: :association_add, before_remove: :association_remove
-  has_and_belongs_to_many :products, join_table: :projects_products,
-                                     after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :organizations,
+                          join_table: :projects_organizations,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+  has_and_belongs_to_many :products,
+                          join_table: :projects_products,
+                          after_add: :association_add,
+                          before_remove: :association_remove
   has_and_belongs_to_many :digital_principles, join_table: :projects_digital_principles
   has_and_belongs_to_many :sectors, join_table: :projects_sectors
-  has_and_belongs_to_many :sustainable_development_goals, join_table: :projects_sdgs, association_foreign_key: :sdg_id
-  has_many :project_descriptions
+  has_and_belongs_to_many :sustainable_development_goals,
+                          join_table: :projects_sdgs,
+                          association_foreign_key: :sdg_id
 
   belongs_to :origin
 
   scope :name_contains, ->(name) { where('LOWER(projects.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(projects.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('projects.name = ? OR projects.slug = ?', name, slug) }
+
+  amoeba do
+    enable
+
+    exclude_association :digital_principles
+    exclude_association :organizations
+    exclude_association :products
+  end
+
+  def sync_associations(source_project)
+    destination_organizations = []
+    source_project.organizations.each do |source_organization|
+      organization = Organization.find_by(slug: source_organization.slug)
+      destination_organizations << organization unless organization.nil?
+    end
+    self.organizations = destination_organizations
+
+    destination_products = []
+    source_project.products.each do |source_product|
+      product = Product.find_by(slug: source_product.slug)
+      destination_products << product unless product.nil?
+    end
+    self.products = destination_products
+  end
+
+  def sync_record(copy_of_project)
+    ActiveRecord::Base.transaction do
+      self.project_descriptions = copy_of_project.project_descriptions
+
+      self.countries = copy_of_project.countries
+      self.origin = copy_of_project.origin
+      self.sectors = copy_of_project.dataset_sectors
+      self.sustainable_development_goals = copy_of_project.sustainable_development_goals
+
+      save!
+
+      update!(copy_of_project.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
 
   def sectors_localized
     sectors.where('locale = ?', I18n.locale)
@@ -41,15 +90,11 @@ class Project < ApplicationRecord
     project_url
   end
 
-  def to_param
-    slug
-  end
-
   def image_file
     if File.exist?(File.join('public', 'assets', 'products', "#{slug}.png"))
       "/assets/projects/#{slug}.png"
     else
-      'project_placeholder.png'
+      '/assets/projects/project-placeholder.png'
     end
   end
 

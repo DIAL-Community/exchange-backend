@@ -13,8 +13,9 @@ class ProductProductRelationship < ApplicationRecord
     self.association_source = ProductProductRelationship.LEFT
   end
 
+  # overridden
   def generate_slug
-    self.slug = "#{from_product.slug}_#{to_product.slug}_#{relationship_type}" if !to_product.nil? && !from_product.nil?
+    self.slug = "#{from_product.slug}-#{to_product.slug}-#{relationship_type}" if !to_product.nil? && !from_product.nil?
   end
 
   def audit_id_value

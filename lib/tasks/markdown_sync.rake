@@ -142,7 +142,7 @@ namespace :markdown_sync do
       if use_case_step.nil?
         use_case_step = UseCaseStep.new(
           name: step_name,
-          slug: slug_em(step_name),
+          slug: reslug_em(step_name),
           use_case:
         )
 

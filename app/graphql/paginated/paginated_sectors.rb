@@ -7,6 +7,10 @@ module Paginated
     type [Types::SectorType], null: false
 
     def resolve(search:, offset_attributes:)
+      if !unsecure_read_allowed && context[:current_user].nil?
+        return []
+      end
+
       sectors = Sector.order(:name)
                       .where(locale: I18n.locale)
       unless search.blank?

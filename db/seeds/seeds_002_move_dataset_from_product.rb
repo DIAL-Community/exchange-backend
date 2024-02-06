@@ -15,7 +15,7 @@ datasets.each do |dataset|
     # Find by name, and then by aliases and then by slug.
     break unless existing_dataset.nil?
 
-    slug = slug_em(name_alias)
+    slug = reslug_em(name_alias)
     existing_dataset = Dataset.first_duplicate(name_alias, slug)
     # Check to see if both just have the same alias. In this case, it's not a duplicate
   end
@@ -23,7 +23,7 @@ datasets.each do |dataset|
   if existing_dataset.nil?
     existing_dataset = Dataset.new
     existing_dataset.name = name_aliases.first
-    existing_dataset.slug = slug_em(existing_dataset.name)
+    existing_dataset.slug = reslug_em(existing_dataset.name)
   end
 
   website = cleanup_url(dataset.website)
@@ -59,7 +59,7 @@ datasets.each do |dataset|
 
   if !dataset.organizations_products.nil? && !dataset.organizations_products.empty?
     dataset.organizations_products.each do |organization_product|
-      organization_dataset = OrganizationsDataset.new
+      organization_dataset = OrganizationDataset.new
       organization_dataset.organization_id = organization_product.organization.id
       organization_dataset.organization_type = organization_product.org_type
 

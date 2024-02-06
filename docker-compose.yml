@@ -5,6 +5,8 @@ services:
     build:
       context: .
       target: build-web
+      additional_contexts:
+        gdpir: ../www.dpi.global
     environment:
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_ENV=production

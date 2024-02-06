@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'modules/slugger'
 require 'modules/url_sanitizer'
 
-namespace :resources_sync do
+namespace :resource_sync do
   desc 'Sync DIAL resources data with wordpress API.'
   task sync_dial_resources: :environment do
     task_name = 'Sync DIAL Resources'
@@ -146,12 +146,12 @@ namespace :resources_sync do
         resource.authors = [resource_author]
       end
 
-      resource.save
+      resource.save!
       successful_operation = true
     end
 
     if successful_operation
-      puts "Resource '#{resource.name}' record saved."
+      puts "  Resource '#{resource.name}' record saved."
     end
   end
 end

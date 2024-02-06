@@ -2,8 +2,8 @@
 require 'modules/slugger'
 
 # Migrate 'Other: Supply Chain and Logistics' to 'Supply Chain and Logistics'.
-current_sector_slug = slug_em('Other: Supply Chain and Logistics')
-updated_sector_slug = slug_em('Supply Chain and Logistics')
+current_sector_slug = reslug_em('Other: Supply Chain and Logistics')
+updated_sector_slug = reslug_em('Supply Chain and Logistics')
 
 sectors_to_update = Sector.where(slug: current_sector_slug)
 sectors_to_update.each do |sector_to_update|

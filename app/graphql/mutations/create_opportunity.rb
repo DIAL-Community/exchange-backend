@@ -42,7 +42,7 @@ module Mutations
 
       if opportunity.nil?
         opportunity = Opportunity.new(name:)
-        opportunity.slug = slug_em(name)
+        opportunity.slug = reslug_em(name)
 
         if Opportunity.where(slug: opportunity.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -75,7 +75,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(opportunity)
-        opportunity.save
+        opportunity.save!
 
         unless image_file.nil?
           uploader = LogoUploader.new(opportunity, image_file.original_filename, context[:current_user])

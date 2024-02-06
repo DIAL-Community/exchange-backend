@@ -71,7 +71,7 @@ module Mutations
       name_string = "#{city.name}, #{province.name}, #{country.code}"
       office_params = {
         name: name_string,
-        slug: slug_em(name_string),
+        slug: reslug_em(name_string),
 
         province_id: province.id,
         country_id: country.id,

@@ -66,6 +66,7 @@ module Types
     field :update_product_countries, mutation: Mutations::UpdateProductCountries
     field :update_product_tags, mutation: Mutations::UpdateProductTags
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
+    field :update_product_resources, mutation: Mutations::UpdateProductResources
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
 
     field :create_dataset, mutation: Mutations::CreateDataset
@@ -155,9 +156,14 @@ module Types
 
     field :update_resource_tags, mutation: Mutations::UpdateResourceTags
     field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
+    field :update_resource_products, mutation: Mutations::UpdateResourceProducts
 
     field :create_region, mutation: Mutations::CreateRegion
     field :delete_region, mutation: Mutations::DeleteRegion
     field :update_region_countries, mutation: Mutations::UpdateRegionCountries
+
+    field :create_sync, mutation: Mutations::CreateSync
+    field :delete_sync, mutation: Mutations::DeleteSync
+    field :sync_tenants, mutation: Mutations::SyncTenants
   end
 end

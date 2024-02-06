@@ -10,10 +10,6 @@ class Tag < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
 
-  def to_param
-    slug
-  end
-
   def tag_description_localized
     description = tag_descriptions.order(Arel.sql('LENGTH(description) DESC'))
                                   .find_by(locale: I18n.locale)
@@ -25,8 +21,11 @@ class Tag < ApplicationRecord
   end
 
   def self.serialization_options
-    {
-      except: %i[created_at updated_at]
-    }
+    { except: %i[created_at updated_at] }
+  end
+
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 end

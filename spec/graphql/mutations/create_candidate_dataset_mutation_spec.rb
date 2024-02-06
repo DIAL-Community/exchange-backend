@@ -67,7 +67,7 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
           "visualizationUrl" => "",
           "description" => "Some description",
           "name" => "Some Name",
-          "slug" => "some_name"
+          "slug" => "some-name"
         }))
       expect(result['data']['createCandidateDataset']['errors'])
         .to(eq([]))

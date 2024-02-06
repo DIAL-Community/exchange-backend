@@ -8,7 +8,6 @@ include Modules::Fao
 namespace :fao do
   task :sync_fao_products, [:tenant] => :environment do |_, _params|
     ENV['tenant'].nil? ? tenant_name = 'public' : tenant_name = ENV['tenant']
-    puts "TENANT: " + tenant_name
     Apartment::Tenant.switch(tenant_name) do
       task_name = 'Import FAO Products'
       tracking_task_setup(task_name, 'Preparing task tracker record.')

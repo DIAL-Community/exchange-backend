@@ -37,7 +37,7 @@ module Mutations
       if candidate_product.nil?
         candidate_product = CandidateProduct.new
         # Generate slug for the candidate product.
-        slug = slug_em(name)
+        slug = reslug_em(name)
         # Check if we need to add _dup to the slug.
         first_duplicate = CandidateProduct.slug_simple_starts_with(slug)
                                           .order(slug: :desc)

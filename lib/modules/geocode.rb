@@ -39,7 +39,7 @@ module Modules
             next unless address_component['types'].include?(address_key)
 
             province.name = address_component['long_name']
-            province.slug = slug_em(province.name)
+            province.slug = reslug_em(province.name)
           end
           province.latitude = province_result['geometry']['location']['lat']
           province.longitude = province_result['geometry']['location']['lng']
@@ -90,7 +90,7 @@ module Modules
             next unless address_component['types'].include?(address_key)
 
             city.name = address_component['long_name']
-            city.slug = slug_em(address)
+            city.slug = reslug_em(address)
           end
           city.latitude = city_result['geometry']['location']['lat']
           city.longitude = city_result['geometry']['location']['lng']

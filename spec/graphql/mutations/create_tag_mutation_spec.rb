@@ -45,38 +45,38 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: 'Some description'
       }
     )
 
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some name", "slug" => "some-name" }))
     end
   end
 
   it 'is successful - admin can update tag name and slug remains the same' do
-    create(:tag, name: "Some name", slug: "some_name")
+    create(:tag, name: "Some name", slug: "some-name")
     expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
       variables: {
         name: "Some new name",
-        slug: "some_name",
+        slug: "some-name",
         description: 'Some description'
       }
     )
 
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some new name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some new name", "slug" => "some-name" }))
     end
   end
 
   it 'is successful - should update references on other objects' do
-    create(:tag, name: "Some Name", slug: "some_name")
+    create(:tag, name: "Some Name", slug: "some-name")
     create(:product, name: "Some Product", slug: "some_product", tags: ['Some Name'])
     expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
 
@@ -84,7 +84,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       mutation,
       variables: {
         name: "Some New Name",
-        slug: "some_name",
+        slug: "some-name",
         description: 'Some description'
       }
     )
@@ -99,7 +99,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some New Name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some New Name", "slug" => "some-name" }))
       # The tag update operation should also update tag list in the product object.
       expect(product_result['data']['product']['tags']).to(eq(['Some New Name']))
     end
@@ -122,7 +122,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
     # First tag creation should use normal slug.
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some Name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some Name", "slug" => "some-name" }))
     end
 
     result = execute_graphql(
@@ -130,10 +130,10 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       variables: graph_variables,
     )
 
-    # The following create should add _dupX to the slug when creating tag using the same name.
+    # The following create should add -duplicate-X to the slug when creating tag using the same name.
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some Name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some Name", "slug" => "some-name" }))
     end
 
     result = execute_graphql(
@@ -143,7 +143,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createTag']['tag'])
-        .to(eq({ "name" => "Some Name", "slug" => "some_name" }))
+        .to(eq({ "name" => "Some Name", "slug" => "some-name" }))
     end
   end
 
@@ -152,7 +152,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       mutation,
       variables: {
         name: "Some name",
-        slug: "some_name",
+        slug: "some-name",
         description: 'Some description'
       }
     )

@@ -29,7 +29,7 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:product, name: 'Some Name', slug: 'some_name',
+    create(:product, name: 'Some Name', slug: 'some-name',
                      building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
@@ -37,26 +37,26 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do
       expect(result['data']['updateProductBuildingBlocks']['product'])
-        .to(eq({ "slug" => "some_name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
+        .to(eq({ "slug" => "some-name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
       expect(result['data']['updateProductBuildingBlocks']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:product, name: 'Some Name', slug: 'some_name',
+    create(:product, name: 'Some Name', slug: 'some-name',
                      building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some_name', mappingStatus: 'VALIDATED' },
+      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
 
     aggregate_failures do

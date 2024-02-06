@@ -30,7 +30,7 @@ module Mutations
       building_block = BuildingBlock.find_by(slug:)
       if building_block.nil?
         building_block = BuildingBlock.new(name:)
-        slug = slug_em(name)
+        slug = reslug_em(name)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = BuildingBlock.slug_simple_starts_with(slug)

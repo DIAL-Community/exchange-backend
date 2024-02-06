@@ -120,6 +120,7 @@ Rails.application.routes.draw do
 
   get '/healthcheck', to: 'about#healthcheck', as: :healthcheck
   get '/tenant', to: 'about#tenant', as: :tenant
+  get '/tenants', to: 'about#tenants', as: :tenants
 
   post '/send_email', to: 'application#send_email', as: :send_email
   post '/create_issue', to: 'application#create_issue', as: :create_issue

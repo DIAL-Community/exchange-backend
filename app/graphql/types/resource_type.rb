@@ -4,7 +4,8 @@ module Types
   class AuthorType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
-    field :email, String, null: false
+    field :slug, String, null: false
+    field :email, String, null: true
     field :picture, String, null: false
   end
 
@@ -22,7 +23,7 @@ module Types
     def parsed_description
       first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
       return first_paragraph.text unless first_paragraph.nil?
-      return object.description if first_paragraph.nil?
+      object.description if first_paragraph.nil?
     end
 
     field :show_in_exchange, Boolean, null: false
@@ -39,12 +40,12 @@ module Types
     field :tags, GraphQL::Types::JSON, null: false
 
     field :featured, Boolean, null: false
-    field :spotlight, Boolean, null: false
 
     field :published_date, GraphQL::Types::ISO8601Date, null: true
 
     field :organizations, [Types::OrganizationType], null: false
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
+    field :products, [Types::ProductType], null: false, method: :products_ordered
     field :authors, [Types::AuthorType], null: false, method: :authors_ordered
   end
 end

@@ -6,7 +6,7 @@ include Modules::Slugger
 module Modules
   module Track
     def tracking_task_setup(task_name, message, description = nil)
-      task_slug = slug_em(task_name)
+      task_slug = reslug_em(task_name)
       task_tracker = TaskTracker.find_by(slug: task_slug)
       if task_tracker.nil?
         task_tracker = TaskTracker.new
@@ -35,7 +35,7 @@ module Modules
     end
 
     def tracking_task_start(task_name)
-      task_slug = slug_em(task_name)
+      task_slug = reslug_em(task_name)
       task_tracker = TaskTracker.find_by(slug: task_slug)
       return if task_tracker.nil?
 
@@ -46,7 +46,7 @@ module Modules
     end
 
     def tracking_task_log(task_name, message)
-      task_slug = slug_em(task_name)
+      task_slug = reslug_em(task_name)
       task_tracker = TaskTracker.find_by(slug: task_slug)
       return if task_tracker.nil?
 
@@ -55,7 +55,7 @@ module Modules
     end
 
     def tracking_task_finish(task_name)
-      task_slug = slug_em(task_name)
+      task_slug = reslug_em(task_name)
       task_tracker = TaskTracker.find_by(slug: task_slug)
       return if task_tracker.nil?
 
