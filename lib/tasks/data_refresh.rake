@@ -21,7 +21,8 @@ namespace :data_refresh do
     classes = ActiveRecord::Base.descendants
     classes.each do |c|
       next if c.nil?
-      next if c.name.include?('ApplicationRecord') || c.name.include?('DialSpreadsheetData')
+      next if c.name.include?('ApplicationRecord') || c.name.include?('DialSpreadsheetData') 
+      next if c.name.include?('ProjectOrganization')
       next if c.name.include?('::') || c.name.include?('HABTM') || c.name.include?('InternalMetadata')
       next if c.table_name.nil? || c.table_name.blank?
 
