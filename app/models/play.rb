@@ -12,8 +12,9 @@ class Play < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(plays.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(plays.slug) like LOWER(?)', "#{slug}\\_%") }
 
-  def to_param
-    slug
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def play_description_localized
@@ -30,7 +31,7 @@ class Play < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'playbooks', "#{slug}.png"))
       "/assets/playbooks/#{slug}.png"
     else
-      '/assets/playbooks/playbook_placeholder.png'
+      '/assets/playbooks/playbook-placeholder.png'
     end
   end
 end

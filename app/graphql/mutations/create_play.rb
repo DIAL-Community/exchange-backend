@@ -28,7 +28,7 @@ module Mutations
       play = Play.find_by(slug:)
       if play.nil?
         play = Play.new(name:)
-        play.slug = slug_em(name)
+        play.slug = reslug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -42,7 +42,7 @@ module Mutations
       # Re-slug if the name is updated (not the same with the one in the db).
       if play.name != name
         play.name = name
-        play.slug = slug_em(name)
+        play.slug = reslug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -70,7 +70,7 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(play)
-        play.save
+        play.save!
 
         play_description = PlayDescription.find_by(play:, locale: I18n.locale)
         play_description = PlayDescription.new if play_description.nil?
@@ -79,7 +79,7 @@ module Mutations
         play_description.description = description
 
         assign_auditable_user(play_description)
-        play_description.save
+        play_description.save!
 
         playbook = Playbook.find_by(slug: playbook_slug)
         # Only create assignment if the playbook is not yet assigned.
@@ -93,7 +93,7 @@ module Mutations
           assigned_play.playbook = playbook
 
           assign_auditable_user(assigned_play)
-          assigned_play.save
+          assigned_play.save!
         end
 
         successful_operation = true

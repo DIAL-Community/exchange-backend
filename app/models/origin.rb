@@ -6,6 +6,11 @@ class Origin < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
 
+  # overridden
+  def generate_slug
+    self.slug = reslug_em(name, 64)
+  end
+
   def self_url(options = {})
     "#{options[:api_path]}/#{options[:api_source]}?origins[]=#{slug}" if options[:api_path].present?
   end

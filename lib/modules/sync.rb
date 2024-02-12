@@ -34,7 +34,7 @@ module Modules
           # Find by name, and then by aliases and then by slug.
           break unless existing_dataset.nil?
 
-          slug = slug_em(name_alias)
+          slug = reslug_em(name_alias)
           existing_dataset = Dataset.first_duplicate(name_alias, slug)
           # Check to see if both just have the same alias. In this case, it's not a duplicate
         end
@@ -46,7 +46,7 @@ module Modules
 
           existing_dataset = Dataset.new
           existing_dataset.name = name_aliases.first
-          existing_dataset.slug = slug_em(existing_dataset.name)
+          existing_dataset.slug = reslug_em(existing_dataset.name)
           @@dataset_list << existing_dataset.name
         end
 
@@ -120,7 +120,7 @@ module Modules
             next if organization.nil?
 
             unless is_new
-              organization_dataset = OrganizationsDataset.find_by(
+              organization_dataset = OrganizationDataset.find_by(
                 dataset_id: existing_dataset.id,
                 organization_id: organization.id,
                 organization_type: organization_entry['org_type']
@@ -128,7 +128,7 @@ module Modules
               next unless organization_dataset.nil?
             end
 
-            organization_dataset = OrganizationsDataset.new
+            organization_dataset = OrganizationDataset.new
             organization_dataset.organization_id = organization.id
             organization_dataset.organization_type = organization_entry['org_type']
 
@@ -183,19 +183,19 @@ module Modules
           # Find by name, and then by aliases and then by slug.
           break unless existing_product.nil?
 
-          slug = slug_em(name_alias)
+          slug = reslug_em(name_alias)
           existing_product = Product.first_duplicate(name_alias, slug)
           # Check to see if both just have the same alias. In this case, it's not a duplicate
         end
 
         if existing_product.nil?
           # Check to see if it is a child product (ie. it already has a repository)
-          product_repository = ProductRepository.find_by(slug: slug_em("#{json_data['name']} Repository"))
+          product_repository = ProductRepository.find_by(slug: reslug_em("#{json_data['name']} Repository"))
           return unless product_repository.nil?
 
           existing_product = Product.new
           existing_product.name = name_aliases.first
-          existing_product.slug = slug_em(existing_product.name)
+          existing_product.slug = reslug_em(existing_product.name)
           @@product_list << existing_product.name
         end
 
@@ -276,7 +276,7 @@ module Modules
 
     def sync_digisquare_product(digi_product, digisquare_maturity)
       dsq_endorser = Endorser.find_by(slug: 'dsq')
-      digisquare_origin = Origin.find_by(slug: 'digital_square')
+      digisquare_origin = Origin.find_by(slug: 'digital-square')
 
       name_aliases = [digi_product['name']]
       digi_product['aliases']&.each do |name_alias|
@@ -288,14 +288,14 @@ module Modules
         # Find by name, and then by aliases and then by slug.
         break unless existing_product.nil?
 
-        slug = slug_em(name_alias)
+        slug = reslug_em(name_alias)
         existing_product = Product.first_duplicate(name_alias, slug)
       end
 
       if existing_product.nil?
         existing_product = Product.new
         existing_product.name = digi_product['name']
-        existing_product.slug = slug_em(digi_product['name'])
+        existing_product.slug = reslug_em(digi_product['name'])
         existing_product.save
         @@product_list << existing_product.name
       end
@@ -382,14 +382,14 @@ module Modules
         # Find by name, and then by aliases and then by slug.
         break unless existing_product.nil?
 
-        slug = slug_em(name_alias)
+        slug = reslug_em(name_alias)
         existing_product = Product.first_duplicate(name_alias, slug)
       end
 
       if existing_product.nil?
         existing_product = Product.new
         existing_product.name = product['name']
-        existing_product.slug = slug_em(product['name'])
+        existing_product.slug = reslug_em(product['name'])
         @@product_list << existing_product.name
       end
 
@@ -473,7 +473,7 @@ module Modules
 
     def sync_repository_data(json_data)
       product_name = json_data['name']
-      existing_product = Product.first_duplicate(product_name, slug_em(product_name))
+      existing_product = Product.first_duplicate(product_name, reslug_em(product_name))
 
       # Do nothing if product is not exists or product have been manually updated
       return if existing_product.nil? || existing_product.manual_update
@@ -487,7 +487,7 @@ module Modules
         puts "  Creating repository for: #{product_name} => #{json_data['repositoryUrl']}."
         repository_attrs = {
           name: repository_name,
-          slug: slug_em(repository_name),
+          slug: reslug_em(repository_name),
           absolute_url: cleanup_url(json_data['repositoryUrl'].to_s),
           description: "Main code repository of #{product_name}.",
           main_repository: true
@@ -519,7 +519,7 @@ module Modules
           puts "  Creating repository for: '#{repository_name.titlecase}'."
           repository_attrs = {
             name: repository_name.titlecase,
-            slug: slug_em(repository_name),
+            slug: reslug_em(repository_name),
             absolute_url: cleanup_url(repository_url.to_s.strip),
             description: "#{repository_counter_text(index).titlecase} code repository of #{product_name}.",
             main_repository: true
@@ -545,17 +545,17 @@ module Modules
           organization = Organization.find_by(
             "LOWER(name) = LOWER(?) OR slug = ? OR aliases @> ARRAY['#{organization_name}']::varchar[]",
             organization_name,
-            slug_em(organization_name)
+            reslug_em(organization_name)
           )
           if organization.nil?
             # Create a new organization and assign it as an owner
             organization = Organization.new
             organization.name = organization_name
-            organization.slug = slug_em(organization_name, 128)
+            organization.slug = reslug_em(organization_name, 128)
             organization.website = cleanup_url(organization['website'])
             organization.save
 
-            organization_product = OrganizationsProduct.new
+            organization_product = OrganizationProduct.new
             organization_product.org_type = organization['org_type']
             organization_product.organization_id = organization.id
             organization_product.product_id = existing_product.id
@@ -569,7 +569,7 @@ module Modules
           next if existing_product.organizations.include?(organization)
 
           puts "  Adding organization to product: #{organization.name}."
-          organization_product = OrganizationsProduct.new
+          organization_product = OrganizationProduct.new
           organization_product.org_type = organization['org_type']
           organization_product.organization_id = organization.id
           organization_product.product_id = existing_product.id
@@ -601,7 +601,7 @@ module Modules
 
       # Create new project or update existing project
       project_name = english_project[0]
-      project_slug = slug_em(project_name, 64)
+      project_slug = reslug_em(project_name, 64)
 
       existing_project = Project.name_and_slug_search(project_name, project_slug).first
       existing_project = Project.new if existing_project.nil?
@@ -651,7 +651,7 @@ module Modules
       implementer_organizations = Organization.name_contains(english_project[5])
 
       if !implementer_organizations.empty? && !existing_project.organizations.include?(implementer_organizations.first)
-        project_organization = ProjectsOrganization.new
+        project_organization = ProjectOrganization.new
         project_organization.org_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id
@@ -677,7 +677,7 @@ module Modules
         existing_tags = []
         project_tags = subsector_names.gsub(/\s*\(.+\)/, '').split(',').map(&:strip)
         project_tags.each do |project_tag|
-          tag = Tag.find_by(slug: slug_em(project_tag))
+          tag = Tag.find_by(slug: reslug_em(project_tag))
           existing_tags << tag.name unless tag.nil?
         end
         existing_project.tags = existing_tags
@@ -690,7 +690,7 @@ module Modules
                                       .sub('Industry, Innovation, and', 'Industry Innovation and')
         sdg_names = sdg_list.split(',')
         sdg_names.each do |sdg_name|
-          sdg_slug = slug_em(sdg_name.strip)
+          sdg_slug = reslug_em(sdg_name.strip)
           sdg = SustainableDevelopmentGoal.find_by(slug: sdg_slug)
           unless sdg.nil? || existing_project.sustainable_development_goals.include?(sdg)
             existing_project.sustainable_development_goals << sdg
@@ -749,7 +749,7 @@ module Modules
       sector_array = []
 
       sector_name = sector_name.to_s.strip
-      sector_slug = slug_em(sector_name)
+      sector_slug = reslug_em(sector_name)
       existing_sector = Sector.find_by(
         'slug like ? and locale = ? and is_displayable is true and parent_sector_id is null',
         "%#{sector_slug}%",
@@ -777,7 +777,7 @@ module Modules
         next if subsector.blank?
 
         subsector = subsector.strip
-        subsector_slug = slug_em(subsector, 64)
+        subsector_slug = reslug_em(subsector, 64)
         existing_subsector = Sector.find_by(
           'slug like ? and parent_sector_id = ? and locale = ? and is_displayable is true',
           "%#{subsector_slug}%",
@@ -904,7 +904,7 @@ module Modules
         regex = /(?<content>"(?:[^\\"]|\\.)+")|(?<open>\{)\s+(?<close>\})|(?<open>\[)\s+(?<close>\])/m
         json_string = json_string.gsub(regex, '\k<open>\k<content>\k<close>')
         json_string += "\n"
-        File.open("export/#{slug_em(publicgoods_name, 100).gsub('_', '-')}.json", 'w') do |f|
+        File.open("export/#{reslug_em(publicgoods_name, 100).gsub('_', '-')}.json", 'w') do |f|
           f.write(json_string)
         end
       end

@@ -35,7 +35,7 @@ class CandidateProductsController < ApplicationController
         unless @candidate_product.repository.nil?
           product_repository = ProductRepository.new
           product_repository.name = "#{@candidate_product.name} Repository"
-          product_repository.slug = slug_em(product_repository.name)
+          product_repository.slug = reslug_em(product_repository.name)
 
           product_repositorys = ProductRepository.where(slug: product_repository.slug)
           unless product_repositorys.empty?

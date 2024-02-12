@@ -62,7 +62,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "PUBLISHED",
           "category" => "DPI",
@@ -94,7 +94,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
@@ -107,14 +107,14 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
   it 'updates name for existing method matched by slug' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
-    create(:building_block, name: "Some name", slug: "some_name")
+    create(:building_block, name: "Some name", slug: "some-name")
 
     result = execute_graphql_as_user(
       admin_user,
       mutation,
       variables: {
         name: "Some new name",
-        slug: "some_name",
+        slug: "some-name",
         description: "some description",
         maturity: "BETA",
         category: nil,
@@ -127,7 +127,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(eq({
           "name" => "Some new name",
-          "slug" => "some_name",
+          "slug" => "some-name",
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
@@ -140,7 +140,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
 
   it 'generate offset for new building block with duplicated name' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
-    create(:building_block, name: "Some name", slug: "some_name")
+    create(:building_block, name: "Some name", slug: "some-name")
 
     result = execute_graphql_as_user(
       admin_user,
@@ -159,7 +159,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(eq({
           "name" => "Some name",
-          "slug" => "some_name_dup0",
+          "slug" => "some-name-duplicate-0",
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,

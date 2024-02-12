@@ -5,6 +5,6 @@ require 'modules/slugger'
 origin = Origin.find_by(slug: 'dial_osc')
 unless origin.nil?
   origin.name = 'DIAL'
-  origin.slug = slug_em('DIAL')
+  origin.slug = reslug_em('DIAL')
   origin.save!
 end

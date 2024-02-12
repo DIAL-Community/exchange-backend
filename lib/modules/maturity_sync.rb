@@ -3,7 +3,7 @@
 module Modules
   module MaturitySync
     def create_category(cat_name)
-      category_slug = slug_em(cat_name)
+      category_slug = reslug_em(cat_name)
       rubric_category = RubricCategory.where(slug: category_slug)
                                       .first || RubricCategory.new
       rubric_category.name = cat_name
@@ -23,7 +23,7 @@ module Modules
     end
 
     def create_indicator(indicator_name, indicator_desc, indicator_source, indicator_count, indicator_type, category_id)
-      indicator_slug = slug_em(indicator_name)
+      indicator_slug = reslug_em(indicator_name)
       category_indicator = CategoryIndicator.where(rubric_category_id: category_id, slug: indicator_slug)
                                             .first || CategoryIndicator.new
       category_indicator.name = indicator_name

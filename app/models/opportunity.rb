@@ -17,45 +17,35 @@ class Opportunity < ApplicationRecord
     OTHER: 'OTHER'
   }
 
-  has_and_belongs_to_many(
-    :sectors,
-    dependent: :delete_all,
-    join_table: :opportunities_sectors,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_and_belongs_to_many :sectors,
+                          dependent: :delete_all,
+                          join_table: :opportunities_sectors,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :countries,
-    dependent: :delete_all,
-    join_table: :opportunities_countries,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_and_belongs_to_many :countries,
+                          dependent: :delete_all,
+                          join_table: :opportunities_countries,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :organizations,
-    dependent: :delete_all,
-    join_table: :opportunities_organizations,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_and_belongs_to_many :organizations,
+                          dependent: :delete_all,
+                          join_table: :opportunities_organizations,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :building_blocks,
-    dependent: :delete_all,
-    join_table: :opportunities_building_blocks,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_and_belongs_to_many :building_blocks,
+                          dependent: :delete_all,
+                          join_table: :opportunities_building_blocks,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
-  has_and_belongs_to_many(
-    :use_cases,
-    dependent: :delete_all,
-    join_table: :opportunities_use_cases,
-    after_add: :association_add,
-    before_remove: :association_remove
-  )
+  has_and_belongs_to_many :use_cases,
+                          dependent: :delete_all,
+                          join_table: :opportunities_use_cases,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
   belongs_to(:origin)
 
@@ -64,11 +54,25 @@ class Opportunity < ApplicationRecord
   scope :name_contains, ->(name) { where('LOWER(opportunities.name) like LOWER(?)', "%#{name}%") }
   scope :name_and_slug_search, -> (name, slug) { where('opportunities.name = ? OR opportunities.slug = ?', name, slug) }
 
+  amoeba do
+    enable
+
+    exclude_association :building_blocks
+    exclude_association :organizations
+    exclude_association :use_cases
+  end
+
+  def sync_record(copy_of_opportunity)
+    ActiveRecord::Base.transaction do
+      update!(copy_of_opportunity.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def image_file
     if File.exist?(File.join('public', 'assets', 'opportunities', "#{slug}.png"))
       "/assets/opportunities/#{slug}.png"
     else
-      '/assets/opportunities/opportunity_placeholder.png'
+      '/assets/opportunities/opportunity-placeholder.png'
     end
   end
 
@@ -93,8 +97,8 @@ class Opportunity < ApplicationRecord
   end
 
   # overridden
-  def to_param
-    slug
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def self_url(options = {})

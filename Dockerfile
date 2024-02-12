@@ -18,6 +18,8 @@ RUN apt-get install -y nodejs
 RUN apt-get update
 RUN apt-get install -y cron git imagemagick build-essential libpq-dev nodejs logrotate cmake cloc
 
+COPY --from=gdpir . /www.dpi.global
+
 RUN mkdir /candidates
 RUN git clone https://github.com/unicef/publicgoods-candidates.git /candidates
 

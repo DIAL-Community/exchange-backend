@@ -50,7 +50,7 @@ module Mutations
 
     def create_new_contact(name, email, title)
       contact = Contact.new(name:, email:, title:)
-      contact.slug = slug_em(name)
+      contact.slug = reslug_em(name)
 
       if Contact.where(slug: contact.slug).count.positive?
         # Check if we need to add _dup to the slug.

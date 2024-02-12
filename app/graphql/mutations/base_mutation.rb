@@ -71,13 +71,13 @@ module Mutations
 
     def generate_offset(first_duplicate)
       size = 0
-      if !first_duplicate.nil? && first_duplicate.slug.include?('_dup')
+      if !first_duplicate.nil? && first_duplicate.slug.include?('-duplicate')
         size = first_duplicate.slug
-                              .slice(/_dup\d+$/)
+                              .slice(/-duplicate\d+$/)
                               .delete('^0-9')
                               .to_i + 1
       end
-      "_dup#{size}"
+      "-duplicate-#{size}"
     end
 
     def captcha_verification(captcha)

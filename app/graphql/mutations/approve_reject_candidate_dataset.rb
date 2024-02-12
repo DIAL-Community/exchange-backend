@@ -71,7 +71,7 @@ module Mutations
                             visualization_url: candidate_dataset.visualization_url,
                             dataset_type: candidate_dataset.dataset_type)
 
-      slug = slug_em(candidate_dataset.name)
+      slug = reslug_em(candidate_dataset.name)
       # Check if we need to add _dup to the slug.
       first_duplicate = Dataset.slug_simple_starts_with(slug)
                                .order(slug: :desc)

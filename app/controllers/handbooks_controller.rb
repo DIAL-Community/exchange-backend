@@ -167,8 +167,8 @@ class HandbooksController < ApplicationController
   def duplicates
     @handbook = []
     if params[:current].present?
-      current_slug = slug_em(params[:current])
-      original_slug = slug_em(params[:original])
+      current_slug = reslug_em(params[:current])
+      original_slug = reslug_em(params[:original])
       if current_slug != original_slug
         @handbook = Handbook.where(slug: current_slug)
                             .to_a
@@ -256,7 +256,7 @@ class HandbooksController < ApplicationController
                   ])
           .tap do |attr|
             if params[:reslug].present?
-              attr[:slug] = slug_em(attr[:name])
+              attr[:slug] = reslug_em(attr[:name])
               if params[:duplicate].present?
                 first_duplicate = Handbook.slug_starts_with(attr[:slug]).order(slug: :desc).first
                 attr[:slug] = attr[:slug] + generate_offset(first_duplicate).to_s

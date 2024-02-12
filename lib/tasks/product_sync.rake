@@ -15,7 +15,7 @@ namespace :product_sync do
     if country.nil?
       country = Country.new(
         name: 'Niue',
-        slug: slug_em('Niue'),
+        slug: reslug_em('Niue'),
         code: 'NU',
         code_longer: 'NIU',
         latitude: -19.053889,
@@ -30,7 +30,7 @@ namespace :product_sync do
     if country.nil?
       country = Country.new(
         name: 'Cook Islands',
-        slug: slug_em('Cook Islands'),
+        slug: reslug_em('Cook Islands'),
         code: 'CK',
         code_longer: 'COK',
         latitude: -21.200000,

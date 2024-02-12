@@ -26,7 +26,7 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        task_tracker.destroy
+        task_tracker.destroy!
         successful_operation = true
       end
 

@@ -7,27 +7,50 @@ class UseCase < ApplicationRecord
   include Auditable
 
   belongs_to :sector
-  has_many :sdg_targets,
-           after_add: :association_add, before_remove: :association_remove
 
   has_many :use_case_steps, -> { order(step_number: :asc) }, dependent: :destroy
   has_many :use_case_headers, dependent: :destroy
   has_many :use_case_descriptions, dependent: :destroy
 
-  has_and_belongs_to_many :opportunities, join_table: :opportunities_use_cases
-  has_and_belongs_to_many :sdg_targets, join_table: :use_cases_sdg_targets,
-                                        after_add: :association_add, before_remove: :association_remove
+  has_and_belongs_to_many :opportunities,
+                          join_table: :opportunities_use_cases
+  has_and_belongs_to_many :sdg_targets,
+                          join_table: :use_cases_sdg_targets,
+                          after_add: :association_add,
+                          before_remove: :association_remove
 
   scope :name_contains, ->(name) { where('LOWER(use_cases.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(use_cases.slug) like LOWER(?)', "#{slug}\\_%") }
 
   attr_accessor :uc_desc, :ucs_header, :building_blocks, :workflows
 
+  amoeba do
+    enable
+
+    exclude_association :opportunities
+  end
+
+  def sync_record(copy_of_use_case)
+    ActiveRecord::Base.transaction do
+      self.use_case_descriptions = copy_of_use_case.use_case_descriptions
+
+      self.sdg_targets = copy_of_use_case.sdg_targets
+      self.sector = copy_of_use_case.sector
+
+      self.use_case_steps = copy_of_use_case.use_case_steps
+      self.use_case_headers = copy_of_use_case.use_case_headers
+
+      save!
+
+      update!(copy_of_use_case.attributes.except('id', 'created_at', 'updated_at'))
+    end
+  end
+
   def image_file
-    if File.exist?(File.join('public', 'assets', 'use_cases', "#{slug}.svg"))
-      "/assets/use_cases/#{slug}.svg"
+    if File.exist?(File.join('public', 'assets', 'use-cases', "#{slug}.svg"))
+      "/assets/use-cases/#{slug}.svg"
     else
-      '/assets/use_cases/use_case_placeholder.svg'
+      '/assets/use-cases/use-case-placeholder.svg'
     end
   end
 
@@ -42,8 +65,8 @@ class UseCase < ApplicationRecord
   end
 
   # overridden
-  def to_param
-    slug
+  def generate_slug
+    self.slug = reslug_em(name, 64)
   end
 
   def self_url(options = {})

@@ -21,7 +21,7 @@ module Mutations
         }
       end
 
-      slug = slug_em(spreadsheet_data['name'])
+      slug = reslug_em(spreadsheet_data['name'])
       record = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
       if record.nil? && assoc != 'products' && assoc != 'datasets'
         # Trying to update association when we don't have the base spreadsheet record yet.

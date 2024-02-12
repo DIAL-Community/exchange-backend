@@ -7,6 +7,8 @@ module Paginated
     type [Types::ContactType], null: false
 
     def resolve(search:, offset_attributes:)
+      return [] unless an_admin
+
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
       end

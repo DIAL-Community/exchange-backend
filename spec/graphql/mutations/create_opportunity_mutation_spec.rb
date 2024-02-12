@@ -46,11 +46,12 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
 
   it 'should allow admin to create opportunity record' do
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
+    create(:origin, slug: 'giz')
     result = execute_graphql_as_user(
       admin_user,
       mutation,
       variables: {
-        slug: "opportunity_a",
+        slug: "opportunity-a",
         name: "Opportunity A",
         webAddress: "somewebsite.org",
         description: "Some description",
@@ -65,8 +66,7 @@ RSpec.describe(Mutations::CreateOpportunity, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['createOpportunity']['opportunity']['name'])
-        .to(eq("Opportunity A"))
+      expect(result['data']['createOpportunity']['opportunity']['name']).to(eq("Opportunity A"))
     end
   end
 
