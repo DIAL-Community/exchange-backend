@@ -1728,7 +1728,7 @@ CREATE TABLE fao.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecure_read boolean DEFAULT true NOT NULL
+    allow_unsecure_read boolean NOT NULL
 );
 
 
@@ -3609,11 +3609,11 @@ CREATE TABLE fao.resources (
     link_description character varying,
     tags character varying[] DEFAULT '{}'::character varying[],
     resource_type character varying,
-    resource_topic character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
     source character varying,
-    resource_filename character varying
+    resource_filename character varying,
+    resource_topics character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -5614,7 +5614,7 @@ CREATE TABLE public.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecure_read boolean DEFAULT true NOT NULL
+    allow_unsecure_read boolean NOT NULL
 );
 
 
@@ -16684,6 +16684,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240118161746'),
 ('20240121042516'),
 ('20240123162741'),
-('20240202213701');
+('20240202213701'),
+('20240203165039'),
+('20240203165141'),
+('20240203190751');
 
 
