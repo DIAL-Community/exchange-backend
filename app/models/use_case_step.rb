@@ -36,12 +36,43 @@ class UseCaseStep < ApplicationRecord
     exclude_association :workflows
   end
 
+  def sync_associations(source_use_case_step)
+    destination_building_blocks = []
+    source_use_case_step.building_blocks.each do |source_building_block|
+      building_block = BuildingBlock.find_by(slug: source_building_block.slug)
+      destination_building_blocks << building_block unless building_block.nil?
+    end
+    self.building_blocks = destination_building_blocks
+
+    destination_datasets = []
+    source_use_case_step.datasets.each do |source_dataset|
+      dataset = Dataset.find_by(slug: source_dataset.slug)
+      destination_datasets << dataset unless dataset.nil?
+    end
+    self.datasets = destination_datasets
+
+    destination_products = []
+    source_use_case_step.products.each do |source_product|
+      product = Product.find_by(slug: source_product.slug)
+      destination_products << product unless product.nil?
+    end
+    self.products = destination_products
+
+    destination_workflows = []
+    source_use_case_step.workflows.each do |source_workflow|
+      workflow = Workflow.find_by(slug: source_workflow.slug)
+      destination_workflows << workflow unless workflow.nil?
+    end
+    self.workflows = destination_workflows
+  end
+
   def sync_record(copy_of_use_case_step)
     ActiveRecord::Base.transaction do
       self.use_case_step_descriptions = copy_of_use_case_step.use_case_step_descriptions
       save!
 
-      update!(copy_of_use_case_step.attributes.except('id', 'created_at', 'updated_at'))
+      # Don't copy the source use_case_id as they might be different.
+      update!(copy_of_use_case_step.attributes.except('id', 'created_at', 'updated_at', 'use_case_id'))
     end
   end
 
