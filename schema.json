@@ -11277,18 +11277,6 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "source",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": "null",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
                   "name": "authors",
                   "description": null,
                   "type": {
@@ -11305,6 +11293,42 @@
                     }
                   },
                   "defaultValue": "[]",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "sourceName",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "sourceWebsite",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": "null",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "sourceLogoFile",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Upload",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -30599,8 +30623,8 @@
 
               ],
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "Organization",
                 "ofType": null
               },
               "isDeprecated": false,

@@ -3611,9 +3611,9 @@ CREATE TABLE fao.resources (
     resource_type character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
-    source character varying,
     resource_filename character varying,
-    resource_topics character varying[] DEFAULT '{}'::character varying[]
+    resource_topics character varying[] DEFAULT '{}'::character varying[],
+    source character varying
 );
 
 
@@ -7497,9 +7497,9 @@ CREATE TABLE public.resources (
     resource_type character varying,
     published_date timestamp(6) without time zone,
     featured boolean DEFAULT false NOT NULL,
-    source character varying,
     resource_filename character varying,
-    resource_topics character varying[] DEFAULT '{}'::character varying[]
+    resource_topics character varying[] DEFAULT '{}'::character varying[],
+    organization_id bigint
 );
 
 
@@ -13736,6 +13736,13 @@ CREATE INDEX index_resources_countries_on_resource_id ON public.resources_countr
 
 
 --
+-- Name: index_resources_on_organization_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_on_organization_id ON public.resources USING btree (organization_id);
+
+
+--
 -- Name: index_rubric_category_descriptions_on_rubric_category_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -15883,6 +15890,14 @@ ALTER TABLE ONLY public.resource_topic_descriptions
 
 
 --
+-- Name: resources fk_rails_b7c74d1aaf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources
+    ADD CONSTRAINT fk_rails_b7c74d1aaf FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
 -- Name: opportunities_building_blocks fk_rails_bd7e32857c; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16687,6 +16702,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240202213701'),
 ('20240203165039'),
 ('20240203165141'),
-('20240203190751');
+('20240203190751'),
+('20240213054529');
 
 

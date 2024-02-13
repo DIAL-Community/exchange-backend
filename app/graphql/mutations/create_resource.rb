@@ -21,9 +21,12 @@ module Mutations
 
     argument :resource_type, String, required: false, default_value: nil
     argument :resource_topics, [String], required: false, default_value: []
-    argument :source, String, required: false, default_value: nil
 
     argument :authors, [GraphQL::Types::JSON], required: false, default_value: []
+
+    argument :source_name, String, required: false, default_value: nil
+    argument :source_website, String, required: false, default_value: nil
+    argument :source_logo_file, ApolloUploadServer::Upload, required: false
 
     argument :show_in_exchange, Boolean, required: false
     argument :show_in_wizard, Boolean, required: false
@@ -38,7 +41,8 @@ module Mutations
     def resolve(
       name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
-      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:, source:
+      resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:,
+      source_name:, source_website:, source_logo_file: nil
     )
       unless an_admin || a_content_editor
         return {
@@ -85,8 +89,6 @@ module Mutations
       end
       resource.resource_topics = validated_resource_topics
 
-      resource.source = source
-
       resource.featured = featured
 
       resource.image_url = image_url
@@ -124,8 +126,48 @@ module Mutations
           resource.authors << resource_author
         end
 
+        unless organization.nil?
+          organization.resources << resource
+          organization.save!
+        end
+
         assign_auditable_user(resource)
         resource.save!
+
+        unless source_name.nil?
+          source_organization = Organization.find_by(slug: reslug_em(source_name))
+          if source_organization.nil?
+            source_organization = Organization.new(name: source_name, website: source_website)
+            source_organization.slug = reslug_em(name)
+
+            if Organization.where(slug: source_organization.slug).count.positive?
+              # Check if we need to add _dup to the slug.
+              first_duplicate = Organization.slug_simple_starts_with(source_organization.slug)
+                                            .order(slug: :desc)
+                                            .first
+              source_organization.slug += generate_offset(first_duplicate)
+            end
+          end
+
+          unless source_organization.nil?
+            resource.organization = source_organization
+          end
+
+          assign_auditable_user(resource)
+          resource.save!
+
+          unless source_logo_file.nil?
+            uploader = LogoUploader.new(source_organization, source_logo_file.original_filename, context[:current_user])
+            begin
+              puts "Saving source organization logo file: '#{uploader.filename}'."
+              uploader.store!(source_logo_file)
+              puts "Logo image for source organization: '#{uploader.filename}' saved."
+            rescue StandardError => e
+              puts "Unable to save image for: #{source_organization.name}. Standard error: #{e}."
+            end
+            source_organization.auditable_image_changed(source_logo_file.original_filename)
+          end
+        end
 
         unless image_file.nil?
           uploader = SimpleUploader.new(resource, image_file.original_filename, context[:current_user])
@@ -147,11 +189,6 @@ module Mutations
           rescue StandardError => e
             puts "Unable to resource file for: #{resource.name}. Standard error: #{e}."
           end
-        end
-
-        unless organization.nil?
-          organization.resources << resource
-          organization.save!
         end
 
         successful_operation = true

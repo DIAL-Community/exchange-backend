@@ -942,7 +942,7 @@ type Mutation {
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
-  createResource(authors: [JSON!] = [], description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopics: [String!] = [], resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, source: String = null): CreateResourcePayload
+  createResource(authors: [JSON!] = [], description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopics: [String!] = [], resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, sourceLogoFile: Upload, sourceName: String = null, sourceWebsite: String = null): CreateResourcePayload
   createResourceTopic(description: String, name: String!, slug: String!): CreateResourceTopicPayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
@@ -1784,7 +1784,7 @@ type Resource {
   showInExchange: Boolean!
   showInWizard: Boolean!
   slug: String!
-  source: String
+  source: Organization
   tags: JSON!
 }
 

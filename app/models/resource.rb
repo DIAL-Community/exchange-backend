@@ -3,6 +3,8 @@
 class Resource < ApplicationRecord
   include Auditable
 
+  belongs_to :organization, optional: true
+
   has_and_belongs_to_many :organizations,
                           after_add: :association_add,
                           before_remove: :association_remove,

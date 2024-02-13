@@ -44,7 +44,10 @@ module Types
       resolved_resource_topics
     end
 
-    field :source, String, null: true
+    field :source, Types::OrganizationType, null: true
+    def source
+      Organization.find(object.organization_id)
+    end
 
     field :tags, GraphQL::Types::JSON, null: false
 

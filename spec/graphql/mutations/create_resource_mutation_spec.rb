@@ -15,7 +15,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
         $resourceLink: String
         $resourceType: String
         $resourceTopics: [String!]
-        $source: String
+        $sourceName: String
+        $sourceWebsite: String
         $showInExchange: Boolean
         $showInWizard: Boolean
         $organizationSlug: String
@@ -30,7 +31,8 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
           resourceLink: $resourceLink
           resourceType: $resourceType
           resourceTopics: $resourceTopics
-          source: $source
+          sourceName: $sourceName
+          sourceWebsite: $sourceWebsite
           showInExchange: $showInExchange
           showInWizard: $showInWizard
           organizationSlug: $organizationSlug
