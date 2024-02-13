@@ -32,7 +32,9 @@ RSpec.describe(Mutations::CreateResourceTopic, type: :graphql) do
         resource(slug: $slug) {
           slug
           name
-          resourceTopics
+          resourceTopics {
+            name
+          }
         }
       }
     GQL
@@ -103,7 +105,7 @@ RSpec.describe(Mutations::CreateResourceTopic, type: :graphql) do
       expect(result['data']['createResourceTopic']['resourceTopic'])
         .to(eq({ "name" => "Some New Name", "slug" => "some-name" }))
       # The resource topic update operation should also update resource topic list in the product object.
-      expect(resource_result['data']['resource']['resourceTopics']).to(eq(['Some New Name']))
+      expect(resource_result['data']['resource']['resourceTopics']).to(eq([{ 'name' => 'Some New Name' }]))
     end
   end
 

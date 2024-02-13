@@ -1779,7 +1779,7 @@ type Resource {
   publishedDate: ISO8601Date
   resourceFile: String
   resourceLink: String
-  resourceTopics: [String!]
+  resourceTopics: [ResourceTopic!]
   resourceType: String
   showInExchange: Boolean!
   showInWizard: Boolean!

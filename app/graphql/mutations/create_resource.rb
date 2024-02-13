@@ -81,7 +81,7 @@ module Mutations
         resource_topic = ResourceTopic.find_by(name: resource_topic)
         next if resource_topic.nil?
 
-        validated_resource_topics << resource_topic
+        validated_resource_topics << resource_topic.name
       end
       resource.resource_topics = validated_resource_topics
 
