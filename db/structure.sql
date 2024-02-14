@@ -15894,7 +15894,7 @@ ALTER TABLE ONLY public.resource_topic_descriptions
 --
 
 ALTER TABLE ONLY public.resources
-    ADD CONSTRAINT fk_rails_b7c74d1aaf FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+    ADD CONSTRAINT fk_rails_b7c74d1aaf FOREIGN KEY (organization_id) REFERENCES public.organizations(id) ON DELETE SET NULL;
 
 
 --

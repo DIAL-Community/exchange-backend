@@ -46,7 +46,7 @@ module Types
 
     field :source, Types::OrganizationType, null: true
     def source
-      Organization.find(object.organization_id)
+      Organization.find(object.organization_id) unless object.organization_id.nil?
     end
 
     field :tags, GraphQL::Types::JSON, null: false

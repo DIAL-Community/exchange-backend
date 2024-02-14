@@ -40,7 +40,16 @@ class Resource < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
       "/assets/resources/#{slug}.png"
     else
-      '/assets/resources/resource-placeholder.png'
+      return '/assets/resources/resource-placeholder.png' if organization_id.nil?
+
+      source_organization = Organization.find(organization_id)
+      return '/assets/resources/resource-placeholder.png' if source_organization.nil?
+
+      if File.exist?(File.join('public', 'assets', 'organizations', "#{source_organization.slug}.png"))
+        "/assets/organizations/#{source_organization.slug}.png"
+      else
+        '/assets/resources/resource-placeholder.png'
+      end
     end
   end
 

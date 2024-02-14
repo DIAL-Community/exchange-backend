@@ -43,7 +43,7 @@ module Paginated
       end
 
       filtered_resource_topics = resource_topics.reject { |x| x.nil? || x.blank? }
-      unless filtered_tags.empty?
+      unless filtered_resource_topics.empty?
         resources = resources.where(
           "resources.resource_topics @> '{#{filtered_resource_topics.join(',').downcase}}'::varchar[] or " \
           "resources.resource_topics @> '{#{filtered_resource_topics.join(',')}}'::varchar[] "

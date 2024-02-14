@@ -3,6 +3,6 @@
 class UpdateSourceOnResourcesTable < ActiveRecord::Migration[7.0]
   def change
     remove_column(:resources, :source, :string)
-    add_reference(:resources, :organization, foreign_key: { to_table: :organizations })
+    add_reference(:resources, :organization, foreign_key: { to_table: :organizations, on_delete: :nullify })
   end
 end
