@@ -92,35 +92,48 @@ namespace :resource_sync do
     resource.show_in_wizard = false
     resource.show_in_exchange = true
 
-    tag_current_page = 1
-    wp_base = 'https://dial.global'
-    wp_tag_base = '/wp-json/wp/v2/tags'
-
-    resource_tags = []
-    still_seeing_tags = true
-    while still_seeing_tags
-      wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
-
-      connection = Faraday.new(url: wp_base)
-      connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
-
-      tag_response = connection.get("#{wp_tag_base}#{wp_tag_query}")
-      tag_response_body = JSON.parse(tag_response.body)
-
-      if tag_response_body.is_a?(Array) && tag_response_body.empty?
-        still_seeing_tags = false
-      else
-        tag_response_body.each do |tag_structure|
-          resource_tags << tag_structure['name']
-        end
-      end
-
-      tag_current_page += 1
-    end
-    resource.tags = resource_tags
-
     successful_operation = false
     ActiveRecord::Base.transaction do
+      tag_current_page = 1
+      wp_base = 'https://dial.global'
+      wp_tag_base = '/wp-json/wp/v2/tags'
+
+      resource_topics = []
+      still_seeing_tags = true
+      while still_seeing_tags
+        wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
+
+        connection = Faraday.new(url: wp_base)
+        connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
+
+        tag_response = connection.get("#{wp_tag_base}#{wp_tag_query}")
+        tag_response_body = JSON.parse(tag_response.body)
+
+        if tag_response_body.is_a?(Array) && tag_response_body.empty?
+          still_seeing_tags = false
+        else
+          tag_response_body.each do |tag_structure|
+            resource_topic_name = tag_structure['name']
+            resource_topic = ResourceTopic.find_by(slug: reslug_em(resource_topic_name))
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.find_by(name: resource_topic_name)
+            end
+
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.new(name: resource_topic_name, slug: reslug_em(resource_topic_name))
+            end
+
+            # Save the new resource topic to the database.
+            resource_topic.save!
+
+            resource_topics << resource_topic.name
+          end
+        end
+
+        tag_current_page += 1
+      end
+      resource.resource_topics = resource_topics
+
       authors = post_structure['_links']['author']
       authors.each do |author|
         author_href = author['href']
