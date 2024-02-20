@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteProduct, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:product, id: 1000, name: 'Some Product', slug: 'some_product')
+    create(:product, id: 1000, name: 'Some Product', slug: 'some-product')
     expect_any_instance_of(Mutations::DeleteProduct).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteProduct, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:product, id: 1000, name: 'Some Product', slug: 'some_product')
+    create(:product, id: 1000, name: 'Some Product', slug: 'some-product')
 
     result = execute_graphql(
       mutation,

@@ -19,7 +19,7 @@ RSpec.describe(Mutations::DeleteCountry, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
-    create(:country, id: 1000, name: 'Some Country', slug: 'some_country')
+    create(:country, id: 1000, name: 'Some Country', slug: 'some-country')
 
     result = execute_graphql_as_user(
       admin_user,
@@ -34,7 +34,7 @@ RSpec.describe(Mutations::DeleteCountry, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:country, id: 1000, name: 'Some Country', slug: 'some_country')
+    create(:country, id: 1000, name: 'Some Country', slug: 'some-country')
 
     result = execute_graphql(
       mutation,
