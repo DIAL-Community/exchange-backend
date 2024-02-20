@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteDataset, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:dataset, id: 1000, name: 'Some Dataset', slug: 'some_dataset')
+    create(:dataset, id: 1000, name: 'Some Dataset', slug: 'some-dataset')
     expect_any_instance_of(Mutations::DeleteDataset).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteDataset, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:dataset, id: 1000, name: 'Some Dataset', slug: 'some_dataset')
+    create(:dataset, id: 1000, name: 'Some Dataset', slug: 'some-dataset')
 
     result = execute_graphql(
       mutation,

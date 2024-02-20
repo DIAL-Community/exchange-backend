@@ -3,6 +3,8 @@
 class Resource < ApplicationRecord
   include Auditable
 
+  belongs_to :organization, optional: true
+
   has_and_belongs_to_many :organizations,
                           after_add: :association_add,
                           before_remove: :association_remove,
@@ -38,7 +40,16 @@ class Resource < ApplicationRecord
     if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
       "/assets/resources/#{slug}.png"
     else
-      '/assets/resources/resource-placeholder.png'
+      return '/assets/resources/resource-placeholder.png' if organization_id.nil?
+
+      source_organization = Organization.find(organization_id)
+      return '/assets/resources/resource-placeholder.png' if source_organization.nil?
+
+      if File.exist?(File.join('public', 'assets', 'organizations', "#{source_organization.slug}.png"))
+        "/assets/organizations/#{source_organization.slug}.png"
+      else
+        '/assets/resources/resource-placeholder.png'
+      end
     end
   end
 
