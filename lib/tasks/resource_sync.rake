@@ -159,6 +159,11 @@ namespace :resource_sync do
         resource.authors = [resource_author]
       end
 
+      source_organization = Organization.find_by(slug: 'digital-impact-alliance')
+      unless source_organization.nil?
+        resource.organization = source_organization
+      end
+
       resource.save!
       successful_operation = true
     end
