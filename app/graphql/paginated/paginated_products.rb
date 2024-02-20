@@ -16,6 +16,8 @@ module Paginated
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
     # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
     argument :show_gov_stack_only, Boolean, required: false, default_value: false
+    # Show only origins = 'dpga' if show_dpga_only is true.
+    argument :show_dpga_only, Boolean, required: false, default_value: false
 
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::ProductType], null: false
@@ -73,7 +75,8 @@ module Paginated
 
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
-      workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, offset_attributes:
+      workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
+      offset_attributes:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
@@ -105,6 +108,14 @@ module Paginated
                             .ids
 
         products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
+      end
+
+      if show_dpga_only
+        products = products.joins(:origins)
+                           .where(origins: { slug: 'dpga' })
+
+        products = products.left_outer_joins(:endorsers)
+                           .where.not(endorsers: { id: nil })
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }
