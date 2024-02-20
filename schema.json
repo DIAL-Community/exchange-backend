@@ -24132,6 +24132,18 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "showDpgaOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -26402,6 +26414,18 @@
                 },
                 {
                   "name": "showGovStackOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "showDpgaOnly",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",

@@ -16,6 +16,8 @@ module Paginated
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
     # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
     argument :show_gov_stack_only, Boolean, required: false, default_value: false
+    # Show only origins = 'dpga' if show_dpga_only is true.
+    argument :show_dpga_only, Boolean, required: false, default_value: false
 
     type Attributes::PaginationAttributes, null: false
 
@@ -103,6 +105,10 @@ module Paginated
                                   .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
 
         products = products.where(id: (name_products + desc_products + alias_products + sector_products).uniq)
+      end
+
+      if show_dpga_only
+        products = products.where(origins: { slug: 'dpga' })
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }
