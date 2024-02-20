@@ -74,7 +74,7 @@ module Paginated
 
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
-      workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:
+      workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
@@ -108,7 +108,11 @@ module Paginated
       end
 
       if show_dpga_only
-        products = products.where(origins: { slug: 'dpga' })
+        products = products.joins(:origins)
+                           .where(origins: { slug: 'dpga' })
+
+        products = products.left_outer_joins(:endorsers)
+                           .where.not(endorsers: { id: nil })
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }

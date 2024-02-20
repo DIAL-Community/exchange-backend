@@ -111,7 +111,11 @@ module Paginated
       end
 
       if show_dpga_only
-        products = products.where(origins: { slug: 'dpga' })
+        products = products.joins(:origins)
+                           .where(origins: { slug: 'dpga' })
+
+        products = products.left_outer_joins(:endorsers)
+                           .where.not(endorsers: { id: nil })
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }
