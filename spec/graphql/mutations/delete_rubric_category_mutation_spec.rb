@@ -23,7 +23,7 @@ RSpec.describe(Mutations::DeleteRubricCategory, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some_rc')
+    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some-rc')
     expect_any_instance_of(Mutations::DeleteRubricCategory).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -40,7 +40,7 @@ RSpec.describe(Mutations::DeleteRubricCategory, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some_rc')
+    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some-rc')
 
     result = execute_graphql(
       mutation,

@@ -105,9 +105,9 @@ RSpec.describe(Queries::ProductQuery, type: :graphql) do
   end
 
   it 'pulls owned products for logged used' do
-    create(:product, name: 'Some Product', slug: 'some_product', id: 1000)
+    create(:product, name: 'Some Product', slug: 'some-product', id: 1000)
 
-    create(:rubric_category, name: 'Some RC', slug: 'some_rc', id: 1)
+    create(:rubric_category, name: 'Some RC', slug: 'some-rc', id: 1)
 
     category_indicator_1 = create(:category_indicator, name: 'Category Indicator 1',
                                                        slug: 'category_indicator_1',
@@ -124,7 +124,7 @@ RSpec.describe(Queries::ProductQuery, type: :graphql) do
 
     result = execute_graphql(
       query,
-      variables: { slug: 'some_product' }
+      variables: { slug: 'some-product' }
     )
 
     expect(result['data']['product']['notAssignedCategoryIndicators'])

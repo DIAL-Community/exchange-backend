@@ -77,7 +77,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
 
   it 'is successful - should update references on other objects' do
     create(:tag, name: "Some Name", slug: "some-name")
-    create(:product, name: "Some Product", slug: "some_product", tags: ['Some Name'])
+    create(:product, name: "Some Product", slug: "some-product", tags: ['Some Name'])
     expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -93,7 +93,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
     product_result = execute_graphql(
       query,
       variables: {
-        slug: 'some_product'
+        slug: 'some-product'
       }
     )
 

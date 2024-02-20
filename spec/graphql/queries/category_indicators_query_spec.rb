@@ -29,32 +29,32 @@ RSpec.describe(Queries::CategoryIndicatorsQuery, type: :graphql) do
   end
 
   it 'pulls specific category indicator - user is logged as admin' do
-    create(:rubric_category, name: 'Some Rubric Category', slug: 'some_rubric_category', weight: 0.75, id: 1)
-    create(:category_indicator, name: 'Some Category Indicator', slug: 'some_category_indicator', weight: 0.75,
+    create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75, id: 1)
+    create(:category_indicator, name: 'Some Category Indicator', slug: 'some-category_indicator', weight: 0.75,
                                 rubric_category_id: 1)
     expect_any_instance_of(Queries::CategoryIndicatorQuery).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       detail_query,
-      variables: { slug: 'some_category_indicator' }
+      variables: { slug: 'some-category_indicator' }
     )
 
     aggregate_failures do
       expect(result['data']['categoryIndicator']).to(eq({ "name" => "Some Category Indicator",
-                                                          "slug" => "some_category_indicator",
+                                                          "slug" => "some-category_indicator",
                                                           "weight" => 0.75 }))
     end
   end
 
   it 'pulls null rubric category - user is not logged as admin' do
-    create(:rubric_category, name: 'Some Rubric Category', slug: 'some_rubric_category', weight: 0.75, id: 1)
-    create(:category_indicator, name: 'Some Category Indicator', slug: 'some_category_indicator', weight: 0.75,
+    create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75, id: 1)
+    create(:category_indicator, name: 'Some Category Indicator', slug: 'some-category_indicator', weight: 0.75,
                                 rubric_category_id: 1)
     expect_any_instance_of(Queries::CategoryIndicatorQuery).to(receive(:an_admin).and_return(false))
 
     result = execute_graphql(
       detail_query,
-      variables: { slug: 'some_category_indicator' }
+      variables: { slug: 'some-category_indicator' }
     )
 
     aggregate_failures do
@@ -63,7 +63,7 @@ RSpec.describe(Queries::CategoryIndicatorsQuery, type: :graphql) do
   end
 
   it 'pulls list of category indicators - user is logged as admin' do
-    create(:category_indicator, name: 'Some Category Indicator', slug: 'some_category_indicator', weight: 0.75,
+    create(:category_indicator, name: 'Some Category Indicator', slug: 'some-category_indicator', weight: 0.75,
                                 rubric_category_id: nil)
     expect_any_instance_of(Queries::CategoryIndicatorsQuery).to(receive(:an_admin).and_return(true))
 
@@ -73,13 +73,13 @@ RSpec.describe(Queries::CategoryIndicatorsQuery, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['categoryIndicators']).to(eq([{ "name" => "Some Category Indicator",
-                                                            "slug" => "some_category_indicator",
+                                                            "slug" => "some-category_indicator",
                                                             "rubricCategoryId" => nil }]))
     end
   end
 
   it 'pulls null rubric categories - user is not logged as admin' do
-    create(:category_indicator, name: 'Some Category Indicator', slug: 'some_category_indicator', weight: 0.75,
+    create(:category_indicator, name: 'Some Category Indicator', slug: 'some-category_indicator', weight: 0.75,
                                 rubric_category_id: nil)
     expect_any_instance_of(Queries::CategoryIndicatorsQuery).to(receive(:an_admin).and_return(false))
 

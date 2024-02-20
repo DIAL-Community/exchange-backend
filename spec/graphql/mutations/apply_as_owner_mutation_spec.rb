@@ -32,7 +32,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
     create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
     user = create(:user, email: 'user@gmail.com')
 
-    create(:product, name: "Some Product", slug: "some_product", id: 1001)
+    create(:product, name: "Some Product", slug: "some-product", id: 1001)
 
     result = execute_graphql_as_user(
       user,
@@ -61,7 +61,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
     create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
     user = create(:user, email: 'user@gmail.com')
 
-    create(:organization, name: "Some Organization", slug: "some_organization", id: 1001)
+    create(:organization, name: "Some Organization", slug: "some-organization", id: 1001)
 
     result = execute_graphql_as_user(
       user,
@@ -87,7 +87,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:organization, name: "Some Organization", slug: "some_organization", id: 1001)
+    create(:organization, name: "Some Organization", slug: "some-organization", id: 1001)
 
     result = execute_graphql(
       mutation,
@@ -128,7 +128,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
   it 'fails - user is already a product owner' do
     user = create(:user, email: 'user@gmail.com', user_products: [1001])
 
-    create(:product, name: "Some Product", slug: "some_product", id: 1001)
+    create(:product, name: "Some Product", slug: "some-product", id: 1001)
 
     result = execute_graphql_as_user(
       user,
@@ -148,7 +148,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
   end
 
   it 'fails - user is already an organization owner' do
-    create(:organization, name: "Some Organization", slug: "some_organization", id: 1001, website: 'website.com')
+    create(:organization, name: "Some Organization", slug: "some-organization", id: 1001, website: 'website.com')
     user = create(:user, email: 'user@website.com', organization_id: 1001)
 
     result = execute_graphql_as_user(

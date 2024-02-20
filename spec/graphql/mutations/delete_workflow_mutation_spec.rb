@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteWorkflow, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:workflow, id: 1000, name: 'Some Workflow', slug: 'some_workflow')
+    create(:workflow, id: 1000, name: 'Some Workflow', slug: 'some-workflow')
     expect_any_instance_of(Mutations::DeleteWorkflow).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteWorkflow, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:workflow, id: 1000, name: 'Some Workflow', slug: 'some_workflow')
+    create(:workflow, id: 1000, name: 'Some Workflow', slug: 'some-workflow')
 
     result = execute_graphql(
       mutation,
