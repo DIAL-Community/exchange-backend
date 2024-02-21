@@ -188,14 +188,14 @@ GEM
     google-cloud-translate-v3 (0.11.2)
       gapic-common (>= 0.21.1, < 2.a)
       google-cloud-errors (~> 1.0)
-    google-protobuf (3.25.2)
+    google-protobuf (3.25.3)
     googleapis-common-protos (1.4.0)
       google-protobuf (~> 3.14)
       googleapis-common-protos-types (~> 1.2)
       grpc (~> 1.27)
-    googleapis-common-protos-types (1.11.0)
+    googleapis-common-protos-types (1.12.0)
       google-protobuf (~> 3.18)
-    googleauth (1.10.0)
+    googleauth (1.11.0)
       faraday (>= 1.0, < 3.a)
       google-cloud-env (~> 2.1)
       jwt (>= 1.4, < 3.0)
@@ -205,7 +205,8 @@ GEM
     graphiql-rails (1.9.0)
       railties
       sprockets-rails
-    graphql (2.2.8)
+    graphql (2.2.10)
+      base64
     grpc (1.61.0)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
@@ -224,7 +225,8 @@ GEM
     json (2.7.1-java)
     json-schema (4.1.1)
       addressable (>= 2.8)
-    jwt (2.7.1)
+    jwt (2.8.0)
+      base64
     kramdown (2.4.0)
       rexml
     kramdown-parser-gfm (1.1.0)
@@ -247,7 +249,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    mailgun-ruby (1.2.13)
+    mailgun-ruby (1.2.14)
       rest-client (>= 2.0.2)
     marcel (1.0.2)
     matrix (0.4.2)
@@ -292,7 +294,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pdfkit (0.8.7.3)
-    pg (1.5.4)
+    pg (1.5.5)
     public_suffix (4.0.7)
     puma (6.4.2)
       nio4r (~> 2.0)
@@ -444,7 +446,7 @@ GEM
     ruby-ole (1.2.12.2)
     ruby-progressbar (1.13.0)
     ruby-rc4 (0.1.5)
-    ruby-vips (2.2.0)
+    ruby-vips (2.2.1)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubysl-open3 (2.0.0)
@@ -452,7 +454,7 @@ GEM
     sawyer (0.9.2)
       addressable (>= 2.3.5)
       faraday (>= 0.17.3, < 3)
-    signet (0.18.0)
+    signet (0.19.0)
       addressable (~> 2.8)
       faraday (>= 0.17.5, < 3.a)
       jwt (>= 1.5, < 3.0)
