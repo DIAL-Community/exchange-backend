@@ -44,11 +44,10 @@ module Paginated
     argument :sectors, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
-    argument :building_blocks, [String], required: false, default_value: []
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::UseCaseType], null: false
 
-    def resolve(sectors:, use_cases:, sdgs:, building_blocks:, offset_attributes:)
+    def resolve(sectors:, use_cases:, sdgs:, offset_attributes:)
       curr_sectors = Sector.where(id: sectors)
       curr_sdgs = SustainableDevelopmentGoal.where(id: sdgs)
 
