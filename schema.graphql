@@ -1537,7 +1537,7 @@ type Query {
   paginatedTaskTrackers(offsetAttributes: OffsetAttributes!, search: String = "", showFailedOnly: Boolean = false): [TaskTracker!]!
   paginatedUseCases(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false, showGovStackOnly: Boolean = false): [UseCase!]!
   paginatedUsers(offsetAttributes: OffsetAttributes!, search: String = ""): [User!]!
-  paginatedWizardUseCases(buildingBlocks: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): [UseCase!]!
+  paginatedWizardUseCases(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): [UseCase!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], filterBlocks: [String!] = [], sdgs: [String!] = [], search: String = "", showGovStackOnly: Boolean = false, showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
@@ -1564,7 +1564,7 @@ type Query {
   paginationAttributeUseCase(sdgs: [String!] = [], search: String = "", showBeta: Boolean = false, showGovStackOnly: Boolean = false): PaginationAttributes!
   paginationAttributeUser(search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
-  paginationWizardAttributeUseCase(buildingBlocks: [String!] = [], sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
+  paginationWizardAttributeUseCase(sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   play(slug: String!): Play
   playbook(slug: String!): Playbook
   playbooks(search: String = ""): [Playbook!]!
