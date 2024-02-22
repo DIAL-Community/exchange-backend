@@ -35,15 +35,38 @@ module Paginated
       end
 
       unless search.blank?
-        resources = resources.name_contains(search)
+        name_filter = Resource.name_contains(search)
+        description_filter = Resource.where('LOWER(description) like LOWER(?)', "%#{search}%")
+
+        organization_sources = Organization.where('LOWER(name) like LOWER(?)', "%#{search}%")
+        source_filter = Resource.where('organization_id IN (?)', organization_sources.ids)
+
+        author_filter = Resource.joins(:authors)
+                                .where('LOWER(authors.name) like LOWER(?)', "%#{search}%")
+        organization_filter = Resource.joins(:organizations)
+                                      .where('LOWER(organizations.name) like LOWER(?)', "%#{search}%")
+
+        resources = resources.where(
+          id: (
+            name_filter +
+            description_filter +
+            author_filter +
+            source_filter +
+            organization_filter
+          ).uniq
+        )
       end
 
       unless resource_types.empty?
         resources = resources.where(resource_type: resource_types)
       end
 
-      unless resource_topics.empty?
-        resources = resources.where(resource_topic: resource_topics)
+      filtered_resource_topics = resource_topics.reject { |x| x.nil? || x.blank? }
+      unless filtered_resource_topics.empty?
+        resources = resources.where(
+          "resources.resource_topics @> '{#{filtered_resource_topics.join(',').downcase}}'::varchar[] or " \
+          "resources.resource_topics @> '{#{filtered_resource_topics.join(',')}}'::varchar[] "
+        )
       end
 
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }

@@ -34,8 +34,20 @@ module Types
     field :resource_link, String, null: true
 
     field :resource_type, String, null: true
-    field :resource_topic, String, null: true
-    field :source, String, null: true
+    field :resource_topics, [Types::ResourceTopicType], null: true
+    def resource_topics
+      resolved_resource_topics = []
+      object.resource_topics.each do |resource_topic|
+        resolved_resource_topic = ResourceTopic.find_by(name: resource_topic)
+        resolved_resource_topics << resolved_resource_topic unless resolved_resource_topic.nil?
+      end
+      resolved_resource_topics
+    end
+
+    field :source, Types::OrganizationType, null: true
+    def source
+      Organization.find(object.organization_id) unless object.organization_id.nil?
+    end
 
     field :tags, GraphQL::Types::JSON, null: false
 

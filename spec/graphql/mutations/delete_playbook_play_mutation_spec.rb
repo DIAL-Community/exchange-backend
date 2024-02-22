@@ -22,10 +22,10 @@ RSpec.describe(Mutations::DeletePlaybookPlay, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
-    playbook = create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some_playbook')
-    some_play = create(:play, name: 'Some Play', slug: 'some_play')
-    some_more_play = create(:play, name: 'Some More Play', slug: 'some_more_play')
-    yet_more_play = create(:play, name: 'Yet More Play', slug: 'yet_more_play')
+    playbook = create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some-playbook')
+    some_play = create(:play, name: 'Some Play', slug: 'some-play')
+    some_more_play = create(:play, name: 'Some More Play', slug: 'some-more-play')
+    yet_more_play = create(:play, name: 'Yet More Play', slug: 'yet_more-play')
 
     playbook.plays << some_play
     playbook.plays << some_more_play
@@ -34,7 +34,7 @@ RSpec.describe(Mutations::DeletePlaybookPlay, type: :graphql) do
     result = execute_graphql_as_user(
       admin_user,
       mutation,
-      variables: { playbookSlug: 'some_playbook', playSlug: 'some_play' }
+      variables: { playbookSlug: 'some-playbook', playSlug: 'some-play' }
     )
 
     aggregate_failures do
@@ -45,11 +45,11 @@ RSpec.describe(Mutations::DeletePlaybookPlay, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some_playbook')
+    create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some-playbook')
 
     result = execute_graphql(
       mutation,
-      variables: { playbookSlug: 'some_playbook', playSlug: 'some_play' }
+      variables: { playbookSlug: 'some-playbook', playSlug: 'some-play' }
     )
 
     aggregate_failures do
