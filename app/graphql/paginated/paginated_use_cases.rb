@@ -48,7 +48,7 @@ module Paginated
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::UseCaseType], null: false
 
-    def resolve(sectors:, use_cases:, sdgs:, offset_attributes:)
+    def resolve(sectors:, use_cases:, sdgs:, building_blocks:, offset_attributes:)
       curr_sectors = Sector.where(id: sectors)
       curr_sdgs = SustainableDevelopmentGoal.where(id: sdgs)
 

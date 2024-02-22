@@ -45,7 +45,7 @@ module Paginated
     argument :building_blocks, [String], required: false, default_value: []
     type Attributes::PaginationAttributes, null: false
 
-    def resolve(sectors:, use_cases:, sdgs:)
+    def resolve(sectors:, use_cases:, sdgs:, building_blocks:)
       curr_sectors = Sector.where(id: sectors)
       curr_sdgs = SustainableDevelopmentGoal.where(id: sdgs)
 
