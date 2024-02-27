@@ -60,7 +60,7 @@ module Mutations
     def generate_office_params(office)
       city = find_city(
         office['cityName'],
-        office['provinceName'],
+        office['regionName'],
         office['countryCode'],
         Rails.application.secrets.google_api_key
       )
