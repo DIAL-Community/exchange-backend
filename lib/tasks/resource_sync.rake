@@ -218,7 +218,13 @@ namespace :resource_sync do
       # Link to an organization
       org_name = dpi_resource[4]
       resource_org = Organization.find_by(name: org_name)
-      resource_org = Organization.new if resource_org.nil?
+      if resource_org.nil?
+        resource_org = Organization.new
+        resource_org.name = org_name
+        resource_org.slug = reslug_em(org_name)
+        resource_org.save!
+      end
+
       resource.organization = resource_org
 
       resource.resource_link = cleanup_url(dpi_resource[5])
