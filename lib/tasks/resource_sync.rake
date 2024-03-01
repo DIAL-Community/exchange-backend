@@ -156,7 +156,7 @@ namespace :resource_sync do
         avatar_params = '&background=2e3192&color=fff&format=svg'
         resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-        resource.authors = [resource_author]
+        resource.authors << resource_author
       end
 
       source_organization = Organization.find_by(slug: 'digital-impact-alliance')
@@ -169,6 +169,69 @@ namespace :resource_sync do
     end
 
     if successful_operation
+      puts "  Resource '#{resource.name}' record saved."
+    end
+  end
+
+  task sync_dpi_resources: :environment do
+    task_name = 'Sync DPI Resources'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    csv_data = CSV.parse(File.read('./utils/DPIResources.csv'), headers: true)
+
+    csv_data.each_with_index do |dpi_resource, _index|
+      resource_name = dpi_resource[1]
+      tracking_task_log(task_name, "Processing resource: #{resource_name}.")
+
+      resource_name = resource_name
+      resource_slug = reslug_em(resource_name)
+      resource = Resource.name_and_slug_search(resource_name, resource_slug).first
+      if resource.nil?
+        resource = Resource.new(name: resource_name, slug: resource_slug, phase: 'Not Applicable')
+        if Resource.where(slug: resource.slug).count.positive?
+          # Check if we need to add _dup to the slug.
+          first_duplicate = Resource.slug_simple_starts_with(resource.slug)
+                                    .order(slug: :desc)
+                                    .first
+          resource.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      resource.resource_type = dpi_resource[2]
+
+      authors = dpi_resource[3].split(',')
+      authors.each do |author|
+        author_name = author.strip
+        resource_author = Author.find_by(name: author_name)
+        resource_author = Author.new if resource_author.nil?
+
+        resource_author.name = author_name
+        resource_author.slug = reslug_em(author_name)
+        avatar_api = 'https://ui-avatars.com/api/?name='
+        avatar_params = '&background=2e3192&color=fff&format=svg'
+        resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
+
+        resource.authors << resource_author unless resource_author.nil? || resource.authors.include?(resource_author)
+      end
+
+      # Link to an organization
+      org_name = dpi_resource[4]
+      resource_org = Organization.first_duplicate(org_name.strip, reslug_em(org_name.strip))
+      if resource_org.nil?
+        resource_org = Organization.new
+        resource_org.name = org_name
+        resource_org.slug = reslug_em(org_name)
+        resource_org.save!
+      end
+
+      resource.organization = resource_org
+
+      resource.resource_link = cleanup_url(dpi_resource[5])
+
+      resource.description = dpi_resource[6]
+
+      resource.save!
       puts "  Resource '#{resource.name}' record saved."
     end
   end
