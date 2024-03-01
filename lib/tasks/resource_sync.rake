@@ -217,7 +217,7 @@ namespace :resource_sync do
 
       # Link to an organization
       org_name = dpi_resource[4]
-      resource_org = Organization.find_by(name: org_name)
+      resource_org = Organization.first_duplicate(org_name.strip, reslug_em(org_name.strip))
       if resource_org.nil?
         resource_org = Organization.new
         resource_org.name = org_name
