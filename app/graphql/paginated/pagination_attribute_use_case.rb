@@ -42,7 +42,6 @@ module Paginated
     argument :sectors, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
-    argument :building_blocks, [String], required: false, default_value: []
     type Attributes::PaginationAttributes, null: false
 
     def resolve(sectors:, use_cases:, sdgs:)
