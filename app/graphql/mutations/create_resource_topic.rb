@@ -14,7 +14,7 @@ module Mutations
     field :resource_topic, Types::ResourceTopicType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, parent_topic_id:nil)
+    def resolve(name:, slug:, description:, parent_topic_id: nil)
       unless an_admin
         return {
           resource_topic: nil,
