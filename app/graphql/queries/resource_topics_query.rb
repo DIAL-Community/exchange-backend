@@ -6,9 +6,9 @@ module Queries
     type [Types::ResourceTopicType], null: false
 
     def resolve(search:)
-      tags = ResourceTopic.order(:name)
-      tags = tags.name_contains(search) unless search.blank?
-      tags
+      topics = ResourceTopic.where(parent_topic_id: nil).order(:name)
+      topics = tags.name_contains(search) unless search.blank?
+      topics
     end
   end
 
