@@ -29,8 +29,10 @@ module Queries
     type [Types::ResourceType], null: true
 
     def resolve(slug:, search:, resource_types:, countries:)
-      resource_topic = ResourceTopic.find_by(slug:)
-      resource_topic_resources = Resource.where("resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]")
+
+      resource_topic = ResourceTopic.find_by(slug:) unless slug.empty?
+      resource_topic_resources = Resource.where("resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]") unless slug.empty?
+      resource_topic_resources = Resource.where("resources.resource_topics::text <> '{}'::text") if slug.empty?
 
       unless search.blank?
         name_filter = Resource.name_contains(search)
@@ -51,7 +53,7 @@ module Queries
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }
       unless filtered_countries.empty?
         resource_topic_resources = resource_topic_resources.left_outer_joins(:countries)
-                             .where(countries: { name: filtered_countries })
+                                                           .where(countries: { name: filtered_countries })
       end
 
       resource_topic_resources
