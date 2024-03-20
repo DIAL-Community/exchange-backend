@@ -29,9 +29,9 @@ module Queries
     type [Types::ResourceType], null: true
 
     def resolve(slug:, search:, resource_types:, countries:)
-
       resource_topic = ResourceTopic.find_by(slug:) unless slug.empty?
-      resource_topic_resources = Resource.where("resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]") unless slug.empty?
+      resource_topic_resources = Resource.where("resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]") \
+        unless slug.empty?
       resource_topic_resources = Resource.where("resources.resource_topics::text <> '{}'::text") if slug.empty?
 
       unless search.blank?
