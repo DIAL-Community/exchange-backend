@@ -179,7 +179,7 @@ namespace :resource_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    file_path = './utils/'+resource_file
+    file_path = './utils/' + resource_file
     csv_data = CSV.parse(File.read(file_path), headers: true)
 
     csv_data.each_with_index do |dpi_resource, _index|
@@ -210,7 +210,8 @@ namespace :resource_sync do
         resource_country = Country.find_by(name: country_name)
         next if resource_country.nil?
 
-        resource.countries << resource_country unless resource_country.nil? || resource.countries.include?(resource_country)
+        resource.countries << resource_country unless resource_country.nil? \
+          || resource.countries.include?(resource_country)
       end
 
       authors = []
@@ -246,6 +247,7 @@ namespace :resource_sync do
       # Try to get the image
       image_saved = false
       begin
+        # rubocop:disable Security/Open
         og_image = Nokogiri::HTML(URI.open(dpi_resource[7])).at_css("meta[property='og:image']")
         unless og_image.blank?
           puts og_image['content']
@@ -258,7 +260,7 @@ namespace :resource_sync do
       rescue StandardError => e
         puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
       end
-      
+
       if !image_saved && resource_org.image_file != '/assets/organizations/organization-placeholder.png'
         # try the organization logo
         puts resource_org.image_file
