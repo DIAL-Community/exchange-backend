@@ -223,8 +223,10 @@ type Country {
   longitude: String!
   name: String!
   organizations: [Organization!]
+  products: [Product!]
   projects: [Project!]
   regions: [Region!]
+  resources: [Resource!]
   slug: String!
 }
 
