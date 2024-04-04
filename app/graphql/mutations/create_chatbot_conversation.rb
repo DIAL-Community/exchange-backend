@@ -33,7 +33,7 @@ module Mutations
         experiences on introducing eGovernment services through the CIO Digital Leaders Forum.
       chatbot_sample_answer
 
-    chatbot_conversation.user = context[:current_user]
+      chatbot_conversation.user = context[:current_user]
 
       if chatbot_conversation.save
         # Successful creation, return the created object with no errors
