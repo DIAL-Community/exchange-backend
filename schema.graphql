@@ -1502,7 +1502,7 @@ type Query {
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
   categoryIndicators(search: String = ""): [CategoryIndicator!]!
-  chatbotConversations(sessionIdentifier: String!): [ChatbotConversation!]!
+  chatbotConversations(currentIdentifier: String = null, sessionIdentifier: String!): [ChatbotConversation!]!
   cities(search: String = ""): [City!]!
   city(slug: String!): City
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
