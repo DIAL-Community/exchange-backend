@@ -11,7 +11,7 @@ module Paginated
         return { total_count: 0 }
       end
 
-      resource_topics = ResourceTopic.order(:name)
+      resource_topics = ResourceTopic.where(parent_topic_id: nil).order(:name)
       unless search.blank?
         name_filter = resource_topics.name_contains(search)
 

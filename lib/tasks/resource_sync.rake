@@ -173,12 +173,14 @@ namespace :resource_sync do
     end
   end
 
-  task sync_dpi_resources: :environment do
+  task :sync_dpi_resources, [:resource_file] => :environment do |_, _params|
+    ENV['resource_file'].nil? ? resource_file = 'DPIResources.csv' : resource_file = ENV['resource_file']
     task_name = 'Sync DPI Resources'
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    csv_data = CSV.parse(File.read('./utils/DPIResources.csv'), headers: true)
+    file_path = './utils/' + resource_file
+    csv_data = CSV.parse(File.read(file_path), headers: true)
 
     csv_data.each_with_index do |dpi_resource, _index|
       resource_name = dpi_resource[1]
@@ -199,8 +201,21 @@ namespace :resource_sync do
       end
 
       resource.resource_type = dpi_resource[2]
+      resource.resource_topics << dpi_resource[3]
 
-      authors = dpi_resource[3].split(',')
+      countries = []
+      countries = dpi_resource[4].split(',') unless dpi_resource[4].nil?
+      countries.each do |country|
+        country_name = country.strip
+        resource_country = Country.find_by(name: country_name)
+        next if resource_country.nil?
+
+        resource.countries << resource_country unless resource_country.nil? \
+          || resource.countries.include?(resource_country)
+      end
+
+      authors = []
+      authors = dpi_resource[5].split(',') unless dpi_resource[5].nil?
       authors.each do |author|
         author_name = author.strip
         resource_author = Author.find_by(name: author_name)
@@ -216,7 +231,7 @@ namespace :resource_sync do
       end
 
       # Link to an organization
-      org_name = dpi_resource[4]
+      org_name = dpi_resource[6]
       resource_org = Organization.first_duplicate(org_name.strip, reslug_em(org_name.strip))
       if resource_org.nil?
         resource_org = Organization.new
@@ -227,9 +242,34 @@ namespace :resource_sync do
 
       resource.organization = resource_org
 
-      resource.resource_link = cleanup_url(dpi_resource[5])
+      resource.resource_link = cleanup_url(dpi_resource[7])
 
-      resource.description = dpi_resource[6]
+      # Try to get the image
+      image_saved = false
+      begin
+        # rubocop:disable Security/Open
+        og_image = Nokogiri::HTML(URI.open(dpi_resource[7])).at_css("meta[property='og:image']")
+        unless og_image.blank?
+          puts og_image['content']
+          upload_user = User.find_by(username: 'admin')
+          uploader = LogoUploader.new(resource, resource.resource_link, upload_user)
+          uploader.download!(og_image['content'])
+          uploader.store!
+          image_saved = true
+        end
+      rescue StandardError => e
+        puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
+      end
+
+      if !image_saved && resource_org.image_file != '/assets/organizations/organization-placeholder.png'
+        # try the organization logo
+        puts resource_org.image_file
+        upload_user = User.find_by(username: 'admin')
+        uploader = LogoUploader.new(resource, resource.resource_link, upload_user)
+        uploader.store!(resource_org.image_file)
+      end
+
+      resource.description = dpi_resource[8]
 
       resource.save!
       puts "  Resource '#{resource.name}' record saved."

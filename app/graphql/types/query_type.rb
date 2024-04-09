@@ -216,7 +216,10 @@ module Types
 
     field :resource_topics, resolver: Queries::ResourceTopicsQuery
     field :resource_topic, resolver: Queries::ResourceTopicQuery
+    field :resource_topic_resources, resolver: Queries::ResourceTopicResourcesQuery
     field :paginated_resource_topics, resolver: Paginated::PaginatedResourceTopics
     field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
+
+    field :chatbot_conversations, resolver: Queries::ChatbotConversationsQuery
   end
 end
