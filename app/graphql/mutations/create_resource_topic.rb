@@ -9,11 +9,12 @@ module Mutations
     argument :name, String, required: true
     argument :slug, String, required: true
     argument :description, String, required: false
+    argument :parent_topic_id, ID, required: false
 
     field :resource_topic, Types::ResourceTopicType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:)
+    def resolve(name:, slug:, description:, parent_topic_id: nil)
       unless an_admin
         return {
           resource_topic: nil,
@@ -54,6 +55,7 @@ module Mutations
         end
 
         resource_topic.name = name
+        resource_topic.parent_topic_id = parent_topic_id
 
         assign_auditable_user(resource_topic)
         resource_topic.save!

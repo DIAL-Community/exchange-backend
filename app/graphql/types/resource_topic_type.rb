@@ -14,6 +14,8 @@ module Types
     field :slug, String, null: false
     field :resource_topic_descriptions, [Types::ResourceTopicDescriptionType], null: true
     field :resource_topic_description, Types::ResourceTopicDescriptionType, null: true
+    field :subtopics, [Types::ResourceTopicType], null: true
+    field :parent_topic, Types::ResourceTopicType, null: true
 
     def resource_topic_description
       description = object.resource_topic_descriptions
@@ -34,6 +36,14 @@ module Types
         "resource_topics @> '{#{object.name.downcase}}'::varchar[] or " \
         "resource_topics @> '{#{object.name}}'::varchar[]"
       )
+    end
+
+    def subtopics
+      ResourceTopic.where(parent_topic_id: object.id)
+    end
+
+    def parent_topic
+      ResourceTopic.find_by(id: object.parent_topic_id) unless object.parent_topic_id.nil?
     end
   end
 end

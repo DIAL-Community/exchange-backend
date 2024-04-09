@@ -169,5 +169,7 @@ module Types
     field :create_sync, mutation: Mutations::CreateSync
     field :delete_sync, mutation: Mutations::DeleteSync
     field :sync_tenants, mutation: Mutations::SyncTenants
+
+    field :create_chatbot_conversation, mutation: Mutations::CreateChatbotConversation
   end
 end
