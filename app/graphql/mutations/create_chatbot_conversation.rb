@@ -26,12 +26,21 @@ module Mutations
         chatbot_conversation.session_identifier = SecureRandom.uuid
       end
 
-      chatbot_conversation.chatbot_answer = <<-chatbot_sample_answer
-        GovStack offers governments with essential tools for digital services, including building block
-        specifications, a sandbox for testing (upcoming), communities of practices, and more. GovStack
-        also organizes forums for digital changemakers to network with each other and exchange their
-        experiences on introducing eGovernment services through the CIO Digital Leaders Forum.
-      chatbot_sample_answer
+      connection = Faraday.new(url: 'http://chatbot-service-url/query')
+      response = connection.post do |request|
+        request.headers['Accept'] = 'application/json'
+        request.headers['Content-Type'] = 'application/json'
+        request.body = %{{
+          "question": "#{chatbot_question}"
+        }}
+      end
+
+      puts "Response status: #{response.status}."
+
+      if response.status == 200
+        response_as_json = JSON.parse(response.body)
+        chatbot_conversation.chatbot_answer = response_as_json['response']
+      end
 
       chatbot_conversation.user = context[:current_user]
 
