@@ -47,7 +47,7 @@ module Modules
         existing_product.aliases << alias_name unless existing_product.aliases.include?(alias_name)
       end
 
-      existing_product.website = fao_product[3] unless fao_product[3].blank?
+      existing_product.website = cleanup_url(fao_product[3]) unless fao_product[3].blank?
       unless fao_product[4].blank?
         upload_user = User.find_by(username: 'admin')
         begin

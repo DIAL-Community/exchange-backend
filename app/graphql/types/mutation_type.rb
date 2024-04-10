@@ -126,6 +126,9 @@ module Types
     field :create_tag, mutation: Mutations::CreateTag
     field :delete_tag, mutation: Mutations::DeleteTag
 
+    field :create_resource_topic, mutation: Mutations::CreateResourceTopic
+    field :delete_resource_topic, mutation: Mutations::DeleteResourceTopic
+
     field :create_comment, mutation: Mutations::CreateComment
     field :delete_comment, mutation: Mutations::DeleteComment
 
@@ -157,6 +160,7 @@ module Types
     field :update_resource_tags, mutation: Mutations::UpdateResourceTags
     field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
     field :update_resource_products, mutation: Mutations::UpdateResourceProducts
+    field :update_resource_resource_topics, mutation: Mutations::UpdateResourceResourceTopics
 
     field :create_region, mutation: Mutations::CreateRegion
     field :delete_region, mutation: Mutations::DeleteRegion
@@ -165,5 +169,7 @@ module Types
     field :create_sync, mutation: Mutations::CreateSync
     field :delete_sync, mutation: Mutations::DeleteSync
     field :sync_tenants, mutation: Mutations::SyncTenants
+
+    field :create_chatbot_conversation, mutation: Mutations::CreateChatbotConversation
   end
 end

@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteBuildingBlock, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:building_block, id: 1000, name: 'Some Building Block', slug: 'some_building_block')
+    create(:building_block, id: 1000, name: 'Some Building Block', slug: 'some-building_block')
     expect_any_instance_of(Mutations::DeleteBuildingBlock).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteBuildingBlock, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:building_block, id: 1000, name: 'Some Building Block', slug: 'some_building_block')
+    create(:building_block, id: 1000, name: 'Some Building Block', slug: 'some-building_block')
 
     result = execute_graphql(
       mutation,

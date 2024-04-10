@@ -14,5 +14,8 @@ module Types
     field :organizations, [Types::OrganizationType], null: true
     field :projects, [Types::ProjectType], null: true
     field :regions, [Types::RegionType], null: true
+
+    field :products, [Types::ProductType], null: true
+    field :resources, [Types::ResourceType], null: true
   end
 end

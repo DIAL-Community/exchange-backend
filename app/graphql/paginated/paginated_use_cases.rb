@@ -44,7 +44,6 @@ module Paginated
     argument :sectors, [String], required: false, default_value: []
     argument :use_cases, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
-    argument :building_blocks, [String], required: false, default_value: []
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::UseCaseType], null: false
 

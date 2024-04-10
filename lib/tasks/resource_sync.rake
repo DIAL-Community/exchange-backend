@@ -92,35 +92,48 @@ namespace :resource_sync do
     resource.show_in_wizard = false
     resource.show_in_exchange = true
 
-    tag_current_page = 1
-    wp_base = 'https://dial.global'
-    wp_tag_base = '/wp-json/wp/v2/tags'
-
-    resource_tags = []
-    still_seeing_tags = true
-    while still_seeing_tags
-      wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
-
-      connection = Faraday.new(url: wp_base)
-      connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
-
-      tag_response = connection.get("#{wp_tag_base}#{wp_tag_query}")
-      tag_response_body = JSON.parse(tag_response.body)
-
-      if tag_response_body.is_a?(Array) && tag_response_body.empty?
-        still_seeing_tags = false
-      else
-        tag_response_body.each do |tag_structure|
-          resource_tags << tag_structure['name']
-        end
-      end
-
-      tag_current_page += 1
-    end
-    resource.tags = resource_tags
-
     successful_operation = false
     ActiveRecord::Base.transaction do
+      tag_current_page = 1
+      wp_base = 'https://dial.global'
+      wp_tag_base = '/wp-json/wp/v2/tags'
+
+      resource_topics = []
+      still_seeing_tags = true
+      while still_seeing_tags
+        wp_tag_query = "?post=#{post_structure['id']}&page=#{tag_current_page}"
+
+        connection = Faraday.new(url: wp_base)
+        connection.basic_auth(ENV['WP_AUTH_USER'], ENV['WP_AUTH_PASSWORD'])
+
+        tag_response = connection.get("#{wp_tag_base}#{wp_tag_query}")
+        tag_response_body = JSON.parse(tag_response.body)
+
+        if tag_response_body.is_a?(Array) && tag_response_body.empty?
+          still_seeing_tags = false
+        else
+          tag_response_body.each do |tag_structure|
+            resource_topic_name = tag_structure['name']
+            resource_topic = ResourceTopic.find_by(slug: reslug_em(resource_topic_name))
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.find_by(name: resource_topic_name)
+            end
+
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.new(name: resource_topic_name, slug: reslug_em(resource_topic_name))
+            end
+
+            # Save the new resource topic to the database.
+            resource_topic.save!
+
+            resource_topics << resource_topic.name
+          end
+        end
+
+        tag_current_page += 1
+      end
+      resource.resource_topics = resource_topics
+
       authors = post_structure['_links']['author']
       authors.each do |author|
         author_href = author['href']
@@ -143,7 +156,12 @@ namespace :resource_sync do
         avatar_params = '&background=2e3192&color=fff&format=svg'
         resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-        resource.authors = [resource_author]
+        resource.authors << resource_author
+      end
+
+      source_organization = Organization.find_by(slug: 'digital-impact-alliance')
+      unless source_organization.nil?
+        resource.organization = source_organization
       end
 
       resource.save!
@@ -151,6 +169,109 @@ namespace :resource_sync do
     end
 
     if successful_operation
+      puts "  Resource '#{resource.name}' record saved."
+    end
+  end
+
+  task :sync_dpi_resources, [:resource_file] => :environment do |_, _params|
+    ENV['resource_file'].nil? ? resource_file = 'DPIResources.csv' : resource_file = ENV['resource_file']
+    task_name = 'Sync DPI Resources'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    file_path = './utils/' + resource_file
+    csv_data = CSV.parse(File.read(file_path), headers: true)
+
+    csv_data.each_with_index do |dpi_resource, _index|
+      resource_name = dpi_resource[1]
+      tracking_task_log(task_name, "Processing resource: #{resource_name}.")
+
+      resource_name = resource_name
+      resource_slug = reslug_em(resource_name)
+      resource = Resource.name_and_slug_search(resource_name, resource_slug).first
+      if resource.nil?
+        resource = Resource.new(name: resource_name, slug: resource_slug, phase: 'Not Applicable')
+        if Resource.where(slug: resource.slug).count.positive?
+          # Check if we need to add _dup to the slug.
+          first_duplicate = Resource.slug_simple_starts_with(resource.slug)
+                                    .order(slug: :desc)
+                                    .first
+          resource.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      resource.resource_type = dpi_resource[2]
+      resource.resource_topics << dpi_resource[3]
+
+      countries = []
+      countries = dpi_resource[4].split(',') unless dpi_resource[4].nil?
+      countries.each do |country|
+        country_name = country.strip
+        resource_country = Country.find_by(name: country_name)
+        next if resource_country.nil?
+
+        resource.countries << resource_country unless resource_country.nil? \
+          || resource.countries.include?(resource_country)
+      end
+
+      authors = []
+      authors = dpi_resource[5].split(',') unless dpi_resource[5].nil?
+      authors.each do |author|
+        author_name = author.strip
+        resource_author = Author.find_by(name: author_name)
+        resource_author = Author.new if resource_author.nil?
+
+        resource_author.name = author_name
+        resource_author.slug = reslug_em(author_name)
+        avatar_api = 'https://ui-avatars.com/api/?name='
+        avatar_params = '&background=2e3192&color=fff&format=svg'
+        resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
+
+        resource.authors << resource_author unless resource_author.nil? || resource.authors.include?(resource_author)
+      end
+
+      # Link to an organization
+      org_name = dpi_resource[6]
+      resource_org = Organization.first_duplicate(org_name.strip, reslug_em(org_name.strip))
+      if resource_org.nil?
+        resource_org = Organization.new
+        resource_org.name = org_name
+        resource_org.slug = reslug_em(org_name)
+        resource_org.save!
+      end
+
+      resource.organization = resource_org
+
+      resource.resource_link = cleanup_url(dpi_resource[7])
+
+      # Try to get the image
+      image_saved = false
+      begin
+        # rubocop:disable Security/Open
+        og_image = Nokogiri::HTML(URI.open(dpi_resource[7])).at_css("meta[property='og:image']")
+        unless og_image.blank?
+          puts og_image['content']
+          upload_user = User.find_by(username: 'admin')
+          uploader = LogoUploader.new(resource, resource.resource_link, upload_user)
+          uploader.download!(og_image['content'])
+          uploader.store!
+          image_saved = true
+        end
+      rescue StandardError => e
+        puts "Unable to save image for: #{resource.name}. Standard error: #{e}."
+      end
+
+      if !image_saved && resource_org.image_file != '/assets/organizations/organization-placeholder.png'
+        # try the organization logo
+        puts resource_org.image_file
+        upload_user = User.find_by(username: 'admin')
+        uploader = LogoUploader.new(resource, resource.resource_link, upload_user)
+        uploader.store!(resource_org.image_file)
+      end
+
+      resource.description = dpi_resource[8]
+
+      resource.save!
       puts "  Resource '#{resource.name}' record saved."
     end
   end

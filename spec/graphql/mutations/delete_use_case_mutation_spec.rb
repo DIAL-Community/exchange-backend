@@ -18,7 +18,7 @@ RSpec.describe(Mutations::DeleteUseCase, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:use_case, id: 1000, name: 'Some UseCase', slug: 'some_use_case')
+    create(:use_case, id: 1000, name: 'Some UseCase', slug: 'some-use_case')
     expect_any_instance_of(Mutations::DeleteUseCase).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -35,7 +35,7 @@ RSpec.describe(Mutations::DeleteUseCase, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:use_case, id: 1000, name: 'Some UseCase', slug: 'some_use_case')
+    create(:use_case, id: 1000, name: 'Some UseCase', slug: 'some-use_case')
 
     result = execute_graphql(
       mutation,

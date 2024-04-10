@@ -18,8 +18,8 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some_rc')
-    create(:category_indicator, id: 1000, name: 'Some CI', slug: 'some_ci', rubric_category_id: 1000)
+    create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some-rc')
+    create(:category_indicator, id: 1000, name: 'Some CI', slug: 'some-ci', rubric_category_id: 1000)
     expect_any_instance_of(Mutations::DeleteCategoryIndicator).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -36,8 +36,8 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:rubric_category, id: 5, name: 'Some RC', slug: 'some_rc')
-    create(:category_indicator, id: 1000, name: 'Some CI', slug: 'some_ci', rubric_category_id: 5)
+    create(:rubric_category, id: 5, name: 'Some RC', slug: 'some-rc')
+    create(:category_indicator, id: 1000, name: 'Some CI', slug: 'some-ci', rubric_category_id: 5)
 
     result = execute_graphql(
       mutation,

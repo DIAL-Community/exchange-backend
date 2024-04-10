@@ -11,6 +11,22 @@ class AboutController < ApplicationController
   end
 
   def tenant
+    # Allow for the case of a tenant that uses the default database
+    default_tenants = [{ "hostname": "dpi.localhost", "tenant_name": "dpi" },
+                       { "hostname": "dpi.dial.global", "tenant_name": "dpi" },
+                       { "hostname": "resource.dial.global", "tenant_name": "dpi" },
+                       { "hostname": "dpi.dial.community", "tenant_name": "dpi" }]
+
+    default_tenant = default_tenants.find { |tenant| tenant[:hostname] == URI.parse(request.referrer).hostname }
+    unless default_tenant.nil?
+      render(json: {
+        "hostname": URI.parse(request.referrer).hostname,
+        'secured': false,
+        "tenant": default_tenant[:tenant_name]
+      })
+      return
+    end
+
     current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
     render(json: {
       "hostname": request.referrer.blank? ? 'default' : URI.parse(request.referrer).hostname,
