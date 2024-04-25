@@ -16,6 +16,14 @@ module Types
     field :regions, [Types::RegionType], null: true
 
     field :products, [Types::ProductType], null: true
+    field :dpi_products, [Types::ProductType], null: true
+    def dpi_products
+      dpi_building_block = BuildingBlock.category_types[:DPI]
+      dpi_building_blocks = BuildingBlock.where(category: dpi_building_block)
+
+      object.products.joins(:building_blocks).where(id: dpi_building_blocks.ids)
+    end
+
     field :resources, [Types::ResourceType], null: true
   end
 end
