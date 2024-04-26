@@ -43,7 +43,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - faiss-index:/faiss-index
+      - ./prod/faiss-index:/faiss-index
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - FAISS_INDEX_PATH=/faiss-index
