@@ -15,7 +15,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
-      - CHATBOT_BASE_URL=http://exchange-chatbot:8000
+      - CHATBOT_BASE_URL=http://exchange-chatbot:8080
     entrypoint: /t4d/docker-entrypoint.sh
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     restart: always
@@ -41,8 +41,7 @@ services:
     build:
       context: ../exchange-chatbot/
     ports:
-      - 8000:8000
-    command: poetry run langchain serve
+      - 8080:8080
     volumes:
       - faiss-index:/faiss-index
     environment:
