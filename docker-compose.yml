@@ -43,10 +43,12 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./prod/faiss-index:/faiss-index
+      - ./prod/chatbot/faiss-index:/faiss-index
+      - ./prod/chatbot/record-manager:/record-manager
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - FAISS_INDEX_PATH=/faiss-index
+      - RECORD_MANAGER_PATH=/record-manager
     depends_on:
       - exchange-backend
       - exchange-frontend
