@@ -49,7 +49,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - FAISS_INDEX_PATH=/faiss-index
       - RECORD_MANAGER_PATH=/record-manager
-      - EXCHANGE_API_BASE=http://exchange-backend:3000
+      - EXCHANGE_API_BASE=http://exchange-backend:3000/api/v1
     depends_on:
       - exchange-backend
       - exchange-frontend
