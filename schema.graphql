@@ -1556,7 +1556,7 @@ type Query {
   paginatedTags(offsetAttributes: OffsetAttributes!, search: String = ""): [Tag!]!
   paginatedTaskTrackers(offsetAttributes: OffsetAttributes!, search: String = "", showFailedOnly: Boolean = false): [TaskTracker!]!
   paginatedUseCases(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showBeta: Boolean = false, showGovStackOnly: Boolean = false): [UseCase!]!
-  paginatedUsers(offsetAttributes: OffsetAttributes!, search: String = ""): [User!]!
+  paginatedUsers(offsetAttributes: OffsetAttributes!, roles: [String!] = [], search: String = ""): [User!]!
   paginatedWizardUseCases(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): [UseCase!]!
   paginatedWorkflows(offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", useCases: [String!] = []): [Workflow!]!
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], filterBlocks: [String!] = [], sdgs: [String!] = [], search: String = "", showGovStackOnly: Boolean = false, showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
@@ -1582,7 +1582,7 @@ type Query {
   paginationAttributeTag(search: String = ""): PaginationAttributes!
   paginationAttributeTaskTracker(search: String = "", showFailedOnly: Boolean = false): PaginationAttributes!
   paginationAttributeUseCase(sdgs: [String!] = [], search: String = "", showBeta: Boolean = false, showGovStackOnly: Boolean = false): PaginationAttributes!
-  paginationAttributeUser(search: String = ""): PaginationAttributes!
+  paginationAttributeUser(roles: [String!] = [], search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
   paginationWizardAttributeUseCase(sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   play(slug: String!): Play
