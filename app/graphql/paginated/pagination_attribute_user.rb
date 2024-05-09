@@ -12,11 +12,15 @@ module Paginated
         return { total_count: 0 }
       end
 
-      return { total_count: 0 } unless an_admin
+      return { total_count: 0 } unless an_admin || an_adli_admin
 
       users = User.order(:name)
       unless search.blank?
         users = users.name_contains(search)
+      end
+
+      if an_adli_admin
+        users = users.where('roles && ARRAY[?]::user_role[]', ['adli_admin', 'adli_user'])
       end
 
       filtered_roles = roles.reject { |x| x.nil? || x.empty? }

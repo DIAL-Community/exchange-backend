@@ -352,7 +352,9 @@ CREATE TYPE fao.user_role AS ENUM (
     'mni',
     'content_writer',
     'content_editor',
-    'dataset_user'
+    'dataset_user',
+    'adli_admin',
+    'adli_user'
 );
 
 
@@ -692,7 +694,9 @@ CREATE TYPE public.user_role AS ENUM (
     'mni',
     'content_writer',
     'content_editor',
-    'dataset_user'
+    'dataset_user',
+    'adli_admin',
+    'adli_user'
 );
 
 
@@ -1131,6 +1135,41 @@ CREATE SEQUENCE fao.category_indicators_id_seq
 --
 
 ALTER SEQUENCE fao.category_indicators_id_seq OWNED BY fao.category_indicators.id;
+
+
+--
+-- Name: chatbot_conversations; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.chatbot_conversations (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    session_identifier character varying NOT NULL,
+    chatbot_question character varying NOT NULL,
+    chatbot_answer character varying NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.chatbot_conversations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.chatbot_conversations_id_seq OWNED BY fao.chatbot_conversations.id;
 
 
 --
@@ -4611,7 +4650,6 @@ CREATE TABLE fao.users (
     unconfirmed_email character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    role fao.user_role DEFAULT 'user'::fao.user_role,
     receive_backup boolean DEFAULT false,
     organization_id bigint,
     expired boolean,
@@ -4627,7 +4665,8 @@ CREATE TABLE fao.users (
     receive_admin_emails boolean DEFAULT false,
     username character varying,
     user_datasets bigint[] DEFAULT '{}'::bigint[],
-    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    role fao.user_role
 );
 
 
@@ -8680,7 +8719,6 @@ CREATE TABLE public.users (
     unconfirmed_email character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    role public.user_role DEFAULT 'user'::public.user_role,
     receive_backup boolean DEFAULT false,
     organization_id bigint,
     expired boolean,
@@ -8878,6 +8916,13 @@ ALTER TABLE ONLY fao.category_indicator_descriptions ALTER COLUMN id SET DEFAULT
 --
 
 ALTER TABLE ONLY fao.category_indicators ALTER COLUMN id SET DEFAULT nextval('fao.category_indicators_id_seq'::regclass);
+
+
+--
+-- Name: chatbot_conversations id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations ALTER COLUMN id SET DEFAULT nextval('fao.chatbot_conversations_id_seq'::regclass);
 
 
 --
@@ -10430,6 +10475,14 @@ ALTER TABLE ONLY fao.category_indicator_descriptions
 
 ALTER TABLE ONLY fao.category_indicators
     ADD CONSTRAINT category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chatbot_conversations chatbot_conversations_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations
+    ADD CONSTRAINT chatbot_conversations_pkey PRIMARY KEY (id);
 
 
 --
@@ -12342,6 +12395,13 @@ CREATE INDEX index_category_indicator_descriptions_on_category_indicator_id ON f
 --
 
 CREATE INDEX index_category_indicators_on_rubric_category_id ON fao.category_indicators USING btree (rubric_category_id);
+
+
+--
+-- Name: index_chatbot_conversations_on_user_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_chatbot_conversations_on_user_id ON fao.chatbot_conversations USING btree (user_id);
 
 
 --
@@ -14875,6 +14935,14 @@ ALTER TABLE ONLY fao.datasets_origins
 
 ALTER TABLE ONLY fao.product_classifications
     ADD CONSTRAINT fk_rails_16035b6309 FOREIGN KEY (classification_id) REFERENCES fao.classifications(id);
+
+
+--
+-- Name: chatbot_conversations fk_rails_17f52fc61f; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations
+    ADD CONSTRAINT fk_rails_17f52fc61f FOREIGN KEY (user_id) REFERENCES fao.users(id);
 
 
 --
@@ -17438,6 +17506,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240203190751'),
 ('20240213054529'),
 ('20240306182144'),
-('20240404132644');
+('20240404132644'),
+('20240509183558'),
+('20240509191953');
 
 

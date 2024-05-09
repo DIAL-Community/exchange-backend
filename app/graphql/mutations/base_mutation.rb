@@ -19,6 +19,12 @@ module Mutations
       end
     end
 
+    def an_adli_admin
+      return false if context[:current_user].nil?
+
+      context[:current_user].roles.include?('adli_admin')
+    end
+
     def an_admin
       return false if context[:current_user].nil?
 

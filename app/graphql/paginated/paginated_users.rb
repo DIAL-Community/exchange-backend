@@ -14,11 +14,15 @@ module Paginated
         return []
       end
 
-      return [] unless an_admin
+      return [] unless an_admin || an_adli_admin
 
       users = User.order(:email)
       unless search.blank?
         users = users.name_contains(search)
+      end
+
+      if an_adli_admin
+        users = users.where('roles && ARRAY[?]::user_role[]', ['adli_admin', 'adli_user'])
       end
 
       filtered_roles = roles.reject { |x| x.nil? || x.empty? }

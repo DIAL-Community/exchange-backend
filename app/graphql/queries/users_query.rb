@@ -6,9 +6,14 @@ module Queries
     type [Types::UserType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
+      return [] unless an_admin || an_adli_admin
 
       users = User.name_contains(search) unless search.blank?
+
+      if an_adli_admin
+        users = users.where('roles && ARRAY[?]::user_role[]', ['adli_admin', 'adli_user'])
+      end
+
       users
     end
   end
@@ -18,9 +23,14 @@ module Queries
     type Types::UserType, null: true
 
     def resolve(user_id:)
-      return unless an_admin
+      return nil unless an_admin || an_adli_admin
 
-      User.find(user_id)
+      user = User.where(id: user_id)
+      if an_adli_admin
+        user = user.where('roles && ARRAY[?]::user_role[]', ['adli_admin', 'adli_user'])
+      end
+      user = user.first
+      user
     end
   end
 
@@ -41,7 +51,7 @@ module Queries
     type GraphQL::Types::JSON, null: true
 
     def resolve
-      return nil unless an_admin
+      return [] unless an_admin
 
       User.user_roles.values
     end
@@ -52,7 +62,7 @@ module Queries
     type Boolean, null: true
 
     def resolve(email:)
-      return false unless an_admin
+      return false unless an_admin || an_adli_admin
 
       email_exists = false
       unless User.find_by(email:).nil?

@@ -1,34 +1,32 @@
 # frozen_string_literal: true
 
 module Mutations
-  class CreateUser < Mutations::BaseMutation
+  class CreateAdliUser < Mutations::BaseMutation
     argument :email, String, required: true
     argument :roles, GraphQL::Types::JSON, required: false, default_value: []
     argument :username, String, required: true
-    argument :organizations, GraphQL::Types::JSON, required: true, default_value: []
-    argument :products, GraphQL::Types::JSON, required: false, default_value: []
     argument :confirmed, Boolean, required: false
 
     field :user, Types::UserType, null: true
     field :errors, [String], null: true
 
-    def resolve(email:, roles:, username:, organizations:, products:, confirmed:)
-      unless an_admin
+    def resolve(email:, roles:, username:, confirmed:)
+      unless an_admin || an_adli_admin
         return {
           user: nil,
-          errors: ['Must be an admin to update user data.']
+          errors: ['Must be an admin or ADLI admin to create / update user data.']
         }
       end
 
       user = User.find_by(email:)
       if user.nil?
         password = random_password
-        user = User.new(email:,
-                        created_at: Time.now,
-                        password:,
-                        password_confirmation: password)
-
-        send_email_with_password(username, email)
+        user = User.new(
+          email:,
+          created_at: Time.now,
+          password:,
+          password_confirmation: password
+        )
       end
       assign_auditable_user(user)
 
@@ -36,38 +34,18 @@ module Mutations
         user.confirmed_at = Time.now
       end
 
-      user.username = username
       user.roles = roles
-
-      if !organizations.nil? && !organizations.empty?
-        org = Organization.find_by(slug: organizations[0]['slug'])
-        user.organization_id = org.id
-      else
-        user.organization_id = nil
-      end
-
-      user.user_products = []
-      if !products.nil? && !products.empty?
-        products.each do |prod|
-          curr_prod = Product.find_by(slug: prod['slug'])
-          user.user_products << curr_prod.id
-        end
-      end
+      user.username = username
 
       if user.save
-        {
-          user:,
-          errors: []
-        }
+        send_email_with_password(username, email)
+        { user:, errors: [] }
       else
-        {
-          user: nil,
-          errors: user.errors.full_messages
-        }
+        { user: nil, errors: user.errors.full_messages }
       end
     rescue ActiveRecord::RecordInvalid => e
       GraphQL::ExecutionError.new(
-        "Invalid Attributes for #{e.record.class.name}: " \
+        "Invalid attributes for #{e.record.class.name}: " \
         "#{e.record.errors.full_messages.join(', ')}"
       )
     end
