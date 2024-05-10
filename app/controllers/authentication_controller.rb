@@ -210,6 +210,7 @@ class AuthenticationController < Devise::SessionsController
       },
       roles: user.roles,
       isAdminUser: user.roles.include?('admin'),
+      isAdliAdminUser: user.roles.include?('adli_admin'),
       isEditorUser: user.roles.include?('content_editor'),
       userToken: user.authentication_token
     }

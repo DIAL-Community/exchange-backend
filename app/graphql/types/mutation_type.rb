@@ -171,5 +171,7 @@ module Types
     field :sync_tenants, mutation: Mutations::SyncTenants
 
     field :create_chatbot_conversation, mutation: Mutations::CreateChatbotConversation
+
+    field :create_adli_user, mutation: Mutations::CreateAdliUser
   end
 end
