@@ -37,7 +37,7 @@ module Queries
   class UserAuthenticationTokenCheckQuery < Queries::BaseQuery
     argument :user_id, Integer, required: true
     argument :user_authentication_token, String, required: true
-    type Boolean, null: true
+    type Boolean, null: false
 
     def resolve(user_id:, user_authentication_token:)
       return false if context[:current_user].nil? || context[:current_user].id != user_id
@@ -48,18 +48,19 @@ module Queries
   end
 
   class UserRolesQuery < Queries::BaseQuery
-    type GraphQL::Types::JSON, null: true
+    type GraphQL::Types::JSON, null: false
 
     def resolve
-      return [] unless an_admin
+      return User.user_roles.values if an_admin
+      return [User.user_roles['adli_user'], User.user_roles['adli_admin']] if an_adli_admin
 
-      User.user_roles.values
+      []
     end
   end
 
   class UserEmailCheckQuery < Queries::BaseQuery
     argument :email, String, required: true
-    type Boolean, null: true
+    type Boolean, null: false
 
     def resolve(email:)
       return false unless an_admin || an_adli_admin
