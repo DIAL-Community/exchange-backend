@@ -226,6 +226,7 @@ type Country {
   aliases: [String!]!
   code: String!
   codeLonger: String!
+  dpiProducts: [Product!]
   id: ID!
   latitude: String!
   longitude: String!

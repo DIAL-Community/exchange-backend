@@ -183,6 +183,13 @@ namespace :resource_sync do
     csv_data = CSV.parse(File.read(file_path), headers: true)
 
     csv_data.each_with_index do |dpi_resource, _index|
+      puts "Processing resource 1: #{dpi_resource[1]}."
+      puts "Processing resource 2: #{dpi_resource[2]}."
+      puts "Processing resource 3: #{dpi_resource[3]}."
+      puts "Processing resource 4: #{dpi_resource[4]}."
+      puts "Processing resource 5: #{dpi_resource[5]}."
+      puts "Processing resource 6: #{dpi_resource[6]}."
+
       resource_name = dpi_resource[1]
       tracking_task_log(task_name, "Processing resource: #{resource_name}.")
 
@@ -201,21 +208,9 @@ namespace :resource_sync do
       end
 
       resource.resource_type = dpi_resource[2]
-      resource.resource_topics << dpi_resource[3]
-
-      countries = []
-      countries = dpi_resource[4].split(',') unless dpi_resource[4].nil?
-      countries.each do |country|
-        country_name = country.strip
-        resource_country = Country.find_by(name: country_name)
-        next if resource_country.nil?
-
-        resource.countries << resource_country unless resource_country.nil? \
-          || resource.countries.include?(resource_country)
-      end
 
       authors = []
-      authors = dpi_resource[5].split(',') unless dpi_resource[5].nil?
+      authors = dpi_resource[3].split(',') unless dpi_resource[5].nil?
       authors.each do |author|
         author_name = author.strip
         resource_author = Author.find_by(name: author_name)
@@ -231,7 +226,7 @@ namespace :resource_sync do
       end
 
       # Link to an organization
-      org_name = dpi_resource[6]
+      org_name = dpi_resource[5]
       resource_org = Organization.first_duplicate(org_name.strip, reslug_em(org_name.strip))
       if resource_org.nil?
         resource_org = Organization.new
@@ -248,7 +243,7 @@ namespace :resource_sync do
       image_saved = false
       begin
         # rubocop:disable Security/Open
-        og_image = Nokogiri::HTML(URI.open(dpi_resource[7])).at_css("meta[property='og:image']")
+        og_image = Nokogiri::HTML(URI.open(dpi_resource[6])).at_css("meta[property='og:image']")
         unless og_image.blank?
           puts og_image['content']
           upload_user = User.find_by(username: 'admin')
@@ -269,7 +264,7 @@ namespace :resource_sync do
         uploader.store!(resource_org.image_file)
       end
 
-      resource.description = dpi_resource[8]
+      resource.description = dpi_resource[7]
 
       resource.save!
       puts "  Resource '#{resource.name}' record saved."

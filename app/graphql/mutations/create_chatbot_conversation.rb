@@ -26,12 +26,14 @@ module Mutations
         chatbot_conversation.session_identifier = SecureRandom.uuid
       end
 
-      connection = Faraday.new(url: 'http://chatbot-service-url/query')
+      connection = Faraday.new(url: "#{ENV['CHATBOT_BASE_URL']}/retriever/invoke")
       response = connection.post do |request|
         request.headers['Accept'] = 'application/json'
         request.headers['Content-Type'] = 'application/json'
         request.body = %{{
-          "question": "#{chatbot_question}"
+          "input": {
+            "input": "#{chatbot_question}"
+          }
         }}
       end
 
@@ -39,7 +41,7 @@ module Mutations
 
       if response.status == 200
         response_as_json = JSON.parse(response.body)
-        chatbot_conversation.chatbot_answer = response_as_json['response']
+        chatbot_conversation.chatbot_answer = response_as_json['output']['output']
       end
 
       chatbot_conversation.user = context[:current_user]
