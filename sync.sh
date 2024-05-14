@@ -30,5 +30,7 @@ rake opportunity_task:close_opportunities           || exit_code+=" 20"
 rake govstack:sync_govstack_procurements            || exit_code+=" 21"
 rake product_sync:digital_square_implementation     || exit_code+=" 22"
 rake gdpir_sync:sync_products\[../www.dpi.global\]  || exit_code+=" 23"
+rake resource_sync:sync_dial_resources              || exit_code+=" 24"
+rake resource_sync:sync_dpi_resources               || exit_code+=" 25"
 
 echo $exit_code
