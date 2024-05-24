@@ -16,7 +16,7 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(play_slug:, move_slug:, name:, description:, resources:)
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           move: nil,
           errors: ['Not allowed to create a move.']

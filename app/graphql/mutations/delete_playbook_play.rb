@@ -9,7 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(playbook_slug:, play_slug:)
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           playbook: nil,
           errors: ['Must be an admin or an editor to remove play from a playbook.']

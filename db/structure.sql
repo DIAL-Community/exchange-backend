@@ -4665,8 +4665,7 @@ CREATE TABLE fao.users (
     receive_admin_emails boolean DEFAULT false,
     username character varying,
     user_datasets bigint[] DEFAULT '{}'::bigint[],
-    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL,
-    role fao.user_role
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
 );
 
 
@@ -6878,7 +6877,8 @@ CREATE TABLE public.playbooks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     draft boolean DEFAULT true NOT NULL,
-    author character varying
+    author character varying,
+    owned_by character varying DEFAULT 'public'::character varying
 );
 
 
@@ -6924,7 +6924,8 @@ CREATE TABLE public.plays (
     tags character varying[] DEFAULT '{}'::character varying[],
     version character varying DEFAULT '1.0'::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    owned_by character varying DEFAULT 'public'::character varying
 );
 
 
@@ -17508,6 +17509,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240306182144'),
 ('20240404132644'),
 ('20240509183558'),
-('20240509191953');
+('20240509191953'),
+('20240524211025');
 
 

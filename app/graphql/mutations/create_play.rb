@@ -18,7 +18,7 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(name:, slug:, description:, tags:, product_slugs:, building_block_slugs:, playbook_slug:)
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           play: nil,
           errors: ['Not allowed to create a play.']

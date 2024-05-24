@@ -3,16 +3,17 @@
 module Paginated
   class PaginatedPlaybooks < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
+    argument :owner, String, required: false, default_value: 'public'
     argument :tags, [String], required: false, default_value: []
     argument :offset_attributes, Attributes::OffsetAttributes, required: true
     type [Types::PlaybookType], null: false
 
-    def resolve(search:, tags:, offset_attributes:)
+    def resolve(search:, owner:, tags:, offset_attributes:)
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
       end
 
-      playbooks = Playbook.all.order(:name)
+      playbooks = Playbook.where(owned_by: owner).order(:name)
       unless an_admin || a_content_editor
         playbooks = playbooks.where(draft: false)
       end

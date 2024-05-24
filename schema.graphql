@@ -1554,7 +1554,7 @@ type Query {
   paginatedDatasets(countries: [String!] = [], datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
-  paginatedPlaybooks(offsetAttributes: OffsetAttributes!, search: String = "", tags: [String!] = []): [Playbook!]!
+  paginatedPlaybooks(offsetAttributes: OffsetAttributes!, owner: String = "public", search: String = "", tags: [String!] = []): [Playbook!]!
   paginatedProducts(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedRegions(offsetAttributes: OffsetAttributes!, search: String = ""): [Region!]!
@@ -1580,7 +1580,7 @@ type Query {
   paginationAttributeDataset(countries: [String!] = [], datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
-  paginationAttributePlaybook(search: String = "", tags: [String!] = []): PaginationAttributes!
+  paginationAttributePlaybook(owner: String = "public", search: String = "", tags: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeRegion(search: String = ""): PaginationAttributes!
@@ -1595,10 +1595,10 @@ type Query {
   paginationAttributeUser(roles: [String!] = [], search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
   paginationWizardAttributeUseCase(sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
-  play(slug: String!): Play
-  playbook(slug: String!): Playbook
-  playbooks(search: String = ""): [Playbook!]!
-  plays(playbookSlug: String = "", search: String = ""): [Play!]!
+  play(owner: String = "public", slug: String!): Play
+  playbook(owner: String = "public", slug: String!): Playbook
+  playbooks(owner: String = "public", search: String = ""): [Playbook!]!
+  plays(owner: String = "public", playbookSlug: String = "", search: String = ""): [Play!]!
   product(slug: String!): Product
   productRepositories(slug: String!): [ProductRepository!]!
   productRepository(productSlug: String = "", slug: String!): ProductRepository
@@ -1689,9 +1689,10 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
+    owner: String = "public"
     slug: String!
   ): PlayConnection!
-  searchPlaybookTags(search: String = ""): [Tag!]!
+  searchPlaybookTags(owner: String = "public", search: String = ""): [Tag!]!
   searchPlays(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1712,6 +1713,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
+    owner: String = "public"
     products: [String!] = []
     search: String = ""
   ): PlayConnection!
