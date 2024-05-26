@@ -3,7 +3,7 @@
 module Paginated
   class PaginationAttributePlaybook < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :owner, String, required: false, default_value: 'public'
+    argument :owner, String, required: true
     argument :tags, [String], required: false, default_value: []
 
     type Attributes::PaginationAttributes, null: false

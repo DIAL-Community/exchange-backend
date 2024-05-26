@@ -3,7 +3,7 @@
 module Queries
   class PlaybooksQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :owner, String, required: false, default_value: 'public'
+    argument :owner, String, required: true
 
     type [Types::PlaybookType], null: false
 
@@ -16,7 +16,7 @@ module Queries
 
   class PlaybookQuery < Queries::BaseQuery
     argument :slug, String, required: true
-    argument :owner, String, required: false, default_value: 'public'
+    argument :owner, String, required: true
 
     type Types::PlaybookType, null: true
 
@@ -31,7 +31,7 @@ module Queries
 
   class SearchPlaybookTagsQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :owner, String, required: false, default_value: 'public'
+    argument :owner, String, required: true
 
     type [Types::TagType], null: false
 
