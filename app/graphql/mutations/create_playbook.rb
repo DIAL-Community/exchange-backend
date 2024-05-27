@@ -8,6 +8,7 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
     argument :cover, ApolloUploadServer::Upload, required: false
     argument :author, String, required: false
     argument :tags, [String], required: false, default_value: []
@@ -19,7 +20,7 @@ module Mutations
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
+    def resolve(name:, slug:, owner:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
       unless an_admin || a_content_editor || an_adli_admin
         return {
           playbook: nil,
@@ -27,7 +28,7 @@ module Mutations
         }
       end
 
-      playbook = Playbook.find_by(slug:)
+      playbook = Playbook.find_by(slug:, owned_by: owner)
       if playbook.nil?
         playbook = Playbook.new(name:)
         playbook.slug = reslug_em(name)
@@ -56,8 +57,9 @@ module Mutations
       end
 
       playbook.tags = tags
-      playbook.author = author
       playbook.draft = draft
+      playbook.author = author
+      playbook.owned_by = owner
 
       successful_operation = false
       ActiveRecord::Base.transaction do

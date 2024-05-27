@@ -4,14 +4,15 @@ module Mutations
   class UpdatePlayMoves < Mutations::BaseMutation
     argument :move_slugs, [String], required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
 
     field :play, Types::PlayType, null: true
     field :errors, [String], null: true
 
-    def resolve(move_slugs:, slug:)
-      play = Play.find_by(slug:)
+    def resolve(move_slugs:, slug:, owner:)
+      play = Play.find_by(slug:, owned_by: owner)
 
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           play: nil,
           errors: ['Must be admin or content editor to update moves of a play.']

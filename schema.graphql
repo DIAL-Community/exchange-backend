@@ -946,9 +946,9 @@ type Mutation {
   applyAsOwner(entity: String!, entityId: Int!): ApplyAsOwnerPayload
   approveRejectCandidateDataset(action: String!, slug: String!): ApproveRejectCandidateDatasetPayload
   approveRejectCandidateRole(action: String!, candidateRoleId: ID!): ApproveRejectCandidateRolePayload
-  autoSaveMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
-  autoSavePlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
-  autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
+  autoSaveMove(description: String!, moveSlug: String, name: String!, owner: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
+  autoSavePlay(buildingBlockSlugs: [String!], description: String!, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
+  autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createAdliUser(confirmed: Boolean, email: String!, roles: JSON = [], username: String!): CreateAdliUserPayload
   createBuildingBlock(category: String, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, maturity: String!, name: String!, slug: String!, specUrl: String = null): CreateBuildingBlockPayload
   createCandidateDataset(captcha: String!, datasetType: String!, description: String!, name: String!, slug: String!, submitterEmail: String!, visualizationUrl: String, website: String!): CreateCandidateDatasetPayload
@@ -961,12 +961,12 @@ type Mutation {
   createContact(email: String!, name: String!, slug: String!, title: String = null): CreateContactPayload
   createCountry(name: String!, slug: String): CreateCountryPayload
   createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
-  createMove(description: String!, moveSlug: String, name: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
+  createMove(description: String!, moveSlug: String, name: String!, owner: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, name: String!, openingDate: ISO8601Date, opportunityOrigin: String!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
-  createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
-  createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
+  createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
+  createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
@@ -994,9 +994,9 @@ type Mutation {
   deleteDataset(id: ID!): DeleteDatasetPayload
   deleteOpportunity(id: ID!): DeleteOpportunityPayload
   deleteOrganization(id: ID!): DeleteOrganizationPayload
-  deletePlayMove(moveSlug: String!, playSlug: String!): DeletePlayMovePayload
+  deletePlayMove(moveSlug: String!, owner: String!, playSlug: String!): DeletePlayMovePayload
   deletePlaybook(id: ID!): DeletePlaybookPayload
-  deletePlaybookPlay(playSlug: String!, playbookSlug: String!): DeletePlaybookPlayPayload
+  deletePlaybookPlay(owner: String!, playSlug: String!, playbookSlug: String!): DeletePlaybookPlayPayload
   deleteProduct(id: ID!): DeleteProductPayload
   deleteProductRepository(id: ID!): DeleteProductRepositoryPayload
   deleteProject(id: ID!): DeleteProjectPayload
@@ -1038,8 +1038,8 @@ type Mutation {
   updateOrganizationResources(resourceSlugs: [String!]!, slug: String!): UpdateOrganizationResourcesPayload
   updateOrganizationSectors(sectorSlugs: [String!]!, slug: String!): UpdateOrganizationSectorsPayload
   updateOrganizationSpecialties(slug: String!, specialties: [String!]!): UpdateOrganizationSpecialtiesPayload
-  updatePlayMoves(moveSlugs: [String!]!, slug: String!): UpdatePlayMovesPayload
-  updatePlaybookPlays(playSlugs: [String!]!, slug: String!): UpdatePlaybookPlaysPayload
+  updatePlayMoves(moveSlugs: [String!]!, owner: String!, slug: String!): UpdatePlayMovesPayload
+  updatePlaybookPlays(owner: String!, playSlugs: [String!]!, slug: String!): UpdatePlaybookPlaysPayload
   updateProductBuildingBlocks(buildingBlockSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductCountries(countrySlugs: [String!]!, slug: String!): UpdateProductCountriesPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
@@ -1554,7 +1554,7 @@ type Query {
   paginatedDatasets(countries: [String!] = [], datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
-  paginatedPlaybooks(offsetAttributes: OffsetAttributes!, owner: String = "public", search: String = "", tags: [String!] = []): [Playbook!]!
+  paginatedPlaybooks(offsetAttributes: OffsetAttributes!, owner: String!, search: String = "", tags: [String!] = []): [Playbook!]!
   paginatedProducts(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedRegions(offsetAttributes: OffsetAttributes!, search: String = ""): [Region!]!
@@ -1580,7 +1580,7 @@ type Query {
   paginationAttributeDataset(countries: [String!] = [], datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
-  paginationAttributePlaybook(owner: String = "public", search: String = "", tags: [String!] = []): PaginationAttributes!
+  paginationAttributePlaybook(owner: String!, search: String = "", tags: [String!] = []): PaginationAttributes!
   paginationAttributeProduct(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeRegion(search: String = ""): PaginationAttributes!
@@ -1595,10 +1595,10 @@ type Query {
   paginationAttributeUser(roles: [String!] = [], search: String = ""): PaginationAttributes!
   paginationAttributeWorkflow(sdgs: [String!] = [], search: String = "", useCases: [String!] = []): PaginationAttributes!
   paginationWizardAttributeUseCase(sdgs: [String!] = [], sectors: [String!] = [], useCases: [String!] = []): PaginationAttributes!
-  play(owner: String = "public", slug: String!): Play
-  playbook(owner: String = "public", slug: String!): Playbook
-  playbooks(owner: String = "public", search: String = ""): [Playbook!]!
-  plays(owner: String = "public", playbookSlug: String = "", search: String = ""): [Play!]!
+  play(owner: String!, slug: String!): Play
+  playbook(owner: String!, slug: String!): Playbook
+  playbooks(owner: String!, search: String = ""): [Playbook!]!
+  plays(owner: String!, playbookSlug: String = "", search: String = ""): [Play!]!
   product(slug: String!): Product
   productRepositories(slug: String!): [ProductRepository!]!
   productRepository(productSlug: String = "", slug: String!): ProductRepository
@@ -1689,10 +1689,10 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    owner: String = "public"
+    owner: String!
     slug: String!
   ): PlayConnection!
-  searchPlaybookTags(owner: String = "public", search: String = ""): [Tag!]!
+  searchPlaybookTags(owner: String!, search: String = ""): [Tag!]!
   searchPlays(
     """
     Returns the elements in the list that come after the specified cursor.
@@ -1713,7 +1713,7 @@ type Query {
     Returns the last _n_ elements from the list.
     """
     last: Int
-    owner: String = "public"
+    owner: String!
     products: [String!] = []
     search: String = ""
   ): PlayConnection!

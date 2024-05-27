@@ -3,8 +3,8 @@
 module Queries
   class PlaysQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :owner, String, required: true
     argument :playbook_slug, String, required: false, default_value: ''
+    argument :owner, String, required: true
     type [Types::PlayType], null: false
 
     def resolve(search:, owner:, playbook_slug:)
@@ -46,8 +46,8 @@ module Queries
 
   class SearchPlaysQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    argument :owner, String, required: true
     argument :products, [String], required: false, default_value: []
+    argument :owner, String, required: true
 
     type Types::PlayType.connection_type, null: false
 

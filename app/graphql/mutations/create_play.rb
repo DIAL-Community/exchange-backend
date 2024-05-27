@@ -8,6 +8,7 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
     argument :tags, [String], required: false, default_value: []
     argument :description, String, required: true
     argument :product_slugs, [String], required: false
@@ -17,7 +18,7 @@ module Mutations
     field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
-    def resolve(name:, slug:, description:, tags:, product_slugs:, building_block_slugs:, playbook_slug:)
+    def resolve(name:, slug:, owner:, description:, tags:, product_slugs:, building_block_slugs:, playbook_slug:)
       unless an_admin || a_content_editor || an_adli_admin
         return {
           play: nil,
@@ -25,7 +26,7 @@ module Mutations
         }
       end
 
-      play = Play.find_by(slug:)
+      play = Play.find_by(slug:, owned_by: owner)
       if play.nil?
         play = Play.new(name:)
         play.slug = reslug_em(name)
@@ -54,6 +55,7 @@ module Mutations
       end
 
       play.tags = tags
+      play.owned_by = owner
 
       play.building_blocks = []
       building_block_slugs&.each do |building_block_slug|

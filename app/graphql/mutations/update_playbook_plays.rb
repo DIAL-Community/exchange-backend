@@ -4,12 +4,13 @@ module Mutations
   class UpdatePlaybookPlays < Mutations::BaseMutation
     argument :play_slugs, [String], required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
 
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(play_slugs:, slug:)
-      playbook = Playbook.find_by(slug:)
+    def resolve(play_slugs:, slug:, owner:)
+      playbook = Playbook.find_by(slug:, owned_by: owner)
 
       unless an_admin || a_content_editor
         return {

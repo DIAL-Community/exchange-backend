@@ -9,11 +9,13 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
       mutation CreatePlaybook (
         $name: String!,
         $slug: String!,
+        $owner: String!,
         $overview: String!
       ) {
         createPlaybook(
           name: $name,
           slug: $slug,
+          owner: $owner,
           overview: $overview,
           author: "Some Author"
         ) {
@@ -35,7 +37,12 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
+      variables: {
+        name: "Some name",
+        slug: "some-name",
+        owner: 'Some owner',
+        overview: "Some Overview"
+      }
     )
 
     aggregate_failures do
@@ -56,7 +63,12 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
+      variables: {
+        name: "Some name",
+        slug: "some-name",
+        owner: 'Some owner',
+        overview: "Some Overview"
+      }
     )
 
     aggregate_failures do
@@ -73,7 +85,12 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
+      variables: {
+        name: "Some name",
+        slug: "some-name",
+        owner: 'Some owner',
+        overview: "Some Overview"
+      }
     )
 
     aggregate_failures do
@@ -88,7 +105,12 @@ RSpec.describe(Mutations::CreatePlaybook, type: :graphql) do
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some-name", overview: "Some Overview" }
+      variables: {
+        name: "Some name",
+        slug: "some-name",
+        owner: 'Some owner',
+        overview: "Some Overview"
+      }
     )
 
     aggregate_failures do

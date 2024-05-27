@@ -8,6 +8,7 @@ module Mutations
 
     argument :play_slug, String, required: true
     argument :move_slug, String, required: false
+    argument :owner, String, required: true
     argument :name, String, required: true
     argument :description, String, required: true
     argument :resources, GraphQL::Types::JSON, required: false, default_value: []
@@ -15,7 +16,7 @@ module Mutations
     field :move, Types::MoveType, null: true
     field :errors, [String], null: false
 
-    def resolve(play_slug:, move_slug:, name:, description:, resources:)
+    def resolve(play_slug:, move_slug:, owner:, name:, description:, resources:)
       unless an_admin || a_content_editor || an_adli_admin
         return {
           move: nil,
@@ -23,7 +24,7 @@ module Mutations
         }
       end
 
-      play = Play.find_by(slug: play_slug)
+      play = Play.find_by(slug: play_slug, owned_by: owner)
       if play.nil?
         return {
           move: nil,
