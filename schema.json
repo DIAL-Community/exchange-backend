@@ -19422,6 +19422,24 @@
               "deprecationReason": null
             },
             {
+              "name": "ownedBy",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "phases",
               "description": null,
               "args": [

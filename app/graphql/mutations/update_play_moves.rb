@@ -21,7 +21,7 @@ module Mutations
 
       if play.nil?
         return {
-          move: nil,
+          play: nil,
           errors: ['Unable to find play.']
         }
       end

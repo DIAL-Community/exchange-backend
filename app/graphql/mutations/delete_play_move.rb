@@ -12,7 +12,7 @@ module Mutations
     def resolve(play_slug:, move_slug:, owner:)
       unless an_admin || a_content_editor || an_adli_admin
         return {
-          playbook: nil,
+          play: nil,
           errors: ['Must be an admin or an editor to remove move from a play.']
         }
       end
@@ -20,7 +20,7 @@ module Mutations
       play = Play.find_by(slug: play_slug, owned_by: owner)
       if play.nil?
         return {
-          move: nil,
+          play: nil,
           errors: ['Unable to find play.']
         }
       end

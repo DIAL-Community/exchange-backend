@@ -50,5 +50,6 @@ module Types
                                                       method: :playbook_play_with_slug_list
 
     field :plays, [Types::PlayType], null: true
+    field :owned_by, String, null: false
   end
 end

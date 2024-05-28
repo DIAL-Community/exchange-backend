@@ -1315,6 +1315,7 @@ type Playbook {
   imageFile: String
   maturity: String
   name: String!
+  ownedBy: String!
   phases: JSON!
   playbookDescription: PlaybookDescription
   playbookDescriptions: [PlaybookDescription!]

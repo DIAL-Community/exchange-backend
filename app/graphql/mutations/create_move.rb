@@ -34,7 +34,7 @@ module Mutations
 
       if an_adli_admin && play.owned_by != 'dpi'
         return {
-          play: nil,
+          move: nil,
           errors: ['Must be admin or content editor to edit non module information.']
         }
       end
