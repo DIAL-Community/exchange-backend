@@ -32,6 +32,13 @@ module Mutations
         }
       end
 
+      if an_adli_admin && play.owned_by != 'dpi'
+        return {
+          play: nil,
+          errors: ['Must be admin or content editor to edit non module information.']
+        }
+      end
+
       play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
         play_move = PlayMove.new(name:)

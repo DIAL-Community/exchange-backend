@@ -19,6 +19,20 @@ module Mutations
         }
       end
 
+      if play.nil?
+        return {
+          move: nil,
+          errors: ['Unable to find play.']
+        }
+      end
+
+      if an_adli_admin && play.owned_by != 'dpi'
+        return {
+          play: nil,
+          errors: ['Must be admin or content editor to edit non module.']
+        }
+      end
+
       index = 0
       move_slugs.each do |move_slug|
         play_move = PlayMove.find_by(play_id: play.id, slug: move_slug)

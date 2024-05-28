@@ -30,7 +30,7 @@ module Mutations
 
       playbook = Playbook.find_by(slug:, owned_by: owner)
       if playbook.nil?
-        playbook = Playbook.new(name:)
+        playbook = Playbook.new(name:, owned_by: owner)
         playbook.slug = reslug_em(name)
 
         if Playbook.where(slug: playbook.slug).count.positive?
@@ -40,6 +40,13 @@ module Mutations
                                     .first
           playbook.slug = playbook.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
+      end
+
+      if an_adli_admin && playbook.owned_by != 'dpi'
+        return {
+          playbook: nil,
+          errors: ['Must be admin or content editor to edit non curriculum information.']
+        }
       end
 
       # Re-slug if the name is updated (not the same with the one in the db).

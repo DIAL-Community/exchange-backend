@@ -12,10 +12,17 @@ module Mutations
     def resolve(play_slugs:, slug:, owner:)
       playbook = Playbook.find_by(slug:, owned_by: owner)
 
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           playbook: nil,
           errors: ['Must be admin or content editor to update plays of a playbook.']
+        }
+      end
+
+      if an_adli_admin && playbook.owned_by != 'dpi'
+        return {
+          playbook: nil,
+          errors: ['Must be admin or content editor to edit non curriculum information.']
         }
       end
 

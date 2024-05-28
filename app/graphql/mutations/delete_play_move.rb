@@ -18,6 +18,20 @@ module Mutations
       end
 
       play = Play.find_by(slug: play_slug, owned_by: owner)
+      if play.nil?
+        return {
+          move: nil,
+          errors: ['Unable to find play.']
+        }
+      end
+
+      if an_adli_admin && play.owned_by != 'dpi'
+        return {
+          play: nil,
+          errors: ['Must be admin or content editor to edit non module information.']
+        }
+      end
+
       play_move = PlayMove.find_by(play_id: play.id, slug: move_slug)
       assign_auditable_user(play_move)
 

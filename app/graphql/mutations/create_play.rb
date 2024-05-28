@@ -28,7 +28,7 @@ module Mutations
 
       play = Play.find_by(slug:, owned_by: owner)
       if play.nil?
-        play = Play.new(name:)
+        play = Play.new(name:, owned_by: owner)
         play.slug = reslug_em(name)
 
         if Play.where(slug: play.slug).count.positive?
@@ -38,6 +38,13 @@ module Mutations
                                 .first
           play.slug = play.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
+      end
+
+      if an_adli_admin && play.owned_by != 'dpi'
+        return {
+          play: nil,
+          errors: ['Must be admin or content editor to edit non module information.']
+        }
       end
 
       # Re-slug if the name is updated (not the same with the one in the db).
