@@ -14,7 +14,7 @@ module Mutations
       unless an_admin || an_adli_admin
         return {
           user: nil,
-          errors: ['Must be an admin or ADLI admin to create / update user data.']
+          errors: ['Must be an admin to create / update user data.']
         }
       end
 

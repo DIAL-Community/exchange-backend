@@ -29,6 +29,7 @@ module Types
     field :use_case_description, Types::UseCaseDescriptionType, null: false,
       method: :use_case_description_localized
 
+    # First paragraph of the building block description
     field :parsed_description, String, null: true
     def parsed_description
       return if object.use_case_description_localized.nil?
@@ -56,7 +57,6 @@ module Types
     end
 
     field :use_case_steps, [Types::UseCaseStepType], null: true
-
     field :use_case_headers, [Types::UseCaseHeaderType], null: true
 
     field :sdg_targets, [Types::SustainableDevelopmentGoalTargetType], null: false

@@ -221,5 +221,8 @@ module Types
     field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
 
     field :chatbot_conversations, resolver: Queries::ChatbotConversationsQuery
+
+    field :paginated_messages, resolver: Paginated::PaginatedMessages
+    field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
   end
 end

@@ -23,6 +23,7 @@ module Types
     field :building_block_description, Types::BuildingBlockDescriptionType, null: true,
           method: :building_block_description_localized
 
+    # First paragraph of the building block description
     field :parsed_description, String, null: true
     def parsed_description
       return if object.building_block_description_localized.nil?
