@@ -224,5 +224,7 @@ module Types
 
     field :paginated_messages, resolver: Paginated::PaginatedMessages
     field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
+    field :messages, resolver: Queries::MessagesQuery
+    field :message, resolver: Queries::MessageQuery
   end
 end

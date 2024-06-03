@@ -1564,6 +1564,8 @@ type Query {
   handbook(slug: String!): Handbook!
   handbooks: [Handbook!]!
   me: User!
+  message(slug: String!): Message
+  messages(search: String = ""): [Message!]!
   move(playSlug: String!, slug: String!): Move
   moves(search: String = ""): [Move!]!
   operatorServiceOnly(search: String = ""): [OperatorService!]!
@@ -1586,7 +1588,7 @@ type Query {
   paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Contact!]!
   paginatedCountries(offsetAttributes: OffsetAttributes!, search: String = ""): [Country!]!
   paginatedDatasets(countries: [String!] = [], datasetTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Dataset!]!
-  paginatedMessages(messageType: String!, offsetAttributes: OffsetAttributes!, search: String = ""): [Message!]!
+  paginatedMessages(messageType: String = "", offsetAttributes: OffsetAttributes!, search: String = "", visibleOnly: Boolean = false): [Message!]!
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
   paginatedPlaybooks(offsetAttributes: OffsetAttributes!, owner: String!, search: String = "", tags: [String!] = []): [Playbook!]!
@@ -1613,7 +1615,7 @@ type Query {
   paginationAttributeContact(search: String = ""): PaginationAttributes!
   paginationAttributeCountry(search: String = ""): PaginationAttributes!
   paginationAttributeDataset(countries: [String!] = [], datasetTypes: [String!] = [], origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
-  paginationAttributeMessage(messageType: String!, search: String = ""): PaginationAttributes!
+  paginationAttributeMessage(messageType: String = "", search: String = "", visibleOnly: Boolean = false): PaginationAttributes!
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
   paginationAttributePlaybook(owner: String!, search: String = "", tags: [String!] = []): PaginationAttributes!
