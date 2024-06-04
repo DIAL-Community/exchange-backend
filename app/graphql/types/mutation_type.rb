@@ -176,5 +176,6 @@ module Types
 
     field :create_message, mutation: Mutations::CreateMessage
     field :delete_message, mutation: Mutations::DeleteMessage
+    field :update_message_visibility, mutation: Mutations::UpdateMessageVisibility
   end
 end

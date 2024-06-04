@@ -14,7 +14,7 @@ module Types
 
     field :message_type, String, null: false
     field :message_template, String, null: false
-    field :message_datetime, GraphQL::Types::ISO8601Date, null: false
+    field :message_datetime, GraphQL::Types::ISO8601DateTime, null: false
 
     field :parsed_message, String, null: false
     def parsed_message
