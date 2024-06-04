@@ -10,7 +10,7 @@ module Mutations
 
     argument :message_type, String, required: true
     argument :message_template, String, required: true
-    argument :message_datetime, GraphQL::Types::ISO8601Date, required: true
+    argument :message_datetime, GraphQL::Types::ISO8601DateTime, required: true
 
     argument :visible, Boolean, required: false, default_value: true
 
@@ -43,6 +43,8 @@ module Mutations
 
       message.message_type = message_type
       message.message_template = message_template
+
+      puts "Message datetime: #{message_datetime}."
       message.message_datetime = message_datetime
 
       message.visible = visible
