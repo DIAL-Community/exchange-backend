@@ -42,7 +42,7 @@ module Mutations
       play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
         play_move = PlayMove.new(name:)
-        play_move.slug = reslug_em(name)
+        play_move.slug = reslug_em("#{play.name} #{name}")
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
