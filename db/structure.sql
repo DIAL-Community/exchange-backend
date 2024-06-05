@@ -476,7 +476,8 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'COUNTRY',
     'CITY',
     'CONTACT',
-    'RESOURCE'
+    'RESOURCE',
+    'PLAY'
 );
 
 
@@ -2022,6 +2023,45 @@ CREATE SEQUENCE fao.handbooks_id_seq
 --
 
 ALTER SEQUENCE fao.handbooks_id_seq OWNED BY fao.handbooks.id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.messages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    message_type character varying NOT NULL,
+    message_template character varying NOT NULL,
+    message_datetime timestamp(6) without time zone NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    location character varying,
+    location_type character varying,
+    created_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.messages_id_seq OWNED BY fao.messages.id;
 
 
 --
@@ -4633,6 +4673,40 @@ CREATE SEQUENCE fao.user_events_id_seq
 --
 
 ALTER SEQUENCE fao.user_events_id_seq OWNED BY fao.user_events.id;
+
+
+--
+-- Name: user_messages; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.user_messages (
+    id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    received_by_id bigint NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.user_messages_id_seq OWNED BY fao.user_messages.id;
 
 
 --
@@ -9177,6 +9251,13 @@ ALTER TABLE ONLY fao.handbooks ALTER COLUMN id SET DEFAULT nextval('fao.handbook
 
 
 --
+-- Name: messages id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages ALTER COLUMN id SET DEFAULT nextval('fao.messages_id_seq'::regclass);
+
+
+--
 -- Name: move_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9664,6 +9745,13 @@ ALTER TABLE ONLY fao.use_cases ALTER COLUMN id SET DEFAULT nextval('fao.use_case
 --
 
 ALTER TABLE ONLY fao.user_events ALTER COLUMN id SET DEFAULT nextval('fao.user_events_id_seq'::regclass);
+
+
+--
+-- Name: user_messages id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages ALTER COLUMN id SET DEFAULT nextval('fao.user_messages_id_seq'::regclass);
 
 
 --
@@ -10776,6 +10864,14 @@ ALTER TABLE ONLY fao.handbooks
 
 
 --
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: move_descriptions move_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11341,6 +11437,14 @@ ALTER TABLE ONLY fao.use_cases
 
 ALTER TABLE ONLY fao.user_events
     ADD CONSTRAINT user_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_messages user_messages_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT user_messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -12651,6 +12755,13 @@ CREATE INDEX index_handbook_questions_on_handbook_page_id ON fao.handbook_questi
 
 
 --
+-- Name: index_messages_on_created_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_messages_on_created_by_id ON fao.messages USING btree (created_by_id);
+
+
+--
 -- Name: index_move_descriptions_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13292,6 +13403,20 @@ CREATE INDEX index_use_case_steps_on_use_case_id ON fao.use_case_steps USING btr
 --
 
 CREATE INDEX index_use_cases_on_sector_id ON fao.use_cases USING btree (sector_id);
+
+
+--
+-- Name: index_user_messages_on_message_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_message_id ON fao.user_messages USING btree (message_id);
+
+
+--
+-- Name: index_user_messages_on_received_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_received_by_id ON fao.user_messages USING btree (received_by_id);
 
 
 --
@@ -15297,6 +15422,14 @@ ALTER TABLE ONLY fao.opportunities
 
 
 --
+-- Name: user_messages fk_rails_60e38b1531; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT fk_rails_60e38b1531 FOREIGN KEY (received_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: organizations_countries fk_rails_61354fe2dd; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -15657,6 +15790,14 @@ ALTER TABLE ONLY fao.datasets_countries
 
 
 --
+-- Name: messages fk_rails_cd133c6420; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages
+    ADD CONSTRAINT fk_rails_cd133c6420 FOREIGN KEY (created_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -15710,6 +15851,14 @@ ALTER TABLE ONLY fao.play_moves
 
 ALTER TABLE ONLY fao.cities
     ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES fao.provinces(id);
+
+
+--
+-- Name: user_messages fk_rails_e3535a825c; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT fk_rails_e3535a825c FOREIGN KEY (message_id) REFERENCES fao.messages(id);
 
 
 --
@@ -17662,6 +17811,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240509191953'),
 ('20240524211025'),
 ('20240530150308'),
-('20240530154604');
+('20240530154604'),
+('20240605130949');
 
 
