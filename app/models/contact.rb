@@ -16,9 +16,9 @@ class Contact < ApplicationRecord
 
   def image_file
     if File.exist?(File.join('public', 'assets', 'contacts', "#{slug}.png"))
-      "/assets/building-blocks/#{slug}.svg"
+      "/assets/users/#{slug}.png"
     else
-      '/assets/building-blocks/building-block-placeholder.svg'
+      '/assets/users/user-placeholder.svg'
     end
   end
 

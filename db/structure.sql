@@ -5471,7 +5471,7 @@ CREATE TABLE public.contacts (
     updated_at timestamp without time zone NOT NULL,
     biography text,
     social_networking_services jsonb DEFAULT '[]'::jsonb,
-    source character varying
+    source character varying DEFAULT 'exchange'::character varying
 );
 
 
