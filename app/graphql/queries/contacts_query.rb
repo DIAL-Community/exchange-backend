@@ -24,4 +24,17 @@ module Queries
       Contact.find_by(slug:)
     end
   end
+
+  class ContactByEmailQuery < Queries::BaseQuery
+    argument :email, String, required: true
+    argument :source, String, required: true, default_value: 'exchange'
+
+    type Types::ContactType, null: true
+
+    def resolve(email:, source:)
+      return nil unless an_admin
+
+      Contact.find_by(email:, source:)
+    end
+  end
 end

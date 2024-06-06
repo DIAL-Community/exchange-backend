@@ -134,7 +134,8 @@ CREATE TYPE fao.comment_object_type AS ENUM (
     'COUNTRY',
     'CITY',
     'CONTACT',
-    'RESOURCE'
+    'RESOURCE',
+    'PLAY'
 );
 
 
@@ -5467,7 +5468,10 @@ CREATE TABLE public.contacts (
     email character varying,
     title character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying
 );
 
 
@@ -17812,6 +17816,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240524211025'),
 ('20240530150308'),
 ('20240530154604'),
-('20240605130949');
+('20240605130949'),
+('20240605184914');
 
 

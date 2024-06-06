@@ -12,15 +12,20 @@ module Mutations
     argument :message_template, String, required: true
     argument :message_datetime, GraphQL::Types::ISO8601DateTime, required: true
 
-    argument :visible, Boolean, required: false, default_value: true
+    argument :visible, Boolean, required: true, default_value: true
 
     argument :location, String, required: false
     argument :location_type, String, required: false
 
+    argument :send_email_notification, Boolean, required: true, default_value: false
+
     field :message, Types::MessageType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, message_template:, message_type:, message_datetime:, visible:, location: nil, location_type: nil)
+    def resolve(
+      name:, message_template:, message_type:, message_datetime:,
+      visible:, location: nil, location_type: nil, send_email_notification:
+    )
       unless an_admin || an_adli_admin
         return {
           user: nil,
@@ -44,7 +49,6 @@ module Mutations
       message.message_type = message_type
       message.message_template = message_template
 
-      puts "Message datetime: #{message_datetime}."
       message.message_datetime = message_datetime
 
       message.visible = visible
@@ -57,6 +61,11 @@ module Mutations
       successful_operation = false
       ActiveRecord::Base.transaction do
         message.save!
+
+        if send_email_notification
+          process_notification_email(message)
+        end
+
         successful_operation = true
       end
 
@@ -73,6 +82,19 @@ module Mutations
           errors: dataset.errors.full_messages
         }
       end
+    end
+
+    def process_notification_email(message)
+      email_subject = message.name
+
+      email_body = "Hi #{username}! <br />Your account have been created.<br />"
+
+      mail(
+        from: 'notifier@exchange.dial.global',
+        to: mail_to,
+        subject: email_subject,
+        body: email_body + default_text
+      ).deliver_now
     end
   end
 end

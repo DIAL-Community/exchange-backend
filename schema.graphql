@@ -213,12 +213,16 @@ type Comment {
 }
 
 type Contact {
+  biography: String
   email: String!
   id: ID!
+  imageFile: String
   mainContact: Boolean
   name: String!
   organizations: [Organization!]!
   slug: String!
+  socialNetworkingServices: JSON
+  source: String
   title: String
 }
 
@@ -992,7 +996,7 @@ type Mutation {
   createContact(email: String!, name: String!, slug: String!, title: String = null): CreateContactPayload
   createCountry(name: String!, slug: String): CreateCountryPayload
   createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
-  createMessage(location: String, locationType: String, messageDatetime: ISO8601DateTime!, messageTemplate: String!, messageType: String!, name: String!, visible: Boolean = true): CreateMessagePayload
+  createMessage(location: String, locationType: String, messageDatetime: ISO8601DateTime!, messageTemplate: String!, messageType: String!, name: String!, sendEmailNotification: Boolean! = false, visible: Boolean! = true): CreateMessagePayload
   createMove(description: String!, moveSlug: String, name: String!, owner: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, name: String!, openingDate: ISO8601Date, opportunityOrigin: String!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
@@ -1553,6 +1557,7 @@ type Query {
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
   compareProducts(slugs: [String!]!): JSON!
   contact(slug: String!): Contact
+  contactByEmail(email: String!, source: String! = "exchange"): Contact
   contacts(search: String = ""): [Contact!]!
   countComments(commentObjectId: Int!, commentObjectType: String!): Int!
   countries(search: String = ""): [Country!]!
