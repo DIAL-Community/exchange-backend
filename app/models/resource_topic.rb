@@ -11,8 +11,8 @@ class ResourceTopic < ApplicationRecord
         -> (name, slug) { where('resource_topics.name = ? OR resource_topics.slug = ?', name, slug) }
 
   def image_file
-    if File.exist?(File.join('public', 'assets', 'building-blocks', "#{slug}.svg"))
-      "/assets/resource-topics/#{slug}.svg"
+    if File.exist?(File.join('public', 'assets', 'resource-topics', "#{slug}.png"))
+      "/assets/resource-topics/#{slug}.png"
     else
       '/assets/resource-topics/resource-topic-placeholder.svg'
     end
