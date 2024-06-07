@@ -25,7 +25,7 @@ module Mutations
         }
       end
 
-      if an_adli_admin && play.owned_by != 'dpi'
+      if an_adli_admin && play.owned_by != DPI_TENANT_NAME
         return {
           play: nil,
           errors: ['Must be admin or content editor to edit non module information.']

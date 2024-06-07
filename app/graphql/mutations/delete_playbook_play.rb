@@ -20,7 +20,7 @@ module Mutations
       play = Play.find_by(slug: play_slug, owned_by: owner)
       playbook = Playbook.find_by(slug: playbook_slug, owned_by: owner)
 
-      if an_adli_admin && (playbook.owned_by != 'dpi' || play.owned_by != 'dpi')
+      if an_adli_admin && (playbook.owned_by != DPI_TENANT_NAME || play.owned_by != DPI_TENANT_NAME)
         return {
           playbook: nil,
           errors: ['Must be admin or content editor to edit non curriculum information.']

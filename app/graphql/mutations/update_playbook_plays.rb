@@ -19,7 +19,7 @@ module Mutations
         }
       end
 
-      if an_adli_admin && playbook.owned_by != 'dpi'
+      if an_adli_admin && playbook.owned_by != DPI_TENANT_NAME
         return {
           playbook: nil,
           errors: ['Must be admin or content editor to edit non curriculum information.']

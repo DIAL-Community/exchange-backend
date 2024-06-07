@@ -14,11 +14,15 @@ module Mutations
     argument :product_slugs, [String], required: false
     argument :building_block_slugs, [String], required: false
     argument :playbook_slug, String, required: false, default_value: nil
+    argument :draft, Boolean, required: true, default_value: true
 
     field :play, Types::PlayType, null: true
     field :errors, [String], null: false
 
-    def resolve(name:, slug:, owner:, description:, tags:, product_slugs:, building_block_slugs:, playbook_slug:)
+    def resolve(
+      name:, slug:, owner:, description:, tags:, product_slugs:, building_block_slugs:,
+      playbook_slug:, draft:
+    )
       unless an_admin || a_content_editor || an_adli_admin
         return {
           play: nil,
@@ -40,7 +44,7 @@ module Mutations
         end
       end
 
-      if an_adli_admin && play.owned_by != 'dpi'
+      if an_adli_admin && play.owned_by != DPI_TENANT_NAME
         return {
           play: nil,
           errors: ['Must be admin or content editor to edit non module information.']
@@ -63,6 +67,8 @@ module Mutations
 
       play.tags = tags
       play.owned_by = owner
+
+      play.draft = draft
 
       play.building_blocks = []
       building_block_slugs&.each do |building_block_slug|

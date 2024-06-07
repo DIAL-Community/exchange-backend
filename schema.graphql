@@ -982,7 +982,7 @@ type Mutation {
   approveRejectCandidateDataset(action: String!, slug: String!): ApproveRejectCandidateDatasetPayload
   approveRejectCandidateRole(action: String!, candidateRoleId: ID!): ApproveRejectCandidateRolePayload
   autoSaveMove(description: String!, moveSlug: String, name: String!, owner: String!, playSlug: String!, resources: JSON = []): CreateMovePayload
-  autoSavePlay(buildingBlockSlugs: [String!], description: String!, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
+  autoSavePlay(buildingBlockSlugs: [String!], description: String!, draft: Boolean! = true, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   autoSavePlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createAdliUser(confirmed: Boolean, email: String!, roles: JSON = [], username: String!): CreateAdliUserPayload
   createBuildingBlock(category: String, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, maturity: String!, name: String!, slug: String!, specUrl: String = null): CreateBuildingBlockPayload
@@ -1001,7 +1001,7 @@ type Mutation {
   createMoveResource(description: String!, index: Int!, moveSlug: String, name: String!, playSlug: String!, url: String!): CreateMoveResourcePayload
   createOpportunity(closingDate: ISO8601Date!, contactEmail: String!, contactName: String!, description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, name: String!, openingDate: ISO8601Date, opportunityOrigin: String!, opportunityStatus: String!, opportunityType: String!, slug: String!, webAddress: String): CreateOpportunityPayload
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
-  createPlay(buildingBlockSlugs: [String!], description: String!, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
+  createPlay(buildingBlockSlugs: [String!], description: String!, draft: Boolean! = true, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
@@ -1289,6 +1289,7 @@ type PaginationAttributes {
 type Play {
   buildingBlocks: [BuildingBlock!]
   createdAt: ISO8601DateTime!
+  draft: Boolean!
   id: ID!
   imageFile: String
   maturity: String

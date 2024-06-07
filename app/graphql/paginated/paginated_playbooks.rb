@@ -14,9 +14,10 @@ module Paginated
       end
 
       playbooks = Playbook.where(owned_by: owner).order(:name)
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         playbooks = playbooks.where(draft: false)
       end
+
       if !search.nil? && !search.to_s.strip.empty?
         name_playbooks = playbooks.name_contains(search)
         desc_playbooks = playbooks.joins(:playbook_descriptions)
