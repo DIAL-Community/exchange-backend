@@ -1325,7 +1325,10 @@ CREATE TABLE fao.contacts (
     email character varying,
     title character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying DEFAULT 'exchange'::character varying
 );
 
 
@@ -7044,7 +7047,8 @@ CREATE TABLE public.plays (
     version character varying DEFAULT '1.0'::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    owned_by character varying DEFAULT 'public'::character varying
+    owned_by character varying DEFAULT 'public'::character varying,
+    draft boolean DEFAULT false
 );
 
 
@@ -17817,6 +17821,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240530150308'),
 ('20240530154604'),
 ('20240605130949'),
-('20240605184914');
+('20240605184914'),
+('20240606205817');
 
 

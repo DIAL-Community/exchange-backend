@@ -46,8 +46,18 @@ module Types
     field :playbook_description, Types::PlaybookDescriptionType, null: true,
                                                                  method: :playbook_description_localized
 
-    field :playbook_plays, [Types::PlaybookPlayType], null: true,
-                                                      method: :playbook_play_with_slug_list
+    field :playbook_plays, [Types::PlaybookPlayType], null: true
+    def playbook_plays
+      returned_list = []
+      object.playbook_plays.each do |playbook_play|
+        playbook_play_hash = playbook_play.attributes
+        playbook_play_hash['playbook_slug'] = object.slug
+        playbook_play_hash['play_slug'] = playbook_play.play.slug
+        playbook_play_hash['play_name'] = playbook_play.play.name
+        returned_list << playbook_play_hash
+      end
+      returned_list
+    end
 
     field :plays, [Types::PlayType], null: true
     field :owned_by, String, null: false
