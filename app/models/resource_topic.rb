@@ -9,4 +9,12 @@ class ResourceTopic < ApplicationRecord
         ->(name) { where('LOWER(resource_topics.name) like LOWER(?)', "%#{name}%") }
   scope :name_and_slug_search,
         -> (name, slug) { where('resource_topics.name = ? OR resource_topics.slug = ?', name, slug) }
+
+  def image_file
+    if File.exist?(File.join('public', 'assets', 'building-blocks', "#{slug}.svg"))
+      "/assets/resource-topics/#{slug}.svg"
+    else
+      '/assets/resource-topics/resource-topic-placeholder.svg'
+    end
+  end
 end

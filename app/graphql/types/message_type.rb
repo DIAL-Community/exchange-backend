@@ -19,7 +19,14 @@ module Types
     field :parsed_message, String, null: false
     def parsed_message
       current_user = context[:current_user]
+      return message_template if current_user.nil?
+
+      current_contact = Contact.find_by(email: current_user.email)
       object.message_template
+            # Replace with current user's name or fallback to username if contact is nil.
+            .gsub('%{user_name}%', current_contact&.name)
+            .gsub('%{user_name}%', current_user.username)
+            # Replace other template literal available for the message object.
             .gsub('%{current_date}%', object.created_at.strftime('%m/%d/%Y'))
             .gsub('%{current_time}%', object.created_at.strftime('%H:%M:%S %:z'))
             .gsub('%{current_datetime}%', object.created_at.strftime('%m/%d/%Y %H:%M:%S %:z'))

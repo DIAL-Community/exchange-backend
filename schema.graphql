@@ -60,7 +60,7 @@ type BuildingBlock {
   category: String
   govStackEntity: Boolean!
   id: ID!
-  imageFile: String
+  imageFile: String!
   maturity: String
   name: String!
   parsedDescription: String
@@ -216,13 +216,13 @@ type Contact {
   biography: String
   email: String!
   id: ID!
-  imageFile: String
-  mainContact: Boolean
+  imageFile: String!
+  mainContact: Boolean!
   name: String!
   organizations: [Organization!]!
   slug: String!
   socialNetworkingServices: JSON
-  source: String
+  source: String!
   title: String
 }
 
@@ -830,7 +830,7 @@ type Handbook {
   handbookDescriptions: [HandbookDescription!]
   handbookPages: [HandbookPage!]
   id: ID!
-  imageFile: String
+  imageFile: String!
   maturity: String
   name: String!
   pdfUrl: String
@@ -1008,7 +1008,7 @@ type Mutation {
   createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
   createResource(authors: [JSON!] = [], description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopics: [String!] = [], resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, sourceLogoFile: Upload, sourceName: String = null, sourceWebsite: String = null): CreateResourcePayload
-  createResourceTopic(description: String, name: String!, parentTopicId: ID, slug: String!): CreateResourceTopicPayload
+  createResourceTopic(description: String, imageFile: Upload, name: String!, parentTopicId: ID, slug: String!): CreateResourceTopicPayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
@@ -1145,7 +1145,7 @@ type Opportunity {
   description: String!
   govStackEntity: Boolean!
   id: ID!
-  imageFile: String
+  imageFile: String!
   name: String!
   openingDate: ISO8601Date
   opportunityStatus: String!
@@ -1173,7 +1173,7 @@ type Organization {
   haveOwner: Boolean!
   heroFile: String
   id: ID!
-  imageFile: String
+  imageFile: String!
   isEndorser: Boolean
   isMni: Boolean
   name: String!
@@ -1291,7 +1291,7 @@ type Play {
   createdAt: ISO8601DateTime!
   draft: Boolean!
   id: ID!
-  imageFile: String
+  imageFile: String!
   maturity: String
   name: String!
   playDescription: PlayDescription
@@ -1351,8 +1351,7 @@ type Playbook {
   createdAt: ISO8601DateTime!
   draft: Boolean!
   id: ID!
-  imageFile: String
-  maturity: String
+  imageFile: String!
   name: String!
   ownedBy: String!
   phases: JSON!
@@ -1867,6 +1866,7 @@ type Resource {
 
 type ResourceTopic {
   id: ID!
+  imageFile: String!
   name: String!
   parentTopic: ResourceTopic
   resourceTopicDescription: ResourceTopicDescription
@@ -1934,7 +1934,7 @@ type StarredObject {
 
 type SustainableDevelopmentGoal {
   id: ID!
-  imageFile: String
+  imageFile: String!
   longTitle: String!
   name: String!
   number: Int!
@@ -1944,7 +1944,7 @@ type SustainableDevelopmentGoal {
 
 type SustainableDevelopmentGoalTarget {
   id: ID!
-  imageFile: String
+  imageFile: String!
   name: String!
   sdg: SustainableDevelopmentGoal!
   sdgNumber: String!
@@ -2448,7 +2448,7 @@ type UseCase {
   buildingBlocks: [BuildingBlock!]
   govStackEntity: Boolean!
   id: ID!
-  imageFile: String
+  imageFile: String!
   markdownUrl: String
   maturity: String!
   name: String!

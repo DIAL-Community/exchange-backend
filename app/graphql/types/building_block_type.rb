@@ -12,7 +12,8 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :image_file, String, null: true
+    field :image_file, String, null: false
+
     field :maturity, String, null: true
     field :category, String, null: true
     field :spec_url, String, null: true

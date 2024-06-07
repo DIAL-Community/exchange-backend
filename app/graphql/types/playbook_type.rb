@@ -34,12 +34,14 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :draft, Boolean, null: false
+    field :image_file, String, null: false
+
     field :tags, GraphQL::Types::JSON, null: false
     field :phases, GraphQL::Types::JSON, null: false
+
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :maturity, String, null: true
-    field :image_file, String, null: true
+
     field :author, String, null: true
 
     field :playbook_descriptions, [Types::PlaybookDescriptionType], null: true
