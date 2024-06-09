@@ -15,6 +15,24 @@ module Queries
   end
 
   class ContactQuery < Queries::BaseQuery
+    argument :slug, String, required: true
+    argument :source, String, required: true, default_value: 'exchange'
+
+    type Types::ContactType, null: true
+
+    def resolve(slug:, source:)
+      # Only logged in user can execute this graph query.
+      return nil if context[:current_user].nil?
+
+      current_user_slug = context[:current_user].slug
+      # Prevent accessing other contact if the current context is not an admin user.
+      return nil if !an_admin && !an_adli_admin && current_user_slug != slug
+
+      Contact.find_by(slug:, source:)
+    end
+  end
+
+  class UserContactQuery < Queries::BaseQuery
     argument :email, String, required: true
     argument :source, String, required: true, default_value: 'exchange'
 

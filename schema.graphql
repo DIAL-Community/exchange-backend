@@ -1556,7 +1556,7 @@ type Query {
   city(slug: String!): City
   comments(commentObjectId: Int!, commentObjectType: String!): [Comment!]!
   compareProducts(slugs: [String!]!): JSON!
-  contact(email: String!, source: String! = "exchange"): Contact
+  contact(slug: String!, source: String! = "exchange"): Contact
   contacts(search: String = ""): [Contact!]!
   countComments(commentObjectId: Int!, commentObjectType: String!): Int!
   countries(search: String = ""): [Country!]!
@@ -1805,6 +1805,7 @@ type Query {
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User
   userAuthenticationTokenCheck(userAuthenticationToken: String!, userId: Int!): Boolean!
+  userContact(email: String!, source: String! = "exchange"): Contact
   userEmailCheck(email: String!): Boolean!
   userRoles: JSON!
   users(search: String = ""): [User!]!
