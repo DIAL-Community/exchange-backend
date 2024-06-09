@@ -14,6 +14,17 @@ module Queries
     end
   end
 
+  class HubContactsQuery < Queries::BaseQuery
+    argument :search, String, required: false, default_value: ''
+    type [Types::ContactType], null: false
+
+    def resolve(search:)
+      contacts = Contact.order(:name)
+      contacts = contacts.name_contains(search) unless search.blank?
+      contacts.where(source: DPI_TENANT_NAME)
+    end
+  end
+
   class ContactQuery < Queries::BaseQuery
     argument :slug, String, required: true
     argument :source, String, required: true, default_value: 'exchange'
@@ -33,6 +44,7 @@ module Queries
   end
 
   class UserContactQuery < Queries::BaseQuery
+    # User and contact object connected using the email field.
     argument :email, String, required: true
     argument :source, String, required: true, default_value: 'exchange'
 

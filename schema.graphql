@@ -214,7 +214,8 @@ type Comment {
 
 type Contact {
   biography: String
-  email: String!
+  email: String
+  extendedData: JSON
   id: ID!
   imageFile: String!
   mainContact: Boolean!
@@ -1568,6 +1569,8 @@ type Query {
   exportPageContents(locale: String = "en", pageIds: [Int!]!): ExportedPdf!
   handbook(slug: String!): Handbook!
   handbooks: [Handbook!]!
+  hubContact(email: String!, source: String! = "exchange"): Contact
+  hubContacts(search: String = ""): [Contact!]!
   me: User!
   message(slug: String!): Message
   messages(search: String = ""): [Message!]!
@@ -1805,7 +1808,6 @@ type Query {
   useCasesSteps(search: String = ""): [UseCaseStep!]!
   user(userId: String!): User
   userAuthenticationTokenCheck(userAuthenticationToken: String!, userId: Int!): Boolean!
-  userContact(email: String!, source: String! = "exchange"): Contact
   userEmailCheck(email: String!): Boolean!
   userRoles: JSON!
   users(search: String = ""): [User!]!

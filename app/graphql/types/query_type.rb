@@ -176,8 +176,9 @@ module Types
     field :paginated_contacts, resolver: Paginated::PaginatedContacts
     field :pagination_attribute_contact, resolver: Paginated::PaginationAttributeContact
     field :contacts, resolver: Queries::ContactsQuery
+    field :hub_contacts, resolver: Queries::HubContactsQuery
     field :contact, resolver: Queries::ContactQuery
-    field :user_contact, resolver: Queries::UserContactQuery
+    field :hub_contact, resolver: Queries::UserContactQuery
 
     field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
     field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
