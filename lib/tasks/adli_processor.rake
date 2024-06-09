@@ -1,0 +1,148 @@
+# frozen_string_literal: true
+
+namespace :adli_processor do
+  desc 'Read ADLI questionaire spredsheet answers and build user & contact records.'
+  task parse_adli_file: :environment do
+    workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')
+    workbook.default_sheet = workbook.sheets.first
+
+    worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+    puts "Worksheet headers: #{worksheet_headers.inspect}."
+
+    2.upto(workbook.last_row) do |row_count|
+      current_row = workbook.row(row_count)
+      current_row_sanitized = current_row.map { |cell| cell.to_s.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+      current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
+
+      email_address = current_row_data['Email address:'].downcase
+      puts "Processing row with email address: #{email_address}."
+
+      existing_user = User.find_by(email: email_address)
+      existing_contact = Contact.find_by(email: email_address)
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        if existing_user.nil?
+          puts "  Using generated password: #{generate_password(email_address.split('@').first)}."
+          existing_user = User.new(
+            email: email_address,
+            username: email_address,
+            password: generate_password(email_address.split('@').first),
+            password_confirmation: generate_password(email_address.split('@').first),
+            confirmed_at: Time.now
+          )
+          existing_user.save!
+        end
+
+        # Ensure user will be assigned the 'adli_user' role.
+        existing_user.roles << 'adli_user' if existing_user.roles.exclude?('adli_user')
+        existing_user.save!
+
+        if existing_contact.nil?
+          existing_contact = Contact.new(email: email_address, slug: reslug_em(email_address))
+        end
+
+        if existing_contact.name != current_row_data['Full Name:'] ||
+          existing_contact.email != current_row_data['Email address:']
+          existing_contact.slug = reslug_em(email_address)
+        end
+
+        existing_contact.source = DPI_TENANT_NAME
+        existing_contact.name = current_row_data['Full Name:'].titleize
+        existing_contact.title = current_row_data['Designation:']
+
+        linked_profile_url = current_row_data['LinkedIn Profile Link:']
+        update_social_networking_service(existing_contact, 'linkedin', linked_profile_url)
+
+        phone_number_title = 'If you consent to be added to a Whatsapp Group with fellow cohort members, please '\
+          'share your mobile number (with country code):'
+        phone_number_value = current_row_data[phone_number_title]
+        update_social_networking_service(existing_contact, 'phone', phone_number_value)
+
+        organization = current_row_data['Organization:']
+        update_extended_data(existing_contact, 'organizations', organization)
+        focus_country = current_row_data['Country or Region of Focus:']
+        update_extended_data(existing_contact, 'countries', focus_country)
+
+        consent_header_title = 'We are creating an ADLI Participant Directory on the DIAL Resource Hub website to ' \
+          'profile each participant. This will be publicly viewable. Do you consent to your name, organization, ' \
+          'designation, and'
+        consent_value = current_row_data[consent_header_title]
+        update_extended_data(existing_contact, 'consent', consent_value)
+
+        existing_contact.save!
+        successful_operation = true
+      end
+
+      if successful_operation
+        puts "  Successfully created user: #{existing_user.id}:#{existing_user.email}."
+        puts "  Associated contact record: #{existing_contact.id}:#{existing_contact.name}."
+      end
+    end
+  end
+
+  def update_extended_data(contact, extended_data_key, extended_data_value)
+    extended_data_entry = {
+      key: extended_data_key,
+      value: extended_data_value
+    }
+
+    existing_entry_index = contact.extended_data.index { |e| e['key'] == extended_data_key }
+    if existing_entry_index.nil?
+      contact.extended_data << extended_data_entry
+    else
+      contact.extended_data[existing_entry_index] = extended_data_entry
+    end
+  end
+
+  def update_social_networking_service(contact, sns_name, sns_value)
+    sns_entry = {
+      name: sns_name,
+      value: sns_value
+    }
+
+    existing_entry_index = contact.social_networking_services.index { |sns| sns['name'] == sns_name }
+    if existing_entry_index.nil?
+      contact.social_networking_services << sns_entry
+    else
+      contact.social_networking_services[existing_entry_index] = sns_entry
+    end
+  end
+
+  def generate_password(user_username)
+    nato_phonetic_alphabet = {
+      'A' => 'Alpha',
+      'B' => 'Bravo',
+      'C' => 'Charlie',
+      'D' => 'Delta',
+      'E' => 'Echo',
+      'F' => 'Foxtrot',
+      'G' => 'Golf',
+      'H' => 'Hotel',
+      'I' => 'India',
+      'J' => 'Juliett',
+      'K' => 'Kilo',
+      'L' => 'Lima',
+      'M' => 'Mike',
+      'N' => 'November',
+      'O' => 'Oscar',
+      'P' => 'Papa',
+      'Q' => 'Quebec',
+      'R' => 'Romeo',
+      'S' => 'Sierra',
+      'T' => 'Tango',
+      'U' => 'Uniform',
+      'V' => 'Victor',
+      'W' => 'Whiskey',
+      'X' => 'X-ray',
+      'Y' => 'Yankee',
+      'Z' => 'Zulu'
+    }
+
+    random_passwords = []
+    user_username[0..5].split("").each do |letter|
+      random_passwords << nato_phonetic_alphabet[letter.upcase]
+    end
+    random_passwords.join(" ")
+  end
+end
