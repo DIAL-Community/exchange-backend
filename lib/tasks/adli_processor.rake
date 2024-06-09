@@ -96,9 +96,14 @@ namespace :adli_processor do
   end
 
   def update_social_networking_service(contact, sns_name, sns_value)
+    return if sns_name == 'linkedin' && !sns_value.downcase.include?('linkedin')
+
     sns_entry = {
       name: sns_name,
-      value: sns_value
+      value: sns_value.strip
+                      .sub(/^https?:\/\//i, '')
+                      .sub(/^https?\/\/:/i, '')
+                      .sub(/\/$/, '')
     }
 
     existing_entry_index = contact.social_networking_services.index { |sns| sns['name'] == sns_name }
