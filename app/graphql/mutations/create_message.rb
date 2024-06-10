@@ -66,6 +66,15 @@ module Mutations
           process_notification_email(message)
         end
 
+        MessageMailer
+          .with(
+            current_user: User.find_by(email: '--'),
+            current_contact: Contact.find_by(email: '--'),
+            current_message: message
+          )
+          .message_action_notification
+          .deliver_now
+
         successful_operation = true
       end
 
@@ -82,19 +91,6 @@ module Mutations
           errors: dataset.errors.full_messages
         }
       end
-    end
-
-    def process_notification_email(message)
-      email_subject = message.name
-
-      email_body = "Hi #{username}! <br />Your account have been created.<br />"
-
-      mail(
-        from: 'notifier@exchange.dial.global',
-        to: mail_to,
-        subject: email_subject,
-        body: email_body + default_text
-      ).deliver_now
     end
   end
 end
