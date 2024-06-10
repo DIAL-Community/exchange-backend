@@ -59,10 +59,39 @@ namespace :adli_processor do
         phone_number_value = current_row_data[phone_number_title]
         update_social_networking_service(existing_contact, 'phone', phone_number_value)
 
-        organization = current_row_data['Organization:']
-        update_extended_data(existing_contact, 'organizations', organization)
+        current_organization = current_row_data['Organization:']
+        unless current_organization.nil? || current_organization.empty?
+          organization_found = false
+          Organization.all.each do |organization|
+            next unless organization.name.downcase.include?(current_organization.downcase)
+
+            organization_found = true
+            update_extended_data(existing_contact, 'organization', organization.name)
+            update_extended_data(existing_contact, 'organization-slug', organization.slug)
+          end
+
+          unless organization_found
+            update_extended_data(existing_contact, 'organization', current_organization)
+            update_extended_data(existing_contact, 'organization-slug', nil)
+          end
+        end
+
         focus_country = current_row_data['Country or Region of Focus:']
-        update_extended_data(existing_contact, 'countries', focus_country)
+        unless focus_country.nil? || focus_country.empty?
+          country_found = false
+          Country.all.each do |country|
+            next unless country.name.downcase.include?(focus_country.downcase)
+
+            country_found = true
+            update_extended_data(existing_contact, 'country', country.name)
+            update_extended_data(existing_contact, 'country-slug', country.code)
+          end
+
+          unless country_found
+            update_extended_data(existing_contact, 'country', focus_country)
+            update_extended_data(existing_contact, 'country-slug', nil)
+          end
+        end
 
         consent_header_title = 'We are creating an ADLI Participant Directory on the DIAL Resource Hub website to ' \
           'profile each participant. This will be publicly viewable. Do you consent to your name, organization, ' \
