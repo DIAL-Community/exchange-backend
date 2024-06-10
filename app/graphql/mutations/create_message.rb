@@ -17,7 +17,7 @@ module Mutations
     argument :location, String, required: false
     argument :location_type, String, required: false
 
-    argument :send_email_notification, Boolean, required: true, default_value: false
+    argument :send_email_notification, Boolean, required: false, default_value: true
 
     field :message, Types::MessageType, null: true
     field :errors, [String], null: true
@@ -58,22 +58,22 @@ module Mutations
 
       message.created_by = context[:current_user]
 
+      message_is_fresh = message.new_record?
+
       successful_operation = false
       ActiveRecord::Base.transaction do
         message.save!
 
-        if send_email_notification
-          process_notification_email(message)
+        if send_email_notification && message_is_fresh
+          MessageMailer
+            .with(
+              current_user: User.find_by(email: '--'),
+              current_contact: Contact.find_by(email: '--'),
+              current_message: message
+            )
+            .message_action_notification
+            .deliver_now
         end
-
-        MessageMailer
-          .with(
-            current_user: User.find_by(email: '--'),
-            current_contact: Contact.find_by(email: '--'),
-            current_message: message
-          )
-          .message_action_notification
-          .deliver_now
 
         successful_operation = true
       end
