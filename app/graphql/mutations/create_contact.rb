@@ -52,7 +52,12 @@ module Mutations
         contact.biography = biography
         contact.source = source
 
-        contact.social_networking_services = social_networking_services
+        contact.social_networking_services = social_networking_services.each do |sns|
+          sns['value'] = sns['value'].strip
+                                     .sub(/^https?:\/\//i, '')
+                                     .sub(/^https?\/\/:/i, '')
+                                     .sub(/\/$/, '')
+        end
 
         assign_auditable_user(contact)
         contact.save!
