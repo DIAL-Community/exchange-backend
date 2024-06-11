@@ -108,7 +108,7 @@ namespace :adli_processor do
         unless focus_country.nil? || focus_country.empty?
           country_found = false
           Country.all.each do |country|
-            next unless country.name.downcase.include?(focus_country.downcase)
+            next unless focus_country.downcase.include?(country.name.downcase)
 
             country_found = true
             update_extended_data(existing_contact, 'country', country.name)
