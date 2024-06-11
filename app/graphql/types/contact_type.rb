@@ -26,11 +26,6 @@ module Types
     end
 
     field :extended_data, GraphQL::Types::JSON, null: true
-    def extended_data
-      return [] if context[:current_user].nil?
-      object.extended_data
-    end
-
     field :organizations, [Types::OrganizationType], null: false
   end
 end

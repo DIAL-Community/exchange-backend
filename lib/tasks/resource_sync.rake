@@ -123,22 +123,22 @@ namespace :resource_sync do
           tag_response_body.each do |tag_structure|
             tag_name = tag_structure['name']
             tag = Tag.find_by(slug: reslug_em(tag_name))
-            if tag.nil?
-              tag = Tag.find_by(name: tag_name)
-            end
-
-            if tag.nil?
-              tag = Tag.new(name: tag_name, slug: reslug_em(tag_name))
-            end
-
+            tag = Tag.find_by(name: tag_name) if tag.nil?
+            tag = Tag.new(name: tag_name, slug: reslug_em(tag_name)) if tag.nil?
             # Save the new resource topic to the database.
             tag.save!
-
+            # Assign tag to the resource.
             resource_tags << tag.name
 
             next unless DEFAULT_RESOURCE_TOPICS.include?(tag_name)
 
             resource_topic = ResourceTopic.find_by(name: tag_name)
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.new(name: tag_name, slug: reslug_em(tag_name))
+            end
+            # Save the new resource topic to the database.
+            resource_topic.save!
+            # Assign resource topic to the resource.
             resource_topics << resource_topic.name unless resource_topic.nil?
           end
         end

@@ -23,14 +23,14 @@ module Queries
     type Types::UserType, null: true
 
     def resolve(user_id:)
-      return nil unless an_admin || an_adli_admin
+      # Only logged in user can execute this graph query.
+      return nil if context[:current_user].nil?
 
-      user = User.where(id: user_id)
-      if an_adli_admin
-        user = user.where('roles && ARRAY[?]::user_role[]', ['adli_admin', 'adli_user'])
-      end
-      user = user.first
-      user
+      current_user_id = context[:current_user].id
+      # Prevent accessing other contact if the current context is not an admin user.
+      return nil if !an_admin && !an_adli_admin && current_user_id.to_s != user_id
+
+      User.find_by(id: user_id.to_i)
     end
   end
 
