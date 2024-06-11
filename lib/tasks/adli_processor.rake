@@ -1,6 +1,34 @@
 # frozen_string_literal: true
 
 namespace :adli_processor do
+  desc 'Read files for contacts and try to find matching contacts in the database.'
+  task match_contact_with_asset: :environment do
+    contact_assets_dir = './public/assets/contacts/'
+    Dir.glob("#{contact_assets_dir}*.[jp]*") do |filename|
+      puts "Processing #{filename}..."
+      # file_extension = File.extname(filename)
+      contact_name = filename.gsub(contact_assets_dir, '')
+
+      existing_contact = nil
+      Contact.all.each do |contact|
+        first_name, last_name = contact.name.split(' ')
+        next if first_name.nil? || last_name.nil?
+
+        if contact_name.include?(first_name) && contact_name.include?(last_name)
+          existing_contact = contact
+          break
+        end
+      end
+
+      if existing_contact.nil?
+        puts "  Contact #{contact_name} not found in the database."
+      else
+        puts "  Contact #{contact_name} found in the database. Renaming file..."
+        File.rename(filename, contact_assets_dir + existing_contact.slug + '.jpg')
+      end
+    end
+  end
+
   desc 'Read ADLI questionaire spredsheet answers and build user & contact records.'
   task parse_adli_file: :environment do
     workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')
