@@ -17,7 +17,9 @@ class User < ApplicationRecord
     product_user: 'product_user',
     mni: 'mni',
     content_writer: 'content_writer',
-    content_editor: 'content_editor'
+    content_editor: 'content_editor',
+    adli_admin: 'adli_admin',
+    adli_user: 'adli_user'
   }
 
   after_initialize :set_default_role, if: :new_record?

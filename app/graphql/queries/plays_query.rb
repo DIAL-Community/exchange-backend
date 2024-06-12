@@ -4,10 +4,11 @@ module Queries
   class PlaysQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
     argument :playbook_slug, String, required: false, default_value: ''
+    argument :owner, String, required: true
     type [Types::PlayType], null: false
 
-    def resolve(search:, playbook_slug:)
-      plays = Play.all
+    def resolve(search:, owner:, playbook_slug:)
+      plays = Play.where(owned_by: owner)
       unless playbook_slug.blank?
         plays = plays.joins(:playbooks)
                      .where(playbooks: { slug: playbook_slug })
@@ -21,37 +22,37 @@ module Queries
 
   class PlayQuery < Queries::BaseQuery
     argument :slug, String, required: true
+    argument :owner, String, required: true
     type Types::PlayType, null: true
 
-    def resolve(slug:)
-      Play.find_by(slug:)
+    def resolve(slug:, owner:)
+      Play.find_by(slug:, owned_by: owner)
     end
   end
 
   class SearchPlaybookPlaysQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
     argument :slug, String, required: true
+    argument :owner, String, required: true
 
     type Types::PlayType.connection_type, null: false
 
-    def resolve(slug:)
-      Play.joins(:playbooks)
+    def resolve(slug:, owner:)
+      Play.where(owned_by: owner)
+          .joins(:playbooks)
           .where(playbooks: { slug: })
           .order('playbook_plays.play_order')
     end
   end
 
   class SearchPlaysQuery < Queries::BaseQuery
-    include ActionView::Helpers::TextHelper
-
     argument :search, String, required: false, default_value: ''
     argument :products, [String], required: false, default_value: []
+    argument :owner, String, required: true
 
     type Types::PlayType.connection_type, null: false
 
-    def resolve(search:, products:)
-      plays = Play.all.order(:name)
+    def resolve(search:, owner:, products:)
+      plays = Play.where(owned_by: owner).order(:name)
       if !search.nil? && !search.to_s.strip.empty?
         name_plays = plays.name_contains(search)
         desc_plays = plays.joins(:play_descriptions)

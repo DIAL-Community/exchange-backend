@@ -23,13 +23,38 @@ class Playbook < ApplicationRecord
     self.slug = reslug_em(name, 64)
   end
 
-  def playbook_play_with_slug_list
+  # Not needed, but adding it to make it balance with playbook plays
+  def all_plays
+    plays
+  end
+
+  def published_plays
+    plays.where(draft: false)
+  end
+
+  def all_playbook_plays
     returned_list = []
     playbook_plays.each do |playbook_play|
       playbook_play_hash = playbook_play.attributes
       playbook_play_hash['playbook_slug'] = slug
       playbook_play_hash['play_slug'] = playbook_play.play.slug
       playbook_play_hash['play_name'] = playbook_play.play.name
+      returned_list << playbook_play_hash
+    end
+    returned_list
+  end
+
+  def published_playbook_plays
+    returned_list = []
+    playbook_plays.each do |playbook_play|
+      current_play = playbook_play.play
+      next if current_play.draft
+
+      playbook_play_hash = playbook_play.attributes
+      playbook_play_hash['play_slug'] = current_play.slug
+      playbook_play_hash['play_name'] = current_play.name
+      playbook_play_hash['playbook_slug'] = slug
+      playbook_play_hash['playbook_name'] = name
       returned_list << playbook_play_hash
     end
     returned_list

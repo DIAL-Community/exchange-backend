@@ -12,8 +12,8 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :image_file, String, null: true
     field :website, String, null: true
+    field :image_file, String, null: false
 
     field :is_mni, Boolean, null: true
     field :is_endorser, Boolean, null: true

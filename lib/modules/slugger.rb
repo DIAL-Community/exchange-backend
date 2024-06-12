@@ -14,7 +14,7 @@ module Modules
 
     def reslug_em(input, max_length = 64)
       slug = input
-             .split(/\s+/)
+             .split(/\s+|[-+@.]/)
              .map { |part| part.gsub(/[^A-Za-z0-9]/, '').downcase }
              .join('-')
       slug = slug.slice(0, max_length) if slug.length > max_length

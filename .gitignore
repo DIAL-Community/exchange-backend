@@ -106,3 +106,5 @@ lib/tasks/local_setup.rake
 
 /lib/assets/credentials.json
 /lib/assets/token.yaml
+
+ADLI Welcome Questions.xlsx

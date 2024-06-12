@@ -11,27 +11,53 @@ module Mutations
     argument :email, String, required: true
     argument :title, String, required: false, default_value: nil
 
+    argument :source, String, required: true, default_value: 'exchange'
+    argument :biography, String, required: false, default_value: nil
+    argument :social_networking_services, GraphQL::Types::JSON, required: false, default_value: []
+
     field :contact, Types::ContactType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, email:, title:, slug:)
-      unless an_admin
+    def resolve(name:, email:, title:, slug:, source:, biography:, social_networking_services:)
+      if context[:current_user].nil?
         return {
           contact: nil,
-          errors: ['Must be an admin to create / edit a contact']
+          errors: ['Must be an logged in to create / edit contact.']
+        }
+      end
+
+      current_user_email = context[:current_user].email
+      if !an_admin && !an_adli_admin && current_user_email != email
+        return {
+          contact: nil,
+          errors: ['User only allowed to edit / create their own contact.']
         }
       end
 
       # Prevent duplicating contact by the name of the contact.
       contact = Contact.find_by(slug:)
       contact = Contact.find_by(email:) if contact.nil?
-      contact = Contact.new(name:, email:, title:, slug: reslug_em(name)) if contact.nil?
+      contact = Contact.new(name:, email:, title:, slug: reslug_em("#{name}-#{email}")) if contact.nil?
+
+      if contact.name != name
+        contact.slug = reslug_em("#{name}-#{email}")
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do
         contact.name = name
         contact.email = email
         contact.title = title
+
+        contact.biography = biography
+        contact.source = source
+
+        contact.social_networking_services = social_networking_services.each do |sns|
+          sns['value'] = sns['value'].strip
+                                     .sub(/^https?:\/\//i, '')
+                                     .sub(/^https?\/\/:/i, '')
+                                     .sub(/\/$/, '')
+        end
 
         assign_auditable_user(contact)
         contact.save!
