@@ -32,7 +32,8 @@ class Organization < ApplicationRecord
 
   has_many :organization_products,
            after_add: :association_add,
-          before_remove: :association_remove
+           before_remove: :association_remove,
+           dependent: :delete_all
   has_many :products,
            through: :organization_products,
            after_add: :association_add,
@@ -40,7 +41,8 @@ class Organization < ApplicationRecord
 
   has_many :organization_datasets,
            after_add: :association_add,
-          before_remove: :association_remove
+           before_remove: :association_remove,
+           dependent: :delete_all
   has_many :datasets,
            through: :organization_datasets,
            after_add: :association_add,

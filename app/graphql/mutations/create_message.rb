@@ -65,14 +65,17 @@ module Mutations
         message.save!
 
         if send_email_notification && message_is_fresh
-          MessageMailer
-            .with(
-              current_user: User.find_by(email: '--'),
-              current_contact: Contact.find_by(email: '--'),
-              current_message: message
-            )
-            .message_action_notification
-            .deliver_now
+          contacts = Contact.where(source: DPI_TENANT_NAME)
+          contacts.each do |contact|
+            MessageMailer
+              .with(
+                current_user: User.find_by(email: contact.email),
+                current_contact: contact,
+                current_message: message
+              )
+              .message_action_notification
+              .deliver_now
+          end
         end
 
         successful_operation = true
