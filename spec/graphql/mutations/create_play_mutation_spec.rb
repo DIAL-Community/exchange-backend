@@ -9,6 +9,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       mutation CreatePlay (
         $name: String!
         $slug: String!
+        $owner: String!
         $description: String!
         $playbookSlug: String
         $productSlugs: [String!]
@@ -17,6 +18,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
         createPlay (
           name: $name
           slug: $slug
+          owner: $owner
           description: $description
           playbookSlug: $playbookSlug
           productSlugs: $productSlugs
@@ -43,16 +45,18 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreatePlay).to(receive(:an_admin).and_return(true))
+    user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
     create(:product, name: "Some Product", slug: "some-product")
     create(:building_block, name: "Some BB", slug: "some-bb")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Description",
         productSlugs: ["some-product"],
         buildingBlockSlugs: ["some-bb"]
@@ -77,7 +81,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
     create(:product, name: "Some Product", slug: "some-product")
     create(:building_block, name: "Some BB", slug: "some-bb")
 
-    current_playbook = create(:playbook, id: 1000, name: 'Some Playbook', slug: 'some-playbook')
+    current_playbook = create(:playbook, id: 100, name: 'Some Playbook', slug: 'some-playbook', owned_by: 'Some Owner')
     expect(current_playbook.plays.length).to(eq(0))
 
     result = execute_graphql_as_user(
@@ -86,6 +90,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Description",
         playbookSlug: 'some-playbook',
         productSlugs: ["some-product"],
@@ -113,6 +118,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Updated Description",
         playbookSlug: 'some-playbook',
         productSlugs: ["some-product"],
@@ -137,16 +143,18 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
   end
 
   it 'is successful - user is logged in as content editor' do
-    expect_any_instance_of(Mutations::CreatePlay).to(receive(:a_content_editor).and_return(true))
+    user = create(:user, email: 'user@gmail.com', roles: [:content_editor])
 
     create(:product, name: "Some Product", slug: "some-product")
     create(:building_block, name: "Some BB", slug: "some-bb")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Description",
         productSlugs: ["some-product"],
         buildingBlockSlugs: ["some-bb"]
@@ -174,6 +182,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Description",
         productSlugs: ["some-product"],
         buildingBlockSlugs: ["some-bb"]
@@ -198,6 +207,7 @@ RSpec.describe(Mutations::CreatePlay, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
+        owner: "Some Owner",
         description: "Some Description",
         productSlugs: ["some-product"],
         buildingBlockSlugs: ["some-bb"]

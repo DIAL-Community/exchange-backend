@@ -13,6 +13,13 @@ namespace :resource_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
+    DEFAULT_RESOURCE_TOPICS = [
+      'Enabling Environment',
+      'Oversight & Accountability',
+      'Participation & Agency',
+      'Technical Insights'
+    ]
+
     # Some of the resources' content is not returned by the wordpress API, so we need to
     # fetch them from the wordpress site and then parse it with nokogiri and then  sync
     # them with the database.
@@ -98,6 +105,7 @@ namespace :resource_sync do
       wp_base = 'https://dial.global'
       wp_tag_base = '/wp-json/wp/v2/tags'
 
+      resource_tags = []
       resource_topics = []
       still_seeing_tags = true
       while still_seeing_tags
@@ -113,25 +121,31 @@ namespace :resource_sync do
           still_seeing_tags = false
         else
           tag_response_body.each do |tag_structure|
-            resource_topic_name = tag_structure['name']
-            resource_topic = ResourceTopic.find_by(slug: reslug_em(resource_topic_name))
-            if resource_topic.nil?
-              resource_topic = ResourceTopic.find_by(name: resource_topic_name)
-            end
+            tag_name = tag_structure['name']
+            tag = Tag.find_by(slug: reslug_em(tag_name))
+            tag = Tag.find_by(name: tag_name) if tag.nil?
+            tag = Tag.new(name: tag_name, slug: reslug_em(tag_name)) if tag.nil?
+            # Save the new resource topic to the database.
+            tag.save!
+            # Assign tag to the resource.
+            resource_tags << tag.name
 
-            if resource_topic.nil?
-              resource_topic = ResourceTopic.new(name: resource_topic_name, slug: reslug_em(resource_topic_name))
-            end
+            next unless DEFAULT_RESOURCE_TOPICS.include?(tag_name)
 
+            resource_topic = ResourceTopic.find_by(name: tag_name)
+            if resource_topic.nil?
+              resource_topic = ResourceTopic.new(name: tag_name, slug: reslug_em(tag_name))
+            end
             # Save the new resource topic to the database.
             resource_topic.save!
-
-            resource_topics << resource_topic.name
+            # Assign resource topic to the resource.
+            resource_topics << resource_topic.name unless resource_topic.nil?
           end
         end
 
         tag_current_page += 1
       end
+      resource.tags = resource_tags
       resource.resource_topics = resource_topics
 
       authors = post_structure['_links']['author']
@@ -183,13 +197,6 @@ namespace :resource_sync do
     csv_data = CSV.parse(File.read(file_path), headers: true)
 
     csv_data.each_with_index do |dpi_resource, _index|
-      puts "Processing resource 1: #{dpi_resource[1]}."
-      puts "Processing resource 2: #{dpi_resource[2]}."
-      puts "Processing resource 3: #{dpi_resource[3]}."
-      puts "Processing resource 4: #{dpi_resource[4]}."
-      puts "Processing resource 5: #{dpi_resource[5]}."
-      puts "Processing resource 6: #{dpi_resource[6]}."
-
       resource_name = dpi_resource[1]
       tracking_task_log(task_name, "Processing resource: #{resource_name}.")
 

@@ -8,6 +8,7 @@ module Mutations
 
     argument :play_slug, String, required: true
     argument :move_slug, String, required: false
+    argument :owner, String, required: true
     argument :name, String, required: true
     argument :description, String, required: true
     argument :resources, GraphQL::Types::JSON, required: false, default_value: []
@@ -15,15 +16,15 @@ module Mutations
     field :move, Types::MoveType, null: true
     field :errors, [String], null: false
 
-    def resolve(play_slug:, move_slug:, name:, description:, resources:)
-      unless an_admin || a_content_editor
+    def resolve(play_slug:, move_slug:, owner:, name:, description:, resources:)
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           move: nil,
           errors: ['Not allowed to create a move.']
         }
       end
 
-      play = Play.find_by(slug: play_slug)
+      play = Play.find_by(slug: play_slug, owned_by: owner)
       if play.nil?
         return {
           move: nil,
@@ -31,10 +32,17 @@ module Mutations
         }
       end
 
+      if an_adli_admin && play.owned_by != DPI_TENANT_NAME
+        return {
+          move: nil,
+          errors: ['Must be admin or content editor to edit non module information.']
+        }
+      end
+
       play_move = PlayMove.find_by(play:, slug: move_slug)
       if play_move.nil?
         play_move = PlayMove.new(name:)
-        play_move.slug = reslug_em(name)
+        play_move.slug = reslug_em("#{play.name} #{name}")
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.
@@ -48,7 +56,7 @@ module Mutations
       # Re-slug if the name is updated (not the same with the one in the db).
       if play_move.name != name
         play_move.name = name
-        play_move.slug = reslug_em(name)
+        play_move.slug = reslug_em("#{play.name} #{name}")
 
         if PlayMove.where(slug: play_move.slug).count.positive?
           # Check if we need to add _dup to the slug.

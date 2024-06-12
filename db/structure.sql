@@ -134,7 +134,8 @@ CREATE TYPE fao.comment_object_type AS ENUM (
     'COUNTRY',
     'CITY',
     'CONTACT',
-    'RESOURCE'
+    'RESOURCE',
+    'PLAY'
 );
 
 
@@ -352,7 +353,9 @@ CREATE TYPE fao.user_role AS ENUM (
     'mni',
     'content_writer',
     'content_editor',
-    'dataset_user'
+    'dataset_user',
+    'adli_admin',
+    'adli_user'
 );
 
 
@@ -474,7 +477,8 @@ CREATE TYPE public.comment_object_type AS ENUM (
     'COUNTRY',
     'CITY',
     'CONTACT',
-    'RESOURCE'
+    'RESOURCE',
+    'PLAY'
 );
 
 
@@ -692,7 +696,9 @@ CREATE TYPE public.user_role AS ENUM (
     'mni',
     'content_writer',
     'content_editor',
-    'dataset_user'
+    'dataset_user',
+    'adli_admin',
+    'adli_user'
 );
 
 
@@ -1134,6 +1140,41 @@ ALTER SEQUENCE fao.category_indicators_id_seq OWNED BY fao.category_indicators.i
 
 
 --
+-- Name: chatbot_conversations; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.chatbot_conversations (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    session_identifier character varying NOT NULL,
+    chatbot_question character varying NOT NULL,
+    chatbot_answer character varying NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.chatbot_conversations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.chatbot_conversations_id_seq OWNED BY fao.chatbot_conversations.id;
+
+
+--
 -- Name: cities; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -1284,7 +1325,11 @@ CREATE TABLE fao.contacts (
     email character varying,
     title character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying DEFAULT 'exchange'::character varying,
+    extended_data jsonb DEFAULT '[]'::jsonb
 );
 
 
@@ -1983,6 +2028,45 @@ CREATE SEQUENCE fao.handbooks_id_seq
 --
 
 ALTER SEQUENCE fao.handbooks_id_seq OWNED BY fao.handbooks.id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.messages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    message_type character varying NOT NULL,
+    message_template character varying NOT NULL,
+    message_datetime timestamp(6) without time zone NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    location character varying,
+    location_type character varying,
+    created_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.messages_id_seq OWNED BY fao.messages.id;
 
 
 --
@@ -2770,7 +2854,8 @@ CREATE TABLE fao.playbooks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     draft boolean DEFAULT true NOT NULL,
-    author character varying
+    author character varying,
+    owned_by character varying DEFAULT 'public'::character varying
 );
 
 
@@ -2816,7 +2901,9 @@ CREATE TABLE fao.plays (
     tags character varying[] DEFAULT '{}'::character varying[],
     version character varying DEFAULT '1.0'::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    owned_by character varying DEFAULT 'public'::character varying,
+    draft boolean DEFAULT false
 );
 
 
@@ -4595,6 +4682,40 @@ ALTER SEQUENCE fao.user_events_id_seq OWNED BY fao.user_events.id;
 
 
 --
+-- Name: user_messages; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.user_messages (
+    id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    received_by_id bigint NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.user_messages_id_seq OWNED BY fao.user_messages.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -4611,7 +4732,6 @@ CREATE TABLE fao.users (
     unconfirmed_email character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    role fao.user_role DEFAULT 'user'::fao.user_role,
     receive_backup boolean DEFAULT false,
     organization_id bigint,
     expired boolean,
@@ -5353,7 +5473,11 @@ CREATE TABLE public.contacts (
     email character varying,
     title character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying DEFAULT 'exchange'::character varying,
+    extended_data jsonb DEFAULT '[]'::jsonb
 );
 
 
@@ -6052,6 +6176,45 @@ CREATE SEQUENCE public.handbooks_id_seq
 --
 
 ALTER SEQUENCE public.handbooks_id_seq OWNED BY public.handbooks.id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.messages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    message_type character varying NOT NULL,
+    message_template character varying NOT NULL,
+    message_datetime timestamp(6) without time zone NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    location character varying,
+    location_type character varying,
+    created_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
 
 --
@@ -6839,7 +7002,8 @@ CREATE TABLE public.playbooks (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     draft boolean DEFAULT true NOT NULL,
-    author character varying
+    author character varying,
+    owned_by character varying DEFAULT 'public'::character varying
 );
 
 
@@ -6885,7 +7049,9 @@ CREATE TABLE public.plays (
     tags character varying[] DEFAULT '{}'::character varying[],
     version character varying DEFAULT '1.0'::character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    owned_by character varying DEFAULT 'public'::character varying,
+    draft boolean DEFAULT false
 );
 
 
@@ -8664,6 +8830,40 @@ ALTER SEQUENCE public.user_events_id_seq OWNED BY public.user_events.id;
 
 
 --
+-- Name: user_messages; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_messages (
+    id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    received_by_id bigint NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_messages_id_seq OWNED BY public.user_messages.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8680,7 +8880,6 @@ CREATE TABLE public.users (
     unconfirmed_email character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    role public.user_role DEFAULT 'user'::public.user_role,
     receive_backup boolean DEFAULT false,
     organization_id bigint,
     expired boolean,
@@ -8881,6 +9080,13 @@ ALTER TABLE ONLY fao.category_indicators ALTER COLUMN id SET DEFAULT nextval('fa
 
 
 --
+-- Name: chatbot_conversations id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations ALTER COLUMN id SET DEFAULT nextval('fao.chatbot_conversations_id_seq'::regclass);
+
+
+--
 -- Name: cities id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9053,6 +9259,13 @@ ALTER TABLE ONLY fao.handbook_questions ALTER COLUMN id SET DEFAULT nextval('fao
 --
 
 ALTER TABLE ONLY fao.handbooks ALTER COLUMN id SET DEFAULT nextval('fao.handbooks_id_seq'::regclass);
+
+
+--
+-- Name: messages id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages ALTER COLUMN id SET DEFAULT nextval('fao.messages_id_seq'::regclass);
 
 
 --
@@ -9546,6 +9759,13 @@ ALTER TABLE ONLY fao.user_events ALTER COLUMN id SET DEFAULT nextval('fao.user_e
 
 
 --
+-- Name: user_messages id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages ALTER COLUMN id SET DEFAULT nextval('fao.user_messages_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9823,6 +10043,13 @@ ALTER TABLE ONLY public.handbook_questions ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY public.handbooks ALTER COLUMN id SET DEFAULT nextval('public.handbooks_id_seq'::regclass);
+
+
+--
+-- Name: messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.messages_id_seq'::regclass);
 
 
 --
@@ -10316,6 +10543,13 @@ ALTER TABLE ONLY public.user_events ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: user_messages id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_messages ALTER COLUMN id SET DEFAULT nextval('public.user_messages_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -10430,6 +10664,14 @@ ALTER TABLE ONLY fao.category_indicator_descriptions
 
 ALTER TABLE ONLY fao.category_indicators
     ADD CONSTRAINT category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chatbot_conversations chatbot_conversations_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations
+    ADD CONSTRAINT chatbot_conversations_pkey PRIMARY KEY (id);
 
 
 --
@@ -10630,6 +10872,14 @@ ALTER TABLE ONLY fao.handbook_questions
 
 ALTER TABLE ONLY fao.handbooks
     ADD CONSTRAINT handbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -11201,6 +11451,14 @@ ALTER TABLE ONLY fao.user_events
 
 
 --
+-- Name: user_messages user_messages_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT user_messages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11526,6 +11784,14 @@ ALTER TABLE ONLY public.handbook_questions
 
 ALTER TABLE ONLY public.handbooks
     ADD CONSTRAINT handbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
 
 
 --
@@ -12097,6 +12363,14 @@ ALTER TABLE ONLY public.user_events
 
 
 --
+-- Name: user_messages user_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_messages
+    ADD CONSTRAINT user_messages_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12345,6 +12619,13 @@ CREATE INDEX index_category_indicators_on_rubric_category_id ON fao.category_ind
 
 
 --
+-- Name: index_chatbot_conversations_on_user_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_chatbot_conversations_on_user_id ON fao.chatbot_conversations USING btree (user_id);
+
+
+--
 -- Name: index_cities_on_province_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -12482,6 +12763,13 @@ CREATE INDEX index_handbook_pages_on_parent_page_id ON fao.handbook_pages USING 
 --
 
 CREATE INDEX index_handbook_questions_on_handbook_page_id ON fao.handbook_questions USING btree (handbook_page_id);
+
+
+--
+-- Name: index_messages_on_created_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_messages_on_created_by_id ON fao.messages USING btree (created_by_id);
 
 
 --
@@ -13126,6 +13414,20 @@ CREATE INDEX index_use_case_steps_on_use_case_id ON fao.use_case_steps USING btr
 --
 
 CREATE INDEX index_use_cases_on_sector_id ON fao.use_cases USING btree (sector_id);
+
+
+--
+-- Name: index_user_messages_on_message_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_message_id ON fao.user_messages USING btree (message_id);
+
+
+--
+-- Name: index_user_messages_on_received_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_received_by_id ON fao.user_messages USING btree (received_by_id);
 
 
 --
@@ -13815,6 +14117,13 @@ CREATE INDEX index_handbook_questions_on_handbook_page_id ON public.handbook_que
 
 
 --
+-- Name: index_messages_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_messages_on_created_by_id ON public.messages USING btree (created_by_id);
+
+
+--
 -- Name: index_move_descriptions_on_play_move_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -14459,6 +14768,20 @@ CREATE INDEX index_use_cases_on_sector_id ON public.use_cases USING btree (secto
 
 
 --
+-- Name: index_user_messages_on_message_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_message_id ON public.user_messages USING btree (message_id);
+
+
+--
+-- Name: index_user_messages_on_received_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_received_by_id ON public.user_messages USING btree (received_by_id);
+
+
+--
 -- Name: index_users_on_authentication_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -14878,6 +15201,14 @@ ALTER TABLE ONLY fao.product_classifications
 
 
 --
+-- Name: chatbot_conversations fk_rails_17f52fc61f; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.chatbot_conversations
+    ADD CONSTRAINT fk_rails_17f52fc61f FOREIGN KEY (user_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: use_case_steps fk_rails_1ab85a3bb6; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -15099,6 +15430,14 @@ ALTER TABLE ONLY fao.operator_services
 
 ALTER TABLE ONLY fao.opportunities
     ADD CONSTRAINT fk_rails_5f8d9a4134 FOREIGN KEY (origin_id) REFERENCES fao.origins(id);
+
+
+--
+-- Name: user_messages fk_rails_60e38b1531; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT fk_rails_60e38b1531 FOREIGN KEY (received_by_id) REFERENCES fao.users(id);
 
 
 --
@@ -15462,6 +15801,14 @@ ALTER TABLE ONLY fao.datasets_countries
 
 
 --
+-- Name: messages fk_rails_cd133c6420; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.messages
+    ADD CONSTRAINT fk_rails_cd133c6420 FOREIGN KEY (created_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -15515,6 +15862,14 @@ ALTER TABLE ONLY fao.play_moves
 
 ALTER TABLE ONLY fao.cities
     ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES fao.provinces(id);
+
+
+--
+-- Name: user_messages fk_rails_e3535a825c; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.user_messages
+    ADD CONSTRAINT fk_rails_e3535a825c FOREIGN KEY (message_id) REFERENCES fao.messages(id);
 
 
 --
@@ -16302,6 +16657,14 @@ ALTER TABLE ONLY public.opportunities
 
 
 --
+-- Name: user_messages fk_rails_60e38b1531; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_messages
+    ADD CONSTRAINT fk_rails_60e38b1531 FOREIGN KEY (received_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: organizations_countries fk_rails_61354fe2dd; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16662,6 +17025,14 @@ ALTER TABLE ONLY public.datasets_countries
 
 
 --
+-- Name: messages fk_rails_cd133c6420; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.messages
+    ADD CONSTRAINT fk_rails_cd133c6420 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -16715,6 +17086,14 @@ ALTER TABLE ONLY public.play_moves
 
 ALTER TABLE ONLY public.cities
     ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES public.provinces(id);
+
+
+--
+-- Name: user_messages fk_rails_e3535a825c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_messages
+    ADD CONSTRAINT fk_rails_e3535a825c FOREIGN KEY (message_id) REFERENCES public.messages(id);
 
 
 --
@@ -17438,6 +17817,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240203190751'),
 ('20240213054529'),
 ('20240306182144'),
-('20240404132644');
+('20240404132644'),
+('20240509183558'),
+('20240509191953'),
+('20240524211025'),
+('20240530150308'),
+('20240530154604'),
+('20240605130949'),
+('20240605184914'),
+('20240606205817'),
+('20240609191249');
 
 

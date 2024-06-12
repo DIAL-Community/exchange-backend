@@ -10,6 +10,7 @@ end
 gem 'actionpack-page_caching'
 gem 'will_paginate'
 
+gem 'roo'
 gem 'spreadsheet'
 gem 'google-apis-sheets_v4'
 

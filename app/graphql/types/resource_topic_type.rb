@@ -12,6 +12,7 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
+    field :image_file, String, null: false
     field :resource_topic_descriptions, [Types::ResourceTopicDescriptionType], null: true
     field :resource_topic_description, Types::ResourceTopicDescriptionType, null: true
     field :subtopics, [Types::ResourceTopicType], null: true

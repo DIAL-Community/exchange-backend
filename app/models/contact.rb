@@ -14,6 +14,14 @@ class Contact < ApplicationRecord
     self.slug = reslug_em(name, 64)
   end
 
+  def image_file
+    if File.exist?(File.join('public', 'assets', 'contacts', "#{slug}.jpg"))
+      "/assets/contacts/#{slug}.jpg"
+    else
+      '/assets/contacts/contact-placeholder.svg'
+    end
+  end
+
   def self_url(options = {})
     return "#{options[:api_path]}/contacts/#{slug}" if options[:api_path].present?
     return options[:item_path] if options[:item_path].present?

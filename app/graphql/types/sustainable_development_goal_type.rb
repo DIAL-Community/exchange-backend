@@ -7,7 +7,7 @@ module Types
     field :slug, String, null: false
     field :long_title, String, null: false
     field :number, Integer, null: false
-    field :image_file, String, null: true
+    field :image_file, String, null: false
 
     field :sdg_targets, [Types::SustainableDevelopmentGoalTargetType], null: false
   end

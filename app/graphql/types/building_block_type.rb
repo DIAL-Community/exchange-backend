@@ -12,7 +12,8 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :image_file, String, null: true
+    field :image_file, String, null: false
+
     field :maturity, String, null: true
     field :category, String, null: true
     field :spec_url, String, null: true
@@ -23,6 +24,7 @@ module Types
     field :building_block_description, Types::BuildingBlockDescriptionType, null: true,
           method: :building_block_description_localized
 
+    # First paragraph of the building block description
     field :parsed_description, String, null: true
     def parsed_description
       return if object.building_block_description_localized.nil?
