@@ -11,6 +11,12 @@ module Queries
       !context[:current_user].nil? && context[:current_user].roles.include?('admin')
     end
 
+    def an_adli_admin
+      return false if context[:current_user].nil?
+
+      context[:current_user].roles.include?('adli_admin')
+    end
+
     def a_content_editor
       !context[:current_user].nil? && context[:current_user].roles.include?('content_editor')
     end

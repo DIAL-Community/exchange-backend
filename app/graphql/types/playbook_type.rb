@@ -33,22 +33,65 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
+    field :draft, Boolean, null: false
+    field :image_file, String, null: false
+
     field :tags, GraphQL::Types::JSON, null: false
     field :phases, GraphQL::Types::JSON, null: false
+
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :maturity, String, null: true
-    field :image_file, String, null: true
+
     field :author, String, null: true
-    field :draft, Boolean, null: false
 
     field :playbook_descriptions, [Types::PlaybookDescriptionType], null: true
     field :playbook_description, Types::PlaybookDescriptionType, null: true,
                                                                  method: :playbook_description_localized
 
-    field :playbook_plays, [Types::PlaybookPlayType], null: true,
-                                                      method: :playbook_play_with_slug_list
+    field :playbook_plays, [Types::PlaybookPlayType], null: true
+    def playbook_plays
+      current_user = context[:current_user]
+      if current_user.nil?
+        if object.owned_by == DPI_TENANT_NAME
+          # Some part of DPI pages are for logged in users only, but they're not a tenant.
+          # Different approach to lock part of the entities.
+          return []
+        else
+          return object.all_plays
+        end
+      end
+
+      an_admin = current_user.roles.include?('admin')
+      an_adli_admin = current_user.roles.include?('adli_admin')
+
+      if an_admin || an_adli_admin
+        object.all_playbook_plays
+      else
+        object.published_playbook_plays
+      end
+    end
 
     field :plays, [Types::PlayType], null: true
+    def plays
+      current_user = context[:current_user]
+      if current_user.nil?
+        if object.owned_by == DPI_TENANT_NAME
+          return []
+        else
+          return object.all_plays
+        end
+      end
+
+      an_admin = current_user.roles.include?('admin')
+      an_adli_admin = current_user.roles.include?('adli_admin')
+
+      if an_admin || an_adli_admin
+        object.all_plays
+      else
+        object.published_plays
+      end
+    end
+
+    field :owned_by, String, null: false
   end
 end

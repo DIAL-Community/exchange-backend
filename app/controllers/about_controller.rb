@@ -12,12 +12,14 @@ class AboutController < ApplicationController
 
   def tenant
     # Allow for the case of a tenant that uses the default database
-    default_tenants = [{ "hostname": "dpi.localhost", "tenant_name": "dpi" },
-                       { "hostname": "dpi.dial.global", "tenant_name": "dpi" },
-                       { "hostname": "resource.dial.global", "tenant_name": "dpi" },
-                       { "hostname": "dpi.dial.community", "tenant_name": "dpi" }]
+    default_tenants = [
+      { "hostname": "dpi.localhost", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "dpi.dial.global", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "resource.dial.global", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "dpi.dial.community", "tenant_name": DPI_TENANT_NAME }
+    ]
 
-    default_tenant = default_tenants.find { |tenant| tenant[:hostname] == URI.parse(request.referrer).hostname }
+    default_tenant = default_tenants.find { |t| t[:hostname] == URI.parse(request.referrer).hostname }
     unless default_tenant.nil?
       render(json: {
         "hostname": URI.parse(request.referrer).hostname,
@@ -29,9 +31,9 @@ class AboutController < ApplicationController
 
     current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
     render(json: {
-      "hostname": request.referrer.blank? ? 'default' : URI.parse(request.referrer).hostname,
+      "hostname": request.referrer.blank? ? 'public' : URI.parse(request.referrer).hostname,
       'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecure_read,
-      "tenant": current_tenant.nil? ? 'default' : current_tenant.tenant_name
+      "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name
     })
   end
 

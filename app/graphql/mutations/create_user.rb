@@ -28,7 +28,7 @@ module Mutations
                         password:,
                         password_confirmation: password)
 
-        send_email_with_password(username, email, password)
+        send_email_with_password(username, email)
       end
       assign_auditable_user(user)
 
@@ -77,7 +77,7 @@ module Mutations
       chars.sort_by { rand }.join[0...10]
     end
 
-    def send_email_with_password(username, email, _password)
+    def send_email_with_password(username, email)
       email_subject = 'Password for your account'
 
       email_body = "Hi #{username}! <br />Your account have been created.<br />"

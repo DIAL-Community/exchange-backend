@@ -42,7 +42,7 @@ module Mutations
       unless an_admin || a_dataset_owner(dataset.id)
         return {
           dataset: nil,
-          errors: ['Must be admin or dataset owner to create a dataset']
+          errors: ['Must be admin or dataset owner to create / edit a dataset']
         }
       end
 
