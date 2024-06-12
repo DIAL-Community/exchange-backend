@@ -4,17 +4,25 @@ module Mutations
   class UpdatePlaybookPlays < Mutations::BaseMutation
     argument :play_slugs, [String], required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
 
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(play_slugs:, slug:)
-      playbook = Playbook.find_by(slug:)
+    def resolve(play_slugs:, slug:, owner:)
+      playbook = Playbook.find_by(slug:, owned_by: owner)
 
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           playbook: nil,
           errors: ['Must be admin or content editor to update plays of a playbook.']
+        }
+      end
+
+      if an_adli_admin && playbook.owned_by != DPI_TENANT_NAME
+        return {
+          playbook: nil,
+          errors: ['Must be admin or content editor to edit non curriculum information.']
         }
       end
 

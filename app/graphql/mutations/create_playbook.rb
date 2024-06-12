@@ -8,6 +8,7 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
+    argument :owner, String, required: true
     argument :cover, ApolloUploadServer::Upload, required: false
     argument :author, String, required: false
     argument :tags, [String], required: false, default_value: []
@@ -19,17 +20,17 @@ module Mutations
     field :playbook, Types::PlaybookType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
-      unless an_admin || a_content_editor
+    def resolve(name:, slug:, owner:, author:, tags:, overview:, audience:, outcomes:, cover: nil, draft:)
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           playbook: nil,
           errors: ['Must be admin or content editor to create a playbook']
         }
       end
 
-      playbook = Playbook.find_by(slug:)
+      playbook = Playbook.find_by(slug:, owned_by: owner)
       if playbook.nil?
-        playbook = Playbook.new(name:)
+        playbook = Playbook.new(name:, owned_by: owner)
         playbook.slug = reslug_em(name)
 
         if Playbook.where(slug: playbook.slug).count.positive?
@@ -39,6 +40,13 @@ module Mutations
                                     .first
           playbook.slug = playbook.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
         end
+      end
+
+      if an_adli_admin && playbook.owned_by != DPI_TENANT_NAME
+        return {
+          playbook: nil,
+          errors: ['Must be admin or content editor to edit non curriculum information.']
+        }
       end
 
       # Re-slug if the name is updated (not the same with the one in the db).
@@ -56,8 +64,9 @@ module Mutations
       end
 
       playbook.tags = tags
-      playbook.author = author
       playbook.draft = draft
+      playbook.author = author
+      playbook.owned_by = owner
 
       successful_operation = false
       ActiveRecord::Base.transaction do

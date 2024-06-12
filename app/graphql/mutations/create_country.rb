@@ -18,7 +18,7 @@ module Mutations
       unless an_admin
         return {
           country: nil,
-          errors: ['Must be admin or content editor to create a country.']
+          errors: ['Must be admin to create a country.']
         }
       end
 

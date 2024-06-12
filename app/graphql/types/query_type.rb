@@ -176,7 +176,9 @@ module Types
     field :paginated_contacts, resolver: Paginated::PaginatedContacts
     field :pagination_attribute_contact, resolver: Paginated::PaginationAttributeContact
     field :contacts, resolver: Queries::ContactsQuery
+    field :hub_contacts, resolver: Queries::HubContactsQuery
     field :contact, resolver: Queries::ContactQuery
+    field :hub_contact, resolver: Queries::UserContactQuery
 
     field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
     field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
@@ -221,5 +223,10 @@ module Types
     field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
 
     field :chatbot_conversations, resolver: Queries::ChatbotConversationsQuery
+
+    field :paginated_messages, resolver: Paginated::PaginatedMessages
+    field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
+    field :messages, resolver: Queries::MessagesQuery
+    field :message, resolver: Queries::MessageQuery
   end
 end

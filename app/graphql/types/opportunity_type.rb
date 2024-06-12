@@ -5,7 +5,7 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :image_file, String, null: true
+    field :image_file, String, null: false
     field :description, String, null: false
 
     field :gov_stack_entity, Boolean, null: false

@@ -19,12 +19,12 @@ class AddDatasetUserToUserRole < ActiveRecord::Migration[6.1]
         );
       ALTER TABLE candidate_roles
         ALTER COLUMN roles DROP DEFAULT,
-        ALTER COLUMN roles TYPE _user_role
+        ALTER COLUMN roles TYPE user_role[]
           USING roles::text::user_role[],
         ALTER COLUMN roles SET DEFAULT '{}'::user_role[];
       ALTER TABLE users
         ALTER COLUMN roles DROP DEFAULT,
-        ALTER COLUMN roles TYPE _user_role
+        ALTER COLUMN roles TYPE user_role[]
           USING roles::text::user_role[],
         ALTER COLUMN roles SET DEFAULT '{}'::user_role[];
       ALTER TABLE users
@@ -53,12 +53,12 @@ class AddDatasetUserToUserRole < ActiveRecord::Migration[6.1]
       );
     ALTER TABLE candidate_roles
       ALTER COLUMN roles DROP DEFAULT,
-      ALTER COLUMN roles TYPE _user_role
+      ALTER COLUMN roles TYPE user_role[]
         USING roles::text::user_role[],
       ALTER COLUMN roles SET DEFAULT '{}'::user_role[];
     ALTER TABLE users
       ALTER COLUMN roles DROP DEFAULT,
-      ALTER COLUMN roles TYPE _user_role
+      ALTER COLUMN roles TYPE user_role[]
         USING roles::text::user_role[],
       ALTER COLUMN roles SET DEFAULT '{}'::user_role[];
     ALTER TABLE users

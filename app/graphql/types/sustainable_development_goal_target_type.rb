@@ -6,7 +6,7 @@ module Types
     field :name, String, null: false
     field :target_number, String, null: false
     field :sdg_number, String, null: false
-    field :image_file, String, null: true
+    field :image_file, String, null: false
 
     field :use_cases, [Types::UseCaseType], null: true
 

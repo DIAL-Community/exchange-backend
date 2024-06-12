@@ -12,8 +12,8 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
-    field :image_file, String, null: false
     field :website, String, null: true
+    field :image_file, String, null: false
     field :visualization_url, String, null: true
     field :geographic_coverage, String, null: true
     field :time_range, String, null: true

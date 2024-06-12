@@ -11,10 +11,12 @@ module Mutations
     argument :description, String, required: false
     argument :parent_topic_id, ID, required: false
 
+    argument :image_file, ApolloUploadServer::Upload, required: false
+
     field :resource_topic, Types::ResourceTopicType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, parent_topic_id: nil)
+    def resolve(name:, slug:, description:, parent_topic_id: nil, image_file: nil)
       unless an_admin
         return {
           resource_topic: nil,
@@ -59,6 +61,15 @@ module Mutations
 
         assign_auditable_user(resource_topic)
         resource_topic.save!
+
+        unless image_file.nil?
+          uploader = LogoUploader.new(resource_topic, image_file.original_filename, context[:current_user])
+          begin
+            uploader.store!(image_file)
+          rescue StandardError => e
+            puts "Unable to save image for: #{resource_topic.name}. Standard error: #{e}."
+          end
+        end
 
         resource_topic_description = ResourceTopicDescription.find_by(
           resource_topic_id: resource_topic.id,
