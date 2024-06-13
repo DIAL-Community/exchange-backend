@@ -29,6 +29,32 @@ namespace :adli_processor do
     end
   end
 
+  desc 'Update ADLI password using the first part of their email address'
+  task update_adli_password: :environment do
+    workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')
+    workbook.default_sheet = workbook.sheets.first
+
+    worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+
+    2.upto(workbook.last_row) do |row_count|
+      current_row = workbook.row(row_count)
+      current_row_sanitized = current_row.map { |cell| cell.to_s.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+      current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
+
+      email_address = current_row_data['Email address:'].downcase
+      puts "Processing row with email address: #{email_address}."
+
+      existing_user = User.find_by(email: email_address)
+      next if existing_user.nil?
+
+      updated_password = email_address.split('@').first
+      saved = existing_user.reset_password(updated_password, updated_password)
+      if saved
+        puts "  Successfully updated password for user: #{existing_user.id}:#{existing_user.email}."
+      end
+    end
+  end
+
   desc 'Read ADLI questionaire spredsheet answers and build user & contact records.'
   task parse_adli_file: :environment do
     workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')

@@ -33,7 +33,7 @@ class MessageMailer < ActionMailer::Base
     end
 
     mail(
-      from: 'Notifier System <system@dpi.dial.community>',
+      from: 'Notifier System <system@resource.dial.global>',
       to: "#{current_contact.name} <#{current_contact.email}>",
       subject: email_subject,
       body: email_body
