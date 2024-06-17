@@ -148,6 +148,8 @@ namespace :resource_sync do
       resource.tags = resource_tags
       resource.resource_topics = resource_topics
 
+      resource.authors = []
+
       authors = post_structure['_links']['author']
       authors.each do |author|
         author_href = author['href']
