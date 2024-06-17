@@ -168,11 +168,14 @@ namespace :resource_sync do
 
         resource_author.name = author_href_response_body['name']
         resource_author.slug = reslug_em(author_href_response_body['name'])
+
         avatar_api = 'https://ui-avatars.com/api/?name='
         avatar_params = '&background=2e3192&color=fff&format=svg'
         resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-        resource.authors << resource_author
+        if resource_author.new_record? || !resource.authors.include?(resource_author)
+          resource.authors << resource_author
+        end
       end
 
       source_organization = Organization.find_by(slug: 'digital-impact-alliance')
