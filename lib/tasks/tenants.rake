@@ -27,38 +27,40 @@ namespace :tenants do
     tenant_file['tenants'].each do |tenant|
       tenant_name = tenant['name']
 
-      %w[
-        countries
-        provinces
-        districts
-        origins
-        sustainable_development_goals
-        sdg_targets
-        sectors
-        settings
-        rubric_categories
-        rubric_category_descriptions
-      ].each do |table|
-        query = "INSERT INTO #{tenant_name}.#{table} SELECT * FROM  public.#{table};"
-        ActiveRecord::Base.connection.exec_query(query)
-        query = "SELECT setval(pg_get_serial_sequence('#{tenant_name}.#{table}', 'id'), " \
-          "MAX(id)) FROM #{tenant_name}.#{table};"
-        ActiveRecord::Base.connection.exec_query(query)
-      end
-
-      # Category Indicators table has a special type, so do it separately
-      query = "INSERT INTO #{tenant_name}.category_indicators SELECT id, name, slug, " \
-        "indicator_type::text::#{tenant_name}.category_indicator_type, weight, rubric_category_id, " \
-        "data_source, source_indicator, created_at, updated_at, script_name FROM public.category_indicators;"
-      ActiveRecord::Base.connection.exec_query(query)
-
-      query = "INSERT INTO #{tenant_name}.category_indicator_descriptions " \
-        "SELECT * FROM  public.category_indicator_descriptions;"
-      ActiveRecord::Base.connection.exec_query(query)
-
-      # Create default admin user
-      admin_email = "admin@#{tenant_name}.org"
       Apartment::Tenant.switch(tenant_name) do
+        next if CategoryIndicator.any?
+
+        %w[
+          countries
+          provinces
+          districts
+          origins
+          sustainable_development_goals
+          sdg_targets
+          sectors
+          settings
+          rubric_categories
+          rubric_category_descriptions
+        ].each do |table|
+          query = "INSERT INTO #{tenant_name}.#{table} SELECT * FROM  public.#{table};"
+          ActiveRecord::Base.connection.exec_query(query)
+          query = "SELECT setval(pg_get_serial_sequence('#{tenant_name}.#{table}', 'id'), " \
+            "MAX(id)) FROM #{tenant_name}.#{table};"
+          ActiveRecord::Base.connection.exec_query(query)
+        end
+
+        # Category Indicators table has a special type, so do it separately
+        query = "INSERT INTO #{tenant_name}.category_indicators SELECT id, name, slug, " \
+          "indicator_type::text::#{tenant_name}.category_indicator_type, weight, rubric_category_id, " \
+          "data_source, source_indicator, created_at, updated_at, script_name FROM public.category_indicators;"
+        ActiveRecord::Base.connection.exec_query(query)
+
+        query = "INSERT INTO #{tenant_name}.category_indicator_descriptions " \
+          "SELECT * FROM  public.category_indicator_descriptions;"
+        ActiveRecord::Base.connection.exec_query(query)
+
+        # Create default admin user
+        admin_email = "admin@#{tenant_name}.org"
         admin_user = User.new({ email: admin_email, username: 'admin', password: tenant_file['adminPassword'],
                                 password_confirmation: tenant_file['adminPassword'] })
         admin_user.confirm
