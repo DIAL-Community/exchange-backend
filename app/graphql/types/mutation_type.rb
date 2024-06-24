@@ -19,9 +19,9 @@ module Types
     field :delete_play_move, mutation: Mutations::DeletePlayMove
     field :update_play_moves, mutation: Mutations::UpdatePlayMoves
 
-    field :create_move, mutation: Mutations::CreateMove
-    field :auto_save_move, mutation: Mutations::CreateMove
-    field :create_move_resource, mutation: Mutations::CreateMoveResource
+    field :create_move, mutation: Mutations::CreatePlayMove
+    field :auto_save_move, mutation: Mutations::CreatePlayMove
+    field :create_move_resource, mutation: Mutations::CreatePlayMoveResource
 
     field :create_user, mutation: Mutations::CreateUser
     field :delete_user, mutation: Mutations::DeleteUser

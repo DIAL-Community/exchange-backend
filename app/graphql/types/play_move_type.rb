@@ -13,11 +13,11 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :move_order, Integer, null: true
-    field :resources, GraphQL::Types::JSON, null: false
+    field :inline_resources, GraphQL::Types::JSON, null: false
 
     field :move_descriptions, [Types::PlayMoveDescriptionType], null: true
     field :move_description, Types::PlayMoveDescriptionType, null: true,
-                                                             method: :play_move_description_localized
+                                                                  method: :play_move_description_localized
 
     field :play, Types::PlayType, null: false
     field :play_name, String, null: true

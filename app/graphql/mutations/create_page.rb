@@ -1,9 +1,8 @@
 # frozen_string_literal: true
+require 'modules/slugger'
 
 module Mutations
   class CreatePage < Mutations::BaseMutation
-    require 'modules/slugger'
-
     include Modules::Slugger
 
     argument :name, String, required: true
