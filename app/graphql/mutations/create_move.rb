@@ -13,7 +13,7 @@ module Mutations
     argument :description, String, required: true
     argument :resources, GraphQL::Types::JSON, required: false, default_value: []
 
-    field :move, Types::MoveType, null: true
+    field :move, Types::PlayMoveType, null: true
     field :errors, [String], null: false
 
     def resolve(play_slug:, move_slug:, owner:, name:, description:, resources:)
@@ -76,16 +76,16 @@ module Mutations
         assign_auditable_user(play_move)
         play_move.save!
 
-        move_desc = MoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
-        if move_desc.nil?
-          move_desc = MoveDescription.new
-          move_desc.play_move = play_move
-          move_desc.locale = I18n.locale
+        play_move_desc = PlayMoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
+        if play_move_desc.nil?
+          play_move_desc = PlayMoveDescription.new
+          play_move_desc.play_move = play_move
+          play_move_desc.locale = I18n.locale
         end
-        move_desc.description = description
+        play_move_desc.description = description
 
-        assign_auditable_user(move_desc)
-        move_desc.save!
+        assign_auditable_user(play_move_desc)
+        play_move_desc.save!
 
         successful_operation = true
       end
@@ -118,7 +118,7 @@ module Mutations
     argument :description, String, required: true
     argument :index, Integer, required: true
 
-    field :move, Types::MoveType, null: true
+    field :move, Types::PlayMoveType, null: true
     field :errors, [String], null: false
 
     def resolve(play_slug:, move_slug:, url:, name:, description:, index:)
