@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 module Mutations
   class UpdateResourceCountries < Mutations::BaseMutation
     argument :country_slugs, [String], required: true

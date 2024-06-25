@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 module Mutations
   class UpdateRubricCategoryIndicators < Mutations::BaseMutation
     argument :category_indicator_slugs, [String], required: true
