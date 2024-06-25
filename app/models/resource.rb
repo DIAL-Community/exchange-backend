@@ -5,6 +5,13 @@ class Resource < ApplicationRecord
 
   belongs_to :organization, optional: true
 
+  has_many :resource_building_blocks, dependent: :delete_all
+  has_many :building_blocks, through: :resource_building_blocks, dependent: :delete_all
+
+  has_and_belongs_to_many :use_cases,
+                          join_table: :resources_use_cases,
+                          dependent: :delete_all
+
   has_and_belongs_to_many :organizations,
                           after_add: :association_add,
                           before_remove: :association_remove,
@@ -51,6 +58,16 @@ class Resource < ApplicationRecord
         '/assets/resources/resource-placeholder.svg'
       end
     end
+  end
+
+  def building_blocks_mapping_status
+    return nil if building_blocks.nil? || building_blocks.empty?
+
+    product_building_blocks.each do |building_block|
+      mapping_status = building_block.mapping_status
+      return mapping_status unless mapping_status.nil?
+    end
+    nil
   end
 
   def resource_file

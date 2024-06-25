@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-
 module Mutations
-  class UpdateResourceCountries < Mutations::BaseMutation
-    argument :country_slugs, [String], required: true
+  class UpdateResourceUseCases < Mutations::BaseMutation
+    argument :use_case_slugs, [String], required: true
     argument :slug, String, required: true
 
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
 
-    def resolve(country_slugs:, slug:)
+    def resolve(use_case_slugs:, slug:)
       resource = Resource.find_by(slug:)
 
       unless an_admin || a_content_editor
@@ -19,11 +18,11 @@ module Mutations
         }
       end
 
-      resource.countries = []
-      if !country_slugs.nil? && !country_slugs.empty?
-        country_slugs.each do |country_slug|
-          current_country = Country.find_by(slug: country_slug)
-          resource.countries << current_country unless current_country.nil?
+      resource.use_cases = []
+      if !use_case_slugs.nil? && !use_case_slugs.empty?
+        use_case_slugs.each do |use_case_slug|
+          current_use_case = UseCase.find_by(slug: use_case_slug)
+          resource.use_cases << current_use_case unless current_use_case.nil?
         end
       end
 
