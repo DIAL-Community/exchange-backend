@@ -13,6 +13,8 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :move_order, Integer, null: true
+
+    field :resources, [ResourceType], null: true
     field :inline_resources, GraphQL::Types::JSON, null: false
 
     field :move_descriptions, [Types::PlayMoveDescriptionType], null: true

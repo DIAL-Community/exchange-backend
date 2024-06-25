@@ -1301,6 +1301,7 @@ type PlayMove {
   play: Play!
   playName: String
   playSlug: String
+  resources: [Resource!]
   slug: String!
 }
 
