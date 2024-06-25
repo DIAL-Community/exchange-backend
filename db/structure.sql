@@ -2070,39 +2070,6 @@ ALTER SEQUENCE fao.messages_id_seq OWNED BY fao.messages.id;
 
 
 --
--- Name: move_descriptions; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.move_descriptions (
-    id bigint NOT NULL,
-    play_move_id bigint,
-    locale character varying NOT NULL,
-    description character varying NOT NULL,
-    prerequisites character varying DEFAULT ''::character varying NOT NULL,
-    outcomes character varying DEFAULT ''::character varying NOT NULL
-);
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.move_descriptions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.move_descriptions_id_seq OWNED BY fao.move_descriptions.id;
-
-
---
 -- Name: oauth_access_grants; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2720,6 +2687,39 @@ CREATE SEQUENCE fao.play_descriptions_id_seq
 --
 
 ALTER SEQUENCE fao.play_descriptions_id_seq OWNED BY fao.play_descriptions.id;
+
+
+--
+-- Name: play_move_descriptions; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.play_move_descriptions (
+    id bigint NOT NULL,
+    play_move_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    prerequisites character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.play_move_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.play_move_descriptions_id_seq OWNED BY fao.play_move_descriptions.id;
 
 
 --
@@ -4263,7 +4263,7 @@ CREATE SEQUENCE fao.task_descriptions_id_seq
 -- Name: task_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
 --
 
-ALTER SEQUENCE fao.task_descriptions_id_seq OWNED BY fao.move_descriptions.id;
+ALTER SEQUENCE fao.task_descriptions_id_seq OWNED BY fao.play_move_descriptions.id;
 
 
 --
@@ -9301,13 +9301,6 @@ ALTER TABLE ONLY fao.messages ALTER COLUMN id SET DEFAULT nextval('fao.messages_
 
 
 --
--- Name: move_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.move_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.task_descriptions_id_seq'::regclass);
-
-
---
 -- Name: oauth_access_grants id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9417,6 +9410,13 @@ ALTER TABLE ONLY fao.page_contents ALTER COLUMN id SET DEFAULT nextval('fao.page
 --
 
 ALTER TABLE ONLY fao.play_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.play_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: play_move_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_move_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.task_descriptions_id_seq'::regclass);
 
 
 --
@@ -10922,14 +10922,6 @@ ALTER TABLE ONLY fao.messages
 
 
 --
--- Name: move_descriptions move_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.move_descriptions
-    ADD CONSTRAINT move_descriptions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11055,6 +11047,14 @@ ALTER TABLE ONLY fao.page_contents
 
 ALTER TABLE ONLY fao.play_descriptions
     ADD CONSTRAINT play_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_move_descriptions play_move_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_move_descriptions
+    ADD CONSTRAINT play_move_descriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -12820,13 +12820,6 @@ CREATE INDEX index_messages_on_created_by_id ON fao.messages USING btree (create
 
 
 --
--- Name: index_move_descriptions_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_move_descriptions_on_play_move_id ON fao.move_descriptions USING btree (play_move_id);
-
-
---
 -- Name: index_oauth_access_grants_on_application_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13062,6 +13055,13 @@ CREATE INDEX index_page_contents_on_handbook_page_id ON fao.page_contents USING 
 --
 
 CREATE INDEX index_play_descriptions_on_play_id ON fao.play_descriptions USING btree (play_id);
+
+
+--
+-- Name: index_play_move_descriptions_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_play_move_descriptions_on_play_move_id ON fao.play_move_descriptions USING btree (play_move_id);
 
 
 --
@@ -13418,7 +13418,7 @@ CREATE INDEX index_tag_descriptions_on_tag_id ON fao.tag_descriptions USING btre
 -- Name: index_task_descriptions_on_play_task_id; Type: INDEX; Schema: fao; Owner: -
 --
 
-CREATE INDEX index_task_descriptions_on_play_task_id ON fao.move_descriptions USING btree (play_move_id);
+CREATE INDEX index_task_descriptions_on_play_task_id ON fao.play_move_descriptions USING btree (play_move_id);
 
 
 --
@@ -14423,6 +14423,13 @@ CREATE INDEX index_play_moves_on_play_id ON public.play_moves USING btree (play_
 
 
 --
+-- Name: index_play_moves_resources; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON public.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
 -- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -15190,10 +15197,10 @@ ALTER TABLE ONLY fao.districts
 
 
 --
--- Name: move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: play_move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.move_descriptions
+ALTER TABLE ONLY fao.play_move_descriptions
     ADD CONSTRAINT fk_rails_0684d55f45 FOREIGN KEY (play_move_id) REFERENCES fao.play_moves(id);
 
 
@@ -15718,10 +15725,10 @@ ALTER TABLE ONLY fao.products_endorsers
 
 
 --
--- Name: move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: play_move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.move_descriptions
+ALTER TABLE ONLY fao.play_move_descriptions
     ADD CONSTRAINT fk_rails_9f26d2af9a FOREIGN KEY (play_move_id) REFERENCES fao.play_moves(id);
 
 
