@@ -22,16 +22,25 @@ module Types
       return message_template if current_user.nil?
 
       current_contact = Contact.find_by(email: current_user.email)
-      object.message_template
-            # Replace with current user's name or fallback to username if contact is nil.
-            .gsub('%{user_name}%', current_contact&.name)
-            .gsub('%{user_name}%', current_user.username)
-            # Replace other template literal available for the message object.
-            .gsub('%{current_date}%', object.created_at.strftime('%m/%d/%Y'))
-            .gsub('%{current_time}%', object.created_at.strftime('%H:%M:%S %:z'))
-            .gsub('%{current_datetime}%', object.created_at.strftime('%m/%d/%Y %H:%M:%S %:z'))
-            .gsub('%{user_email}%', current_user.email)
-            .gsub('%{user_username}%', current_user.username)
+
+      message_body = object.message_template
+      unless date_created.nil?
+        message_body = message_body.gsub('%{current_date}%', date_created.strftime('%m/%d/%Y'))
+                                   .gsub('%{current_time}%', date_created.strftime('%H:%M:%S %:z'))
+                                   .gsub('%{current_datetime}%', date_created.strftime('%m/%d/%Y %H:%M:%S %:z'))
+      end
+
+      unless current_contact.nil?
+        message_body = message_body.gsub('%{user_name}%', current_contact&.name)
+      end
+
+      unless current_user.nil?
+        message_body = message_body.gsub('%{user_email}%', current_user&.email)
+                                   # Replace with current user's name or fallback to username if contact is nil.
+                                   .gsub('%{user_name}%', current_user&.username)
+                                   .gsub('%{user_username}%', current_user&.username)
+      end
+      message_body
     end
 
     field :visible, Boolean, null: false
