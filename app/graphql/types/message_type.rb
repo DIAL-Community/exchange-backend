@@ -23,6 +23,7 @@ module Types
 
       current_contact = Contact.find_by(email: current_user.email)
 
+      date_created = object.created_at
       message_body = object.message_template
       unless date_created.nil?
         message_body = message_body.gsub('%{current_date}%', date_created.strftime('%m/%d/%Y'))
