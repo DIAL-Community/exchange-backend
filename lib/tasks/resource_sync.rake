@@ -125,7 +125,7 @@ namespace :resource_sync do
             tag = Tag.find_by(slug: reslug_em(tag_name))
             tag = Tag.find_by(name: tag_name) if tag.nil?
             tag = Tag.new(name: tag_name, slug: reslug_em(tag_name)) if tag.nil?
-            # Save the new resource topic to the database.
+            # Save the new tag to the database.
             tag.save!
             # Assign tag to the resource.
             resource_tags << tag.name
@@ -291,6 +291,13 @@ namespace :resource_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
+    DEFAULT_RESOURCE_TOPICS = [
+      'Enabling Environment',
+      'Oversight & Accountability',
+      'Participation & Agency',
+      'Technical Insights'
+    ]
+
     workbook = Roo::Spreadsheet.open('./data/DPI Readings.xlsx')
     workbook.default_sheet = 'New Research'
 
@@ -322,9 +329,41 @@ namespace :resource_sync do
       ActiveRecord::Base.transaction do
         existing_resource.resource_type = current_row_data['Type (Pick 1)']
 
-        authors = current_row_data['Author'].split(',') unless current_row_data['Author'].nil?
+        existing_resource.resource_topics = []
+        topics = current_row_data['Topic (Multi-Select)'].split(',')
+        topics.each do |topic|
+          topic_name = topic.strip
+          next if topic_name.blank?
+
+          tag = Tag.find_by(slug: reslug_em(topic_name))
+          tag = Tag.find_by(name: topic_name) if tag.nil?
+          tag = Tag.new(name: topic_name, slug: reslug_em(topic_name)) if tag.nil?
+          # Save the new tag to the database.
+          tag.save!
+          # Assign tag to the resource.
+          unless existing_resource.tags.include?(tag.name)
+            existing_resource.tags << tag.name
+          end
+
+          next unless DEFAULT_RESOURCE_TOPICS.include?(topic_name)
+
+          resource_topic = ResourceTopic.find_by(name: topic_name)
+          if resource_topic.nil?
+            resource_topic = ResourceTopic.new(name: topic_name, slug: reslug_em(topic_name))
+          end
+          # Save the new resource topic to the database.
+          resource_topic.save!
+          # Assign resource topic to the resource.
+          unless existing_resource.resource_topics.include?(resource_topic.name)
+            existing_resource.resource_topics << resource_topic.name
+          end
+        end
+
+        authors = current_row_data['Author'].split(',')
         authors.each do |author|
           author_name = author.strip
+          next if author_name.blank?
+
           resource_author = Author.find_by(name: author_name)
           resource_author = Author.new if resource_author.nil?
 
@@ -343,17 +382,15 @@ namespace :resource_sync do
 
         # Link to an organization
         organization_name = current_row_data['Source']
-        resource_organization = Organization.first_duplicate(
-          organization_name.strip,
-          reslug_em(organization_name.strip)
-        )
-        if resource_organization.nil?
-          resource_organization = Organization.new
-          resource_organization.name = organization_name
-          resource_organization.slug = reslug_em(organization_name)
-          resource_organization.save!
+        organization = Organization.find_by(name: organization_name)
+        organization = Organization.find_by(slug: reslug_em(organization_name)) if organization.nil?
+        if organization.nil? && !organization_name.blank?
+          organization = Organization.new
+          organization.name = organization_name
+          organization.slug = reslug_em(organization_name)
+          organization.save!
         end
-        existing_resource.organization = resource_organization
+        existing_resource.organization = organization
 
         existing_resource.save!
         successful_operation = true
