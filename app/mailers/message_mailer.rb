@@ -29,7 +29,7 @@ class MessageMailer < ActionMailer::Base
       email_body = email_body.gsub('%{user_email}%', current_user&.email)
                              # Replace with current user's name or fallback to username if contact is nil.
                              .gsub('%{user_name}%', current_user&.username)
-                             .gsub('%{user_username}%', current_user.username)
+                             .gsub('%{user_username}%', current_user&.username)
     end
 
     mail(
