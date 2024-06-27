@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require 'modules/slugger'
-
 module Mutations
   class UpdateProductCountries < Mutations::BaseMutation
-    include Modules::Slugger
-
     argument :country_slugs, [String], required: true
     argument :slug, String, required: true
 

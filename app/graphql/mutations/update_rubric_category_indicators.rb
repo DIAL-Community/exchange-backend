@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require 'modules/slugger'
-
 module Mutations
   class UpdateRubricCategoryIndicators < Mutations::BaseMutation
-    include Modules::Slugger
-
     argument :category_indicator_slugs, [String], required: true
     argument :rubric_category_slug, String, required: true
 
