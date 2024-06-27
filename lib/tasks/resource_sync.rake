@@ -125,7 +125,7 @@ namespace :resource_sync do
             tag = Tag.find_by(slug: reslug_em(tag_name))
             tag = Tag.find_by(name: tag_name) if tag.nil?
             tag = Tag.new(name: tag_name, slug: reslug_em(tag_name)) if tag.nil?
-            # Save the new resource topic to the database.
+            # Save the new tag to the database.
             tag.save!
             # Assign tag to the resource.
             resource_tags << tag.name
@@ -281,5 +281,126 @@ namespace :resource_sync do
       resource.save!
       puts "  Resource '#{resource.name}' record saved."
     end
+
+    tracking_task_finish(task_name)
+  end
+
+  desc 'Read DPI Readings.xlsx file and then save it to the database.'
+  task sync_dpi_readings: :environment do
+    task_name = 'Sync DPI Readings'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    DEFAULT_RESOURCE_TOPICS = [
+      'Enabling Environment',
+      'Oversight & Accountability',
+      'Participation & Agency',
+      'Technical Insights'
+    ]
+
+    workbook = Roo::Spreadsheet.open('./data/DPI Readings.xlsx')
+    workbook.default_sheet = 'New Research'
+
+    worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+    puts "Worksheet headers: #{worksheet_headers.inspect}."
+
+    2.upto(workbook.last_row) do |row_count|
+      current_row = workbook.row(row_count)
+      current_row_sanitized = current_row.map { |cell| cell.to_s.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+      current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
+
+      resource_name = current_row_data['Article Title']
+      puts "Processing row #{row_count} --> with title: #{resource_name}."
+
+      resource_slug = reslug_em(resource_name)
+      existing_resource = Resource.name_and_slug_search(resource_name, resource_slug).first
+      if existing_resource.nil?
+        existing_resource = Resource.new(name: resource_name, slug: resource_slug, phase: 'Not Applicable')
+        if Resource.where(slug: existing_resource.slug).count.positive?
+          # Check if we need to add _dup to the slug.
+          first_duplicate = Resource.slug_simple_starts_with(existing_resource.slug)
+                                    .order(slug: :desc)
+                                    .first
+          existing_resource.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        existing_resource.resource_type = current_row_data['Type (Pick 1)']
+
+        existing_resource.resource_topics = []
+        topics = current_row_data['Topic (Multi-Select)'].split(',')
+        topics.each do |topic|
+          topic_name = topic.strip
+          next if topic_name.blank?
+
+          tag = Tag.find_by(slug: reslug_em(topic_name))
+          tag = Tag.find_by(name: topic_name) if tag.nil?
+          tag = Tag.new(name: topic_name, slug: reslug_em(topic_name)) if tag.nil?
+          # Save the new tag to the database.
+          tag.save!
+          # Assign tag to the resource.
+          unless existing_resource.tags.include?(tag.name)
+            existing_resource.tags << tag.name
+          end
+
+          next unless DEFAULT_RESOURCE_TOPICS.include?(topic_name)
+
+          resource_topic = ResourceTopic.find_by(name: topic_name)
+          if resource_topic.nil?
+            resource_topic = ResourceTopic.new(name: topic_name, slug: reslug_em(topic_name))
+          end
+          # Save the new resource topic to the database.
+          resource_topic.save!
+          # Assign resource topic to the resource.
+          unless existing_resource.resource_topics.include?(resource_topic.name)
+            existing_resource.resource_topics << resource_topic.name
+          end
+        end
+
+        authors = current_row_data['Author'].split(',')
+        authors.each do |author|
+          author_name = author.strip
+          next if author_name.blank?
+
+          resource_author = Author.find_by(name: author_name)
+          resource_author = Author.new if resource_author.nil?
+
+          resource_author.name = author_name
+          resource_author.slug = reslug_em(author_name)
+
+          avatar_api = 'https://ui-avatars.com/api/?name='
+          avatar_params = '&background=2e3192&color=fff&format=svg'
+          resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
+
+          existing_resource.authors << resource_author unless existing_resource.authors.include?(resource_author)
+        end
+
+        existing_resource.resource_link = cleanup_url(current_row_data['Link'])
+        existing_resource.description = current_row_data['Description']
+
+        # Link to an organization
+        organization_name = current_row_data['Source']
+        organization = Organization.find_by(name: organization_name)
+        organization = Organization.find_by(slug: reslug_em(organization_name)) if organization.nil?
+        if organization.nil? && !organization_name.blank?
+          organization = Organization.new
+          organization.name = organization_name
+          organization.slug = reslug_em(organization_name)
+          organization.save!
+        end
+        existing_resource.organization = organization
+
+        existing_resource.save!
+        successful_operation = true
+      end
+
+      if successful_operation
+        puts "  Successfully created resource: #{existing_resource.id}:#{existing_resource.name}."
+      end
+    end
+
+    tracking_task_finish(task_name)
   end
 end

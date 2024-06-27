@@ -158,8 +158,10 @@ module Types
     field :create_task_tracker, mutation: Mutations::CreateTaskTracker
 
     field :update_resource_tags, mutation: Mutations::UpdateResourceTags
-    field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
     field :update_resource_products, mutation: Mutations::UpdateResourceProducts
+    field :update_resource_use_cases, mutation: Mutations::UpdateResourceUseCases
+    field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
+    field :update_resource_building_blocks, mutation: Mutations::UpdateResourceBuildingBlocks
     field :update_resource_resource_topics, mutation: Mutations::UpdateResourceResourceTopics
 
     field :create_region, mutation: Mutations::CreateRegion
