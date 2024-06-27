@@ -55,6 +55,15 @@ module Types
 
     field :published_date, GraphQL::Types::ISO8601Date, null: true
 
+    field :building_blocks, [Types::BuildingBlockType], null: true
+    def building_blocks
+      object.resource_building_blocks.map(&:building_block)
+    end
+
+    field :building_blocks_mapping_status, String, method: :building_blocks_mapping_status
+
+    field :use_cases, [Types::UseCaseType], null: false
+
     field :organizations, [Types::OrganizationType], null: false
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
     field :products, [Types::ProductType], null: false, method: :products_ordered
