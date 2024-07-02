@@ -3,7 +3,7 @@
 module Queries
   class MovesQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
-    type [Types::MoveType], null: false
+    type [Types::PlayMoveType], null: false
 
     def resolve(search:)
       moves = PlayMove.all.order(:name)
@@ -17,7 +17,7 @@ module Queries
   class MoveQuery < Queries::BaseQuery
     argument :play_slug, String, required: true
     argument :slug, String, required: true
-    type Types::MoveType, null: true
+    type Types::PlayMoveType, null: true
 
     def resolve(play_slug:, slug:)
       play = Play.find_by(slug: play_slug)
@@ -31,7 +31,7 @@ module Queries
 
     argument :search, String, required: false, default_value: ''
 
-    type Types::MoveType.connection_type, null: false
+    type Types::PlayMoveType.connection_type, null: false
 
     def resolve(search:, products:)
       moves = PlayMove.all.order(:name)

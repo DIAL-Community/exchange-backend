@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MoveDescription < ApplicationRecord
+class PlayMoveDescription < ApplicationRecord
   include Auditable
 
   belongs_to :play_move

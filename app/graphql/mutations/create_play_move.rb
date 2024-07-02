@@ -1,9 +1,8 @@
 # frozen_string_literal: true
+require 'modules/slugger'
 
 module Mutations
-  class CreateMove < Mutations::BaseMutation
-    require 'modules/slugger'
-
+  class CreatePlayMove < Mutations::BaseMutation
     include Modules::Slugger
 
     argument :play_slug, String, required: true
@@ -11,12 +10,13 @@ module Mutations
     argument :owner, String, required: true
     argument :name, String, required: true
     argument :description, String, required: true
-    argument :resources, GraphQL::Types::JSON, required: false, default_value: []
+    argument :resource_slugs, [String], required: false
+    argument :inline_resources, GraphQL::Types::JSON, required: false, default_value: []
 
-    field :move, Types::MoveType, null: true
+    field :move, Types::PlayMoveType, null: true
     field :errors, [String], null: false
 
-    def resolve(play_slug:, move_slug:, owner:, name:, description:, resources:)
+    def resolve(play_slug:, move_slug:, owner:, name:, description:, resource_slugs:, inline_resources:)
       unless an_admin || a_content_editor || an_adli_admin
         return {
           move: nil,
@@ -69,23 +69,29 @@ module Mutations
 
       play_move.play = play
       play_move.move_order = play.play_moves.count
-      play_move.resources = resources.reject { |resource| resource['name'].blank? || resource['url'].blank? }
+      play_move.inline_resources = inline_resources.reject { |r| r['name'].blank? || r['url'].blank? }
+
+      play_move.resources = []
+      resource_slugs&.each do |resource_slug|
+        current_resource = Resource.find_by(slug: resource_slug)
+        play_move.resources << current_resource unless current_resource.nil?
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do
         assign_auditable_user(play_move)
         play_move.save!
 
-        move_desc = MoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
-        if move_desc.nil?
-          move_desc = MoveDescription.new
-          move_desc.play_move = play_move
-          move_desc.locale = I18n.locale
+        play_move_desc = PlayMoveDescription.find_by(play_move_id: play_move, locale: I18n.locale)
+        if play_move_desc.nil?
+          play_move_desc = PlayMoveDescription.new
+          play_move_desc.play_move = play_move
+          play_move_desc.locale = I18n.locale
         end
-        move_desc.description = description
+        play_move_desc.description = description
 
-        assign_auditable_user(move_desc)
-        move_desc.save!
+        assign_auditable_user(play_move_desc)
+        play_move_desc.save!
 
         successful_operation = true
       end
@@ -106,7 +112,7 @@ module Mutations
     end
   end
 
-  class CreateMoveResource < Mutations::BaseMutation
+  class CreatePlayMoveResource < Mutations::BaseMutation
     require 'modules/slugger'
 
     include Modules::Slugger
@@ -118,7 +124,7 @@ module Mutations
     argument :description, String, required: true
     argument :index, Integer, required: true
 
-    field :move, Types::MoveType, null: true
+    field :move, Types::PlayMoveType, null: true
     field :errors, [String], null: false
 
     def resolve(play_slug:, move_slug:, url:, name:, description:, index:)
@@ -130,18 +136,18 @@ module Mutations
       play_move = PlayMove.find_by(play:, slug: move_slug)
       return { move: nil, errors: ['Unable to find move.'] } if play_move.nil?
 
-      if index >= play_move.resources.count
+      if index >= play_move.inline_resources.count
         # The index is higher or equal than the current count of the resource.
         # Append the new resource to the move.
         play_move.resources << ({
-          i: play_move.resources.count,
+          i: play_move.inline_resources.count,
           name:,
           description:,
           url:
         })
       else
         # The index is less length of the resources
-        play_move.resources.each_with_index do |resource, i|
+        play_move.inline_resources.each_with_index do |resource, i|
           next if index != i
 
           resource['url'] = url
