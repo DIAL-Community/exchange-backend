@@ -26,6 +26,6 @@ module Types
     field :products, [Types::ProductType], null: true
     field :building_blocks, [Types::BuildingBlockType], null: true
 
-    field :play_moves, [Types::MoveType], null: true
+    field :play_moves, [Types::PlayMoveType], null: true
   end
 end
