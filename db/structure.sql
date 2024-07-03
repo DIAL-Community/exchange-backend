@@ -3775,6 +3775,39 @@ ALTER SEQUENCE fao.regions_id_seq OWNED BY fao.regions.id;
 
 
 --
+-- Name: resource_building_blocks; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resource_building_blocks (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    mapping_status fao.mapping_status_type DEFAULT 'BETA'::fao.mapping_status_type,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resource_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resource_building_blocks_id_seq OWNED BY fao.resource_building_blocks.id;
+
+
+--
 -- Name: resource_topic_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3902,6 +3935,38 @@ CREATE SEQUENCE fao.resources_id_seq
 --
 
 ALTER SEQUENCE fao.resources_id_seq OWNED BY fao.resources.id;
+
+
+--
+-- Name: resources_use_cases; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resources_use_cases (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resources_use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resources_use_cases_id_seq OWNED BY fao.resources_use_cases.id;
 
 
 --
@@ -5546,7 +5611,8 @@ CREATE TABLE public.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
 );
 
 
@@ -9713,6 +9779,13 @@ ALTER TABLE ONLY fao.regions ALTER COLUMN id SET DEFAULT nextval('fao.regions_id
 
 
 --
+-- Name: resource_building_blocks id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks ALTER COLUMN id SET DEFAULT nextval('fao.resource_building_blocks_id_seq'::regclass);
+
+
+--
 -- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9731,6 +9804,13 @@ ALTER TABLE ONLY fao.resource_topics ALTER COLUMN id SET DEFAULT nextval('fao.re
 --
 
 ALTER TABLE ONLY fao.resources ALTER COLUMN id SET DEFAULT nextval('fao.resources_id_seq'::regclass);
+
+
+--
+-- Name: resources_use_cases id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases ALTER COLUMN id SET DEFAULT nextval('fao.resources_use_cases_id_seq'::regclass);
 
 
 --
@@ -11400,6 +11480,14 @@ ALTER TABLE ONLY fao.regions
 
 
 --
+-- Name: resource_building_blocks resource_building_blocks_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT resource_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11421,6 +11509,14 @@ ALTER TABLE ONLY fao.resource_topics
 
 ALTER TABLE ONLY fao.resources
     ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_use_cases resources_use_cases_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT resources_use_cases_pkey PRIMARY KEY (id);
 
 
 --
@@ -13214,6 +13310,13 @@ CREATE INDEX index_play_moves_on_play_id ON fao.play_moves USING btree (play_id)
 
 
 --
+-- Name: index_play_moves_resources; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON fao.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
 -- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13445,6 +13548,27 @@ CREATE UNIQUE INDEX index_regions_on_slug ON fao.regions USING btree (slug);
 
 
 --
+-- Name: index_resource_building_blocks; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_building_blocks ON fao.resource_building_blocks USING btree (resource_id, building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_building_block_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_building_block_id ON fao.resource_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_resource_id ON fao.resource_building_blocks USING btree (resource_id);
+
+
+--
 -- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13498,6 +13622,27 @@ CREATE INDEX index_resources_countries_on_resource_id ON fao.resources_countries
 --
 
 CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resources_use_cases ON fao.resources_use_cases USING btree (resource_id, use_case_id);
+
+
+--
+-- Name: index_resources_use_cases_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_resource_id ON fao.resources_use_cases USING btree (resource_id);
+
+
+--
+-- Name: index_resources_use_cases_on_use_case_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_use_case_id ON fao.resources_use_cases USING btree (use_case_id);
 
 
 --
@@ -14576,6 +14721,13 @@ CREATE INDEX index_play_move_descriptions_on_play_move_id ON public.play_move_de
 --
 
 CREATE INDEX index_play_moves_on_play_id ON public.play_moves USING btree (play_id);
+
+
+--
+-- Name: index_play_moves_resources; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON public.play_moves_resources USING btree (play_move_id, resource_id);
 
 
 --
@@ -16020,6 +16172,14 @@ ALTER TABLE ONLY fao.resource_topics
 
 
 --
+-- Name: resources_use_cases fk_rails_b312c98a0b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT fk_rails_b312c98a0b FOREIGN KEY (use_case_id) REFERENCES fao.use_cases(id);
+
+
+--
 -- Name: oauth_access_grants fk_rails_b4b53e07b8; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -16057,6 +16217,22 @@ ALTER TABLE ONLY fao.product_descriptions
 
 ALTER TABLE ONLY fao.opportunities_countries
     ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES fao.countries(id);
+
+
+--
+-- Name: resources_use_cases fk_rails_c51465b571; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT fk_rails_c51465b571 FOREIGN KEY (resource_id) REFERENCES fao.resources(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_c60c9cd0cf; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT fk_rails_c60c9cd0cf FOREIGN KEY (building_block_id) REFERENCES fao.building_blocks(id);
 
 
 --
@@ -16105,6 +16281,14 @@ ALTER TABLE ONLY fao.use_cases
 
 ALTER TABLE ONLY fao.product_classifications
     ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES fao.products(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_d574f6d18b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT fk_rails_d574f6d18b FOREIGN KEY (resource_id) REFERENCES fao.resources(id);
 
 
 --
@@ -18153,6 +18337,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240624192517'),
 ('20240624193953'),
 ('20240624203205'),
-('20240625122716');
+('20240625122716'),
+('20240703124148');
 
 

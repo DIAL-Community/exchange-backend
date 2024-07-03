@@ -10,11 +10,12 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: false
+    argument :description, String, required: false
 
     field :country, Types::CountryType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug: nil)
+    def resolve(name:, slug: nil, description: nil)
       unless an_admin
         return {
           country: nil,
@@ -80,6 +81,7 @@ module Mutations
       end
 
       country.name = name
+      country.description = description
       if country.save
         # Successful creation, return the created object with no errors
         {
