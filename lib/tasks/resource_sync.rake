@@ -299,7 +299,7 @@ namespace :resource_sync do
     ]
 
     workbook = Roo::Spreadsheet.open('./data/DPI Readings.xlsx')
-    workbook.default_sheet = 'New Research'
+    workbook.default_sheet = 'List 2'
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
     puts "Worksheet headers: #{worksheet_headers.inspect}."
@@ -391,6 +391,15 @@ namespace :resource_sync do
           organization.save!
         end
         existing_resource.organization = organization
+
+        existing_resource.countries = []
+        country_name = current_row_data['Country/Region']
+        unless country_name.nil? || country_name.blank?
+          country = Country.find_by(name: country_name)
+          next if country.nil?
+
+          existing_resource.countries << country unless existing_resource.countries.include?(country)
+        end
 
         existing_resource.save!
         successful_operation = true
