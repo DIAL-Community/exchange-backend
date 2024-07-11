@@ -2939,6 +2939,20 @@
               "deprecationReason": null
             },
             {
+              "name": "description",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "dpiProducts",
               "description": null,
               "args": [
@@ -10112,6 +10126,18 @@
                 },
                 {
                   "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "description",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
