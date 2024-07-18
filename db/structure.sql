@@ -2070,39 +2070,6 @@ ALTER SEQUENCE fao.messages_id_seq OWNED BY fao.messages.id;
 
 
 --
--- Name: move_descriptions; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.move_descriptions (
-    id bigint NOT NULL,
-    play_move_id bigint,
-    locale character varying NOT NULL,
-    description character varying NOT NULL,
-    prerequisites character varying DEFAULT ''::character varying NOT NULL,
-    outcomes character varying DEFAULT ''::character varying NOT NULL
-);
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.move_descriptions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.move_descriptions_id_seq OWNED BY fao.move_descriptions.id;
-
-
---
 -- Name: oauth_access_grants; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2723,6 +2690,39 @@ ALTER SEQUENCE fao.play_descriptions_id_seq OWNED BY fao.play_descriptions.id;
 
 
 --
+-- Name: play_move_descriptions; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.play_move_descriptions (
+    id bigint NOT NULL,
+    play_move_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    prerequisites character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.play_move_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.play_move_descriptions_id_seq OWNED BY fao.play_move_descriptions.id;
+
+
+--
 -- Name: play_moves; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -2732,7 +2732,7 @@ CREATE TABLE fao.play_moves (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     move_order integer DEFAULT 0 NOT NULL,
-    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    inline_resources jsonb DEFAULT '[]'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2755,6 +2755,38 @@ CREATE SEQUENCE fao.play_moves_id_seq
 --
 
 ALTER SEQUENCE fao.play_moves_id_seq OWNED BY fao.play_moves.id;
+
+
+--
+-- Name: play_moves_resources; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.play_moves_resources (
+    id bigint NOT NULL,
+    play_move_id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.play_moves_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.play_moves_resources_id_seq OWNED BY fao.play_moves_resources.id;
 
 
 --
@@ -3743,6 +3775,39 @@ ALTER SEQUENCE fao.regions_id_seq OWNED BY fao.regions.id;
 
 
 --
+-- Name: resource_building_blocks; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resource_building_blocks (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    mapping_status fao.mapping_status_type DEFAULT 'BETA'::fao.mapping_status_type,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resource_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resource_building_blocks_id_seq OWNED BY fao.resource_building_blocks.id;
+
+
+--
 -- Name: resource_topic_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3870,6 +3935,38 @@ CREATE SEQUENCE fao.resources_id_seq
 --
 
 ALTER SEQUENCE fao.resources_id_seq OWNED BY fao.resources.id;
+
+
+--
+-- Name: resources_use_cases; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resources_use_cases (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resources_use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resources_use_cases_id_seq OWNED BY fao.resources_use_cases.id;
 
 
 --
@@ -4263,7 +4360,7 @@ CREATE SEQUENCE fao.task_descriptions_id_seq
 -- Name: task_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
 --
 
-ALTER SEQUENCE fao.task_descriptions_id_seq OWNED BY fao.move_descriptions.id;
+ALTER SEQUENCE fao.task_descriptions_id_seq OWNED BY fao.play_move_descriptions.id;
 
 
 --
@@ -5514,7 +5611,8 @@ CREATE TABLE public.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
 );
 
 
@@ -6218,39 +6316,6 @@ ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
 
 --
--- Name: move_descriptions; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.move_descriptions (
-    id bigint NOT NULL,
-    play_move_id bigint,
-    locale character varying NOT NULL,
-    description character varying NOT NULL,
-    prerequisites character varying DEFAULT ''::character varying NOT NULL,
-    outcomes character varying DEFAULT ''::character varying NOT NULL
-);
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.move_descriptions_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.move_descriptions_id_seq OWNED BY public.move_descriptions.id;
-
-
---
 -- Name: oauth_access_grants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6871,6 +6936,39 @@ ALTER SEQUENCE public.play_descriptions_id_seq OWNED BY public.play_descriptions
 
 
 --
+-- Name: play_move_descriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.play_move_descriptions (
+    id bigint NOT NULL,
+    play_move_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    prerequisites character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.play_move_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.play_move_descriptions_id_seq OWNED BY public.play_move_descriptions.id;
+
+
+--
 -- Name: play_moves; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -6880,7 +6978,7 @@ CREATE TABLE public.play_moves (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     move_order integer DEFAULT 0 NOT NULL,
-    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    inline_resources jsonb DEFAULT '[]'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -6903,6 +7001,38 @@ CREATE SEQUENCE public.play_moves_id_seq
 --
 
 ALTER SEQUENCE public.play_moves_id_seq OWNED BY public.play_moves.id;
+
+
+--
+-- Name: play_moves_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.play_moves_resources (
+    id bigint NOT NULL,
+    play_move_id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.play_moves_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.play_moves_resources_id_seq OWNED BY public.play_moves_resources.id;
 
 
 --
@@ -7891,6 +8021,39 @@ ALTER SEQUENCE public.regions_id_seq OWNED BY public.regions.id;
 
 
 --
+-- Name: resource_building_blocks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resource_building_blocks (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    mapping_status public.mapping_status_type DEFAULT 'BETA'::public.mapping_status_type,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.resource_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.resource_building_blocks_id_seq OWNED BY public.resource_building_blocks.id;
+
+
+--
 -- Name: resource_topic_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -8018,6 +8181,38 @@ CREATE SEQUENCE public.resources_id_seq
 --
 
 ALTER SEQUENCE public.resources_id_seq OWNED BY public.resources.id;
+
+
+--
+-- Name: resources_use_cases; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resources_use_cases (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.resources_use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.resources_use_cases_id_seq OWNED BY public.resources_use_cases.id;
 
 
 --
@@ -8411,7 +8606,7 @@ CREATE SEQUENCE public.task_descriptions_id_seq
 -- Name: task_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE public.task_descriptions_id_seq OWNED BY public.move_descriptions.id;
+ALTER SEQUENCE public.task_descriptions_id_seq OWNED BY public.play_move_descriptions.id;
 
 
 --
@@ -9269,13 +9464,6 @@ ALTER TABLE ONLY fao.messages ALTER COLUMN id SET DEFAULT nextval('fao.messages_
 
 
 --
--- Name: move_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.move_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.task_descriptions_id_seq'::regclass);
-
-
---
 -- Name: oauth_access_grants id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9388,10 +9576,24 @@ ALTER TABLE ONLY fao.play_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.
 
 
 --
+-- Name: play_move_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_move_descriptions ALTER COLUMN id SET DEFAULT nextval('fao.task_descriptions_id_seq'::regclass);
+
+
+--
 -- Name: play_moves id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.play_moves ALTER COLUMN id SET DEFAULT nextval('fao.play_tasks_id_seq'::regclass);
+
+
+--
+-- Name: play_moves_resources id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_moves_resources ALTER COLUMN id SET DEFAULT nextval('fao.play_moves_resources_id_seq'::regclass);
 
 
 --
@@ -9577,6 +9779,13 @@ ALTER TABLE ONLY fao.regions ALTER COLUMN id SET DEFAULT nextval('fao.regions_id
 
 
 --
+-- Name: resource_building_blocks id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks ALTER COLUMN id SET DEFAULT nextval('fao.resource_building_blocks_id_seq'::regclass);
+
+
+--
 -- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9595,6 +9804,13 @@ ALTER TABLE ONLY fao.resource_topics ALTER COLUMN id SET DEFAULT nextval('fao.re
 --
 
 ALTER TABLE ONLY fao.resources ALTER COLUMN id SET DEFAULT nextval('fao.resources_id_seq'::regclass);
+
+
+--
+-- Name: resources_use_cases id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases ALTER COLUMN id SET DEFAULT nextval('fao.resources_use_cases_id_seq'::regclass);
 
 
 --
@@ -10053,13 +10269,6 @@ ALTER TABLE ONLY public.messages ALTER COLUMN id SET DEFAULT nextval('public.mes
 
 
 --
--- Name: move_descriptions id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.move_descriptions ALTER COLUMN id SET DEFAULT nextval('public.task_descriptions_id_seq'::regclass);
-
-
---
 -- Name: oauth_access_grants id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -10172,10 +10381,24 @@ ALTER TABLE ONLY public.play_descriptions ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: play_move_descriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_move_descriptions ALTER COLUMN id SET DEFAULT nextval('public.task_descriptions_id_seq'::regclass);
+
+
+--
 -- Name: play_moves id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.play_moves ALTER COLUMN id SET DEFAULT nextval('public.play_tasks_id_seq'::regclass);
+
+
+--
+-- Name: play_moves_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_moves_resources ALTER COLUMN id SET DEFAULT nextval('public.play_moves_resources_id_seq'::regclass);
 
 
 --
@@ -10361,6 +10584,13 @@ ALTER TABLE ONLY public.regions ALTER COLUMN id SET DEFAULT nextval('public.regi
 
 
 --
+-- Name: resource_building_blocks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_building_blocks ALTER COLUMN id SET DEFAULT nextval('public.resource_building_blocks_id_seq'::regclass);
+
+
+--
 -- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -10379,6 +10609,13 @@ ALTER TABLE ONLY public.resource_topics ALTER COLUMN id SET DEFAULT nextval('pub
 --
 
 ALTER TABLE ONLY public.resources ALTER COLUMN id SET DEFAULT nextval('public.resources_id_seq'::regclass);
+
+
+--
+-- Name: resources_use_cases id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources_use_cases ALTER COLUMN id SET DEFAULT nextval('public.resources_use_cases_id_seq'::regclass);
 
 
 --
@@ -10883,14 +11120,6 @@ ALTER TABLE ONLY fao.messages
 
 
 --
--- Name: move_descriptions move_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.move_descriptions
-    ADD CONSTRAINT move_descriptions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11019,11 +11248,27 @@ ALTER TABLE ONLY fao.play_descriptions
 
 
 --
+-- Name: play_move_descriptions play_move_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_move_descriptions
+    ADD CONSTRAINT play_move_descriptions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: play_moves play_moves_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.play_moves
     ADD CONSTRAINT play_moves_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves_resources play_moves_resources_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_moves_resources
+    ADD CONSTRAINT play_moves_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -11235,6 +11480,14 @@ ALTER TABLE ONLY fao.regions
 
 
 --
+-- Name: resource_building_blocks resource_building_blocks_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT resource_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11256,6 +11509,14 @@ ALTER TABLE ONLY fao.resource_topics
 
 ALTER TABLE ONLY fao.resources
     ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_use_cases resources_use_cases_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT resources_use_cases_pkey PRIMARY KEY (id);
 
 
 --
@@ -11795,14 +12056,6 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: move_descriptions move_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.move_descriptions
-    ADD CONSTRAINT move_descriptions_pkey PRIMARY KEY (id);
-
-
---
 -- Name: oauth_access_grants oauth_access_grants_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -11931,11 +12184,27 @@ ALTER TABLE ONLY public.play_descriptions
 
 
 --
+-- Name: play_move_descriptions play_move_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_move_descriptions
+    ADD CONSTRAINT play_move_descriptions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: play_moves play_moves_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.play_moves
     ADD CONSTRAINT play_moves_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves_resources play_moves_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_moves_resources
+    ADD CONSTRAINT play_moves_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -12147,6 +12416,14 @@ ALTER TABLE ONLY public.regions
 
 
 --
+-- Name: resource_building_blocks resource_building_blocks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_building_blocks
+    ADD CONSTRAINT resource_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -12168,6 +12445,14 @@ ALTER TABLE ONLY public.resource_topics
 
 ALTER TABLE ONLY public.resources
     ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_use_cases resources_use_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources_use_cases
+    ADD CONSTRAINT resources_use_cases_pkey PRIMARY KEY (id);
 
 
 --
@@ -12773,13 +13058,6 @@ CREATE INDEX index_messages_on_created_by_id ON fao.messages USING btree (create
 
 
 --
--- Name: index_move_descriptions_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_move_descriptions_on_play_move_id ON fao.move_descriptions USING btree (play_move_id);
-
-
---
 -- Name: index_oauth_access_grants_on_application_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13018,10 +13296,38 @@ CREATE INDEX index_play_descriptions_on_play_id ON fao.play_descriptions USING b
 
 
 --
+-- Name: index_play_move_descriptions_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_play_move_descriptions_on_play_move_id ON fao.play_move_descriptions USING btree (play_move_id);
+
+
+--
 -- Name: index_play_moves_on_play_id; Type: INDEX; Schema: fao; Owner: -
 --
 
 CREATE INDEX index_play_moves_on_play_id ON fao.play_moves USING btree (play_id);
+
+
+--
+-- Name: index_play_moves_resources; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON fao.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
+-- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_play_move_id ON fao.play_moves_resources USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_resources_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_resource_id ON fao.play_moves_resources USING btree (resource_id);
 
 
 --
@@ -13242,6 +13548,27 @@ CREATE UNIQUE INDEX index_regions_on_slug ON fao.regions USING btree (slug);
 
 
 --
+-- Name: index_resource_building_blocks; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_building_blocks ON fao.resource_building_blocks USING btree (resource_id, building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_building_block_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_building_block_id ON fao.resource_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_resource_id ON fao.resource_building_blocks USING btree (resource_id);
+
+
+--
 -- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13295,6 +13622,27 @@ CREATE INDEX index_resources_countries_on_resource_id ON fao.resources_countries
 --
 
 CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resources_use_cases ON fao.resources_use_cases USING btree (resource_id, use_case_id);
+
+
+--
+-- Name: index_resources_use_cases_on_resource_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_resource_id ON fao.resources_use_cases USING btree (resource_id);
+
+
+--
+-- Name: index_resources_use_cases_on_use_case_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_use_case_id ON fao.resources_use_cases USING btree (use_case_id);
 
 
 --
@@ -13371,7 +13719,7 @@ CREATE INDEX index_tag_descriptions_on_tag_id ON fao.tag_descriptions USING btre
 -- Name: index_task_descriptions_on_play_task_id; Type: INDEX; Schema: fao; Owner: -
 --
 
-CREATE INDEX index_task_descriptions_on_play_task_id ON fao.move_descriptions USING btree (play_move_id);
+CREATE INDEX index_task_descriptions_on_play_task_id ON fao.play_move_descriptions USING btree (play_move_id);
 
 
 --
@@ -14124,13 +14472,6 @@ CREATE INDEX index_messages_on_created_by_id ON public.messages USING btree (cre
 
 
 --
--- Name: index_move_descriptions_on_play_move_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_move_descriptions_on_play_move_id ON public.move_descriptions USING btree (play_move_id);
-
-
---
 -- Name: index_oauth_access_grants_on_application_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -14369,10 +14710,38 @@ CREATE INDEX index_play_descriptions_on_play_id ON public.play_descriptions USIN
 
 
 --
+-- Name: index_play_move_descriptions_on_play_move_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_play_move_descriptions_on_play_move_id ON public.play_move_descriptions USING btree (play_move_id);
+
+
+--
 -- Name: index_play_moves_on_play_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_play_moves_on_play_id ON public.play_moves USING btree (play_id);
+
+
+--
+-- Name: index_play_moves_resources; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON public.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
+-- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_play_move_id ON public.play_moves_resources USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_resources_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_resource_id ON public.play_moves_resources USING btree (resource_id);
 
 
 --
@@ -14593,6 +14962,27 @@ CREATE UNIQUE INDEX index_regions_on_slug ON public.regions USING btree (slug);
 
 
 --
+-- Name: index_resource_building_blocks; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_building_blocks ON public.resource_building_blocks USING btree (resource_id, building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_building_block_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_building_block_id ON public.resource_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_resource_id ON public.resource_building_blocks USING btree (resource_id);
+
+
+--
 -- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -14646,6 +15036,27 @@ CREATE INDEX index_resources_countries_on_resource_id ON public.resources_countr
 --
 
 CREATE INDEX index_resources_on_organization_id ON public.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_use_cases; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resources_use_cases ON public.resources_use_cases USING btree (resource_id, use_case_id);
+
+
+--
+-- Name: index_resources_use_cases_on_resource_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_resource_id ON public.resources_use_cases USING btree (resource_id);
+
+
+--
+-- Name: index_resources_use_cases_on_use_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_use_case_id ON public.resources_use_cases USING btree (use_case_id);
 
 
 --
@@ -14722,7 +15133,7 @@ CREATE INDEX index_tag_descriptions_on_tag_id ON public.tag_descriptions USING b
 -- Name: index_task_descriptions_on_play_task_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_task_descriptions_on_play_task_id ON public.move_descriptions USING btree (play_move_id);
+CREATE INDEX index_task_descriptions_on_play_task_id ON public.play_move_descriptions USING btree (play_move_id);
 
 
 --
@@ -15129,10 +15540,10 @@ ALTER TABLE ONLY fao.districts
 
 
 --
--- Name: move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: play_move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.move_descriptions
+ALTER TABLE ONLY fao.play_move_descriptions
     ADD CONSTRAINT fk_rails_0684d55f45 FOREIGN KEY (play_move_id) REFERENCES fao.play_moves(id);
 
 
@@ -15214,6 +15625,14 @@ ALTER TABLE ONLY fao.chatbot_conversations
 
 ALTER TABLE ONLY fao.use_case_steps
     ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES fao.use_cases(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_1ba13f968c; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_moves_resources
+    ADD CONSTRAINT fk_rails_1ba13f968c FOREIGN KEY (resource_id) REFERENCES fao.resources(id);
 
 
 --
@@ -15374,6 +15793,14 @@ ALTER TABLE ONLY fao.projects
 
 ALTER TABLE ONLY fao.tag_descriptions
     ADD CONSTRAINT fk_rails_46e6dc893e FOREIGN KEY (tag_id) REFERENCES fao.tags(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_48f1a17adf; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.play_moves_resources
+    ADD CONSTRAINT fk_rails_48f1a17adf FOREIGN KEY (play_move_id) REFERENCES fao.play_moves(id);
 
 
 --
@@ -15657,10 +16084,10 @@ ALTER TABLE ONLY fao.products_endorsers
 
 
 --
--- Name: move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: play_move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.move_descriptions
+ALTER TABLE ONLY fao.play_move_descriptions
     ADD CONSTRAINT fk_rails_9f26d2af9a FOREIGN KEY (play_move_id) REFERENCES fao.play_moves(id);
 
 
@@ -15745,6 +16172,14 @@ ALTER TABLE ONLY fao.resource_topics
 
 
 --
+-- Name: resources_use_cases fk_rails_b312c98a0b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT fk_rails_b312c98a0b FOREIGN KEY (use_case_id) REFERENCES fao.use_cases(id);
+
+
+--
 -- Name: oauth_access_grants fk_rails_b4b53e07b8; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -15782,6 +16217,22 @@ ALTER TABLE ONLY fao.product_descriptions
 
 ALTER TABLE ONLY fao.opportunities_countries
     ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES fao.countries(id);
+
+
+--
+-- Name: resources_use_cases fk_rails_c51465b571; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources_use_cases
+    ADD CONSTRAINT fk_rails_c51465b571 FOREIGN KEY (resource_id) REFERENCES fao.resources(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_c60c9cd0cf; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT fk_rails_c60c9cd0cf FOREIGN KEY (building_block_id) REFERENCES fao.building_blocks(id);
 
 
 --
@@ -15830,6 +16281,14 @@ ALTER TABLE ONLY fao.use_cases
 
 ALTER TABLE ONLY fao.product_classifications
     ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES fao.products(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_d574f6d18b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_building_blocks
+    ADD CONSTRAINT fk_rails_d574f6d18b FOREIGN KEY (resource_id) REFERENCES fao.resources(id);
 
 
 --
@@ -16353,10 +16812,10 @@ ALTER TABLE ONLY public.districts
 
 
 --
--- Name: move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: play_move_descriptions fk_rails_0684d55f45; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.move_descriptions
+ALTER TABLE ONLY public.play_move_descriptions
     ADD CONSTRAINT fk_rails_0684d55f45 FOREIGN KEY (play_move_id) REFERENCES public.play_moves(id);
 
 
@@ -16438,6 +16897,14 @@ ALTER TABLE ONLY public.chatbot_conversations
 
 ALTER TABLE ONLY public.use_case_steps
     ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES public.use_cases(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_1ba13f968c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_moves_resources
+    ADD CONSTRAINT fk_rails_1ba13f968c FOREIGN KEY (resource_id) REFERENCES public.resources(id);
 
 
 --
@@ -16598,6 +17065,14 @@ ALTER TABLE ONLY public.projects
 
 ALTER TABLE ONLY public.tag_descriptions
     ADD CONSTRAINT fk_rails_46e6dc893e FOREIGN KEY (tag_id) REFERENCES public.tags(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_48f1a17adf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.play_moves_resources
+    ADD CONSTRAINT fk_rails_48f1a17adf FOREIGN KEY (play_move_id) REFERENCES public.play_moves(id);
 
 
 --
@@ -16881,10 +17356,10 @@ ALTER TABLE ONLY public.products_endorsers
 
 
 --
--- Name: move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: play_move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.move_descriptions
+ALTER TABLE ONLY public.play_move_descriptions
     ADD CONSTRAINT fk_rails_9f26d2af9a FOREIGN KEY (play_move_id) REFERENCES public.play_moves(id);
 
 
@@ -16969,6 +17444,14 @@ ALTER TABLE ONLY public.resource_topics
 
 
 --
+-- Name: resources_use_cases fk_rails_b312c98a0b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources_use_cases
+    ADD CONSTRAINT fk_rails_b312c98a0b FOREIGN KEY (use_case_id) REFERENCES public.use_cases(id);
+
+
+--
 -- Name: oauth_access_grants fk_rails_b4b53e07b8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -17006,6 +17489,22 @@ ALTER TABLE ONLY public.product_descriptions
 
 ALTER TABLE ONLY public.opportunities_countries
     ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: resources_use_cases fk_rails_c51465b571; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources_use_cases
+    ADD CONSTRAINT fk_rails_c51465b571 FOREIGN KEY (resource_id) REFERENCES public.resources(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_c60c9cd0cf; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_building_blocks
+    ADD CONSTRAINT fk_rails_c60c9cd0cf FOREIGN KEY (building_block_id) REFERENCES public.building_blocks(id);
 
 
 --
@@ -17054,6 +17553,14 @@ ALTER TABLE ONLY public.use_cases
 
 ALTER TABLE ONLY public.product_classifications
     ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_d574f6d18b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_building_blocks
+    ADD CONSTRAINT fk_rails_d574f6d18b FOREIGN KEY (resource_id) REFERENCES public.resources(id);
 
 
 --
@@ -17826,6 +18333,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240605130949'),
 ('20240605184914'),
 ('20240606205817'),
-('20240609191249');
+('20240609191249'),
+('20240624192517'),
+('20240624193953'),
+('20240624203205'),
+('20240625122716'),
+('20240703124148');
 
 

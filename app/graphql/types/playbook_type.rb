@@ -57,7 +57,7 @@ module Types
           # Different approach to lock part of the entities.
           return []
         else
-          return object.all_plays
+          return object.all_playbook_plays
         end
       end
 

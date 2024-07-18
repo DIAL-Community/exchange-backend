@@ -123,7 +123,9 @@ module Mutations
           avatar_params = '&background=2e3192&color=fff&format=svg'
           resource_author.picture = "#{avatar_api}#{resource_author.name.gsub(/\s+/, '+')}#{avatar_params}"
 
-          resource.authors << resource_author
+          if resource_author.new_record? || !resource.authors.include?(resource_author)
+            resource.authors << resource_author
+          end
         end
 
         unless organization.nil?

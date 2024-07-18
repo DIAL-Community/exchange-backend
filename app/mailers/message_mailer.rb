@@ -29,11 +29,11 @@ class MessageMailer < ActionMailer::Base
       email_body = email_body.gsub('%{user_email}%', current_user&.email)
                              # Replace with current user's name or fallback to username if contact is nil.
                              .gsub('%{user_name}%', current_user&.username)
-                             .gsub('%{user_username}%', current_user.username)
+                             .gsub('%{user_username}%', current_user&.username)
     end
 
     mail(
-      from: 'Notifier System <system@dpi.dial.community>',
+      from: 'Notifier System <system@resource.dial.global>',
       to: "#{current_contact.name} <#{current_contact.email}>",
       subject: email_subject,
       body: email_body

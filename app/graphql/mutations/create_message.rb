@@ -17,14 +17,12 @@ module Mutations
     argument :location, String, required: false
     argument :location_type, String, required: false
 
-    argument :send_email_notification, Boolean, required: false, default_value: true
-
     field :message, Types::MessageType, null: true
     field :errors, [String], null: true
 
     def resolve(
       name:, message_template:, message_type:, message_datetime:,
-      visible:, location: nil, location_type: nil, send_email_notification:
+      visible:, location: nil, location_type: nil
     )
       unless an_admin || an_adli_admin
         return {
@@ -58,25 +56,9 @@ module Mutations
 
       message.created_by = context[:current_user]
 
-      message_is_fresh = message.new_record?
-
       successful_operation = false
       ActiveRecord::Base.transaction do
         message.save!
-
-        if send_email_notification && message_is_fresh
-          contacts = Contact.where(source: DPI_TENANT_NAME)
-          contacts.each do |contact|
-            MessageMailer
-              .with(
-                current_user: User.find_by(email: contact.email),
-                current_contact: contact,
-                current_message: message
-              )
-              .message_action_notification
-              .deliver_now
-          end
-        end
 
         successful_operation = true
       end

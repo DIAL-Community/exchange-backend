@@ -85,7 +85,7 @@ module Paginated
       filtered_countries = countries.reject { |x| x.nil? || x.empty? }
       unless filtered_countries.empty?
         resources = resources.left_outer_joins(:countries)
-                             .where(countries: { name: filtered_countries })
+                             .where(countries: { id: filtered_countries })
       end
 
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }

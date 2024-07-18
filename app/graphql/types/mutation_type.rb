@@ -19,9 +19,9 @@ module Types
     field :delete_play_move, mutation: Mutations::DeletePlayMove
     field :update_play_moves, mutation: Mutations::UpdatePlayMoves
 
-    field :create_move, mutation: Mutations::CreateMove
-    field :auto_save_move, mutation: Mutations::CreateMove
-    field :create_move_resource, mutation: Mutations::CreateMoveResource
+    field :create_move, mutation: Mutations::CreatePlayMove
+    field :auto_save_move, mutation: Mutations::CreatePlayMove
+    field :create_move_resource, mutation: Mutations::CreatePlayMoveResource
 
     field :create_user, mutation: Mutations::CreateUser
     field :delete_user, mutation: Mutations::DeleteUser
@@ -158,8 +158,10 @@ module Types
     field :create_task_tracker, mutation: Mutations::CreateTaskTracker
 
     field :update_resource_tags, mutation: Mutations::UpdateResourceTags
-    field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
     field :update_resource_products, mutation: Mutations::UpdateResourceProducts
+    field :update_resource_use_cases, mutation: Mutations::UpdateResourceUseCases
+    field :update_resource_countries, mutation: Mutations::UpdateResourceCountries
+    field :update_resource_building_blocks, mutation: Mutations::UpdateResourceBuildingBlocks
     field :update_resource_resource_topics, mutation: Mutations::UpdateResourceResourceTopics
 
     field :create_region, mutation: Mutations::CreateRegion
