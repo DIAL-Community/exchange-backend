@@ -5,7 +5,10 @@ require('csv')
 class Organization < ApplicationRecord
   include Auditable
 
+  attribute :org_type, :string
   enum org_type: { endorser: 'endorser', mni: 'mni', product: 'product' }, _suffix: true
+
+  attribute :endorser_levels, :string
   enum endorser_levels: { NONE: 'none', GOLD: 'gold', SILVER: 'silver', BRONZE: 'bronze' }
 
   attr_accessor :organization_description

@@ -38,7 +38,6 @@ Rails.application.configure do
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
-  config.active_record.legacy_connection_handling = false
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -56,21 +55,21 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'exchange.dial.global', port: 80 }
   Rails.application.routes.default_url_options[:host] = 'exchange.dial.global'
 
-  #config.action_mailer.delivery_method = :mailgun
+  # config.action_mailer.delivery_method = :mailgun
 
-  #config.action_mailer.mailgun_settings = {
-  #  api_key: Rails.application.secrets.mailgun_api_key,
-  #  domain: Rails.application.secrets.mailgun_domain
-  #}
+  # config.action_mailer.mailgun_settings = {
+  #   api_key: Rails.application.secrets.mailgun_api_key,
+  #   domain: Rails.application.secrets.mailgun_domain
+  # }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              Rails.application.secrets.mail_domain,
-    port:                 587,
-    domain:               'dial.community',
-    user_name:            'dial_catalog',
-    password:             Rails.application.secrets.mail_api_key,
-    #authentication:       'plain',
+    address: Rails.application.secrets.mail_domain,
+    port: 587,
+    domain: 'dial.community',
+    user_name: 'dial_catalog',
+    password: Rails.application.secrets.mail_api_key,
+    # authentication:     'plain',
     enable_starttls_auto: true
   }
 
@@ -82,7 +81,7 @@ Rails.application.configure do
   config.log_level = :info
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store

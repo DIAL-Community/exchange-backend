@@ -6,6 +6,7 @@ class BuildingBlock < ApplicationRecord
   include EntityStatusType
   include Auditable
 
+  attribute :category_type, :string
   enum category_type: {
     DPI: 'DPI',
     FUNCTIONAL: 'FUNCTIONAL'

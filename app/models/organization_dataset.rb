@@ -6,6 +6,7 @@ class OrganizationDataset < ApplicationRecord
   belongs_to :organization
   belongs_to :dataset
 
+  attribute :org_type, :string
   enum org_type: { owner: 'owner', maintainer: 'maintainer', funder: 'funder', implementer: 'implementer' }
 
   after_initialize :set_default_type, if: :new_record?

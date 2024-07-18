@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/BlockNesting
 # rubocop:disable Style/ClassVars
 
 # TODO: Revisit this module to reduce the if nesting.
@@ -912,4 +911,3 @@ module Modules
   end
 end
 # rubocop:enable Style/ClassVars
-# rubocop:enable Metrics/BlockNesting
