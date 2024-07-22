@@ -5,7 +5,7 @@ module Queries
     argument :category_slug, String, required: true
     type [Types::SoftwareFeatureType], null: false
 
-    def resolve(search:)
+    def resolve(category_slug:)
       features = SoftwareFeature.where(software_category: category_slug).order(:name)
       features
     end

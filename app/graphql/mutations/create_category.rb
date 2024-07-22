@@ -27,8 +27,8 @@ module Mutations
 
         # Check if we need to add _dup to the slug.
         first_duplicate = SoftwareCategory.slug_simple_starts_with(category.slug)
-                                .order(slug: :desc)
-                                .first
+                                          .order(slug: :desc)
+                                          .first
         unless first_duplicate.nil?
           category.slug = category.slug + generate_offset(first_duplicate)
         end

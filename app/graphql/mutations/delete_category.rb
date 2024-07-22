@@ -16,7 +16,7 @@ module Mutations
       end
 
       category = SoftwareCategory.find_by(id:)
-      
+
       if category.destroy
         # Successful deletion, return the deleted sector with no errors
         {

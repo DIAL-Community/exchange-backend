@@ -8,7 +8,7 @@ module Types
     field :description, String, null: false
     field :facility_scale, Integer, null: false
     field :category_id, Integer, null: false
-    def category_id 
+    def category_id
       object.software_category.id
     end
 
