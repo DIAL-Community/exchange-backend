@@ -1366,7 +1366,8 @@ CREATE TABLE fao.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
 );
 
 
@@ -8140,7 +8141,8 @@ CREATE TABLE public.resources (
     link_description character varying,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -15039,6 +15041,13 @@ CREATE INDEX index_resources_on_organization_id ON public.resources USING btree 
 
 
 --
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON public.resources USING btree (submitted_by_id);
+
+
+--
 -- Name: index_resources_use_cases; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17052,6 +17061,14 @@ ALTER TABLE ONLY public.projects_digital_principles
 
 
 --
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: projects fk_rails_45a5b9baa8; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -18338,6 +18355,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240624193953'),
 ('20240624203205'),
 ('20240625122716'),
-('20240703124148');
+('20240703124148'),
+('20240721194811');
 
 

@@ -1870,6 +1870,7 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: Organization
+  submittedBy: User
   tags: JSON!
   useCases: [UseCase!]!
 }

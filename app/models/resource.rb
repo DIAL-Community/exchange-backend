@@ -4,6 +4,7 @@ class Resource < ApplicationRecord
   include Auditable
 
   belongs_to :organization, optional: true
+  belongs_to :submitted_by, class_name: 'User', optional: true
 
   has_many :resource_building_blocks, dependent: :delete_all
   has_many :building_blocks, through: :resource_building_blocks, dependent: :delete_all
