@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 require 'modules/maturity_sync'
 require 'modules/slugger'
 require 'modules/track'

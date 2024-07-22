@@ -5725,8 +5725,12 @@ CREATE TABLE health.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
+<<<<<<< HEAD
     updated_at timestamp(6) without time zone NOT NULL,
     chatbot_response jsonb DEFAULT '{}'::jsonb
+=======
+    updated_at timestamp(6) without time zone NOT NULL
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 );
 
 
@@ -7600,6 +7604,7 @@ ALTER SEQUENCE health.product_building_blocks_id_seq OWNED BY health.product_bui
 
 
 --
+<<<<<<< HEAD
 -- Name: product_categories; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -7610,6 +7615,8 @@ CREATE TABLE health.product_categories (
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: product_classifications; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -7673,6 +7680,7 @@ ALTER SEQUENCE health.product_descriptions_id_seq OWNED BY health.product_descri
 
 
 --
+<<<<<<< HEAD
 -- Name: product_features; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -7683,6 +7691,8 @@ CREATE TABLE health.product_features (
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: product_indicators; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -7876,7 +7886,11 @@ CREATE TABLE health.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
+<<<<<<< HEAD
     product_type health.product_type_save DEFAULT 'product'::health.product_type_save,
+=======
+    product_type character varying(20) DEFAULT 'product'::health.product_type_save,
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -7886,8 +7900,12 @@ CREATE TABLE health.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
+<<<<<<< HEAD
     extra_attributes jsonb DEFAULT '{}'::jsonb,
     product_stage character varying
+=======
+    extra_attributes jsonb DEFAULT '{}'::jsonb
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 );
 
 
@@ -8343,6 +8361,7 @@ ALTER SEQUENCE health.resource_topics_id_seq OWNED BY health.resource_topics.id;
 
 
 --
+<<<<<<< HEAD
 -- Name: resource_types; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -8377,6 +8396,8 @@ ALTER SEQUENCE health.resource_types_id_seq OWNED BY health.resource_types.id;
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: resources; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -8397,8 +8418,12 @@ CREATE TABLE health.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
+<<<<<<< HEAD
     organization_id bigint,
     submitted_by_id bigint
+=======
+    organization_id bigint
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 );
 
 
@@ -8683,6 +8708,7 @@ ALTER SEQUENCE health.settings_id_seq OWNED BY health.settings.id;
 
 
 --
+<<<<<<< HEAD
 -- Name: software_categories; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -8751,6 +8777,8 @@ ALTER SEQUENCE health.software_features_id_seq OWNED BY health.software_features
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: starred_objects; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -15115,6 +15143,7 @@ ALTER TABLE ONLY health.resource_topics ALTER COLUMN id SET DEFAULT nextval('hea
 
 
 --
+<<<<<<< HEAD
 -- Name: resource_types id; Type: DEFAULT; Schema: health; Owner: -
 --
 
@@ -15122,6 +15151,8 @@ ALTER TABLE ONLY health.resource_types ALTER COLUMN id SET DEFAULT nextval('heal
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: resources id; Type: DEFAULT; Schema: health; Owner: -
 --
 
@@ -15178,6 +15209,7 @@ ALTER TABLE ONLY health.settings ALTER COLUMN id SET DEFAULT nextval('health.set
 
 
 --
+<<<<<<< HEAD
 -- Name: software_categories id; Type: DEFAULT; Schema: health; Owner: -
 --
 
@@ -15192,6 +15224,8 @@ ALTER TABLE ONLY health.software_features ALTER COLUMN id SET DEFAULT nextval('h
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: starred_objects id; Type: DEFAULT; Schema: health; Owner: -
 --
 
@@ -17752,6 +17786,7 @@ ALTER TABLE ONLY health.resource_topics
 
 
 --
+<<<<<<< HEAD
 -- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -17760,6 +17795,8 @@ ALTER TABLE ONLY health.resource_types
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: resources resources_pkey; Type: CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -17832,6 +17869,7 @@ ALTER TABLE ONLY health.settings
 
 
 --
+<<<<<<< HEAD
 -- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -17848,6 +17886,8 @@ ALTER TABLE ONLY health.software_features
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -20989,6 +21029,7 @@ CREATE INDEX index_principle_descriptions_on_digital_principle_id ON health.prin
 
 
 --
+<<<<<<< HEAD
 -- Name: index_product_categories_on_product_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21003,6 +21044,8 @@ CREATE INDEX index_product_categories_on_software_category_id ON health.product_
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21024,6 +21067,7 @@ CREATE INDEX index_product_descriptions_on_product_id ON health.product_descript
 
 
 --
+<<<<<<< HEAD
 -- Name: index_product_features_on_product_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21038,6 +21082,8 @@ CREATE INDEX index_product_features_on_software_feature_id ON health.product_fea
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: index_product_indicators_on_category_indicator_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21248,6 +21294,7 @@ CREATE INDEX index_resources_on_organization_id ON health.resources USING btree 
 
 
 --
+<<<<<<< HEAD
 -- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21255,6 +21302,8 @@ CREATE INDEX index_resources_on_submitted_by_id ON health.resources USING btree 
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: index_resources_use_cases; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21325,6 +21374,7 @@ CREATE INDEX index_sessions_on_updated_at ON health.sessions USING btree (update
 
 
 --
+<<<<<<< HEAD
 -- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -21332,6 +21382,8 @@ CREATE INDEX index_software_features_on_software_category_id ON health.software_
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: index_starred_object_record; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -24470,6 +24522,7 @@ ALTER TABLE ONLY health.datasets_origins
 
 
 --
+<<<<<<< HEAD
 -- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24478,6 +24531,8 @@ ALTER TABLE ONLY health.product_categories
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24502,6 +24557,7 @@ ALTER TABLE ONLY health.use_case_steps
 
 
 --
+<<<<<<< HEAD
 -- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24510,6 +24566,8 @@ ALTER TABLE ONLY health.software_features
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: play_moves_resources fk_rails_1ba13f968c; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24654,6 +24712,7 @@ ALTER TABLE ONLY health.projects_digital_principles
 
 
 --
+<<<<<<< HEAD
 -- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24662,6 +24721,8 @@ ALTER TABLE ONLY health.resources
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: projects fk_rails_45a5b9baa8; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24918,6 +24979,7 @@ ALTER TABLE ONLY health.projects_countries
 
 
 --
+<<<<<<< HEAD
 -- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24926,6 +24988,8 @@ ALTER TABLE ONLY health.product_features
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24950,6 +25014,7 @@ ALTER TABLE ONLY health.opportunities_sectors
 
 
 --
+<<<<<<< HEAD
 -- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24966,6 +25031,8 @@ ALTER TABLE ONLY health.product_features
 
 
 --
+=======
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 -- Name: playbook_plays fk_rails_9d1a7ebfec; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -27212,9 +27279,13 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240624203205'),
 ('20240625122716'),
 ('20240703124148'),
+<<<<<<< HEAD
 ('20240712135449'),
 ('20240721194811'),
 ('20240806130712'),
 ('20240814120047');
+=======
+('20240712135449');
+>>>>>>> fc04ecf6 (New data models and APIs for product categories and features)
 
 
