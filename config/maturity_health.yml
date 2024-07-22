@@ -1,0 +1,60 @@
+- category: Usage
+  indicators:
+    - name: Number of deployments
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+    - name: Number of deployment countries
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 1
+        - operator: lessThan
+          value: 3
+      high:
+        - operator: greaterThan
+          value: 2
+    - name: Number of active users
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+    - name: Number of transactions/month
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+- category: Interoperability
+  indicators:
+    - name: Data import/export using FHIR
+      type: boolean
+      
+    

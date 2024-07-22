@@ -2,7 +2,7 @@
 
 module Modules
   module MaturitySync
-    def create_category(cat_name)
+    def create_category(cat_name, cat_desc = nil)
       category_slug = reslug_em(cat_name)
       rubric_category = RubricCategory.where(slug: category_slug)
                                       .first || RubricCategory.new
@@ -16,7 +16,7 @@ module Modules
                                                       .first || RubricCategoryDescription.new
       rubric_category_desc.rubric_category_id = rubric_category.id
       rubric_category_desc.locale = I18n.locale
-      rubric_category_desc.description = "<p>#{cat_name}</p>"
+      rubric_category_desc.description = cat_desc ? cat_desc : "<p>#{cat_name}</p>"
       rubric_category_desc.save
 
       rubric_category
@@ -699,7 +699,7 @@ module Modules
       { 'error': 'Indicator not found' }
     end
 
-    def calculate_product_indicators(product_id)
+    def calculate_product_indicators(product_id, config_file)
       product_repositories = ProductRepository.where(product_id:)
       github_category_indicators = CategoryIndicator.where(data_source: 'GitHub')
 

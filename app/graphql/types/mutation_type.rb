@@ -68,6 +68,7 @@ module Types
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
     field :update_product_resources, mutation: Mutations::UpdateProductResources
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
+    field :update_product_categories, mutation: Mutations::UpdateProductCategories
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :delete_dataset, mutation: Mutations::DeleteDataset
@@ -109,6 +110,9 @@ module Types
 
     field :create_sector, mutation: Mutations::CreateSector
     field :delete_sector, mutation: Mutations::DeleteSector
+
+    field :create_category, mutation: Mutations::CreateCategory
+    field :delete_category, mutation: Mutations::DeleteCategory
 
     field :create_workflow, mutation: Mutations::CreateWorkflow
     field :delete_workflow, mutation: Mutations::DeleteWorkflow

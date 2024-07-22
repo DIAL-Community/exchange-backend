@@ -122,6 +122,18 @@ class Product < ApplicationRecord
                           after_add: :association_add,
                           before_remove: :association_remove
 
+  has_and_belongs_to_many :software_categories,
+                          join_table: :product_categories,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+
+  has_and_belongs_to_many :software_features,
+                          join_table: :product_features,
+                          dependent: :delete_all,
+                          after_add: :association_add,
+                          before_remove: :association_remove
+
   validates :name, presence: true, length: { maximum: 300 }
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }

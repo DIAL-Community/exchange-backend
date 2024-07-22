@@ -63,6 +63,9 @@ module Types
 
     field :resources, [Types::ResourceType], null: true
 
+    field :software_categories, [Types::SoftwareCategoryType], null: true
+    field :software_features, [Types::SoftwareFeatureType], null: true
+
     field :current_projects, [Types::ProjectType], null: true do
       argument :first, Integer, required: false
     end

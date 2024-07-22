@@ -1,0 +1,39 @@
+- category: Electronic Health Record
+  description: Products that track individual patients health records longitudinally
+  features:
+    - name: Clinical Decision Support
+      description: Provide prompts and alerts, or checklists, based according to protocol, Screen persons by risk or other health status
+      health_facility_scale: 2
+    - name: Patient Record Management
+      description: Longitudinal tracking of person’s health status and services,  Manage structured and unstructured (images, notes) clinical records, Routine health indicator data collection and management
+      health_facility_scale: 1
+    - name: Individual Registration
+      description: Verify a person’s unique identity, Enrol person(s) for health services/clinical care plan
+      health_facility_scale: 1
+    - name: CPOE/Order Management
+      description: Allows doctors to enter orders digitally in the EHR system
+      health_facility_scale: 2
+    - name: Encounter Coding
+      description: Configurable system for creating codes for various encounters. Should allow use of standard coding systems (ICD10, Snomed)
+      health_facility_scale: 2
+    - name: Patient Billing
+      description: Track patient financial accounts, send invoices, receive payments and reconcile accounts
+      health_facility_scale: 2
+    - name: X-Ray and Imaging
+      description: Offering digital imaging services and ability to order X-Rays and other imaging 
+      health_facility_scale: 3
+    - name: Patient Care Templates
+      description: Allow provider to configure templates for doctor notes
+      health_facility_scale: 3
+- category: Pharmacy
+  description: Managing the inventory and disbursement of medicine and other supplies
+  features:
+  - name: Dispensing and Administration
+    description: Track all medicines and supplies that have been dispensed, update patient records on administration
+    health_facility_scale: 2
+  - name: Inventory Management
+    description: Management of inventory including alerts when inventory levels are low
+    health_facility_scale: 2
+  - name: Drug Interaction Monitoring
+    description: Provide the ability to monitor patients and track effects of various medications
+    health_facility_scale: 3
