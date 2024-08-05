@@ -147,6 +147,8 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
+    faraday_middleware (1.2.0)
+      faraday (~> 1.0)
     ffi (1.15.5)
     ffi (1.15.5-java)
     ffi (1.15.5-x64-mingw32)
@@ -532,6 +534,7 @@ DEPENDENCIES
   devise
   factory_bot
   factory_bot_rails
+  faraday_middleware
   google-apis-sheets_v4
   google-cloud-translate
   graphiql-rails

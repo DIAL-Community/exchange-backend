@@ -274,21 +274,25 @@ namespace :sync do
 
     description = nil
     if description.nil? || description.blank?
+      puts "  Reading meta meta[name='description']..."
       meta_description = parsed_response.at_css('meta[@name="description"]')
       description = meta_description.attr('content') unless meta_description.nil?
     end
 
     if description.nil? || description.blank?
+      puts "  Reading meta meta[name='twitter:description']..."
       twitter_description = parsed_response.at_css('meta[@name="twitter:description"]')
       description = twitter_description.attr('content') unless twitter_description.nil?
     end
 
     if description.nil? || description.blank?
+      puts "  Reading meta meta[property='og:description']..."
       og_description = parsed_response.at_css('meta[@property="og:description"]')
       description = og_description.attr('content') unless og_description.nil?
     end
 
     if description.nil? || description.blank?
+      puts "  Searching //p[string-length() >= 120..."
       long_paragraphs = parsed_response.search('//p[string-length() >= 120]')
       description = long_paragraphs.first.attr('content') unless long_paragraphs.empty?
     end
@@ -300,30 +304,26 @@ namespace :sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    Product.left_joins(:product_descriptions)
-           .where(product_descriptions: { id: nil })
-           .each do |product|
+    faraday = Faraday.new(ssl: { verify: true, verify_mode: 0 }) do |f|
+      f.use(FaradayMiddleware::FollowRedirects, limit: 6)
+      f.adapter(Faraday.default_adapter)
+    end
+
+    Product.where(manual_update: false).each do |product|
       next if product.website.nil? || product.website.empty?
 
       product_description = ProductDescription.where(product_id: product, locale: I18n.locale)
-      next unless product_description.empty?
+                                              .order(Arel.sql('LENGTH(description) DESC'))
+      next if !product_description.empty? && !product_description.first.description.blank?
 
       tracking_task_log(task_name, "Processing website for product: #{product.name}.")
 
       begin
         puts "(Product) Opening connection to: #{product.website}."
-        uri = URI.parse("https://#{product.website}")
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
+        response = faraday.get("https://#{product.website}")
       rescue StandardError
         begin
-          uri = URI.parse("http://#{product.website}")
-          http = Net::HTTP.new(uri.host, uri.port)
-          request = Net::HTTP::Get.new(uri.request_uri)
-          response = http.request(request)
+          response = faraday.get("http://#{product.website}")
         rescue StandardError => e_retry
           puts "Unable to retrieve meta information. Message: #{e_retry}."
         end
@@ -343,30 +343,21 @@ namespace :sync do
       end
     end
 
-    Organization.left_joins(:organization_descriptions)
-                .where(organization_descriptions: { id: nil })
-                .each do |organization|
+    Organization.all.each do |organization|
       next if organization.website.nil? || organization.website.empty?
 
       org_description = OrganizationDescription.where(organization_id: organization, locale: I18n.locale)
-      next unless org_description.empty?
+                                               .order(Arel.sql('LENGTH(description) DESC'))
+      next if !org_description.empty? && !org_description.first.description.blank?
 
       tracking_task_log(task_name, "Processing website for organization: #{organization.name}.")
 
       begin
         puts "(Organization) Opening connection to: #{organization.website}."
-        uri = URI.parse("https://#{organization.website}")
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
+        response = faraday.get("https://#{organization.website}")
       rescue StandardError
         begin
-          uri = URI.parse("http://#{organization.website}")
-          http = Net::HTTP.new(uri.host, uri.port)
-          request = Net::HTTP::Get.new(uri.request_uri)
-          response = http.request(request)
+          response = faraday.get("http://#{organization.website}")
         rescue StandardError => e_retry
           puts "Unable to retrieve meta information. Message: #{e_retry}."
         end
