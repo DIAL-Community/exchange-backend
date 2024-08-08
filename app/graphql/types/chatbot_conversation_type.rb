@@ -9,5 +9,6 @@ module Types
 
     field :chatbot_question, String, null: false
     field :chatbot_answer, String, null: false
+    field :chatbot_response, GraphQL::Types::JSON, null: true
   end
 end
