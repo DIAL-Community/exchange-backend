@@ -1366,7 +1366,8 @@ CREATE TABLE fao.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
 );
 
 
@@ -3894,7 +3895,8 @@ CREATE TABLE fao.resources (
     link_description character varying,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -5396,7 +5398,8 @@ CREATE TABLE public.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -8140,7 +8143,8 @@ CREATE TABLE public.resources (
     link_description character varying,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -13625,6 +13629,13 @@ CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (or
 
 
 --
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON fao.resources USING btree (submitted_by_id);
+
+
+--
 -- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -15039,6 +15050,13 @@ CREATE INDEX index_resources_on_organization_id ON public.resources USING btree 
 
 
 --
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON public.resources USING btree (submitted_by_id);
+
+
+--
 -- Name: index_resources_use_cases; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -15777,6 +15795,14 @@ ALTER TABLE ONLY fao.organization_descriptions
 
 ALTER TABLE ONLY fao.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES fao.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES fao.users(id);
 
 
 --
@@ -17049,6 +17075,14 @@ ALTER TABLE ONLY public.organization_descriptions
 
 ALTER TABLE ONLY public.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES public.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES public.users(id);
 
 
 --
@@ -18338,6 +18372,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240624193953'),
 ('20240624203205'),
 ('20240625122716'),
-('20240703124148');
+('20240703124148'),
+('20240721194811'),
+('20240806130712');
 
 
