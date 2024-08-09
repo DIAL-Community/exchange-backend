@@ -182,7 +182,7 @@ type CategoryIndicatorDescription {
 type ChatbotConversation {
   chatbotAnswer: String!
   chatbotQuestion: String!
-  chatbotResponse: JSON
+  chatbotReferences(first: Int): [String!]
   id: ID!
   identifier: String!
   sessionIdentifier: String!
