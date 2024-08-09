@@ -182,6 +182,7 @@ type CategoryIndicatorDescription {
 type ChatbotConversation {
   chatbotAnswer: String!
   chatbotQuestion: String!
+  chatbotReferences(first: Int): [String!]
   id: ID!
   identifier: String!
   sessionIdentifier: String!
@@ -1577,6 +1578,7 @@ type Query {
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
   categoryIndicators(search: String = ""): [CategoryIndicator!]!
+  chatbotConversationStarters: JSON!
   chatbotConversations(currentIdentifier: String = null, sessionIdentifier: String!): [ChatbotConversation!]!
   cities(search: String = ""): [City!]!
   city(slug: String!): City
@@ -1895,6 +1897,7 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: Organization
+  submittedBy: User
   tags: JSON!
   useCases: [UseCase!]!
 }

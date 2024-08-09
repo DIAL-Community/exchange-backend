@@ -21,4 +21,17 @@ module Queries
       chatbot_conversations
     end
   end
+
+  class ChatbotConversationStartersQuery < Queries::BaseQuery
+    type GraphQL::Types::JSON, null: false
+
+    def resolve
+      default_question_answers = YAML.load_file('data/default-chatbot-qa.yml')
+      default_starter_questions = []
+      default_question_answers['questions'].each do |default_question_answer|
+        default_starter_questions << default_question_answer['question']
+      end
+      default_starter_questions
+    end
+  end
 end

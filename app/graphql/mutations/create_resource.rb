@@ -44,7 +44,7 @@ module Mutations
       resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:,
       source_name:, source_website:, source_logo_file: nil
     )
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           resource: nil,
           errors: ['Must be admin or content editor to create a resource.']
@@ -107,6 +107,11 @@ module Mutations
       end
 
       resource.show_in_wizard = show_in_wizard
+
+      # Set submitted data for new record.
+      if resource.new_record?
+        resource.submitted_by = context[:current_user]
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do
