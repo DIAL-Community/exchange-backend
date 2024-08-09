@@ -4,6 +4,7 @@ class Resource < ApplicationRecord
   include Auditable
 
   belongs_to :organization, optional: true
+  belongs_to :submitted_by, class_name: 'User', optional: true
 
   has_many :resource_building_blocks, dependent: :delete_all
   has_many :building_blocks, through: :resource_building_blocks, dependent: :delete_all
@@ -44,19 +45,15 @@ class Resource < ApplicationRecord
   end
 
   def image_file
-    if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
-      "/assets/resources/#{slug}.png"
+    return '/assets/resources/resource-placeholder.svg' if organization_id.nil?
+
+    source_organization = Organization.find(organization_id)
+    return '/assets/resources/resource-placeholder.svg' if source_organization.nil?
+
+    if File.exist?(File.join('public', 'assets', 'organizations', "#{source_organization.slug}.png"))
+      "/assets/organizations/#{source_organization.slug}.png"
     else
-      return '/assets/resources/resource-placeholder.svg' if organization_id.nil?
-
-      source_organization = Organization.find(organization_id)
-      return '/assets/resources/resource-placeholder.svg' if source_organization.nil?
-
-      if File.exist?(File.join('public', 'assets', 'organizations', "#{source_organization.slug}.png"))
-        "/assets/organizations/#{source_organization.slug}.png"
-      else
-        '/assets/resources/resource-placeholder.svg'
-      end
+      '/assets/organizations/organization-placeholder.png'
     end
   end
 

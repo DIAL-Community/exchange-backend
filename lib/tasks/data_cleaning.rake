@@ -124,7 +124,7 @@ namespace :data do
     puts "Processing move resource records."
     tracking_task_log(task_name, 'Processing moves.')
     PlayMove.all.each do |play_move|
-      play_move.resources.each do |resource|
+      play_move.inline_resources.each do |resource|
         resource['url'] = cleanup_url(resource['url'])
       end
 
@@ -172,12 +172,12 @@ namespace :data do
     puts "Processing resource records."
     tracking_task_log(task_name, 'Processing resources.')
     Resource.all.each do |resource|
-      next if resource.link.blank?
+      next if resource.resource_link.blank?
 
-      original_link = resource.link
-      resource.link = cleanup_url(resource.link)
+      original_link = resource.resource_link
+      resource.resource_link = cleanup_url(resource.resource_link)
       if resource.save
-        puts "  Resource link updated: #{original_link} -> #{resource.link}."
+        puts "  Resource link updated: #{original_link} -> #{resource.resource_link}."
       end
     end
 

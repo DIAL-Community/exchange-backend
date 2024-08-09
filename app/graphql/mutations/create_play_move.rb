@@ -68,7 +68,7 @@ module Mutations
       end
 
       play_move.play = play
-      play_move.move_order = play.play_moves.count
+      play_move.move_order = play.play_moves.count if play_move.new_record?
       play_move.inline_resources = inline_resources.reject { |r| r['name'].blank? || r['url'].blank? }
 
       play_move.resources = []

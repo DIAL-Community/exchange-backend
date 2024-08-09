@@ -53,6 +53,12 @@ module Types
 
     field :featured, Boolean, null: false
 
+    field :submitted_by, Types::UserType, null: true
+    def submitted_by
+      return nil if context[:current_user].nil?
+      object.submitted_by
+    end
+
     field :published_date, GraphQL::Types::ISO8601Date, null: true
 
     field :building_blocks, [Types::BuildingBlockType], null: true
