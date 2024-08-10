@@ -29,20 +29,24 @@ module Queries
     type [Types::ResourceType], null: true
 
     def resolve(slug:, search:, resource_types:, countries:)
-      resource_topic = ResourceTopic.find_by(slug:) unless slug.empty?
-      resource_topic_resources = Resource.where("resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]") \
-        unless slug.empty?
-      resource_topic_resources = Resource.where("resources.resource_topics::text <> '{}'::text") if slug.empty?
+      resource_topic_resources = Resource.all
+
+      resource_topic = ResourceTopic.find_by(slug:) unless slug.blank?
+      unless resource_topic.nil?
+        resource_topic_where_clause = "resources.resource_topics @> '{#{resource_topic.name}}'::varchar[]"
+        resource_topic_resources = Resource.where(resource_topic_where_clause)
+      end
+
+      if resource_topic.nil? && slug == 'with-topic-only'
+        resource_topic_resources = resource_topic_resources.where("resources.resource_topics::text <> '{}'::text")
+      end
 
       unless search.blank?
         name_filter = Resource.name_contains(search)
         description_filter = Resource.where('LOWER(description) like LOWER(?)', "%#{search}%")
 
         resource_topic_resources = resource_topic_resources.where(
-          id: (
-            name_filter +
-            description_filter
-          ).uniq
+          id: (name_filter + description_filter).uniq
         )
       end
 

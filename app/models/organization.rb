@@ -129,9 +129,11 @@ class Organization < ApplicationRecord
 
   def organization_description_localized
     description = organization_descriptions
+                  .order(Arel.sql('LENGTH(description) DESC'))
                   .find_by(locale: I18n.locale)
     if description.nil?
       description = organization_descriptions
+                    .order(Arel.sql('LENGTH(description) DESC'))
                     .find_by(locale: 'en')
     end
     description

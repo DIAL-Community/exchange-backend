@@ -15,8 +15,15 @@ module Types
       return if object.description.nil?
 
       object_description = object.description
-      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
-      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+      object_description_html = Nokogiri::HTML.fragment(object_description)
+
+      parsed_description = ''
+      object_description_html.traverse do |node|
+        if node.text?
+          parsed_description += node.text
+        end
+      end
+      parsed_description
     end
 
     field :contact_name, String, null: true
