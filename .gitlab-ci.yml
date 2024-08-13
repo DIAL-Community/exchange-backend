@@ -22,6 +22,10 @@ variables:
   DB_PASSWORD: 'Password!1'
   RAILS_ENV: test
 
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
 cache:
   key:
     files:
