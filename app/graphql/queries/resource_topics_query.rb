@@ -7,7 +7,7 @@ module Queries
 
     def resolve(search:)
       topics = ResourceTopic.where(parent_topic_id: nil).order(:name)
-      topics = tags.name_contains(search) unless search.blank?
+      topics = topics.name_contains(search) unless search.blank?
       topics
     end
   end
