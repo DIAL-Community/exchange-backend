@@ -104,6 +104,7 @@ namespace :db do
     tracking_task_start(task_name)
 
     Audit.where('created_at < ?', 90.days.ago).destroy_all
+    UserEvent.where('created_at < ?', 90.days.ago).destroy_all
 
     tracking_task_finish(task_name)
   end
