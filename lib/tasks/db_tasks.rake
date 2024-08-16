@@ -30,6 +30,26 @@ namespace :db do
     end
   end
 
+  desc 'Dumps specific database schema to db/backup/{app-name}-{schema-name}.dump'
+  task :backup_schema, [:schema_name] => :environment do |_task, args|
+    task_name = 'Database Schema Backup'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    schema_name = args[:schema_name]
+
+    cmd = nil
+    with_config do |app, host, db, user, pass, port|
+      cmd = " export PGPASSWORD='#{pass}' && " \
+            " pg_dump --verbose --clean --host #{host} --username #{user} -p #{port} -n #{schema_name} " \
+            " --no-owner --no-acl --format=c #{db} > #{Rails.root}/db/backups/#{app}-#{schema_name}.dump"
+    end
+    return_value = system(cmd)
+    if return_value
+      tracking_task_finish(task_name)
+    end
+  end
+
   desc 'Restores the database dump at db/APP_NAME.dump.'
   task restore: :environment do
     cmd = nil
@@ -40,6 +60,27 @@ namespace :db do
     Rake::Task['db:drop'].invoke
     Rake::Task['db:create'].invoke
     system(cmd)
+  end
+
+  desc 'Restores the schema dump at db/{app-name}-{schema-name}.dump.'
+  task :restore_schema, [:schema_name] => :environment do |_task, args|
+    task_name = 'Database Schema Backup'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    schema_name = args[:schema_name]
+
+    cmd = nil
+    with_config do |app, host, db, user, pass, port|
+      cmd = " export PGPASSWORD='#{pass}' && " \
+            " pg_restore --verbose --clean --host #{host} --username #{user} -p #{port} -n #{schema_name} " \
+            " --no-owner --no-acl --dbname #{db} #{Rails.root}/db/backups/#{app}-#{schema_name}.dump"
+    end
+
+    return_value = system(cmd)
+    if return_value
+      tracking_task_finish(task_name)
+    end
   end
 
   desc 'Creates a database the first time the app is run - from db/APP_NAME_public.dump.'
