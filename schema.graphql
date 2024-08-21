@@ -1684,6 +1684,7 @@ type Query {
   resourceTopic(slug: String!): ResourceTopic
   resourceTopicResources(countries: [String!] = [], resourceTypes: [String!] = [], search: String = "", slug: String!): [Resource!]
   resourceTopics(search: String = ""): [ResourceTopic!]!
+  resourceTypes(search: String = ""): [ResourceType!]!
   resources(search: String = ""): [Resource!]!
   rubricCategories(search: String): [RubricCategory!]!
   rubricCategory(slug: String!): RubricCategory!
@@ -1919,6 +1920,14 @@ type ResourceTopicDescription {
   id: ID!
   locale: String!
   resourceTopicId: Int
+}
+
+type ResourceType {
+  description: String
+  id: ID!
+  locale: String!
+  name: String!
+  slug: String!
 }
 
 type RubricCategory {

@@ -9,6 +9,14 @@ module Types
     field :picture, String, null: false
   end
 
+  class ResourceTypeType < Types::BaseObject
+    field :id, ID, null: false
+    field :name, String, null: false
+    field :slug, String, null: false
+    field :description, String, null: true
+    field :locale, String, null: false
+  end
+
   class ResourceType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false

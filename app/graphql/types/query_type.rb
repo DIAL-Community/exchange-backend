@@ -121,6 +121,7 @@ module Types
 
     field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery
+    field :resource_types, resolver: Queries::ResourceTypesQuery
 
     field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
     field :paginated_wizard_use_cases, resolver: Paginated::PaginatedWizardUseCases
