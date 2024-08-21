@@ -78,7 +78,10 @@ module Mutations
 
       resource.resource_link = resource_link
       resource.link_description = link_description
-      resource.resource_type = resource_type
+
+      existing_resource_type = ResourceType.find_by(name: resource_type)
+      resource.resource_type = existing_resource_type.name unless existing_resource_type.nil?
+      resource.resource_type = 'Unspecified Type' if existing_resource_type.nil?
 
       validated_resource_topics = []
       resource_topics.each do |resource_topic|

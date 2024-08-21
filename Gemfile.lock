@@ -124,6 +124,8 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+    faker (3.4.2)
+      i18n (>= 1.8.11, < 2)
     faraday (1.10.3)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -534,6 +536,7 @@ DEPENDENCIES
   devise
   factory_bot
   factory_bot_rails
+  faker
   faraday_middleware
   google-apis-sheets_v4
   google-cloud-translate

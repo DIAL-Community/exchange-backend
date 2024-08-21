@@ -1151,7 +1151,8 @@ CREATE TABLE fao.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -8123,6 +8124,40 @@ ALTER SEQUENCE public.resource_topics_id_seq OWNED BY public.resource_topics.id;
 
 
 --
+-- Name: resource_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.resource_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.resource_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.resource_types_id_seq OWNED BY public.resource_types.id;
+
+
+--
 -- Name: resources; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -10609,6 +10644,13 @@ ALTER TABLE ONLY public.resource_topics ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: resource_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_types ALTER COLUMN id SET DEFAULT nextval('public.resource_types_id_seq'::regclass);
+
+
+--
 -- Name: resources id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12441,6 +12483,14 @@ ALTER TABLE ONLY public.resource_topic_descriptions
 
 ALTER TABLE ONLY public.resource_topics
     ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.resource_types
+    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -18374,6 +18424,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240625122716'),
 ('20240703124148'),
 ('20240721194811'),
-('20240806130712');
+('20240806130712'),
+('20240814120047');
 
 
