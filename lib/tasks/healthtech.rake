@@ -16,6 +16,12 @@ namespace :health_sync do
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
 
     Apartment::Tenant.switch(tenant_name) do
+      # if user set the purge flag, then delete all the existing categories and indicators
+      if ENV['purge'] == 'true'
+        puts 'purging existing categories'
+        CategoryIndicator.delete_all
+        RubricCategory.delete_all
+      end
       health_maturity = YAML.load_file('config/maturity_health.yml')
       health_maturity.each do |health_category|
         rubric_category = create_category(health_category['category'], health_category['description'])
@@ -34,6 +40,12 @@ namespace :health_sync do
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
 
     Apartment::Tenant.switch(tenant_name) do
+      # if user set the purge flag, then delete all the existing categories
+      if ENV['purge'] == 'true'
+        puts 'purging existing categories'
+        SoftwareFeature.delete_all
+        SoftwareCategory.delete_all
+      end
       health_categories = YAML.load_file('config/software_categories.yml')
       health_categories.each do |health_category|
         new_category = SoftwareCategory.where(name: health_category['category']).first || SoftwareCategory.new
@@ -43,6 +55,7 @@ namespace :health_sync do
         new_category.save!
 
         health_category['features'].each do |feature|
+          puts "processing feature: #{feature['name']}"
           new_feature = SoftwareFeature.where(name: feature['name'],
 software_category_id: new_category.id).first || SoftwareFeature.new
           new_feature.name = feature['name']

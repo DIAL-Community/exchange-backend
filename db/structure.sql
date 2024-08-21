@@ -3375,6 +3375,16 @@ ALTER SEQUENCE fao.product_building_blocks_id_seq OWNED BY fao.product_building_
 
 
 --
+-- Name: product_categories; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.product_categories (
+    product_id bigint,
+    software_category_id bigint
+);
+
+
+--
 -- Name: product_classifications; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3435,6 +3445,16 @@ CREATE SEQUENCE fao.product_descriptions_id_seq
 --
 
 ALTER SEQUENCE fao.product_descriptions_id_seq OWNED BY fao.product_descriptions.id;
+
+
+--
+-- Name: product_features; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.product_features (
+    product_id bigint,
+    software_feature_id bigint
+);
 
 
 --
@@ -3641,7 +3661,8 @@ CREATE TABLE fao.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb
+    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    product_stage character varying
 );
 
 
@@ -4117,8 +4138,7 @@ CREATE TABLE fao.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint,
-    submitted_by_id bigint
+    organization_id bigint
 );
 
 
@@ -4400,6 +4420,74 @@ CREATE SEQUENCE fao.settings_id_seq
 --
 
 ALTER SEQUENCE fao.settings_id_seq OWNED BY fao.settings.id;
+
+
+--
+-- Name: software_categories; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.software_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.software_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.software_categories_id_seq OWNED BY fao.software_categories.id;
+
+
+--
+-- Name: software_features; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.software_features (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    facility_scale integer,
+    software_category_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.software_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.software_features_id_seq OWNED BY fao.software_features.id;
 
 
 --
@@ -7475,6 +7563,16 @@ ALTER SEQUENCE health.product_building_blocks_id_seq OWNED BY health.product_bui
 
 
 --
+-- Name: product_categories; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.product_categories (
+    product_id bigint,
+    software_category_id bigint
+);
+
+
+--
 -- Name: product_classifications; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -7535,6 +7633,16 @@ CREATE SEQUENCE health.product_descriptions_id_seq
 --
 
 ALTER SEQUENCE health.product_descriptions_id_seq OWNED BY health.product_descriptions.id;
+
+
+--
+-- Name: product_features; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.product_features (
+    product_id bigint,
+    software_feature_id bigint
+);
 
 
 --
@@ -7741,7 +7849,8 @@ CREATE TABLE health.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb
+    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    product_stage character varying
 );
 
 
@@ -8499,6 +8608,74 @@ CREATE SEQUENCE health.settings_id_seq
 --
 
 ALTER SEQUENCE health.settings_id_seq OWNED BY health.settings.id;
+
+
+--
+-- Name: software_categories; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.software_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.software_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.software_categories_id_seq OWNED BY health.software_categories.id;
+
+
+--
+-- Name: software_features; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.software_features (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    facility_scale integer,
+    software_category_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.software_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.software_features_id_seq OWNED BY health.software_features.id;
 
 
 --
@@ -14083,6 +14260,20 @@ ALTER TABLE ONLY fao.settings ALTER COLUMN id SET DEFAULT nextval('fao.settings_
 
 
 --
+-- Name: software_categories id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.software_categories ALTER COLUMN id SET DEFAULT nextval('fao.software_categories_id_seq'::regclass);
+
+
+--
+-- Name: software_features id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.software_features ALTER COLUMN id SET DEFAULT nextval('fao.software_features_id_seq'::regclass);
+
+
+--
 -- Name: starred_objects id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -14864,6 +15055,20 @@ ALTER TABLE ONLY health.sessions ALTER COLUMN id SET DEFAULT nextval('health.ses
 --
 
 ALTER TABLE ONLY health.settings ALTER COLUMN id SET DEFAULT nextval('health.settings_id_seq'::regclass);
+
+
+--
+-- Name: software_categories id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.software_categories ALTER COLUMN id SET DEFAULT nextval('health.software_categories_id_seq'::regclass);
+
+
+--
+-- Name: software_features id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.software_features ALTER COLUMN id SET DEFAULT nextval('health.software_features_id_seq'::regclass);
 
 
 --
@@ -16556,6 +16761,22 @@ ALTER TABLE ONLY fao.settings
 
 
 --
+-- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.software_categories
+    ADD CONSTRAINT software_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_features software_features_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.software_features
+    ADD CONSTRAINT software_features_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -17465,6 +17686,22 @@ ALTER TABLE ONLY health.sessions
 
 ALTER TABLE ONLY health.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.software_categories
+    ADD CONSTRAINT software_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_features software_features_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.software_features
+    ADD CONSTRAINT software_features_pkey PRIMARY KEY (id);
 
 
 --
@@ -19215,6 +19452,20 @@ CREATE INDEX index_principle_descriptions_on_digital_principle_id ON fao.princip
 
 
 --
+-- Name: index_product_categories_on_product_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_product_id ON fao.product_categories USING btree (product_id);
+
+
+--
+-- Name: index_product_categories_on_software_category_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_software_category_id ON fao.product_categories USING btree (software_category_id);
+
+
+--
 -- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -19233,6 +19484,20 @@ CREATE INDEX index_product_classifications_on_product_id ON fao.product_classifi
 --
 
 CREATE INDEX index_product_descriptions_on_product_id ON fao.product_descriptions USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_product_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_product_features_on_product_id ON fao.product_features USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_software_feature_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_product_features_on_software_feature_id ON fao.product_features USING btree (software_feature_id);
 
 
 --
@@ -19446,13 +19711,6 @@ CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (or
 
 
 --
--- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_resources_on_submitted_by_id ON fao.resources USING btree (submitted_by_id);
-
-
---
 -- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -19520,6 +19778,13 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON fao.sessions USING btree (se
 --
 
 CREATE INDEX index_sessions_on_updated_at ON fao.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_software_features_on_software_category_id ON fao.software_features USING btree (software_category_id);
 
 
 --
@@ -20566,6 +20831,20 @@ CREATE INDEX index_principle_descriptions_on_digital_principle_id ON health.prin
 
 
 --
+-- Name: index_product_categories_on_product_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_product_id ON health.product_categories USING btree (product_id);
+
+
+--
+-- Name: index_product_categories_on_software_category_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_software_category_id ON health.product_categories USING btree (software_category_id);
+
+
+--
 -- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -20584,6 +20863,20 @@ CREATE INDEX index_product_classifications_on_product_id ON health.product_class
 --
 
 CREATE INDEX index_product_descriptions_on_product_id ON health.product_descriptions USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_product_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_product_features_on_product_id ON health.product_features USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_software_feature_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_product_features_on_software_feature_id ON health.product_features USING btree (software_feature_id);
 
 
 --
@@ -20864,6 +21157,13 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON health.sessions USING btree 
 --
 
 CREATE INDEX index_sessions_on_updated_at ON health.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_software_features_on_software_category_id ON health.software_features USING btree (software_category_id);
 
 
 --
@@ -22733,6 +23033,14 @@ ALTER TABLE ONLY fao.datasets_origins
 
 
 --
+-- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.product_categories
+    ADD CONSTRAINT fk_rails_156a781ad6 FOREIGN KEY (software_category_id) REFERENCES fao.software_categories(id);
+
+
+--
 -- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -22754,6 +23062,14 @@ ALTER TABLE ONLY fao.chatbot_conversations
 
 ALTER TABLE ONLY fao.use_case_steps
     ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES fao.use_cases(id);
+
+
+--
+-- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.software_features
+    ADD CONSTRAINT fk_rails_1aba49ed7b FOREIGN KEY (software_category_id) REFERENCES fao.software_categories(id);
 
 
 --
@@ -22898,14 +23214,6 @@ ALTER TABLE ONLY fao.organization_descriptions
 
 ALTER TABLE ONLY fao.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES fao.digital_principles(id);
-
-
---
--- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.resources
-    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES fao.users(id);
 
 
 --
@@ -23165,6 +23473,14 @@ ALTER TABLE ONLY fao.projects_countries
 
 
 --
+-- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.product_features
+    ADD CONSTRAINT fk_rails_9019f50ede FOREIGN KEY (product_id) REFERENCES fao.products(id);
+
+
+--
 -- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -23186,6 +23502,22 @@ ALTER TABLE ONLY fao.use_case_descriptions
 
 ALTER TABLE ONLY fao.opportunities_sectors
     ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES fao.sectors(id);
+
+
+--
+-- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.product_categories
+    ADD CONSTRAINT fk_rails_98a9a32a41 FOREIGN KEY (product_id) REFERENCES fao.products(id);
+
+
+--
+-- Name: product_features fk_rails_9cbbc9970e; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.product_features
+    ADD CONSTRAINT fk_rails_9cbbc9970e FOREIGN KEY (software_feature_id) REFERENCES fao.software_features(id);
 
 
 --
@@ -23965,6 +24297,14 @@ ALTER TABLE ONLY health.datasets_origins
 
 
 --
+-- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.product_categories
+    ADD CONSTRAINT fk_rails_156a781ad6 FOREIGN KEY (software_category_id) REFERENCES health.software_categories(id);
+
+
+--
 -- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -23986,6 +24326,14 @@ ALTER TABLE ONLY health.chatbot_conversations
 
 ALTER TABLE ONLY health.use_case_steps
     ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES health.use_cases(id);
+
+
+--
+-- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.software_features
+    ADD CONSTRAINT fk_rails_1aba49ed7b FOREIGN KEY (software_category_id) REFERENCES health.software_categories(id);
 
 
 --
@@ -24389,6 +24737,14 @@ ALTER TABLE ONLY health.projects_countries
 
 
 --
+-- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.product_features
+    ADD CONSTRAINT fk_rails_9019f50ede FOREIGN KEY (product_id) REFERENCES health.products(id);
+
+
+--
 -- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: health; Owner: -
 --
 
@@ -24410,6 +24766,22 @@ ALTER TABLE ONLY health.use_case_descriptions
 
 ALTER TABLE ONLY health.opportunities_sectors
     ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES health.sectors(id);
+
+
+--
+-- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.product_categories
+    ADD CONSTRAINT fk_rails_98a9a32a41 FOREIGN KEY (product_id) REFERENCES health.products(id);
+
+
+--
+-- Name: product_features fk_rails_9cbbc9970e; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.product_features
+    ADD CONSTRAINT fk_rails_9cbbc9970e FOREIGN KEY (software_feature_id) REFERENCES health.software_features(id);
 
 
 --
@@ -26659,6 +27031,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240624203205'),
 ('20240625122716'),
 ('20240703124148'),
+('20240712135449'),
 ('20240721194811'),
 ('20240806130712');
 
