@@ -6,6 +6,35 @@ class AuthenticationController < Devise::SessionsController
   skip_before_action :verify_authenticity_token, only: %i[sign_in_ux sign_in_auth0]
 
   def sign_up_ux
+    puts "Receiving parameter: #{params['user']['captcha_token']}."
+
+    faraday = Faraday.new do |builder|
+      builder.adapter(Faraday.default_adapter)
+    end
+
+    response = faraday.post(ENV['MCAPTCHA_VERIFIER_URL']) do |request|
+      request.headers['Accept'] = 'application/json'
+      request.headers['Content-Type'] = 'application/json'
+      request.body = %{{
+        "token": "#{params['user']['captcha_token']}",
+        "key": "#{ENV['MCAPTCHA_SITE_KEY']}",
+        "secret": "#{ENV['MCAPTCHA_SECRET']}"
+      }}
+    end
+
+    if response.status != 200
+      return respond_to do |format|
+        format.json { render(json: {}, status: :unprocessable_entity) }
+      end
+    end
+
+    parsed_response = JSON.parse(response.body)
+    if parsed_response['valid'].to_s.downcase == 'false'
+      return respond_to do |format|
+        format.json { render(json: {}, status: :unprocessable_entity) }
+      end
+    end
+
     user = User.new(user_params)
     referrer_uri = URI.parse(request.referrer)
     user.tenant_url = referrer_uri.scheme + '://' + referrer_uri.host + '/'
@@ -28,14 +57,12 @@ class AuthenticationController < Devise::SessionsController
   def sign_in_ux
     user = User.find_by(email: params['user']['email'])
     if user.nil? || !user.valid_password?(params['user']['password'])
-      puts "HERE"
       return respond_to do |format|
         format.json { render(json: unauthorized_response, status: :unauthorized) }
       end
     end
 
     if user.valid_password?(params['user']['password']) && !user.confirmed?
-      puts "OR HERE"
       return respond_to do |format|
         format.json { render(json: unauthorized_response, status: :forbidden) }
       end
@@ -171,7 +198,7 @@ class AuthenticationController < Devise::SessionsController
 
   def user_params
     params.require(:user)
-          .permit(:email, :username, :password, :password_confirmation)
+          .permit(:email, :username, :password, :password_confirmation, :captcha_token)
   end
 
   def reset_password_params

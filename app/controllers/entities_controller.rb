@@ -6,6 +6,35 @@ class EntitiesController < ApplicationController
   def process_file
     logger.info('Start of processing entity file ...')
 
+    logger.info("Receiving parameter: #{captcha}.")
+
+    faraday = Faraday.new do |builder|
+      builder.adapter(Faraday.default_adapter)
+    end
+
+    response = faraday.post(ENV['MCAPTCHA_VERIFIER_URL']) do |request|
+      request.headers['Accept'] = 'application/json'
+      request.headers['Content-Type'] = 'application/json'
+      request.body = %{{
+        "token": "#{params[:captcha]}",
+        "key": "#{ENV['MCAPTCHA_SITE_KEY']}",
+        "secret": "#{ENV['MCAPTCHA_SECRET']}"
+      }}
+    end
+
+    if response.status != 200
+      return respond_to do |format|
+        format.json { render(json: { message: 'Unable to process file.' }, status: :bad_request) }
+      end
+    end
+
+    parsed_response = JSON.parse(response.body)
+    if parsed_response['valid'].to_s.downcase == 'false'
+      return respond_to do |format|
+        format.json { render(json: { message: 'Unable to process file.' }, status: :bad_request) }
+      end
+    end
+
     entity_uploader = EntityUploader.new(params[:entity_file].original_filename, current_user)
     begin
       entity_uploader.store!(params[:entity_file])
@@ -23,15 +52,8 @@ class EntitiesController < ApplicationController
       description_object = ProjectDescription.new
     end
 
-    captcha = params[:captcha]
-    captcha_verified = Recaptcha.verify_via_api_call(captcha,
-                                                     {
-                                                       secret_key: Rails.application.secrets.captcha_secret_key,
-                                                       skip_remote_ip: true
-                                                     })
-
     respond_to do |format|
-      if captcha_verified && entity_object.save
+      if entity_object.save
         # Save the description information.
         if json_data[:description]
           description_object.locale = I18n.locale

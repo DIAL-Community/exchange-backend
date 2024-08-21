@@ -87,11 +87,26 @@ module Mutations
     end
 
     def captcha_verification(captcha)
-      Recaptcha.verify_via_api_call(captcha,
-                                    {
-                                      secret_key: Rails.application.secrets.captcha_secret_key,
-                                      skip_remote_ip: true
-                                    })
+      puts "Receiving parameter: #{captcha}."
+
+      faraday = Faraday.new do |builder|
+        builder.adapter(Faraday.default_adapter)
+      end
+
+      response = faraday.post(ENV['MCAPTCHA_VERIFIER_URL']) do |request|
+        request.headers['Accept'] = 'application/json'
+        request.headers['Content-Type'] = 'application/json'
+        request.body = %{{
+          "token": "#{captcha}",
+          "key": "#{ENV['MCAPTCHA_SITE_KEY']}",
+          "secret": "#{ENV['MCAPTCHA_SECRET']}"
+        }}
+      end
+
+      return false if response.status != 200
+
+      parsed_response = JSON.parse(response.body)
+      parsed_response['valid'].to_s.downcase == 'true'
     end
   end
 end

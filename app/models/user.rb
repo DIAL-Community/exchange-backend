@@ -34,6 +34,8 @@ class User < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(users.email) like LOWER(?)', "%#{name}%") }
 
+  attr_accessor :captcha_token
+  attr_accessor :password_confirmation
   attr_accessor :is_approved
   attr_accessor :tenant_url
 
