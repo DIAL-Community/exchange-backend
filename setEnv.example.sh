@@ -33,7 +33,10 @@ if [ "${user_env:0:1}" == "d" ] || [ "${user_env:0:1}" == "D" ]; then
   export GITHUB_PERSONAL_TOKEN=<your github personal token>
   export WP_AUTH_USER=<WP username>
   export WP_AUTH_PASSWORD=<WP Password>
-  export CHATBOT_BASE_URL='<base url for your chatbot backend>'
+  export CHATBOT_BASE_URL=<base url for your chatbot backend>
+  export MCAPTCHA_VERIFIER_URL=<Captcha-verifier-url>
+  export MCAPTCHA_SECRET=<Captcha-secret>
+  export MCAPTCHA_SITE_KEY=<Captcha-site-key>
 fi
 if [ "${user_env:0:1}" == "t" ] || [ "${user_env:0:1}" == "T" ]; then
   export SECRET_KEY_BASE=<devise secret key>
@@ -60,7 +63,10 @@ if [ "${user_env:0:1}" == "t" ] || [ "${user_env:0:1}" == "T" ]; then
   export GITHUB_PERSONAL_TOKEN=<your github personal token>
   export WP_AUTH_USER=<WP username>
   export WP_AUTH_PASSWORD=<WP Password>
-  export CHATBOT_BASE_URL='<base url for your chatbot backend>'
+  export CHATBOT_BASE_URL=<base url for your chatbot backend>
+  export MCAPTCHA_VERIFIER_URL=<Captcha-verifier-url>
+  export MCAPTCHA_SECRET=<Captcha-secret>
+  export MCAPTCHA_SITE_KEY=<Captcha-site-key>
 fi
 if [ "${user_env:0:1}" == "p" ] || [ "${user_env:0:1}" == "P" ]; then
   export SECRET_KEY_BASE=<devise secret key>
@@ -87,5 +93,8 @@ if [ "${user_env:0:1}" == "p" ] || [ "${user_env:0:1}" == "P" ]; then
   export GITHUB_PERSONAL_TOKEN=<your github personal token>
   export WP_AUTH_USER=<WP username>
   export WP_AUTH_PASSWORD=<WP Password>
-  export CHATBOT_BASE_URL='<base url for your chatbot backend>'
+  export CHATBOT_BASE_URL=<base url for your chatbot backend>
+  export MCAPTCHA_VERIFIER_URL=<Captcha-verifier-url>
+  export MCAPTCHA_SECRET=<Captcha-secret>
+  export MCAPTCHA_SITE_KEY=<Captcha-site-key>
 fi
