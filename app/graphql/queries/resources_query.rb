@@ -20,4 +20,15 @@ module Queries
       Resource.find_by(slug:)
     end
   end
+
+  class ResourceTypesQuery < Queries::BaseQuery
+    argument :search, String, required: false, default_value: ''
+    type [Types::ResourceTypeType], null: false
+
+    def resolve(search:)
+      resource_types = ResourceType.all.order(:name)
+      resource_types = resource_types.name_contains(search) unless search.blank?
+      resource_types
+    end
+  end
 end

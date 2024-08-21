@@ -9,6 +9,14 @@ module Types
     field :picture, String, null: false
   end
 
+  class ResourceTypeType < Types::BaseObject
+    field :id, ID, null: false
+    field :name, String, null: false
+    field :slug, String, null: false
+    field :description, String, null: true
+    field :locale, String, null: false
+  end
+
   class ResourceType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
@@ -52,6 +60,12 @@ module Types
     field :tags, GraphQL::Types::JSON, null: false
 
     field :featured, Boolean, null: false
+
+    field :submitted_by, Types::UserType, null: true
+    def submitted_by
+      return nil if context[:current_user].nil?
+      object.submitted_by
+    end
 
     field :published_date, GraphQL::Types::ISO8601Date, null: true
 

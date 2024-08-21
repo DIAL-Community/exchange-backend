@@ -44,7 +44,7 @@ module Mutations
       resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:,
       source_name:, source_website:, source_logo_file: nil
     )
-      unless an_admin || a_content_editor
+      unless an_admin || a_content_editor || an_adli_admin
         return {
           resource: nil,
           errors: ['Must be admin or content editor to create a resource.']
@@ -78,7 +78,10 @@ module Mutations
 
       resource.resource_link = resource_link
       resource.link_description = link_description
-      resource.resource_type = resource_type
+
+      existing_resource_type = ResourceType.find_by(name: resource_type)
+      resource.resource_type = existing_resource_type.name unless existing_resource_type.nil?
+      resource.resource_type = 'Unspecified Type' if existing_resource_type.nil?
 
       validated_resource_topics = []
       resource_topics.each do |resource_topic|
@@ -107,6 +110,11 @@ module Mutations
       end
 
       resource.show_in_wizard = show_in_wizard
+
+      # Set submitted data for new record.
+      if resource.new_record?
+        resource.submitted_by = context[:current_user]
+      end
 
       successful_operation = false
       ActiveRecord::Base.transaction do

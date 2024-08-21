@@ -121,6 +121,7 @@ module Types
 
     field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery
+    field :resource_types, resolver: Queries::ResourceTypesQuery
 
     field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
     field :paginated_wizard_use_cases, resolver: Paginated::PaginatedWizardUseCases
@@ -223,6 +224,7 @@ module Types
     field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
 
     field :chatbot_conversations, resolver: Queries::ChatbotConversationsQuery
+    field :chatbot_conversation_starters, resolver: Queries::ChatbotConversationStartersQuery
 
     field :paginated_messages, resolver: Paginated::PaginatedMessages
     field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage

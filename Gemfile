@@ -69,6 +69,8 @@ gem 'google-cloud-translate'
 gem 'ros-apartment', require: 'apartment'
 
 gem 'amoeba'
+gem 'faraday_middleware'
+gem 'faker'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

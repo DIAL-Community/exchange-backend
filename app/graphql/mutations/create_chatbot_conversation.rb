@@ -33,15 +33,20 @@ module Mutations
         request.body = %{{
           "input": {
             "input": "#{chatbot_question}"
-          }
+          },
+          "config": {
+            "configurable": {
+              "session_id": "#{chatbot_conversation.session_identifier}"
+            }
+          },
+          "kwargs": {}
         }}
       end
 
-      puts "Response status: #{response.status}."
-
       if response.status == 200
         response_as_json = JSON.parse(response.body)
-        chatbot_conversation.chatbot_answer = response_as_json['output']['output']
+        chatbot_conversation.chatbot_answer = response_as_json['output']['answer']
+        chatbot_conversation.chatbot_response = response_as_json
       end
 
       chatbot_conversation.user = context[:current_user]

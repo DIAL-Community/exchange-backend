@@ -182,6 +182,7 @@ type CategoryIndicatorDescription {
 type ChatbotConversation {
   chatbotAnswer: String!
   chatbotQuestion: String!
+  chatbotReferences(first: Int): [String!]
   id: ID!
   identifier: String!
   sessionIdentifier: String!
@@ -231,6 +232,7 @@ type Country {
   aliases: [String!]!
   code: String!
   codeLonger: String!
+  description: String
   dpiProducts: [Product!]
   id: ID!
   latitude: String!
@@ -939,7 +941,7 @@ type Mutation {
   createCity(cityName: String!, countryName: String!, provinceName: String!, slug: String): CreateCityPayload
   createComment(commentId: String, commentObjectId: Int!, commentObjectType: String!, parentCommentId: String, text: String!, userId: Int!): CreateCommentPayload
   createContact(biography: String = null, email: String!, name: String!, slug: String!, socialNetworkingServices: JSON = [], source: String! = "exchange", title: String = null): CreateContactPayload
-  createCountry(name: String!, slug: String): CreateCountryPayload
+  createCountry(description: String, name: String!, slug: String): CreateCountryPayload
   createDataset(aliases: JSON, dataFormat: String, datasetType: String!, description: String!, geographicCoverage: String, imageFile: Upload, languages: String, license: String, name: String!, slug: String!, timeRange: String, visualizationUrl: String, website: String): CreateDatasetPayload
   createMessage(location: String, locationType: String, messageDatetime: ISO8601DateTime!, messageTemplate: String!, messageType: String!, name: String!, visible: Boolean! = true): CreateMessagePayload
   createMove(description: String!, inlineResources: JSON = [], moveSlug: String, name: String!, owner: String!, playSlug: String!, resourceSlugs: [String!]): CreatePlayMovePayload
@@ -1555,6 +1557,7 @@ type Query {
   capabilityOnly(search: String = ""): [Capability!]!
   categoryIndicator(slug: String!): CategoryIndicator
   categoryIndicators(search: String = ""): [CategoryIndicator!]!
+  chatbotConversationStarters: JSON!
   chatbotConversations(currentIdentifier: String = null, sessionIdentifier: String!): [ChatbotConversation!]!
   cities(search: String = ""): [City!]!
   city(slug: String!): City
@@ -1660,6 +1663,7 @@ type Query {
   resourceTopic(slug: String!): ResourceTopic
   resourceTopicResources(countries: [String!] = [], resourceTypes: [String!] = [], search: String = "", slug: String!): [Resource!]
   resourceTopics(search: String = ""): [ResourceTopic!]!
+  resourceTypes(search: String = ""): [ResourceType!]!
   resources(search: String = ""): [Resource!]!
   rubricCategories(search: String): [RubricCategory!]!
   rubricCategory(slug: String!): RubricCategory!
@@ -1869,6 +1873,7 @@ type Resource {
   showInWizard: Boolean!
   slug: String!
   source: Organization
+  submittedBy: User
   tags: JSON!
   useCases: [UseCase!]!
 }
@@ -1890,6 +1895,14 @@ type ResourceTopicDescription {
   id: ID!
   locale: String!
   resourceTopicId: Int
+}
+
+type ResourceType {
+  description: String
+  id: ID!
+  locale: String!
+  name: String!
+  slug: String!
 }
 
 type RubricCategory {
