@@ -94,7 +94,7 @@ namespace :resource_sync do
 
     resource.resource_link = cleanup_url(post_structure['link'])
     resource.description = post_structure['excerpt']['rendered']
-    resource.published_date = Date.strptime(post_structure['date_gmt'])
+    resource.published_date = Date.parse(post_structure['date_gmt'])
 
     resource.show_in_wizard = false
     resource.show_in_exchange = true
@@ -164,6 +164,7 @@ namespace :resource_sync do
         next if !author_href_response_body['data'].nil? && author_href_response_body['data']['status'] == 401
 
         resource_author = Author.find_by(name: author_href_response_body['name'])
+        resource_author = Author.find_by(slug: reslug_em(author_href_response_body['name'])) if resource_author.nil?
         resource_author = Author.new if resource_author.nil?
 
         resource_author.name = author_href_response_body['name']
@@ -180,7 +181,7 @@ namespace :resource_sync do
 
       source_organization = Organization.find_by(slug: 'digital-impact-alliance')
       unless source_organization.nil?
-        resource.organization = source_organization
+        resource.organization_id = source_organization.id
       end
 
       resource.save!
@@ -226,6 +227,7 @@ namespace :resource_sync do
       authors.each do |author|
         author_name = author.strip
         resource_author = Author.find_by(name: author_name)
+        resource_author = Author.find_by(slug: reslug_em(author_name)) if resource_author.nil?
         resource_author = Author.new if resource_author.nil?
 
         resource_author.name = author_name
@@ -310,6 +312,8 @@ namespace :resource_sync do
       current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
 
       resource_name = current_row_data['Article Title']
+      next if resource_name.blank?
+
       puts "Processing row #{row_count} --> with title: #{resource_name}."
 
       resource_slug = reslug_em(resource_name)
@@ -359,12 +363,13 @@ namespace :resource_sync do
           end
         end
 
-        authors = current_row_data['Author'].split(',')
+        authors = current_row_data['Author'].split(';')
         authors.each do |author|
           author_name = author.strip
           next if author_name.blank?
 
           resource_author = Author.find_by(name: author_name)
+          resource_author = Author.find_by(slug: reslug_em(author_name)) if resource_author.nil?
           resource_author = Author.new if resource_author.nil?
 
           resource_author.name = author_name
@@ -390,15 +395,22 @@ namespace :resource_sync do
           organization.slug = reslug_em(organization_name)
           organization.save!
         end
-        existing_resource.organization = organization
+        existing_resource.organization_id = organization.id unless organization.nil?
 
         existing_resource.countries = []
         country_name = current_row_data['Country/Region']
         unless country_name.nil? || country_name.blank?
           country = Country.find_by(name: country_name)
-          next if country.nil?
+          unless country.nil?
+            existing_resource.countries << country
+          end
+        end
 
-          existing_resource.countries << country unless existing_resource.countries.include?(country)
+        begin
+          parsed_date = Date.parse(current_row_data['Publication Date'])
+          existing_resource.published_date = parsed_date
+        rescue Date::Error
+          existing_resource.published_date = nil
         end
 
         existing_resource.save!

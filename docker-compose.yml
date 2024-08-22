@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   exchange-backend:
     # image: localhost:5000/t4d-product-backlog:${T4D_VERSION}
