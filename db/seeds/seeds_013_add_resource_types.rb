@@ -58,7 +58,7 @@ Resource.all.each do |resource|
     resource_type = ResourceType.find_by(name: existing_resource_type.strip)
     if resource_type.nil?
       existing_resource_type = resource_type_mapping[existing_resource_type]
-      resource_type = ResourceType.find_by(name: existing_resource_type.strip)
+      resource_type = ResourceType.find_by(name: existing_resource_type.strip) unless existing_resource_type.nil?
     end
   end
 
