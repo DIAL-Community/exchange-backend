@@ -12,7 +12,7 @@ module Mutations
     field :message, String, null: true
 
     def resolve(slug:, local_ownership: nil, impact: nil, years_in_production: nil)
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
 
       unless an_admin || a_product_owner(product)
         return {
@@ -34,7 +34,7 @@ module Mutations
 
       if product.save
         {
-          product: product,
+          product:,
           errors: [],
           message: 'Product extra attributes updated successfully'
         }

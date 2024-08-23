@@ -36,19 +36,19 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
     result = execute_graphql(
       mutation,
           variables: {
-          slug: 'test-product',
-          localOwnership: 'New Ownership',
-          impact: 'High Impact',
-          yearsInProduction: '10'
-      },
+            slug: 'test-product',
+            localOwnership: 'New Ownership',
+            impact: 'High Impact',
+            yearsInProduction: '10'
+          },
     )
 
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product']['extraAttributes'])
         .to(eq({
-            "local_ownership" => "New Ownership",
-            "impact" => "High Impact",
-            "years_in_production" => "10"
+          "local_ownership" => "New Ownership",
+          "impact" => "High Impact",
+          "years_in_production" => "10"
         }))
       expect(result['data']['updateProductExtraAttributes']['errors'])
         .to(eq([]))
@@ -63,11 +63,11 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
     result = execute_graphql(
       mutation,
           variables: {
-          slug: 'test-product',
-          localOwnership: 'New Ownership',
-          impact: 'High Impact',
-          yearsInProduction: '10'
-      },
+            slug: 'test-product',
+            localOwnership: 'New Ownership',
+            impact: 'High Impact',
+            yearsInProduction: '10'
+          },
     )
 
     aggregate_failures do
@@ -81,7 +81,8 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
   end
 
   it 'is successful - updates only one field' do
-    create(:product, name: 'Test Product', slug: 'test-product', extra_attributes: { "local_ownership" => "Old Ownership" })
+    create(:product, name: 'Test Product', slug: 'test-product',
+extra_attributes: { "local_ownership" => "Old Ownership" })
     expect_any_instance_of(Mutations::UpdateProductExtraAttributes).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
@@ -92,8 +93,8 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product']['extraAttributes'])
         .to(eq({
-            "local_ownership" => "Old Ownership",
-            "impact" => "Updated Impact"
+          "local_ownership" => "Old Ownership",
+          "impact" => "Updated Impact"
         }))
       expect(result['data']['updateProductExtraAttributes']['errors'])
         .to(eq([]))
@@ -107,10 +108,10 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
     result = execute_graphql(
       mutation,
       variables: {
-          slug: 'non-existent-product',
-          localOwnership: 'New Ownership',
-          impact: 'High Impact',
-          yearsInProduction: '10'
+        slug: 'non-existent-product',
+        localOwnership: 'New Ownership',
+        impact: 'High Impact',
+        yearsInProduction: '10'
       },
     )
 
