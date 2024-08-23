@@ -143,6 +143,36 @@ class Product < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, -> (name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
 
+  def local_ownership
+    extra_attributes['local_ownership']
+  end
+
+  def local_ownership=(value)
+    self.extra_attributes ||= {}
+    self.extra_attributes['local_ownership'] = value
+    save
+  end
+
+  def impact
+    extra_attributes['impact']
+  end
+
+  def impact=(value)
+    self.extra_attributes ||= {}
+    self.extra_attributes['impact'] = value
+    save
+  end
+
+  def years_in_production
+    extra_attributes['years_in_production']
+  end
+
+  def years_in_production=(value)
+    self.extra_attributes ||= {}
+    self.extra_attributes['years_in_production'] = value
+    save
+  end
+
   amoeba do
     enable
 
