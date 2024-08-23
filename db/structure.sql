@@ -5690,7 +5690,8 @@ CREATE TABLE health.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -7840,7 +7841,7 @@ CREATE TABLE health.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
-    product_type character varying(20) DEFAULT 'product'::health.product_type_save,
+    product_type health.product_type_save DEFAULT 'product'::health.product_type_save,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -8327,7 +8328,8 @@ CREATE TABLE health.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -21140,6 +21142,13 @@ CREATE INDEX index_resources_on_organization_id ON health.resources USING btree 
 
 
 --
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON health.resources USING btree (submitted_by_id);
+
+
+--
 -- Name: index_resources_use_cases; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -24528,6 +24537,14 @@ ALTER TABLE ONLY health.organization_descriptions
 
 ALTER TABLE ONLY health.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES health.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES health.users(id);
 
 
 --
