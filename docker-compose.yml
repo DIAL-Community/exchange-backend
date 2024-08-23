@@ -52,6 +52,7 @@ services:
     depends_on:
       - exchange-backend
       - exchange-frontend
+    restart: unless-stopped
   restarter:
     image: docker:cli
     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
