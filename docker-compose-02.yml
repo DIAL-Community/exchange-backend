@@ -37,6 +37,8 @@ services:
     ports:
       - 3002:3002
     command: yarn start
+    depends_on:
+      - exchange-backend
   exchange-chatbot:
     build:
       context: ../exchange-chatbot/
@@ -53,6 +55,7 @@ services:
     depends_on:
       - exchange-backend
       - exchange-frontend
+    restart: unless-stopped
   restarter:
     image: docker:cli
     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
@@ -66,6 +69,9 @@ services:
     restart: always
     ports:
       - 3001:3001
+    depends_on:
+      - exchange-backend
+      - exchange-frontend
 volumes:
   assets:
     driver_opts:
