@@ -31,7 +31,7 @@ cache:
 
 build_rails:
   tags:
-    - rails
+    - gitlab-org
   stage: build
   timeout: 60m
   script:
@@ -42,7 +42,7 @@ build_rails:
 
 lint_rails:
   tags:
-    - rails
+    - gitlab-org
   stage: lint
   timeout: 60m
   before_script:
@@ -54,7 +54,7 @@ lint_rails:
 
 test_rails:
   tags:
-    - rails
+    - gitlab-org
   stage: test
   timeout: 60m
   before_script:
