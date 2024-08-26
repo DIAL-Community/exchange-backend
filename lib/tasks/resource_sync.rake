@@ -423,20 +423,23 @@ namespace :resource_sync do
   def safe_parse_date(date_in_string_format)
     parsed_date = nil
 
+    assumed_timezone = 'UTC'
     begin
-      parsed_date = Date.parse(date_in_string_format)
+      parsed_date = Date.parse("#{date_in_string_format} #{assumed_timezone}")
     rescue ArgumentError
-      puts "Unable to parse date using standard parsing method."
+      puts "  Unable to parse date using parse method."
     end
 
     # Return if we're getting a correct date object
     return parsed_date unless parsed_date.nil?
 
     begin
-      parsed_date = Date.strptime(date_in_string_format, '%Y')
+      parsed_date = Date.strptime("#{date_in_string_format} #{assumed_timezone}", '%Y')
     rescue ArgumentError
-      puts "Unable to parse date using strptime method."
+      puts "  Unable to parse date using strptime method."
     end
+
+    puts "  Date parsing: '#{date_in_string_format}' ->  '#{parsed_date}'."
 
     parsed_date
   end
