@@ -94,7 +94,7 @@ namespace :resource_sync do
 
     resource.resource_link = cleanup_url(post_structure['link'])
     resource.description = post_structure['excerpt']['rendered']
-    resource.published_date = Date.parse(post_structure['date_gmt'])
+    resource.published_date = safe_parse_date(post_structure['date'])
 
     resource.show_in_wizard = false
     resource.show_in_exchange = true
