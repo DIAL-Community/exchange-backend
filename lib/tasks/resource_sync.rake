@@ -406,12 +406,7 @@ namespace :resource_sync do
           end
         end
 
-        begin
-          parsed_date = Date.parse(current_row_data['Publication Date'])
-          existing_resource.published_date = parsed_date
-        rescue Date::Error
-          existing_resource.published_date = nil
-        end
+        existing_resource.published_date = safe_parse_date(current_row_data['Publication Date'])
 
         existing_resource.save!
         successful_operation = true
@@ -423,5 +418,26 @@ namespace :resource_sync do
     end
 
     tracking_task_finish(task_name)
+  end
+
+  def safe_parse_date(date_in_string_format)
+    parsed_date = nil
+
+    begin
+      parsed_date = Date.parse(date_in_string_format)
+    rescue ArgumentError
+      puts "Unable to parse date using standard parsing method."
+    end
+
+    # Return if we're getting a correct date object
+    return parsed_date unless parsed_date.nil?
+
+    begin
+      parsed_date = Date.strptime(date_in_string_format, '%Y')
+    rescue ArgumentError
+      puts "Unable to parse date using strptime method."
+    end
+
+    parsed_date
   end
 end
