@@ -26707,46 +26707,6 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "compartmentalized",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Boolean",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": "false",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "featuredOnly",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  },
-                  "defaultValue": "false",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "featuredLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "3",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
                   "name": "offsetAttributes",
                   "description": null,
                   "type": {
@@ -28993,34 +28953,6 @@
                     }
                   },
                   "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "compartmentalized",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Boolean",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": "false",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "featuredLength",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": "3",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
