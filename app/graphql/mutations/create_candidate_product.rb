@@ -58,8 +58,11 @@ module Mutations
 
       if candidate_product.save && captcha_verification(captcha)
         AdminMailer
-          .with(candidate_name: candidate_product.name)
-          .notify_new_candidate_product
+          .with(
+            candidate_name: candidate_product.name,
+            object_type: 'Candidate Product'
+          )
+          .notify_new_candidate_record
           .deliver_now
         # Successful creation, return the created object with no errors
         {

@@ -105,7 +105,7 @@ class AdminMailer < ApplicationMailer
     )
   end
 
-  def notify_new_candidate_product
+  def notify_new_candidate_record
     mail_to = ''
     User.where(receive_admin_emails: true).each do |user|
       next unless user.roles.include?('admin')
@@ -116,30 +116,23 @@ class AdminMailer < ApplicationMailer
     mail(
       from: 'notifier@exchange.dial.global',
       to: mail_to,
-      subject: 'Candidate Product Created',
-      body: 'A new candidate record created. Please log in to see the changes. '\
-            "Candidate name: [#{params[:candidate_name]}]." + default_text
+      subject: "#{params[:object_type]} Created",
+      body: 'A new candidate record created. Please log in to see the changes.\n\n'\
+            "Candidate name: [#{params[:candidate_name]}].\n\n" \
+            "#{default_text}"
     )
   end
 
-  def notify_new_candidate_organization
-    mail_to = ''
-    User.where(receive_admin_emails: true).each do |user|
-      next unless user.roles.include?('admin')
-
-      mail_to += "#{user.email}; "
-    end
-
+  def notify_candidate_record_approval
     mail(
       from: 'notifier@exchange.dial.global',
-      to: mail_to,
-      subject: 'Candidate Organization Created',
-      body: 'A new candidate record created. Please log in to see the changes. '\
-            "Candidate name: [#{params[:candidate_name]}]." + default_text
+      to: [params[:user_email]],
+      subject: "#{params[:object_type]} #{params[:rejected] ? 'Rejected' : 'Approved'}",
+      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
     )
   end
 
-  def notify_new_candidate_dataset
+  def notify_new_candidate_resource
     mail_to = ''
     User.where(receive_admin_emails: true).each do |user|
       next unless user.roles.include?('admin')
