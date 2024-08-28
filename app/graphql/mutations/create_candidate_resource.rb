@@ -61,6 +61,12 @@ module Mutations
       candidate_resource.submitter_email = submitter_email
       candidate_resource.description = description
 
+      unless published_date.nil?
+        date = published_date.to_s
+        timestamp = Time.new(date[0..3], date[5..6], date[8..9], 12, 0, 0, "+00:00")
+        candidate_resource.published_date = timestamp
+      end
+
       candidate_resource.countries = []
       if !country_slugs.nil? && !country_slugs.empty?
         country_slugs.each do |country_slug|
