@@ -114,7 +114,7 @@ type CandidateDataset {
   rejectedBy: String
   rejectedDate: ISO8601Date
   slug: String!
-  submitterEmail: String!
+  submitterEmail: String
   visualizationUrl: String
   website: String!
 }
@@ -122,7 +122,7 @@ type CandidateDataset {
 type CandidateOrganization {
   approvedBy: String
   approvedDate: ISO8601Date
-  contact: Contact!
+  contact: Contact
   contacts: [Contact!]!
   createStorefront: Boolean!
   createdAt: ISO8601Date
@@ -149,7 +149,7 @@ type CandidateProduct {
   rejectedDate: ISO8601Date
   repository: String!
   slug: String!
-  submitterEmail: String!
+  submitterEmail: String
   website: String!
 }
 
@@ -162,6 +162,7 @@ type CandidateResource {
   id: ID!
   linkDescription: String!
   name: String!
+  parsedDescription: String
   publishedDate: ISO8601Date
   rejected: Boolean
   rejectedBy: String
@@ -169,7 +170,7 @@ type CandidateResource {
   resourceLink: String
   resourceType: String!
   slug: String!
-  submitterEmail: String!
+  submitterEmail: String
 }
 
 type CandidateRole {
@@ -1654,7 +1655,7 @@ type Query {
   paginatedCandidateDatasets(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateDataset!]!
   paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
   paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
-  paginatedCandidateResources(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateResource!]!
+  paginatedCandidateResources(countries: [String!] = [], inReviewOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateResource!]!
   paginatedCandidateRoles(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateRole!]!
   paginatedCities(offsetAttributes: OffsetAttributes!, search: String = ""): [City!]!
   paginatedContacts(offsetAttributes: OffsetAttributes!, search: String = ""): [Contact!]!
@@ -1682,7 +1683,7 @@ type Query {
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateProduct(search: String = ""): PaginationAttributes!
-  paginationAttributeCandidateResource(search: String = ""): PaginationAttributes!
+  paginationAttributeCandidateResource(countries: [String!] = [], inReviewOnly: Boolean = false, search: String = ""): PaginationAttributes!
   paginationAttributeCandidateRole(search: String = ""): PaginationAttributes!
   paginationAttributeCity(search: String = ""): PaginationAttributes!
   paginationAttributeContact(search: String = ""): PaginationAttributes!

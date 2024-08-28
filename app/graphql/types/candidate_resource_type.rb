@@ -6,6 +6,12 @@ module Types
     field :slug, String, null: false
     field :name, String, null: false
     field :description, String, null: false
+    field :parsed_description, String, null: true
+    def parsed_description
+      first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
+      return first_paragraph.text unless first_paragraph.nil?
+      object.description if first_paragraph.nil?
+    end
 
     field :resource_type, String, null: false
     field :resource_link, String, null: true
@@ -40,7 +46,13 @@ module Types
       approved_by
     end
 
-    field :submitter_email, String, null: false
+    field :submitter_email, String, null: true
+    def submitter_email
+      unless context[:current_user].nil?
+        object.submitter_email
+      end
+    end
+
     field :countries, [Types::CountryType], null: false, method: :countries_ordered
   end
 end

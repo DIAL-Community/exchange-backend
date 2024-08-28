@@ -38,6 +38,11 @@ module Types
     end
 
     field :data_type, String, null: false
-    field :submitter_email, String, null: false
+    field :submitter_email, String, null: true
+    def submitter_email
+      unless context[:current_user].nil?
+        object.submitter_email
+      end
+    end
   end
 end
