@@ -78,33 +78,6 @@ class AdminMailer < ApplicationMailer
     )
   end
 
-  def notify_candidate_organization_approval
-    mail(
-      from: 'notifier@exchange.dial.global',
-      to: [params[:user_email]],
-      subject: "Candidate Organization #{params[:rejected] ? 'Rejected' : 'Approved'}",
-      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
-    )
-  end
-
-  def notify_candidate_product_approval
-    mail(
-      from: 'notifier@exchange.dial.global',
-      to: [params[:user_email]],
-      subject: "Candidate Product #{params[:rejected] ? 'Rejected' : 'Approved'}",
-      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
-    )
-  end
-
-  def notify_candidate_dataset_approval
-    mail(
-      from: 'notifier@exchange.dial.global',
-      to: [params[:user_email]],
-      subject: "Candidate Dataset #{params[:rejected] ? 'Rejected' : 'Approved'}",
-      body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
-    )
-  end
-
   def notify_new_candidate_record
     mail_to = ''
     User.where(receive_admin_emails: true).each do |user|
@@ -129,23 +102,6 @@ class AdminMailer < ApplicationMailer
       to: [params[:user_email]],
       subject: "#{params[:object_type]} #{params[:rejected] ? 'Rejected' : 'Approved'}",
       body: 'Your submission status have been updated in the Exchange (https://exchange.dial.global).' + default_text
-    )
-  end
-
-  def notify_new_candidate_resource
-    mail_to = ''
-    User.where(receive_admin_emails: true).each do |user|
-      next unless user.roles.include?('admin')
-
-      mail_to += "#{user.email}; "
-    end
-
-    mail(
-      from: 'notifier@exchange.dial.global',
-      to: mail_to,
-      subject: 'Candidate Dataset Created',
-      body: 'A new candidate record created. Please log in to see the changes. '\
-            "Candidate name: [#{params[:candidate_name]}]." + default_text
     )
   end
 

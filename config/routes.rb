@@ -12,20 +12,6 @@ Rails.application.routes.draw do
 
   root to: redirect(path: '/products')
 
-  resources :candidate_organizations do
-    member do
-      post 'reject'
-      post 'approve'
-    end
-  end
-
-  resources :candidate_products do
-    member do
-      post 'reject'
-      post 'approve'
-    end
-  end
-
   devise_for :users, controllers: {
     confirmations: 'confirmations',
     registrations: 'registrations',
