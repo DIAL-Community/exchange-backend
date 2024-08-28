@@ -9,6 +9,7 @@ module Mutations
     argument :name, String, required: true
     argument :slug, String, required: true
     argument :description, String, required: true
+    argument :published_date, GraphQL::Types::ISO8601Date, required: true
 
     argument :resource_type, String, required: true
     argument :resource_link, String, required: true
@@ -23,7 +24,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(
-      name:, slug:, description:,
+      name:, slug:, description:, published_date:,
       resource_type:, resource_link:, link_description:,
       country_slugs:, submitter_email:, captcha:
     )

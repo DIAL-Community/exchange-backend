@@ -11,4 +11,8 @@ class CandidateResource < ApplicationRecord
   def generate_slug
     self.slug = reslug_em(name, 64)
   end
+
+  def countries_ordered
+    countries&.order('countries.name ASC')
+  end
 end

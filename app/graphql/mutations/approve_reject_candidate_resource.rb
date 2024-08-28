@@ -81,7 +81,9 @@ module Mutations
         description: candidate_resource.description,
         resource_type: candidate_resource.resource_type,
         resource_link: candidate_resource.resource_link,
-        link_description: candidate_resource.link_description
+        link_description: candidate_resource.link_description,
+        published_date: candidate_resource.published_date,
+        phase: "Not Applicable"
       )
 
       resource.countries = []

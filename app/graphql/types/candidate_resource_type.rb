@@ -11,6 +11,8 @@ module Types
     field :resource_link, String, null: true
     field :link_description, String, null: false
 
+    field :published_date, GraphQL::Types::ISO8601Date, null: true
+
     field :created_at, GraphQL::Types::ISO8601Date, null: true
 
     field :rejected, Boolean, null: true
@@ -39,5 +41,6 @@ module Types
     end
 
     field :submitter_email, String, null: false
+    field :countries, [Types::CountryType], null: false, method: :countries_ordered
   end
 end
