@@ -9,21 +9,24 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
       mutation CreateProduct(
         $name: String!,
         $slug: String!,
-        $description: String!
-        $govStackEntity: Boolean
+        $description: String!,
+        $govStackEntity: Boolean,
+        $productStage: String
       ) {
         createProduct(
           name: $name,
           slug: $slug,
           aliases: {},
           website: "somewebsite.org",
-          description: $description
-          govStackEntity: $govStackEntity
+          description: $description,
+          govStackEntity: $govStackEntity,
+          productStage: $productStage
         ) {
             product {
               name
               slug
               govStackEntity
+              productStage
               productDescription {
                 description
               }
@@ -53,14 +56,15 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
           "name" => "Some name",
           "govStackEntity" => false,
           "productDescription" => { "description" => "Some description" },
-          "slug" => "some-name"
+          "slug" => "some-name",
+          "productStage" => nil
         }))
       expect(result['data']['createProduct']['errors'])
         .to(eq([]))
     end
   end
 
-  it 'is successful - setting gov stack field as admin admin' do
+  it 'is successful - setting gov stack field as admin' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
 
     result = execute_graphql_as_user(
@@ -79,15 +83,16 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         .to(eq({
           "name" => "Some name",
           "govStackEntity" => true,
-          "productDescription" => { "description" => "Some description" },
-          "slug" => "some-name"
+          "slug" => "some-name",
+          "productStage" => nil,
+          "productDescription" => { "description" => "Some description" }
         }))
       expect(result['data']['createProduct']['errors'])
         .to(eq([]))
     end
   end
 
-  it 'is failed - setting gov stack field as non admin' do
+  it 'fails - setting gov stack field as non-admin' do
     created_product = create(:product, name: 'Some Name', slug: 'some-name')
     owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_user], user_products: [created_product.id])
 
@@ -107,8 +112,9 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         .to(eq({
           "name" => "Some other name",
           "govStackEntity" => false,
-          "productDescription" => { "description" => "Some description" },
-          "slug" => "some-name"
+          "slug" => "some-name",
+          "productStage" => nil,
+          "productDescription" => { "description" => "Some description" }
         }))
       expect(result['data']['createProduct']['errors'])
         .to(eq([]))
