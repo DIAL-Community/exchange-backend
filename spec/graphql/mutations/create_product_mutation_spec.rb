@@ -46,7 +46,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
-        description: "Some description"
+        description: "Some description",
+        productStage: nil
       }
     )
 
@@ -74,7 +75,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         name: "Some name",
         slug: "some-name",
         description: "Some description",
-        govStackEntity: true
+        govStackEntity: true,
+        productStage: nil
       }
     )
 
@@ -103,7 +105,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         name: "Some other name",
         slug: "some-name",
         description: "Some description",
-        govStackEntity: true
+        govStackEntity: true,
+        productStage: nil
       }
     )
 
@@ -127,7 +130,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
       variables: {
         name: "Some name",
         slug: "some-name",
-        description: "Some description"
+        description: "Some description",
+        productStage: nil
       }
     )
 
