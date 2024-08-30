@@ -4119,6 +4119,40 @@ ALTER SEQUENCE fao.resource_topics_id_seq OWNED BY fao.resource_topics.id;
 
 
 --
+-- Name: resource_types; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.resource_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.resource_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.resource_types_id_seq OWNED BY fao.resource_types.id;
+
+
+--
 -- Name: resources; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -7842,7 +7876,7 @@ CREATE TABLE health.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
-    product_type character varying(20) DEFAULT 'product'::health.product_type_save,
+    product_type health.product_type_save DEFAULT 'product'::health.product_type_save,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -8306,6 +8340,40 @@ CREATE SEQUENCE health.resource_topics_id_seq
 --
 
 ALTER SEQUENCE health.resource_topics_id_seq OWNED BY health.resource_topics.id;
+
+
+--
+-- Name: resource_types; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.resource_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.resource_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.resource_types_id_seq OWNED BY health.resource_types.id;
 
 
 --
@@ -14242,6 +14310,13 @@ ALTER TABLE ONLY fao.resource_topics ALTER COLUMN id SET DEFAULT nextval('fao.re
 
 
 --
+-- Name: resource_types id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_types ALTER COLUMN id SET DEFAULT nextval('fao.resource_types_id_seq'::regclass);
+
+
+--
 -- Name: resources id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -15037,6 +15112,13 @@ ALTER TABLE ONLY health.resource_topic_descriptions ALTER COLUMN id SET DEFAULT 
 --
 
 ALTER TABLE ONLY health.resource_topics ALTER COLUMN id SET DEFAULT nextval('health.resource_topics_id_seq'::regclass);
+
+
+--
+-- Name: resource_types id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.resource_types ALTER COLUMN id SET DEFAULT nextval('health.resource_types_id_seq'::regclass);
 
 
 --
@@ -16734,6 +16816,14 @@ ALTER TABLE ONLY fao.resource_topics
 
 
 --
+-- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resource_types
+    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: resources resources_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -17659,6 +17749,14 @@ ALTER TABLE ONLY health.resource_topic_descriptions
 
 ALTER TABLE ONLY health.resource_topics
     ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.resource_types
+    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
 
 
 --
