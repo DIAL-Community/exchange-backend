@@ -166,7 +166,7 @@ class Product < ApplicationRecord
     attribute ? attribute['value'] : nil
   end
 
-  def method_missing(method_name, *arguments, &block)
+  def method_missing(method_name, *arguments)
     if method_name.to_s.end_with?('=')
       attribute_name = method_name.to_s.chomp('=')
       set_extra_attribute(name: attribute_name, value: arguments.first)
@@ -175,7 +175,7 @@ class Product < ApplicationRecord
     end
   end
 
-  def respond_to_missing?(method_name, include_private = false)
+  def respond_to_missing?(_method_name, _include_private = false)
     true
   end
 

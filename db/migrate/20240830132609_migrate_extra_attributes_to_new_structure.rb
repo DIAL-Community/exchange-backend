@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class MigrateExtraAttributesToNewStructure < ActiveRecord::Migration[6.1]
   def up
     Product.find_each do |product|
