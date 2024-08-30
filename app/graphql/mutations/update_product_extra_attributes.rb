@@ -1,17 +1,25 @@
 # frozen_string_literal: true
+module Types
+  class ExtraAttributeInputType < GraphQL::Schema::InputObject
+    graphql_name 'ExtraAttributeInput'
+    description 'An extra attribute for a product'
+
+    argument :name, String, required: true
+    argument :value, GraphQL::Types::JSON, required: true
+    argument :type, String, required: false
+  end
+end
 
 module Mutations
   class UpdateProductExtraAttributes < Mutations::BaseMutation
     argument :slug, String, required: true
-    argument :local_ownership, String, required: false
-    argument :impact, String, required: false
-    argument :years_in_production, String, required: false
+    argument :extra_attributes, [Types::ExtraAttributeInputType], required: true
 
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
     field :message, String, null: true
 
-    def resolve(slug:, local_ownership: nil, impact: nil, years_in_production: nil)
+    def resolve(slug:, extra_attributes:)
       product = Product.find_by(slug:)
 
       unless an_admin || a_product_owner(product)
@@ -28,9 +36,9 @@ module Mutations
         }
       end
 
-      product.local_ownership = local_ownership if local_ownership.present?
-      product.impact = impact if impact.present?
-      product.years_in_production = years_in_production if years_in_production.present?
+      extra_attributes.each do |attr|
+        product.set_extra_attribute(name: attr[:name], value: attr[:value], type: attr[:type])
+      end
 
       if product.save
         {

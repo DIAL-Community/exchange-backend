@@ -844,6 +844,15 @@ type ExportedPdf {
   locale: String!
 }
 
+"""
+An extra attribute for a product
+"""
+input ExtraAttributeInput {
+  name: String!
+  type: String
+  value: JSON!
+}
+
 type Handbook {
   createdAt: ISO8601DateTime!
   handbookDescriptions: [HandbookDescription!]
@@ -1046,7 +1055,7 @@ type Mutation {
   updateProductBuildingBlocks(buildingBlockSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductCategories(categorySlugs: [String!]!, featureSlugs: [String!]!, slug: String!): UpdateProductCategoriesPayload
   updateProductCountries(countrySlugs: [String!]!, slug: String!): UpdateProductCountriesPayload
-  updateProductExtraAttributes(impact: String, localOwnership: String, slug: String!, yearsInProduction: String): UpdateProductExtraAttributesPayload
+  updateProductExtraAttributes(extraAttributes: [ExtraAttributeInput!]!, slug: String!): UpdateProductExtraAttributesPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
   updateProductOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
   updateProductProjects(projectSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
