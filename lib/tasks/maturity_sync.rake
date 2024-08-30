@@ -183,7 +183,22 @@ namespace :maturity_sync do
       puts "Updating score for: #{product.name}."
       tracking_task_log(task_name, "Updating score for: #{product.name}.")
       calculate_maturity_scores(product.id)
-      calculate_product_indicators(product.id)
+      calculate_product_indicators(product.id, 'config/indicator_config.yml')
+    end
+
+    tracking_task_finish(task_name)
+  end
+
+  task :update_health_scores, [:path] => :environment do |_, _params|
+    task_name = 'Update Health Maturity Score'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    Product.all.each do |product|
+      puts "Updating score for: #{product.name}."
+      tracking_task_log(task_name, "Updating score for: #{product.name}.")
+      calculate_maturity_scores(product.id)
+      calculate_product_indicators(product.id, 'config/maturity_health.yml')
     end
 
     tracking_task_finish(task_name)

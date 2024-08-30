@@ -1,0 +1,184 @@
+- category: Electronic Health Record
+  description: Products that track individual patients health records longitudinally
+  features:
+    - name: Clinical Decision Support
+      description: Provide prompts and alerts, or checklists, based according to protocol, Screen persons by risk or other health status
+      health_facility_scale: 2
+    - name: Patient Record Management
+      description: Longitudinal tracking of person’s health status and services,  Manage structured and unstructured (images, notes) clinical records, Routine health indicator data collection and management
+      health_facility_scale: 1
+    - name: Individual Registration
+      description: Verify a person’s unique identity, Enrol person(s) for health services/clinical care plan
+      health_facility_scale: 1
+    - name: CPOE/Order Management
+      description: Allows doctors to enter orders digitally in the EHR system
+      health_facility_scale: 2
+    - name: Encounter Coding
+      description: Configurable system for creating codes for various encounters. Should allow use of standard coding systems (ICD10, Snomed)
+      health_facility_scale: 2
+    - name: Patient Billing
+      description: Track patient financial accounts, send invoices, receive payments and reconcile accounts
+      health_facility_scale: 2
+    - name: X-Ray and Imaging
+      description: Offering digital imaging services and ability to order X-Rays and other imaging 
+      health_facility_scale: 3
+    - name: Patient Care Templates
+      description: Allow provider to configure templates for doctor notes
+      health_facility_scale: 3
+    - name: ER Triage and Dashboard
+      description: Provide overview of ER cases and status
+      health_facility_scale: 3
+    - name: Encounter Data Import/Export
+      description: Import and Export of patient enounter records in FHIR or other standard format
+      health_facility_scale: 3
+    - name: Surgical Management
+      description: Track surgical cases, track surgical outcomes
+      health_facility_scale: 4
+    - name: Virtual Care
+      description: Provide online consultations
+      health_facility_scale: 4
+    - name: Encounter Workflow Support
+      description: Integration with Pharmacy, Labs, and other Categories
+      health_facility_scale: 4
+- category: Pharmacy
+  description: Managing the inventory and disbursement of medicine and other supplies
+  features:
+  - name: Dispensing and Administration
+    description: Track all medicines and supplies that have been dispensed, update patient records on administration
+    health_facility_scale: 2
+  - name: Inventory Management
+    description: Management of inventory including alerts when inventory levels are low
+    health_facility_scale: 2
+  - name: Drug Interaction Monitoring
+    description: Provide the ability to monitor patients and track effects of various medications
+    health_facility_scale: 3
+  - name: Decision Support
+    description: AI or other algorithms to advise on pharmacy actions
+    health_facility_scale: 4
+  - name: Electronic Prescribing
+    description: Send and/or recieve digital prescription orders
+    health_facility_scale: 4
+  - name: EHR Integration
+    description: Integration of pharmacy with hospital EHR systems
+    health_facility_scale: 3
+- category: Laboratory and Diagnostics
+  description: Management of laboratory and diagnostic tests
+  features:
+  - name: Capture biological specimens
+    description: Track the collection and lab testing of biological specimens
+    health_facility_scale: 2
+  - name: Transmit and track diagnostic orders
+    description: Send requests for diagnostics and track results
+    health_facility_scale: 2
+  - name: Send diagnostics to providers
+    description: Send results of diagnostics to health providers
+    health_facility_scale: 2
+  - name: Capture results from digital devices
+    description: Receive digital results from diagnostic devices
+    health_facility_scale: 3
+  - name: Inventory Management
+    description: Management of inventory including alerts when inventory levels are low
+  - name: EHR Integration
+    description: Integration of labs/diagnostics with hospital EHR systems
+    health_facility_scale: 3
+- category: Disease Surveillance
+  description: Digital solutions for tracking outbreaks and vaccination efforts
+  features:
+  - name: Contact tracking
+    description: Monitoring individuals who have been exposed to a Disease
+  - name: Track and trace
+    description: Real-time tracking of individuals events related to outbreaks
+  - name: Case reporting
+    description: Provide online forms for reporting an individual who has tested positive
+  - name: Case investigation
+    description: Online workflow to track and investigate cases
+  - name: Vaccine-related adverse events Monitoring
+    description: An online database that tracks any adverse response to vaccinations
+  - name: Social media Monitoring
+    description: Tools for searching social media platforms for reports of disease outbreaks
+- category: National and Community Health
+  description: Tools for aggregating large amounts of health data for a country, region or Community
+  features:
+  - name: Longintudinal health records
+    description: Aggregating health data for an individual from multiple sources
+  - name: National health domain-specific registries
+    description: Database to track health facilities, or information about health systems
+  - name: Clinical data repository 
+    description: Databases for tracking clinical data from multiple sources
+  - name: Clinical data warehouse
+    description: A data warehouse to track clinical data from various sources and formats
+- category: Analytics and Data Aggregation
+  description: Tools for collecting and analyzing health data
+  features:
+  - name: Data Visualization
+    description: Tools for displaying health data in multiple visual formats
+    health_facility_scale: 3
+  - name: Dashboards
+    description: Visual tools for monitoring the performance of digital health systems
+    health_facility_scale: 3
+  - name: Clinical data Dashboards
+    description: Tools to give a visual overview of current health data for a clinic or facility
+    health_facility_scale: 3
+  - name: Business intelligence
+    description: Tools to support decision making based on health data
+    health_facility_scale: 4
+  - name: Data processing (ETL)
+    description: Tools to help synthesize and process health data into different formats
+    health_facility_scale: 4
+- category: AI for Health
+  description: Tools that use AI and other technologies to improve health outcomes
+  features:
+  - name: Patient directed chatbot
+    description: AI chatbot that patients can use for basic consultation and/or diagnosis
+    health_facility_scale: 1
+  - name: Doctor directed diagnosis support
+    description: AI tools that support clinical decision making for doctors
+    health_facility_scale: 3
+  - name: Medical image diagnostic support
+    description: AI tools that can process images and make diagnoses
+    health_facility_scale: 4
+- category: Virtual Health
+  description: Solutions that support virtual health interventions
+  features:
+  - name: Guided self-help
+    description: Digital tools that provide direct health guidance for patients
+    health_facility_scale: 1
+  - name: Telemedicine appointments
+    description: Tools that allow patients to have virtual/online appointments with doctors
+    health_facility_scale: 2
+  - name: Interactive services/chatbots
+    description: Online tools that patients can use to access services or provide medical support
+    health_facility_scale: 3
+  - name: Remote patient monitoring
+    description: Tools that allow for monitoring health metrics for a patient remotely
+    health_facility_scale: 3
+- category: Front-line (CHW) tools
+  description: Tools that support front-line community health workers
+  features:
+  - name: Customizable data collection forms
+    description: Allow users to create custom data collection forms for front-line workers
+    health_facility_scale: 1
+  - name: Diagnosis support
+    description: Tools that support clinical decision making for front-line workers
+    health_facility_scale: 1
+  - name: Offline mobile use
+    description: Allow for collection of data while offline and transmission once back online
+    health_facility_scale: 1
+  - name: Integration with local health facility (EMR)
+    description: Allow data exchange between EMR/EHR and CHW application
+    health_facility_scale: 1
+  - name: Integration with national health systems 
+    description: Allows data to be sent to national health systems like DHIS2
+    health_facility_scale: 1
+- category: vaccination
+  description: Tools for tracking vaccinations
+  features:
+  - name: Patient vaccination records
+    description: Online records of vaccination events
+    health_facility_scale: 2
+  - name: Digital vaccine card
+    description: A digital vaccination credential that a user can keep on their phone
+    health_facility_scale: 2
+  - name: Vaccine-related adverse events monitoring
+    description: An online database that tracks any adverse response to vaccinations
+    health_facility_scale: 3
