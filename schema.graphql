@@ -1418,7 +1418,7 @@ type Product {
   countries: [Country!]
   currentProjects(first: Int): [Project!]
   endorsers: [Endorser!]
-  extraAttributes: JSON
+  extraAttributes: [JSON!]
   govStackEntity: Boolean!
   haveOwner: Boolean!
   hostingModel: String
