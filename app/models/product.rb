@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require('csv')
+require 'csv'
 require 'modules/maturity_sync'
 
 class Product < ApplicationRecord
@@ -43,10 +43,10 @@ class Product < ApplicationRecord
            after_add: :association_add,
            before_remove: :association_remove
   has_many :building_blocks,
-            through: :product_building_blocks,
-            dependent: :delete_all,
-            after_add: :association_add,
-            before_remove: :association_remove
+           through: :product_building_blocks,
+           dependent: :delete_all,
+           after_add: :association_add,
+           before_remove: :association_remove
 
   has_many :product_sustainable_development_goals,
            dependent: :delete_all,
@@ -70,10 +70,13 @@ class Product < ApplicationRecord
            before_remove: :association_remove
 
   has_many :interop_relationships, -> { where(relationship_type: 'interoperates') },
-           foreign_key: :from_product_id, class_name: 'ProductProductRelationship',
-           after_add: :association_add, before_remove: :association_remove
+           foreign_key: :from_product_id,
+           class_name: 'ProductProductRelationship',
+           after_add: :association_add,
+           before_remove: :association_remove
   has_many :interoperates_with,
-           through: :interop_relationships, source: :to_product,
+           through: :interop_relationships,
+           source: :to_product,
            dependent: :delete_all,
            after_add: :association_add,
            before_remove: :association_remove
@@ -141,36 +144,39 @@ class Product < ApplicationRecord
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
-  scope :name_and_slug_search, -> (name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
+  scope :name_and_slug_search, ->(name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
 
-  def local_ownership
-    extra_attributes['local_ownership']
-  end
+  def set_extra_attribute(name:, value:, type: nil)
+    self.extra_attributes ||= []
 
-  def local_ownership=(value)
-    self.extra_attributes ||= {}
-    self.extra_attributes['local_ownership'] = value
+    attribute = extra_attributes.find { |attr| attr['name'] == name }
+
+    if attribute
+      attribute['value'] = value
+      attribute['type'] = type if type
+    else
+      self.extra_attributes << { 'name' => name, 'value' => value, 'type' => type }
+    end
+
     save
   end
 
-  def impact
-    extra_attributes['impact']
+  def get_extra_attribute(name)
+    attribute = extra_attributes.find { |attr| attr['name'] == name }
+    attribute ? attribute['value'] : nil
   end
 
-  def impact=(value)
-    self.extra_attributes ||= {}
-    self.extra_attributes['impact'] = value
-    save
+  def method_missing(method_name, *arguments, &block)
+    if method_name.to_s.end_with?('=')
+      attribute_name = method_name.to_s.chomp('=')
+      set_extra_attribute(name: attribute_name, value: arguments.first)
+    else
+      get_extra_attribute(method_name.to_s)
+    end
   end
 
-  def years_in_production
-    extra_attributes['years_in_production']
-  end
-
-  def years_in_production=(value)
-    self.extra_attributes ||= {}
-    self.extra_attributes['years_in_production'] = value
-    save
+  def respond_to_missing?(method_name, include_private = false)
+    true
   end
 
   amoeba do
