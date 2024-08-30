@@ -230,5 +230,10 @@ module Types
     field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
     field :messages, resolver: Queries::MessagesQuery
     field :message, resolver: Queries::MessageQuery
+
+    field :software_categories, resolver: Queries::SoftwareCategoriesQuery
+    field :software_category, resolver: Queries::SoftwareCategoryQuery
+    field :software_features, resolver: Queries::SoftwareFeaturesQuery
+    field :software_feature, resolver: Queries::SoftwareFeatureQuery
   end
 end
