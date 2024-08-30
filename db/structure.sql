@@ -4139,7 +4139,8 @@ CREATE TABLE fao.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -5690,7 +5691,8 @@ CREATE TABLE health.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -8327,7 +8329,8 @@ CREATE TABLE health.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint
+    organization_id bigint,
+    submitted_by_id bigint
 );
 
 
@@ -19761,6 +19764,13 @@ CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (or
 
 
 --
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON fao.resources USING btree (submitted_by_id);
+
+
+--
 -- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -21137,6 +21147,13 @@ CREATE INDEX index_resources_countries_on_resource_id ON health.resources_countr
 --
 
 CREATE INDEX index_resources_on_organization_id ON health.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON health.resources USING btree (submitted_by_id);
 
 
 --
@@ -23267,6 +23284,14 @@ ALTER TABLE ONLY fao.projects_digital_principles
 
 
 --
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: projects fk_rails_45a5b9baa8; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -24528,6 +24553,14 @@ ALTER TABLE ONLY health.organization_descriptions
 
 ALTER TABLE ONLY health.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES health.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES health.users(id);
 
 
 --

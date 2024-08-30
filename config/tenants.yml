@@ -9,5 +9,6 @@ tenants:
     urls: 
       - url: health.localhost
       - url: health.dial.community
+      - url: apps.africacdc.org
     allow_unsecure_read: true
     adminPassword: Admin123
