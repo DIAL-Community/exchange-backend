@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'modules/maturity_sync'
 require 'modules/slugger'
 require 'modules/track'
@@ -13,7 +14,7 @@ include Nokogiri
 namespace :health_sync do
   task :sync_healthtech_indicators, [:path] => :environment do |_, _params|
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
-    
+
     Apartment::Tenant.switch(tenant_name) do
       # if user set the purge flag, then delete all the existing categories and indicators
       if ENV['purge'] == 'true'
@@ -37,7 +38,7 @@ namespace :health_sync do
 
   task :sync_health_categories, [:path] => :environment do |_, _params|
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
-    
+
     Apartment::Tenant.switch(tenant_name) do
       # if user set the purge flag, then delete all the existing categories
       if ENV['purge'] == 'true'
