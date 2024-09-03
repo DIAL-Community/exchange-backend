@@ -13,6 +13,8 @@ module Paginated
         return { total_count: 0 }
       end
 
+      return { total_count: 0 } unless an_admin
+
       candidate_resources = CandidateResource.order(:name)
       unless search.blank?
         name_filter = candidate_resources.name_contains(search)

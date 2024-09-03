@@ -14,6 +14,8 @@ module Paginated
         return []
       end
 
+      return [] unless an_admin
+
       candidate_resources = CandidateResource.order(rejected: :desc)
                                              .order(created_at: :desc)
                                              .order(:name)
