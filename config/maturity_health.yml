@@ -1,0 +1,167 @@
+- category: Usage
+  description: How widely used this software platform is - number of deployments, users, and transactions
+  indicators:
+    - name: Number of deployments
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+    - name: Number of deployment countries
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 1
+        - operator: lessThan
+          value: 3
+      high:
+        - operator: greaterThan
+          value: 2
+    - name: Number of active users
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+    - name: Number of transactions/month
+      type: scale
+      low:
+        - operator: lessThan
+          value: 2
+      medium:
+        - operator: greaterThan
+          value: 2
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+- category: Interoperability
+  descriptions: Does the platform allow for integration with other health systems
+  indicators:
+    - name: Data import/export using FHIR
+      type: boolean
+    - name: Integration with national health systems
+      type: boolean
+    - name: Has open API for integration
+      type: boolean
+- category: Software Development Practices
+  description: Is the software secure, adhere to privacy standards, and is it regularly maintained
+  indicators:
+    - name: Has a privacy policy
+      type: boolean
+    - name: PII and PHI are encrypted at storage and in API calls
+      type: boolean
+    - name: Offers scalable deployment mechanisms
+      description: Can be deployed using docker, kubernetes or similar tools
+      type: boolean
+    - name: Active developers
+      type: scale
+      low:
+        - operator: greaterThan
+          value: 5
+      medium:
+        - operator: greaterThan
+          value: 0
+        - operator: lessThan
+          value: 5
+      high:
+        - operator: lessThan
+          value: 1
+    - name: Releases
+      type: scale
+      low:
+        - operator: equalTo
+          value: 0
+      medium:
+        - operator: greaterThan
+          value: 1
+        - operator: lessThan
+          value: 9
+      high:
+        - operator: greaterThan
+          value: 10
+    - name: Audit logging and error reporting
+      description: Has mechanisms for tracking errors and user issues
+      type: boolean
+    - name: Secure authorization mechanisms
+      description: Uses OIDC or similar protocols to control access to the platform
+      type: boolean
+- category: Usability
+  description: Is the software easy to use in different environments and user groups
+  indicators:
+    - name: Offline/low-bandwidth functionality
+      description: The platform is designed to work in offline or low-bandwidth conditions
+      type: boolean
+    - name: Customizable fields and forms
+      description: Offers ability for users/admins to customize and configure forms and data
+      type: boolean
+    - name: Internationalization
+      description: Can display information in multiple languages
+      type: boolean
+    - name: Accessibility
+      description: Score from an accessibility screening tool - ensuring that people with various disabilities can use the platform
+      type: scale
+      low:
+        - operator: lessThan
+          value: 70
+      medium:
+        - operator: greaterThan
+          value: 70
+        - operator: lessThan
+          value: 90
+      high:
+        - operator: greaterThan
+          value: 90
+- category: Organization sustainability
+  description: Measuring the revenue, investment, and infrastructure of the organization
+  indicators:
+  - name: Implementation support
+    description: The organization has SLAs and a customer service department
+    type: boolean
+  - name: Annual Revenue
+    description: Current annual revenue (USD)
+    type: scale
+    low:
+      - operator: lessThan
+        value: 20000
+    medium:
+      - operator: greaterThan
+        value: 20000
+      - operator: lessThan
+        value: 100000
+    high:
+      - operator: greaterThan
+        value: 100000
+  - name: Outside investment
+    description: Total investments in the company (USD)
+    type: scale
+    low:
+      - operator: lessThan
+        value: 50000
+    medium:
+      - operator: greaterThan
+        value: 50000
+      - operator: lessThan
+        value: 500000
+    high:
+      - operator: greaterThan
+        value: 500000
+    
