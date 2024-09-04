@@ -1,14 +1,4 @@
 # frozen_string_literal: true
-module Types
-  class ExtraAttributeInputType < GraphQL::Schema::InputObject
-    graphql_name 'ExtraAttributeInput'
-    description 'An extra attribute for a product'
-
-    argument :name, String, required: true
-    argument :value, GraphQL::Types::JSON, required: true
-    argument :type, String, required: false
-  end
-end
 
 module Mutations
   class UpdateProductExtraAttributes < Mutations::BaseMutation

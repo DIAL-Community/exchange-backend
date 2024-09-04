@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 class MigrateExtraAttributesToNewStructure < ActiveRecord::Migration[6.1]
   def up
+    change_column(:products, :extra_attributes, :jsonb, using: 'extra_attributes::jsonb', default: [])
+
     Product.find_each do |product|
       next unless product.extra_attributes.is_a?(Hash)
 
@@ -26,5 +28,7 @@ class MigrateExtraAttributesToNewStructure < ActiveRecord::Migration[6.1]
 
       product.update(extra_attributes: old_extra_attributes)
     end
+
+    change_column(:products, :extra_attributes, :json, using: 'extra_attributes::json', default: {})
   end
 end
