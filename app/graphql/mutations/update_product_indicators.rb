@@ -21,7 +21,7 @@ module Mutations
         }
       end
 
-      product = Product.find_by(slug: slug)
+      product = Product.find_by(slug:)
       return { product: nil, errors: ["Product with slug '#{slug}' not found."] } if product.nil?
 
       errors = []
@@ -43,14 +43,15 @@ module Mutations
         if indicator_data['value'].nil?
           product_indicator.destroy!
         else
-          converted_value = convert_raw_value(indicator_data['value'], category_indicator.name, category_indicator.rubric_category.name, indicator_config)
+          converted_value = convert_raw_value(indicator_data['value'], category_indicator.name,
+category_indicator.rubric_category.name, indicator_config)
           product_indicator.indicator_value = converted_value
           product_indicator.save!
         end
       end
 
       if errors.any?
-        return { product: nil, errors: errors }
+        return { product: nil, errors: }
       end
 
       if product.save
