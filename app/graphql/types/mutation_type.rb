@@ -70,6 +70,7 @@ module Types
     field :update_product_resources, mutation: Mutations::UpdateProductResources
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
     field :update_product_categories, mutation: Mutations::UpdateProductCategories
+    field :update_product_extra_attributes, mutation: Mutations::UpdateProductExtraAttributes
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :delete_dataset, mutation: Mutations::DeleteDataset
