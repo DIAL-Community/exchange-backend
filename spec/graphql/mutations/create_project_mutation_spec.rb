@@ -64,7 +64,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   end
 
   it 'is successful - admin can update project name and slug remains the same' do
-    project = create(:project, name: "Some name", slug: "some-name")
+    create(:project, name: "Some name", slug: "some-name")
     create(:origin, slug: 'manually_entered')
     create(:country, slug: 'usa')
     create(:country, slug: 'canada')
