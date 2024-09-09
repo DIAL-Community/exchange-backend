@@ -2,7 +2,7 @@
 
 module Modules
   module MaturitySync
-    def create_category(cat_name, cat_desc = nil)
+    def create_category(cat_name)
       category_slug = reslug_em(cat_name)
       rubric_category = RubricCategory.where(slug: category_slug)
                                       .first || RubricCategory.new
@@ -699,7 +699,7 @@ module Modules
       { 'error': 'Indicator not found' }
     end
 
-    def calculate_product_indicators(product_id, config_file)
+    def calculate_product_indicators(product_id)
       product_repositories = ProductRepository.where(product_id:)
       github_category_indicators = CategoryIndicator.where(data_source: 'GitHub')
 

@@ -11,7 +11,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $slug: String!,
         $description: String!,
         $govStackEntity: Boolean,
-        $productStage: String
+        $productStage: String,
+        $extraAttributes: [ExtraAttributeInput!]
       ) {
         createProduct(
           name: $name,
@@ -20,25 +21,39 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
           website: "somewebsite.org",
           description: $description,
           govStackEntity: $govStackEntity,
-          productStage: $productStage
+          productStage: $productStage,
+          extraAttributes: $extraAttributes
         ) {
-            product {
-              name
-              slug
-              govStackEntity
-              productStage
-              productDescription {
-                description
-              }
+          product {
+            name
+            slug
+            govStackEntity
+            productStage
+            productDescription {
+              description
             }
-            errors
+            extraAttributes
           }
+          errors
         }
+      }
     GQL
   end
 
-  it 'is successful - user is logged in as admin' do
+  it 'is successful - user is logged in as admin with extra attributes' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
+
+    extra_attributes = [
+      { "name" => "impact", "type" => "product_scale", "value" => "Very High" },
+      { "name" => "local_ownership", "type" => "product_scale", "value" => "Local Authority" },
+      { "name" => "years_in_production", "type" => "product_scale", "value" => 8 },
+      { "name" => "deployments", "type" => "integer", "value" => 15 },
+      { "name" => "deployment_countries", "type" => "integer", "value" => 10 },
+      { "name" => "daily_users", "type" => "integer", "value" => 25000 },
+      { "name" => "transactions_per_month", "type" => "integer", "value" => 100000 },
+      { "name" => "annual_revenue", "type" => "integer", "value" => 5000000 },
+      { "name" => "funding_raised", "type" => "product_scale", "value" => 20000000 }
+    ]
 
     result = execute_graphql_as_user(
       admin_user,
@@ -47,56 +62,32 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         name: "Some name",
         slug: "some-name",
         description: "Some description",
-        productStage: nil
+        productStage: nil,
+        extraAttributes: extra_attributes
       }
     )
 
     aggregate_failures do
-      expect(result['data']['createProduct']['product'])
-        .to(eq({
-          "name" => "Some name",
-          "govStackEntity" => false,
-          "productDescription" => { "description" => "Some description" },
-          "slug" => "some-name",
-          "productStage" => nil
-        }))
-      expect(result['data']['createProduct']['errors'])
-        .to(eq([]))
-    end
-  end
-
-  it 'is successful - setting gov stack field as admin' do
-    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
-
-    result = execute_graphql_as_user(
-      admin_user,
-      mutation,
-      variables: {
-        name: "Some name",
-        slug: "some-name",
-        description: "Some description",
-        govStackEntity: true,
-        productStage: nil
-      }
-    )
-
-    aggregate_failures do
-      expect(result['data']['createProduct']['product'])
-        .to(eq({
-          "name" => "Some name",
-          "govStackEntity" => true,
-          "slug" => "some-name",
-          "productStage" => nil,
-          "productDescription" => { "description" => "Some description" }
-        }))
-      expect(result['data']['createProduct']['errors'])
-        .to(eq([]))
+      expect(result['data']['createProduct']['product']).to(eq({
+        "name" => "Some name",
+        "govStackEntity" => false,
+        "productDescription" => { "description" => "Some description" },
+        "slug" => "some-name",
+        "productStage" => nil,
+        "extraAttributes" => extra_attributes.map(&:stringify_keys)
+      }))
+      expect(result['data']['createProduct']['errors']).to(eq([]))
     end
   end
 
   it 'fails - setting gov stack field as non-admin' do
     created_product = create(:product, name: 'Some Name', slug: 'some-name')
     owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_user], user_products: [created_product.id])
+
+    extra_attributes = [
+      { "name" => "impact", "type" => "product_scale", "value" => "Very High" },
+      { "name" => "local_ownership", "type" => "product_scale", "value" => "Local Authority" }
+    ]
 
     result = execute_graphql_as_user(
       owner_user,
@@ -106,40 +97,43 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         slug: "some-name",
         description: "Some description",
         govStackEntity: true,
-        productStage: nil
+        productStage: nil,
+        extraAttributes: extra_attributes
       }
     )
 
     aggregate_failures do
-      expect(result['data']['createProduct']['product'])
-        .to(eq({
-          "name" => "Some other name",
-          "govStackEntity" => false,
-          "slug" => "some-name",
-          "productStage" => nil,
-          "productDescription" => { "description" => "Some description" }
-        }))
-      expect(result['data']['createProduct']['errors'])
-        .to(eq([]))
+      expect(result['data']['createProduct']['product']).to(eq({
+        "name" => "Some other name",
+        "govStackEntity" => false,
+        "slug" => "some-name",
+        "productStage" => nil,
+        "productDescription" => { "description" => "Some description" },
+        "extraAttributes" => extra_attributes.map(&:stringify_keys)
+      }))
+      expect(result['data']['createProduct']['errors']).to(eq([]))
     end
   end
 
   it 'fails - user is not logged in' do
+    extra_attributes = [
+      { "name" => "impact", "type" => "product_scale", "value" => "Very High" }
+    ]
+
     result = execute_graphql(
       mutation,
       variables: {
         name: "Some name",
         slug: "some-name",
         description: "Some description",
-        productStage: nil
+        productStage: nil,
+        extraAttributes: extra_attributes
       }
     )
 
     aggregate_failures do
-      expect(result['data']['createProduct']['product'])
-        .to(be(nil))
-      expect(result['data']['createProduct']['errors'])
-        .to(eq(['Must be admin or product owner to create a product']))
+      expect(result['data']['createProduct']['product']).to(be(nil))
+      expect(result['data']['createProduct']['errors']).to(eq(['Must be admin or product owner to create a product']))
     end
   end
 end

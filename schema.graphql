@@ -896,6 +896,15 @@ type ExportedPdf {
   locale: String!
 }
 
+"""
+An extra attribute for a product
+"""
+input ExtraAttributeInput {
+  name: String!
+  type: String
+  value: JSON!
+}
+
 type Handbook {
   createdAt: ISO8601DateTime!
   handbookDescriptions: [HandbookDescription!]
@@ -1023,9 +1032,9 @@ type Mutation {
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, draft: Boolean! = true, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
-  createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, productStage: String, slug: String!, website: String): CreateProductPayload
+  createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, extraAttributes: [ExtraAttributeInput!], govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, productStage: String, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
-  createProject(description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
+  createProject(countrySlugs: [String!]!, description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
   createResource(authors: [JSON!] = [], description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopics: [String!] = [], resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, sourceLogoFile: Upload, sourceName: String = null, sourceWebsite: String = null): CreateResourcePayload
   createResourceTopic(description: String, imageFile: Upload, name: String!, parentTopicId: ID, slug: String!): CreateResourceTopicPayload
@@ -1102,6 +1111,7 @@ type Mutation {
   updateProductBuildingBlocks(buildingBlockSlugs: [String!]!, mappingStatus: String, slug: String!): UpdateProductBuildingBlocksPayload
   updateProductCategories(categorySlugs: [String!]!, featureSlugs: [String!]!, slug: String!): UpdateProductCategoriesPayload
   updateProductCountries(countrySlugs: [String!]!, slug: String!): UpdateProductCountriesPayload
+  updateProductExtraAttributes(extraAttributes: [ExtraAttributeInput!]!, slug: String!): UpdateProductExtraAttributesPayload
   updateProductIndicators(indicatorsData: [JSON!]!, slug: String!): UpdateProductIndicatorsPayload
   updateProductOrganizations(organizationSlugs: [String!]!, slug: String!): UpdateProductOrganizationsPayload
   updateProductProjects(projectSlugs: [String!]!, slug: String!): UpdateProductProjectsPayload
@@ -1473,7 +1483,7 @@ type Product {
   countries: [Country!]
   currentProjects(first: Int): [Project!]
   endorsers: [Endorser!]
-  extraAttributes: JSON
+  extraAttributes: [JSON!]
   govStackEntity: Boolean!
   haveOwner: Boolean!
   hostingModel: String
@@ -1688,7 +1698,7 @@ type Query {
   paginatedOpportunities(buildingBlocks: [String!] = [], countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): [Opportunity!]!
   paginatedOrganizations(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
   paginatedPlaybooks(offsetAttributes: OffsetAttributes!, owner: String!, search: String = "", tags: [String!] = []): [Playbook!]!
-  paginatedProducts(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, softwareCategories: [String!] = [], softwareFeatures: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
+  paginatedProducts(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], offsetAttributes: OffsetAttributes!, origins: [String!] = [], productStage: String = null, sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, softwareCategories: [String!] = [], softwareFeatures: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): [Product!]!
   paginatedProjects(countries: [String!] = [], offsetAttributes: OffsetAttributes!, organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   paginatedRegions(offsetAttributes: OffsetAttributes!, search: String = ""): [Region!]!
   paginatedResourceTopics(offsetAttributes: OffsetAttributes!, search: String = ""): [ResourceTopic!]!
@@ -2366,6 +2376,15 @@ Autogenerated return type of UpdateProductCountries.
 """
 type UpdateProductCountriesPayload {
   errors: [String!]
+  product: Product
+}
+
+"""
+Autogenerated return type of UpdateProductExtraAttributes.
+"""
+type UpdateProductExtraAttributesPayload {
+  errors: [String!]
+  message: String
   product: Product
 }
 
