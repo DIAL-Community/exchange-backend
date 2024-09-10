@@ -3,9 +3,16 @@
 module Types
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
+    field :approve_reject_candidate_product, mutation: Mutations::ApproveRejectCandidateProduct
+
     field :create_candidate_organization, mutation: Mutations::CreateCandidateOrganization
+    field :approve_reject_candidate_organization, mutation: Mutations::ApproveRejectCandidateOrganization
+
     field :create_candidate_dataset, mutation: Mutations::CreateCandidateDataset
     field :approve_reject_candidate_dataset, mutation: Mutations::ApproveRejectCandidateDataset
+
+    field :create_candidate_resource, mutation: Mutations::CreateCandidateResource
+    field :approve_reject_candidate_resource, mutation: Mutations::ApproveRejectCandidateResource
 
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
@@ -65,9 +72,12 @@ module Types
     field :update_product_projects, mutation: Mutations::UpdateProductProjects
     field :update_product_countries, mutation: Mutations::UpdateProductCountries
     field :update_product_tags, mutation: Mutations::UpdateProductTags
+    field :update_product_stage, mutation: Mutations::UpdateProductStage
     field :update_product_sdgs, mutation: Mutations::UpdateProductSdgs
     field :update_product_resources, mutation: Mutations::UpdateProductResources
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
+    field :update_product_categories, mutation: Mutations::UpdateProductCategories
+    field :update_product_extra_attributes, mutation: Mutations::UpdateProductExtraAttributes
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :delete_dataset, mutation: Mutations::DeleteDataset
@@ -109,6 +119,9 @@ module Types
 
     field :create_sector, mutation: Mutations::CreateSector
     field :delete_sector, mutation: Mutations::DeleteSector
+
+    field :create_category, mutation: Mutations::CreateCategory
+    field :delete_category, mutation: Mutations::DeleteCategory
 
     field :create_workflow, mutation: Mutations::CreateWorkflow
     field :delete_workflow, mutation: Mutations::DeleteWorkflow

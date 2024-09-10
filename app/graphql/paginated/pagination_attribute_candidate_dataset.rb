@@ -13,14 +13,14 @@ module Paginated
 
       return { total_count: 0 } unless an_admin
 
-      candidate_products = CandidateDataset.order(:name)
+      candidate_datasets = CandidateDataset.order(:name)
       unless search.blank?
-        name_filter = candidate_products.name_contains(search)
-        description_filter = candidate_products.where('LOWER(description) like LOWER(?)', "%#{search}%")
-        candidate_products = candidate_products.where(id: (name_filter + description_filter).uniq)
+        name_filter = candidate_datasets.name_contains(search)
+        description_filter = candidate_datasets.where('LOWER(description) like LOWER(?)', "%#{search}%")
+        candidate_datasets = candidate_datasets.where(id: (name_filter + description_filter).uniq)
       end
 
-      { total_count: candidate_products.count }
+      { total_count: candidate_datasets.count }
     end
   end
 end

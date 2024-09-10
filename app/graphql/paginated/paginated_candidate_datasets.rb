@@ -13,17 +13,17 @@ module Paginated
 
       return [] unless an_admin
 
-      candidate_products = CandidateDataset.order(rejected: :desc)
+      candidate_datasets = CandidateDataset.order(rejected: :desc)
                                            .order(created_at: :desc)
                                            .order(:name)
       unless search.blank?
-        name_filter = candidate_products.name_contains(search)
-        description_filter = candidate_products.where('LOWER(description) like LOWER(?)', "%#{search}%")
-        candidate_products = candidate_products.where(id: (name_filter + description_filter).uniq)
+        name_filter = candidate_datasets.name_contains(search)
+        description_filter = candidate_datasets.where('LOWER(description) like LOWER(?)', "%#{search}%")
+        candidate_datasets = candidate_datasets.where(id: (name_filter + description_filter).uniq)
       end
 
       offset_params = offset_attributes.to_h
-      candidate_products.limit(offset_params[:limit]).offset(offset_params[:offset])
+      candidate_datasets.limit(offset_params[:limit]).offset(offset_params[:offset])
     end
   end
 end

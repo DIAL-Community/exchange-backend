@@ -14,12 +14,13 @@ module Mutations
     argument :description, String, required: true
     argument :product_id, Integer, required: false
     argument :organization_id, Integer, required: false
+    argument :country_slugs, [String], required: true
 
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
     def resolve(name:, slug:, start_date: nil, end_date: nil, project_url: nil, description:,
-      product_id: nil, organization_id: nil)
+      product_id: nil, organization_id: nil, country_slugs:)
       project = Project.find_by(slug:)
       check = false
       if project.nil?
@@ -46,6 +47,14 @@ module Mutations
                                    .order(slug: :desc)
                                    .first
           project.slug = project.slug + generate_offset(first_duplicate)
+        end
+      end
+
+      project.countries = []
+      if !country_slugs.nil? && !country_slugs.empty?
+        country_slugs.each do |country_slug|
+          current_country = Country.find_by(slug: country_slug)
+          project.countries << current_country unless current_country.nil?
         end
       end
 

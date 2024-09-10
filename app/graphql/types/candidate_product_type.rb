@@ -7,7 +7,14 @@ module Types
     field :name, String, null: false
     field :website, String, null: false
     field :repository, String, null: false
-    field :submitter_email, String, null: false
+
+    field :submitter_email, String, null: true
+    def submitter_email
+      unless context[:current_user].nil?
+        object.submitter_email
+      end
+    end
+
     field :description, String, null: true
 
     field :created_at, GraphQL::Types::ISO8601Date, null: true

@@ -54,8 +54,11 @@ module Mutations
 
       if candidate_dataset.save! && captcha_verification(captcha)
         AdminMailer
-          .with(candidate_name: candidate_dataset.name)
-          .notify_new_candidate_dataset
+          .with(
+            candidate_name: candidate_dataset.name,
+            object_type: 'Candidate Dataset'
+          )
+          .notify_new_candidate_record
           .deliver_now
         # Successful creation, return the created object with no errors
         {
