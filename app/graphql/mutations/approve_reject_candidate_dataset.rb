@@ -35,8 +35,12 @@ module Mutations
 
       if successful_operation
         AdminMailer
-          .with(rejected: action == 'REJECT', user_email: candidate_dataset.submitter_email)
-          .notify_candidate_dataset_approval
+          .with(
+            rejected: action == 'REJECT',
+            object_type: 'Candidate Dataset',
+            user_email: candidate_dataset.submitter_email
+          )
+          .notify_candidate_record_approval
           .deliver_now
 
         # Successful creation, return the created object with no errors
@@ -58,7 +62,13 @@ module Mutations
       candidate_dataset.rejected_date = Time.now
       candidate_dataset.rejected_by_id = context[:current_user].id
 
-      return true if candidate_dataset.save!
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        candidate_dataset.save!
+        successful_operation = true
+      end
+
+      successful_operation
     end
 
     def approve_candidate(candidate_dataset)
@@ -87,16 +97,18 @@ module Mutations
         assign_auditable_user(dataset)
         dataset.save!
 
-        dataset_desc = DatasetDescription.find_by(dataset_id: dataset.id, locale: I18n.locale)
-        dataset_desc = DatasetDescription.new if dataset_desc.nil?
-        dataset_desc.description = candidate_dataset.description
-        dataset_desc.dataset_id = dataset.id
-        dataset_desc.locale = I18n.locale
+        unless candidate_dataset.description.nil?
+          dataset_description = DatasetDescription.find_by(dataset_id: dataset.id, locale: I18n.locale)
+          dataset_description = DatasetDescription.new if dataset_description.nil?
+          dataset_description.description = candidate_dataset.description
+          dataset_description.dataset_id = dataset.id
+          dataset_description.locale = I18n.locale
 
-        assign_auditable_user(dataset_desc)
-        dataset_desc.save!
+          assign_auditable_user(dataset_description)
+          dataset_description.save!
+        end
+
         candidate_dataset.save!
-
         successful_operation = true
       end
 

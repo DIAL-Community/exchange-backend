@@ -12,14 +12,10 @@ module Paginated
     argument :tags, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
 
-    argument :compartmentalized, Boolean, required: true, default_value: false
-    argument :featured_length, Integer, required: false, default_value: 3
-
     type Attributes::PaginationAttributes, null: false
 
     def resolve(
-      search:, show_in_exchange:, show_in_wizard:, compartmentalized:,
-      featured_length:, resource_types:, resource_topics:, tags:, countries:
+      search:, show_in_exchange:, show_in_wizard:, resource_types:, resource_topics:, tags:, countries:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
@@ -28,11 +24,6 @@ module Paginated
       resources = Resource
                   .order(featured: :desc)
                   .order(published_date: :desc)
-
-      current_offset = 0
-      if compartmentalized
-        current_offset += featured_length
-      end
 
       unless search.blank?
         name_filter = Resource.name_contains(search)
@@ -47,13 +38,7 @@ module Paginated
                                       .where('LOWER(organizations.name) like LOWER(?)', "%#{search}%")
 
         resources = resources.where(
-          id: (
-            name_filter +
-            description_filter +
-            author_filter +
-            source_filter +
-            organization_filter
-          ).uniq
+          id: (name_filter + description_filter + author_filter + source_filter + organization_filter).uniq
         )
       end
 
@@ -64,8 +49,9 @@ module Paginated
       filtered_resource_topics = resource_topics.reject { |x| x.nil? || x.blank? }
       unless filtered_resource_topics.empty?
         resources = resources.where(
-          "resources.resource_topics @> '{#{filtered_resource_topics.join(',').downcase}}'::varchar[] or " \
-          "resources.resource_topics @> '{#{filtered_resource_topics.join(',')}}'::varchar[] "
+          # https://www.postgresql.org/docs/current/functions-array.html
+          "resources.resource_topics && '{#{filtered_resource_topics.join(',').downcase}}'::varchar[] or " \
+          "resources.resource_topics && '{#{filtered_resource_topics.join(',')}}'::varchar[] "
         )
       end
 
@@ -78,17 +64,16 @@ module Paginated
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
       unless filtered_tags.empty?
         resources = resources.where(
-          "resources.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or " \
-          "resources.tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
+          # https://www.postgresql.org/docs/current/functions-array.html
+          " (resources.tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[]) or " \
+          " (resources.tags @> '{#{filtered_tags.join(',')}}'::varchar[]) "
         )
       end
 
       resources = resources.where(show_in_exchange: true) if show_in_exchange
       resources = resources.where(show_in_wizard: true) if show_in_wizard
 
-      resource_count = resources.count - current_offset
-
-      { total_count: resource_count <= 0 ? 0 : resource_count }
+      { total_count: resources.count }
     end
   end
 end

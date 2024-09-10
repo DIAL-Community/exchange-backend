@@ -38,6 +38,11 @@ module Types
       approved_by
     end
 
-    field :contact, Types::ContactType, null: false
+    field :contact, Types::ContactType, null: true
+    def contact
+      unless context[:current_user].nil?
+        object.contact
+      end
+    end
   end
 end

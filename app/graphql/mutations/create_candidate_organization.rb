@@ -73,8 +73,11 @@ module Mutations
 
       if candidate_organization.save && captcha_verification(captcha)
         AdminMailer
-          .with(candidate_name: candidate_organization.name)
-          .notify_new_candidate_organization
+          .with(
+            candidate_name: candidate_organization.name,
+            object_type: 'Candidate Organization'
+          )
+          .notify_new_candidate_record
           .deliver_now
         # Successful creation, return the created object with no errors
         {
