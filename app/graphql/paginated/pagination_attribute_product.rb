@@ -12,6 +12,8 @@ module Paginated
     argument :workflows, [String], required: false, default_value: []
     argument :sdgs, [String], required: false, default_value: []
     argument :origins, [String], required: false, default_value: []
+    argument :software_categories, [String], required: false, default_value: []
+    argument :software_features, [String], required: false, default_value: []
     argument :product_stage, String, required: false, default_value: nil
 
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
@@ -76,7 +78,7 @@ module Paginated
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
-      product_stage:
+      product_stage:, software_categories:, software_features:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
@@ -135,6 +137,18 @@ module Paginated
       unless filtered_sectors.empty?
         products = products.joins(:sectors)
                            .where(sectors: { id: filtered_sectors })
+      end
+
+      filtered_categories = software_categories.reject { |x| x.nil? || x.empty? }
+      unless filtered_categories.empty?
+        products = products.joins(:software_categories)
+                           .where(software_categories: { id: filtered_categories })
+      end
+
+      filtered_features = software_features.reject { |x| x.nil? || x.empty? }
+      unless filtered_features.empty?
+        products = products.joins(:software_features)
+                           .where(software_features: { id: filtered_features })
       end
 
       filtered_tags = tags.reject { |x| x.nil? || x.blank? }
