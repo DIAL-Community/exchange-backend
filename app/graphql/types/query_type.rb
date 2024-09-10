@@ -95,6 +95,9 @@ module Types
     field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
     field :candidate_dataset, resolver: Queries::CandidateDatasetQuery
 
+    field :candidate_resources, resolver: Queries::CandidateResourcesQuery
+    field :candidate_resource, resolver: Queries::CandidateResourceQuery
+
     field :playbooks, resolver: Queries::PlaybooksQuery
     field :playbook, resolver: Queries::PlaybookQuery
     field :search_playbook_tags, resolver: Queries::SearchPlaybookTagsQuery
@@ -156,6 +159,9 @@ module Types
 
     field :paginated_candidate_datasets, resolver: Paginated::PaginatedCandidateDatasets
     field :pagination_attribute_candidate_dataset, resolver: Paginated::PaginationAttributeCandidateDataset
+
+    field :paginated_candidate_resources, resolver: Paginated::PaginatedCandidateResources
+    field :pagination_attribute_candidate_resource, resolver: Paginated::PaginationAttributeCandidateResource
 
     field :paginated_countries, resolver: Paginated::PaginatedCountries
     field :pagination_attribute_country, resolver: Paginated::PaginationAttributeCountry
@@ -230,5 +236,10 @@ module Types
     field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
     field :messages, resolver: Queries::MessagesQuery
     field :message, resolver: Queries::MessageQuery
+
+    field :software_categories, resolver: Queries::SoftwareCategoriesQuery
+    field :software_category, resolver: Queries::SoftwareCategoryQuery
+    field :software_features, resolver: Queries::SoftwareFeaturesQuery
+    field :software_feature, resolver: Queries::SoftwareFeatureQuery
   end
 end

@@ -16,7 +16,7 @@ module Modules
                                                       .first || RubricCategoryDescription.new
       rubric_category_desc.rubric_category_id = rubric_category.id
       rubric_category_desc.locale = I18n.locale
-      rubric_category_desc.description = "<p>#{cat_name}</p>"
+      cat_desc ? rubric_category_desc.description = cat_desc : rubric_category_desc.description = "<p>#{cat_name}</p>"
       rubric_category_desc.save
 
       rubric_category
