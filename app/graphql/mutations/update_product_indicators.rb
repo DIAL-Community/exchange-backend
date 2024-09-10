@@ -43,8 +43,12 @@ module Mutations
         if indicator_data['value'].nil?
           product_indicator.destroy!
         else
-          converted_value = convert_raw_value(indicator_data['value'], category_indicator.name,
-category_indicator.rubric_category.name, indicator_config)
+          converted_value = convert_raw_value(
+            indicator_data['value'],
+            category_indicator.name,
+            category_indicator.rubric_category.name,
+            indicator_config
+          )
           product_indicator.indicator_value = converted_value
           product_indicator.save!
         end
