@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Types
-  class CarouselType < BaseUnion
+  class CarouselType < BaseObject
     field :id, ID, null: false
     field :name, String, null: false
     field :description, String, null: false
@@ -31,7 +31,7 @@ module Types
     field :menu_items, [Types::MenuItemType], null: false
   end
 
-  class SiteSettingType < Types::BaseObject
+  class SiteSettingType < BaseObject
     field :id, ID, null: false
     field :logo_url, String, null: false
     field :favicon_url, String, null: false
