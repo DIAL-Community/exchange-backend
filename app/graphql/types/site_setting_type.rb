@@ -21,7 +21,6 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :url, String, null: false
-    field :menu, Types::MenuType, null: false
   end
 
   class DropdownMenuType < BaseObject
