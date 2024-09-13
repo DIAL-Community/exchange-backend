@@ -32835,6 +32835,20 @@
               "deprecationReason": null
             },
             {
+              "name": "siteSetting",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Sector",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "softwareCategories",
               "description": null,
               "args": [

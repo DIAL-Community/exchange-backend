@@ -1890,6 +1890,7 @@ type Query {
   ): ProjectConnection!
   sector(slug: String!): Sector
   sectors(locale: String = "en", search: String = ""): [Sector!]!
+  siteSetting: Sector
   softwareCategories(search: String = ""): [SoftwareCategory!]!
   softwareCategory(slug: String!): SoftwareCategory
   softwareFeature(slug: String!): SoftwareFeature

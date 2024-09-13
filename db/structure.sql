@@ -1380,6 +1380,81 @@ ALTER SEQUENCE fao.candidate_products_id_seq OWNED BY fao.candidate_products.id;
 
 
 --
+-- Name: candidate_resources; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.candidate_resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_link character varying NOT NULL,
+    link_description character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp(6) without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp(6) without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.candidate_resources_countries (
+    id bigint NOT NULL,
+    candidate_resource_id bigint NOT NULL,
+    country_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.candidate_resources_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.candidate_resources_countries_id_seq OWNED BY fao.candidate_resources_countries.id;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.candidate_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.candidate_resources_id_seq OWNED BY fao.candidate_resources.id;
+
+
+--
 -- Name: candidate_roles; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3662,7 +3737,7 @@ CREATE TABLE fao.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb,
     product_stage character varying
 );
 
@@ -5601,6 +5676,81 @@ CREATE SEQUENCE health.candidate_products_id_seq
 --
 
 ALTER SEQUENCE health.candidate_products_id_seq OWNED BY health.candidate_products.id;
+
+
+--
+-- Name: candidate_resources; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.candidate_resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_link character varying NOT NULL,
+    link_description character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp(6) without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp(6) without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.candidate_resources_countries (
+    id bigint NOT NULL,
+    candidate_resource_id bigint NOT NULL,
+    country_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.candidate_resources_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.candidate_resources_countries_id_seq OWNED BY health.candidate_resources_countries.id;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.candidate_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.candidate_resources_id_seq OWNED BY health.candidate_resources.id;
 
 
 --
@@ -7886,7 +8036,7 @@ CREATE TABLE health.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb,
     product_stage character varying
 );
 
@@ -13860,6 +14010,20 @@ ALTER TABLE ONLY fao.candidate_products ALTER COLUMN id SET DEFAULT nextval('fao
 
 
 --
+-- Name: candidate_resources id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources ALTER COLUMN id SET DEFAULT nextval('fao.candidate_resources_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources_countries id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('fao.candidate_resources_countries_id_seq'::regclass);
+
+
+--
 -- Name: candidate_roles id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -14662,6 +14826,20 @@ ALTER TABLE ONLY health.candidate_organizations ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY health.candidate_products ALTER COLUMN id SET DEFAULT nextval('health.candidate_products_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources ALTER COLUMN id SET DEFAULT nextval('health.candidate_resources_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources_countries id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('health.candidate_resources_countries_id_seq'::regclass);
 
 
 --
@@ -16305,6 +16483,22 @@ ALTER TABLE ONLY fao.candidate_products
 
 
 --
+-- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources
+    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: candidate_roles candidate_roles_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -17238,6 +17432,22 @@ ALTER TABLE ONLY health.candidate_organizations
 
 ALTER TABLE ONLY health.candidate_products
     ADD CONSTRAINT candidate_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources
+    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -19113,6 +19323,13 @@ CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON fao.use_case_steps_bui
 
 
 --
+-- Name: candidate_resources_countries_idx; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_resources_countries_idx ON fao.candidate_resources_countries USING btree (candidate_resource_id, country_id);
+
+
+--
 -- Name: candidate_roles_unique_fields; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -19124,6 +19341,13 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON fao.candidate_roles USING b
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON fao.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_candidate_resources_idx; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_candidate_resources_idx ON fao.candidate_resources_countries USING btree (country_id, candidate_resource_id);
 
 
 --
@@ -19243,6 +19467,20 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON fao.candidate_product
 --
 
 CREATE INDEX index_candidate_products_on_rejected_by_id ON fao.candidate_products USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_approved_by_id ON fao.candidate_resources USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_rejected_by_id ON fao.candidate_resources USING btree (rejected_by_id);
 
 
 --
@@ -20499,6 +20737,13 @@ CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON health.use_case_steps_
 
 
 --
+-- Name: candidate_resources_countries_idx; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_resources_countries_idx ON health.candidate_resources_countries USING btree (candidate_resource_id, country_id);
+
+
+--
 -- Name: candidate_roles_unique_fields; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -20510,6 +20755,13 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON health.candidate_roles USIN
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON health.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_candidate_resources_idx; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_candidate_resources_idx ON health.candidate_resources_countries USING btree (country_id, candidate_resource_id);
 
 
 --
@@ -20629,6 +20881,20 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON health.candidate_prod
 --
 
 CREATE INDEX index_candidate_products_on_rejected_by_id ON health.candidate_products USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_approved_by_id ON health.candidate_resources USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_rejected_by_id ON health.candidate_resources USING btree (rejected_by_id);
 
 
 --
@@ -23259,6 +23525,38 @@ ALTER TABLE ONLY fao.plays_building_blocks
 
 
 --
+-- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources
+    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES fao.users(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES fao.candidate_resources(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES fao.countries(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_resources
+    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: plays_subplays child_play_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -24528,6 +24826,38 @@ ALTER TABLE ONLY health.plays_building_blocks
 
 ALTER TABLE ONLY health.plays_building_blocks
     ADD CONSTRAINT bbs_plays_play_fk FOREIGN KEY (play_id) REFERENCES health.plays(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources
+    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES health.users(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES health.candidate_resources(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES health.countries(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_resources
+    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES health.users(id);
 
 
 --
