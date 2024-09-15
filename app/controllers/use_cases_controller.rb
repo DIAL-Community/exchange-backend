@@ -150,8 +150,6 @@ class UseCasesController < ApplicationController
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
-    puts "Params: #{params.inspect}"
-
     if !params[:show_beta].present? || params[:show_beta].to_s == 'false'
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED])
     end

@@ -200,6 +200,7 @@ class ProductsController < ApplicationController
     use_case_ids = []
     filtered_use_cases = use_cases.reject { |x| x.nil? || x.empty? }
     unless filtered_use_cases.empty?
+      filtered = true
       use_case_ids += UseCase.where(slug: filtered_use_cases).ids
     end
 
@@ -222,7 +223,7 @@ class ProductsController < ApplicationController
     end
 
     building_block_slugs += building_blocks.reject { |x| x.nil? || x.empty? }
-    filtered = true unless building_blocks.empty?
+    filtered = true unless params[:building_blocks].empty?
 
     if is_linked_with_dpi
       filtered = true
@@ -243,8 +244,6 @@ class ProductsController < ApplicationController
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
-    puts "Parameters: #{params.inspect}"
-
     products = Product.order(:name).distinct
     filtered, building_block_slugs = filter_building_blocks(
       params[:sdgs],
@@ -253,89 +252,82 @@ class ProductsController < ApplicationController
       params[:building_blocks],
       params[:is_linked_with_dpi]
     )
-    if filtered
-      if building_block_slugs.empty?
-        # Filter is active, but all the filters are resulting in empty building block array.
-        # All bb is filtered out, return no product.
-        return []
-      else
+    if filtered && building_block_slugs.empty?
+      products = Product.none
+    else
+      unless building_block_slugs.empty?
         products = products.joins(:building_blocks)
                            .where(building_blocks: { slug: building_block_slugs })
       end
-    end
 
-    search = params[:search]
-    if !search.nil? && !search.to_s.strip.blank?
-      name_products = products.name_contains(search)
-      desc_products = products.joins(:product_descriptions)
-                              .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{search}%")
-      alias_products = products.where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
-      by_sectors = Product.joins(:sectors)
-                          .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
-                          .ids
+      search = params[:search]
+      if !search.nil? && !search.to_s.strip.blank?
+        name_products = products.name_contains(search)
+        desc_products = products
+                        .joins(:product_descriptions)
+                        .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{search}%")
+        alias_products = products
+                         .where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
+        by_sectors = Product
+                     .joins(:sectors)
+                     .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
+                     .ids
 
-      products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
-    end
-
-    if params[:show_dpga_only].present? && params[:show_dpga_only].to_s.downcase == 'true'
-      products = products.joins(:origins)
-                         .where(origins: { slug: 'dpga' })
-
-      products = products.left_outer_joins(:endorsers)
-                         .where.not(endorsers: { id: nil })
-    end
-
-    if params[:origins].present?
-      origins = params[:origins].reject { |x| x.nil? || x.empty? }
-      unless origins.empty?
-        products = products.joins(:origins)
-                           .where(origins: { slug: origins })
+        products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
       end
-    end
 
-    if params[:countries].present?
-      filtered_countries = params[:countries].reject { |x| x.nil? || x.empty? }
-      unless filtered_countries.empty?
+      if params[:show_dpga_only].present? && params[:show_dpga_only].to_s.downcase == 'true'
+        products = products.joins(:origins)
+                           .where(origins: { slug: 'dpga' })
+
+        products = products.left_outer_joins(:endorsers)
+                           .where.not(endorsers: { id: nil })
+      end
+
+      if params[:origins].present?
+        origins = params[:origins].reject { |x| x.nil? || x.empty? }
+        products = products.joins(:origins)
+                           .where(origins: { slug: origins }) unless origins.empty?
+      end
+
+      if params[:countries].present?
+        filtered_countries = params[:countries].reject { |x| x.nil? || x.empty? }
         products = products.joins(:countries)
-                           .where(countries: { slug: filtered_countries })
+                           .where(countries: { slug: filtered_countries }) unless filtered_countries.empty?
       end
-    end
 
-    if params[:origins].present?
-      filtered_origins = params[:origins].reject { |x| x.nil? || x.empty? }
-      unless filtered_origins.empty?
+      if params[:origins].present?
+        filtered_origins = params[:origins].reject { |x| x.nil? || x.empty? }
         products = products.joins(:origins)
-                           .where(origins: { slug: filtered_origins })
+                           .where(origins: { slug: filtered_origins }) unless filtered_origins.empty?
       end
-    end
 
-    if params[:sectors].present?
-      filtered_sectors = params[:sectors].reject { |x| x.nil? || x.empty? }
-      unless filtered_sectors.empty?
+      if params[:sectors].present?
+        filtered_sectors = params[:sectors].reject { |x| x.nil? || x.empty? }
         products = products.joins(:sectors)
-                           .where(sectors: { slug: filtered_sectors })
+                           .where(sectors: { slug: filtered_sectors }) unless filtered_sectors.empty?
       end
-    end
 
-    if params[:tags].present?
-      filtered_tags = params[:tags].reject { |x| x.nil? || x.blank? }
-      unless filtered_tags.empty?
-        tags = Tag.where(slug: filtered_tags).map(&:name)
-        products = products.where(
-          " tags @> '{#{tags.join(',').downcase}}'::varchar[] or "\
-          " tags @> '{#{tags.join(',')}}'::varchar[]"
-        )
+      if params[:tags].present?
+        filtered_tags = params[:tags].reject { |x| x.nil? || x.blank? }
+        unless filtered_tags.empty?
+          tags = Tag.where(slug: filtered_tags).map(&:name)
+          products = products.where(
+            " tags @> '{#{tags.join(',').downcase}}'::varchar[] or "\
+            " tags @> '{#{tags.join(',')}}'::varchar[]"
+          )
+        end
       end
-    end
 
-    if (params[:license_types] - ['oss_only']).empty? && (['oss_only'] - params[:license_types]).empty?
-      products = products.where(commercial_product: false)
-    elsif (params[:license_types] - ['commercial_only']).empty? && (['commercial_only'] - params[:license_types]).empty?
-      products = products.where(commercial_product: true)
-    end
+      if (params[:license_types] - ['oss_only']).empty? && (['oss_only'] - params[:license_types]).empty?
+        products = products.where(commercial_product: false)
+      elsif (params[:license_types] - ['commercial_only']).empty? && (['commercial_only'] - params[:license_types]).empty?
+        products = products.where(commercial_product: true)
+      end
 
-    if params[:show_gov_stack_only].present? && params[:show_gov_stack_only].to_s.downcase == 'true'
-      products = products.where(gov_stack_entity: true)
+      if params[:show_gov_stack_only].present? && params[:show_gov_stack_only].to_s.downcase == 'true'
+        products = products.where(gov_stack_entity: true)
+      end
     end
 
     if params[:page_size].present?
