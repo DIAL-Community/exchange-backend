@@ -8,6 +8,7 @@ module Types
     field :description, String, null: false
     field :image_url, String, null: false
     field :target_url, String, null: false
+    field :external, Boolean, null: true
   end
 
   class LandingPageType < BaseObject
@@ -17,6 +18,7 @@ module Types
     field :description, String, null: false
     field :image_url, String, null: false
     field :target_url, String, null: false
+    field :external, Boolean, null: true
   end
 
   class MenuItemType < BaseObject
@@ -24,8 +26,8 @@ module Types
     field :type, String, null: false
     field :slug, String, null: false
     field :name, String, null: false
+    field :target_url, String, null: true
     field :external, Boolean, null: true
-    field :url, String, null: true
   end
 
   class DropdownMenuType < BaseObject

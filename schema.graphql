@@ -203,6 +203,7 @@ type Capability {
 
 type Carousel {
   description: String!
+  external: Boolean
   id: ID!
   imageUrl: String!
   name: String!
@@ -1003,6 +1004,7 @@ scalar JSON
 
 type LandingPage {
   description: String!
+  external: Boolean
   id: ID!
   imageUrl: String!
   name: String!
@@ -1015,8 +1017,8 @@ type MenuItem {
   id: ID!
   name: String!
   slug: String!
+  targetUrl: String
   type: String!
-  url: String
 }
 
 type Message {

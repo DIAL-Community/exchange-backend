@@ -8,19 +8,51 @@ module Queries
       carousels = [{
         id: 1,
         slug: 'dynamic-carousel-1',
-        name: 'Dynamic Carousel 1',
-        description: 'Example of dynamic carousel created on the backend.',
-        image_url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-        target_url: 'https://www.google.com'
+        name: 'Resource Hub (Dynamic Carousel)',
+        description: "
+          Nunc malesuada aliquet auctor. Duis vulputate ante sem, non luctus augue lobortis at. In bibendum ullamcorper.
+        ",
+        image_url: 'https://resource.dial.global/images/hero-image/hub-cover.svg',
+        target_url: 'https://resource.dial.global',
+        external: true
+      }, {
+        id: 2,
+        slug: 'internal-resource-page',
+        name: 'Exchange Resource (Dynamic Carousel)',
+        description: "
+          Etiam id purus id tortor suscipit scelerisque. Etiam ex purus, pellentesque vitae dui sed, mollis mollis.
+        ",
+        image_url: 'https://resource.dial.global/images/hero-image/hub-hero.svg',
+        target_url: '/resources',
+        external: false
       }]
 
       landing_pages = [{
         id: 1,
-        slug: 'dynamic-landing-page-1',
-        name: 'Dynamic Landing Page 1',
-        description: 'landing page 1',
-        image_url: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
-        target_url: 'https://www.google.com'
+        slug: 'google-external-dynamic',
+        name: 'Google (External Dynamic)',
+        description: "
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a sollicitudin nunc.
+          Sed non mollis tortor. Curabitur metus enim, tincidunt et facilisis quis, ultrices a tellus.
+          Cras hendrerit, justo viverra pellentesque laoreet, odio sem porta nunc, at finibus ante purus.
+        ",
+        image_url:
+          'https://lh3.googleusercontent.com/' \
+          'COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA',
+        target_url: 'https://www.google.com',
+        external: true
+      }, {
+        id: 2,
+        slug: 'resource-dynamic-landing-card',
+        name: 'Resource (Dynamic Landing Card)',
+        description: "
+          Ut laoreet hendrerit tellus, in blandit est maximus quis. Sed tempus, lorem ut placerat blandit,
+          odio orci tempus lectus, id facilisis massa turpis at lacus. Proin semper nunc odio, eget malesuada
+          sapien viverra vel. Vestibulum eu nulla id elit lacinia.
+        ",
+        image_url: 'http://localhost:3002/ui/v1/resource-header.svg',
+        target_url: '/resources',
+        external: false
       }]
 
       dropdown_menus = [{
@@ -33,15 +65,15 @@ module Queries
           type: 'menu-item',
           slug: 'products-dynamic-menu',
           name: 'Products (Dynamic Menu)',
-          external: false,
-          url: '/products'
+          target_url: '/products',
+          external: false
         }, {
           id: 2,
           type: 'menu-item',
           slug: 'google-external',
           name: 'Google (External)',
-          external: true,
-          url: 'https://www.google.com'
+          target_url: 'https://www.google.com',
+          external: true
         }, {
           id: 3,
           type: 'separator',
@@ -52,8 +84,8 @@ module Queries
           type: 'menu-item',
           slug: 'organization-dynamic-menu',
           name: 'Organizations (Dynamic Menu)',
-          external: false,
-          url: '/organizations'
+          target_url: '/organizations',
+          external: false
         }]
       }]
 
