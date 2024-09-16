@@ -319,9 +319,11 @@ class ProductsController < ApplicationController
         end
       end
 
-      if (params[:license_types] - ['oss_only']).empty? && (['oss_only'] - params[:license_types]).empty?
+      if (params[:license_types] - ['oss_only']).empty? &&
+        (['oss_only'] - params[:license_types]).empty?
         products = products.where(commercial_product: false)
-      elsif (params[:license_types] - ['commercial_only']).empty? && (['commercial_only'] - params[:license_types]).empty?
+      elsif (params[:license_types] - ['commercial_only']).empty? &&
+        (['commercial_only'] - params[:license_types]).empty?
         products = products.where(commercial_product: true)
       end
 
