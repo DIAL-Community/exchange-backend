@@ -420,6 +420,35 @@ namespace :resource_sync do
     tracking_task_finish(task_name)
   end
 
+  desc 'Parse CGD website for resources.'
+  task sync_cgd_website: :environment do
+    task_name = 'Sync CDG Resources'
+    tracking_task_setup(task_name, 'Preparing task tracker record.')
+    tracking_task_start(task_name)
+
+    # Fetch all resources from wordpress API
+    current_page = 1
+    cgd_base = 'https://www.cgdev.org/page/site-search'
+    cgd_research_base = '?search_api_fulltext=data%20localization&sort_bef_combine=search_api_relevance_DESC'
+
+    still_seeing_resources = true
+    while still_seeing_resources
+      cgd_page_query = "&page=#{current_page}"
+
+      connection = Faraday.new(url: cgd_base)
+      response = connection.get("#{cgd_research_base}#{cgd_page_query}")
+      response_body = response.body
+
+      puts "Response: #{response_body}."
+
+      still_seeing_resources = false
+    end
+  end
+
+  desc 'Parse data.org website for resources.'
+  task sync_datadotorg_website: :environment do
+  end
+
   def safe_parse_date(date_in_string_format)
     parsed_date = nil
 

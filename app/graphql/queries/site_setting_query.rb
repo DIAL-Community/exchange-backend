@@ -28,6 +28,18 @@ module Queries
       }]
 
       landing_pages = [{
+        id: 2,
+        slug: 'resource-dynamic-landing-card',
+        name: 'Resource (Dynamic Landing Card)',
+        description: "
+          Ut laoreet hendrerit tellus, in blandit est maximus quis. Sed tempus, lorem ut placerat blandit,
+          odio orci tempus lectus, id facilisis massa turpis at lacus. Proin semper nunc odio, eget malesuada
+          sapien viverra vel. Vestibulum eu nulla id elit lacinia.
+        ",
+        image_url: 'https://resource.dial.global/ui/v1/resource-header.svg',
+        target_url: '/resources',
+        external: false
+      }, {
         id: 1,
         slug: 'google-external-dynamic',
         name: 'Google (External Dynamic)',
@@ -41,18 +53,6 @@ module Queries
           'COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA',
         target_url: 'https://www.google.com',
         external: true
-      }, {
-        id: 2,
-        slug: 'resource-dynamic-landing-card',
-        name: 'Resource (Dynamic Landing Card)',
-        description: "
-          Ut laoreet hendrerit tellus, in blandit est maximus quis. Sed tempus, lorem ut placerat blandit,
-          odio orci tempus lectus, id facilisis massa turpis at lacus. Proin semper nunc odio, eget malesuada
-          sapien viverra vel. Vestibulum eu nulla id elit lacinia.
-        ",
-        image_url: 'https://resource.dial.global/ui/v1/resource-header.svg',
-        target_url: '/resources',
-        external: false
       }]
 
       dropdown_menus = [{
