@@ -50,7 +50,7 @@ module Queries
           odio orci tempus lectus, id facilisis massa turpis at lacus. Proin semper nunc odio, eget malesuada
           sapien viverra vel. Vestibulum eu nulla id elit lacinia.
         ",
-        image_url: 'http://localhost:3002/ui/v1/resource-header.svg',
+        image_url: 'https://resource.dial.global/ui/v1/resource-header.svg',
         target_url: '/resources',
         external: false
       }]
