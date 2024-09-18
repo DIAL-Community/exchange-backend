@@ -3,9 +3,16 @@
 module Types
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
+    field :approve_reject_candidate_product, mutation: Mutations::ApproveRejectCandidateProduct
+
     field :create_candidate_organization, mutation: Mutations::CreateCandidateOrganization
+    field :approve_reject_candidate_organization, mutation: Mutations::ApproveRejectCandidateOrganization
+
     field :create_candidate_dataset, mutation: Mutations::CreateCandidateDataset
     field :approve_reject_candidate_dataset, mutation: Mutations::ApproveRejectCandidateDataset
+
+    field :create_candidate_resource, mutation: Mutations::CreateCandidateResource
+    field :approve_reject_candidate_resource, mutation: Mutations::ApproveRejectCandidateResource
 
     field :create_playbook, mutation: Mutations::CreatePlaybook
     field :auto_save_playbook, mutation: Mutations::CreatePlaybook
@@ -70,6 +77,7 @@ module Types
     field :update_product_resources, mutation: Mutations::UpdateProductResources
     field :update_product_indicators, mutation: Mutations::UpdateProductIndicators
     field :update_product_categories, mutation: Mutations::UpdateProductCategories
+    field :update_product_extra_attributes, mutation: Mutations::UpdateProductExtraAttributes
 
     field :create_dataset, mutation: Mutations::CreateDataset
     field :delete_dataset, mutation: Mutations::DeleteDataset

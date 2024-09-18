@@ -10,20 +10,24 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
         $name: String!
         $slug: String!
         $description: String!
-        ) {
+        $countrySlugs: [String!]!
+      ) {
         createProject(
           name: $name
           slug: $slug
           description: $description
           productId: null
           organizationId: null
+          countrySlugs: $countrySlugs
         ) {
-            project
-            {
+            project {
               name
               slug
               projectDescription {
                 description
+              }
+              countries {
+                slug
               }
             }
             errors
@@ -35,18 +39,24 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   it 'is successful - user is logged in as admin' do
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
     create(:origin, slug: 'manually_entered')
+    create(:country, slug: 'usa')
+    create(:country, slug: 'canada')
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "", description: "some description" }
+      variables: { name: "Some name", slug: "", description: "some description", countrySlugs: ["usa", "canada"] }
     )
 
     aggregate_failures do
       expect(result['data']['createProject']['project'])
         .to(eq({
           "name" => "Some name",
+          "slug" => "some-name",
           "projectDescription" => { "description" => "some description" },
-          "slug" => "some-name"
+          "countries" => [
+            { "slug" => "usa" },
+            { "slug" => "canada" }
+          ]
         }))
       expect(result['data']['createProject']['errors'])
         .to(eq([]))
@@ -56,19 +66,24 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   it 'is successful - admin can update project name and slug remains the same' do
     create(:project, name: "Some name", slug: "some-name")
     create(:origin, slug: 'manually_entered')
+    create(:country, slug: 'usa')
+    create(:country, slug: 'canada')
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql(
       mutation,
-      variables: { name: "Some new name", slug: "some-name", description: "some description" }
+      variables: { name: "Some new name", slug: "some-name", description: "some description", countrySlugs: ["usa"] }
     )
 
     aggregate_failures do
       expect(result['data']['createProject']['project'])
         .to(eq({
           "name" => "Some new name",
+          "slug" => "some-name",
           "projectDescription" => { "description" => "some description" },
-          "slug" => "some-name"
+          "countries" => [
+            { "slug" => "usa" }
+          ]
         }))
     end
   end
@@ -76,7 +91,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   it 'fails - user is not logged in' do
     result = execute_graphql(
       mutation,
-      variables: { name: "Some name", slug: "some-name", description: "some description" }
+      variables: { name: "Some name", slug: "some-name", description: "some description", countrySlugs: [] }
     )
 
     aggregate_failures do
@@ -84,6 +99,31 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
         .to(be(nil))
       expect(result['data']['createProject']['errors'])
         .to(eq(['Must be admin, product owner or organization owner to create a project']))
+    end
+  end
+
+  it 'is successful - handles non-existent country slugs gracefully' do
+    expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
+    create(:origin, slug: 'manually_entered')
+    create(:country, slug: 'usa')
+
+    result = execute_graphql(
+      mutation,
+      variables: { name: "Some name", slug: "", description: "some description", countrySlugs: ["usa", "nonexistent"] }
+    )
+
+    aggregate_failures do
+      expect(result['data']['createProject']['project'])
+        .to(eq({
+          "name" => "Some name",
+          "slug" => "some-name",
+          "projectDescription" => { "description" => "some description" },
+          "countries" => [
+            { "slug" => "usa" }
+          ]
+        }))
+      expect(result['data']['createProject']['errors'])
+        .to(eq([]))
     end
   end
 end

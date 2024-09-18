@@ -103,7 +103,7 @@
     description: Aggregating health data for an individual from multiple sources
   - name: National health domain-specific registries
     description: Database to track health facilities, or information about health systems
-  - name: Clinical data repository 
+  - name: Clinical data repository
     description: Databases for tracking clinical data from multiple sources
   - name: Clinical data warehouse
     description: A data warehouse to track clinical data from various sources and formats
@@ -167,7 +167,7 @@
   - name: Integration with local health facility (EMR)
     description: Allow data exchange between EMR/EHR and CHW application
     health_facility_scale: 1
-  - name: Integration with national health systems 
+  - name: Integration with national health systems
     description: Allows data to be sent to national health systems like DHIS2
     health_facility_scale: 1
 - category: vaccination
