@@ -11,7 +11,7 @@ module Types
     field :external, Boolean, null: true
   end
 
-  class LandingPageType < BaseObject
+  class HeroCardType < BaseObject
     field :id, ID, null: false
     field :slug, String, null: false
     field :name, String, null: false
@@ -30,7 +30,7 @@ module Types
     field :external, Boolean, null: true
   end
 
-  class DropdownMenuType < BaseObject
+  class MenuType < BaseObject
     field :id, ID, null: false
     field :type, String, null: false
     field :slug, String, null: false
@@ -41,13 +41,16 @@ module Types
 
   class SiteSettingType < BaseObject
     field :id, ID, null: false
+    field :name, String, null: false
+    field :description, String, null: true
+
     field :favicon_url, String, null: false
     field :exchange_logo_url, String, null: false
     field :open_graph_logo_url, String, null: false
 
     field :carousels, [Types::CarouselType], null: false
-    field :landing_pages, [Types::LandingPageType], null: false
+    field :hero_cards, [Types::HeroCardType], null: false
 
-    field :dropdown_menus, [Types::DropdownMenuType], null: false
+    field :menus, [Types::MenuType], null: false
   end
 end

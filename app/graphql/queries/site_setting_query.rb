@@ -27,7 +27,7 @@ module Queries
         external: false
       }]
 
-      landing_pages = [{
+      hero_cards = [{
         id: 2,
         slug: 'resource-dynamic-landing-card',
         name: 'Resource (Dynamic Landing Card)',
@@ -55,7 +55,7 @@ module Queries
         external: true
       }]
 
-      dropdown_menus = [{
+      menus = [{
         id: 1,
         type: 'menu',
         slug: 'dynamic-menu',
@@ -91,12 +91,14 @@ module Queries
 
       {
         id: 1,
+        name: 'Default Site Settings',
+        description: 'The default of the site settings.',
         favicon_url: 'https://exchange.dial.global/favicon.ico',
         exchange_logo_url: 'https://exchange-dev.dial.global/ui/v1/exchange-logo.svg',
         open_graph_logo_url: 'https://exchange.dial.global/images/hero-image/exchange-hero.png',
         carousels:,
-        landing_pages:,
-        dropdown_menus:
+        hero_cards:,
+        menus:
       }
     end
   end
