@@ -1,58 +1,3 @@
-- category: Usage
-  description: How widely used this software platform is - number of deployments, users, and transactions
-  indicators:
-    - name: Number of deployments
-      type: scale
-      low:
-        - operator: lessThan
-          value: 2
-      medium:
-        - operator: greaterThan
-          value: 2
-        - operator: lessThan
-          value: 9
-      high:
-        - operator: greaterThan
-          value: 10
-    - name: Number of deployment countries
-      type: scale
-      low:
-        - operator: lessThan
-          value: 2
-      medium:
-        - operator: greaterThan
-          value: 1
-        - operator: lessThan
-          value: 3
-      high:
-        - operator: greaterThan
-          value: 2
-    - name: Number of active users
-      type: scale
-      low:
-        - operator: lessThan
-          value: 2
-      medium:
-        - operator: greaterThan
-          value: 2
-        - operator: lessThan
-          value: 9
-      high:
-        - operator: greaterThan
-          value: 10
-    - name: Number of transactions/month
-      type: scale
-      low:
-        - operator: lessThan
-          value: 2
-      medium:
-        - operator: greaterThan
-          value: 2
-        - operator: lessThan
-          value: 9
-      high:
-        - operator: greaterThan
-          value: 10
 - category: Interoperability
   descriptions: Does the platform allow for integration with other health systems
   indicators:
@@ -75,16 +20,16 @@
     - name: Active developers
       type: scale
       low:
-        - operator: greaterThan
-          value: 5
+        - operator: lessThan
+          value: 1
       medium:
         - operator: greaterThan
           value: 0
         - operator: lessThan
-          value: 5
+          value: 4
       high:
-        - operator: lessThan
-          value: 1
+        - operator: greaterThan
+          value: 3
     - name: Releases
       type: scale
       low:
@@ -92,12 +37,12 @@
           value: 0
       medium:
         - operator: greaterThan
-          value: 1
+          value: 0
         - operator: lessThan
-          value: 9
+          value: 3
       high:
         - operator: greaterThan
-          value: 10
+          value: 2
     - name: Audit logging and error reporting
       description: Has mechanisms for tracking errors and user issues
       type: boolean
@@ -130,37 +75,3 @@
       high:
         - operator: greaterThan
           value: 90
-- category: Organization sustainability
-  description: Measuring the revenue, investment, and infrastructure of the organization
-  indicators:
-  - name: Implementation support
-    description: The organization has SLAs and a customer service department
-    type: boolean
-  - name: Annual Revenue
-    description: Current annual revenue (USD)
-    type: scale
-    low:
-      - operator: lessThan
-        value: 20000
-    medium:
-      - operator: greaterThan
-        value: 20000
-      - operator: lessThan
-        value: 100000
-    high:
-      - operator: greaterThan
-        value: 100000
-  - name: Outside investment
-    description: Total investments in the company (USD)
-    type: scale
-    low:
-      - operator: lessThan
-        value: 50000
-    medium:
-      - operator: greaterThan
-        value: 50000
-      - operator: lessThan
-        value: 500000
-    high:
-      - operator: greaterThan
-        value: 500000

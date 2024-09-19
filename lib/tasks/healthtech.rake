@@ -20,6 +20,7 @@ namespace :health_sync do
       # if user set the purge flag, then delete all the existing categories and indicators
       if ENV['purge'] == 'true'
         puts 'purging existing categories'
+        ProductIndicator.delete_all
         CategoryIndicatorDescription.delete_all
         CategoryIndicator.delete_all
         RubricCategoryDescription.delete_all
@@ -143,14 +144,72 @@ software_category_id: new_category.id).first || SoftwareFeature.new
 
             # populate attributes for local impact and product stage
             extra_attributes = []
+            extra_attributes << { 'name': 'Relevance', 'value': solution_data[11] } unless solution_data[11].blank?
             extra_attributes << { 'name': 'Impact', 'value': solution_data[10] } unless solution_data[10].blank?
             
             extra_attributes <<  { 'name': 'Deployments', 'type': 'product_stage', 'value': vetted_data[8] } unless vetted_data[8].blank?
+            extra_attributes <<  { 'name': 'Deployed Countries', 'type': 'product_stage', 'value': vetted_data[9] } unless vetted_data[9].blank?
+            extra_attributes <<  { 'name': 'Active Users', 'type': 'product_stage', 'value': vetted_data[10] } unless vetted_data[10].blank?
+            extra_attributes <<  { 'name': 'Transactions per month', 'type': 'product_stage', 'value': vetted_data[11] } unless vetted_data[11].blank?
+            extra_attributes <<  { 'name': 'Annual Revenue', 'type': 'product_stage', 'value': vetted_data[12] } unless vetted_data[12].blank?
+            extra_attributes <<  { 'name': 'Funding Raised', 'type': 'product_stage', 'value': vetted_data[13] } unless vetted_data[13].blank?
             health_product.extra_attributes = extra_attributes
 
             # populate maturity rubric
+            health_indicators = [
+              {name: 'data-importexport-using-fhir', column: 14 },
+              {name: 'integration-with-national-health-systems', column: 16 },
+              {name: 'has-open-api-for-integration', column: 15 },
+              {name: 'has-a-privacy-policy', column: 17 },
+              {name: 'pii-and-phi-are-encrypted-at-storage-and-in-api-calls', column: 18 },
+              {name: 'offers-scalable-deployment-mechanisms', column: 19 },
+              {name: 'active-developers', column: 22 },
+              {name: 'releases', column: 23 },
+              {name: 'audit-logging-and-error-reporting', column: 20 },
+              {name: 'secure-authorization-mechanisms', column: 21 },
+              {name: 'offlinelow-bandwidth-functionality', column: 24 },
+              {name: 'customizable-fields-and-forms', column: 26 },
+              {name: 'internationalization', column: 25 },
+              {name: 'accessibility', column: 27 }
+            ]
+
+            health_indicators.each do |health_indicator|
+              category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
+              product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
+                                                          product_id: health_product.id)
+              if product_indicator.nil?
+                product_indicator = ProductIndicator.new(category_indicator_id: category_indicator.id,
+                                                        product_id: health_product.id)
+              end
+
+              indicator_data = vetted_data[health_indicator[:column]]
+              if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
+                product_indicator.destroy!
+              else
+                if indicator_data == 'yes' || indicator_data == 'Yes'
+                  indicator_data = true
+                end
+                if indicator_data == 'no' || indicator_data == 'No'
+                  indicator_data = false
+                end
+                if indicator_data.is_a? String
+                  if indicator_data.include? "high"
+                    indicator_data = 'high'
+                  end
+                  if indicator_data.include? "medium"
+                    indicator_data = 'medium'
+                  end
+                  if indicator_data.include? "low"
+                    indicator_data = 'low'
+                  end
+                end
+                product_indicator.indicator_value = indicator_data
+                product_indicator.save!
+              end
+            end
 
             health_product.save
+            calculate_maturity_scores(health_product.id)
 
             unless solution_data[7].blank?
               upload_user = User.find_by(username: 'admin')
