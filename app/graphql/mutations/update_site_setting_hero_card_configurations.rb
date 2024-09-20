@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateSiteSettingHeroCards < Mutations::BaseMutation
-    argument :slug, String, required: true
+  class UpdateSiteSettingHeroCardConfigurations < Mutations::BaseMutation
+    argument :site_setting_slug, String, required: true
     argument :hero_card_configurations, GraphQL::Types::JSON, required: true, default_value: []
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, hero_card_configurations:)
-      puts "Receiving slug: #{slug}."
-      puts "Receiving menu configurations: #{hero_card_configurations}."
-
+    def resolve(site_setting_slug:, hero_card_configurations:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -19,7 +16,17 @@ module Mutations
         }
       end
 
-      if resource.save
+      site_setting = SiteSetting.find_by(slug: site_setting_slug)
+      if site_setting.nil?
+        return {
+          site_setting: nil,
+          errors: ['Correct site setting is required.']
+        }
+      end
+
+      site_setting.hero_card_configurations = hero_card_configurations
+
+      if site_setting.save
         # Successful creation, return the created object with no errors
         {
           site_setting:,
@@ -29,7 +36,7 @@ module Mutations
         # Failed save, return the errors to the client
         {
           site_setting: nil,
-          errors: resource.errors.full_messages
+          errors: site_setting.errors.full_messages
         }
       end
     end

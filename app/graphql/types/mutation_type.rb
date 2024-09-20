@@ -193,8 +193,12 @@ module Types
     field :delete_message, mutation: Mutations::DeleteMessage
     field :update_message_visibility, mutation: Mutations::UpdateMessageVisibility
 
-    field :update_site_setting_carousels, mutation: Mutations::UpdateSiteSettingCarousels
-    field :update_site_setting_hero_cards, mutation: Mutations::UpdateSiteSettingHeroCards
-    field :update_site_setting_menus, mutation: Mutations::UpdateSiteSettingMenus
+    field :create_site_setting, mutation: Mutations::CreateSiteSetting
+    field :update_site_setting_carousel_configuration, mutation: Mutations::UpdateSiteSettingCarouselConfiguration
+    field :update_site_setting_carousel_configurations, mutation: Mutations::UpdateSiteSettingCarouselConfigurations
+    field :update_site_setting_hero_card_configuration, mutation: Mutations::UpdateSiteSettingHeroCardConfiguration
+    field :update_site_setting_hero_card_configurations, mutation: Mutations::UpdateSiteSettingHeroCardConfigurations
+    field :update_site_setting_menu_configuration, mutation: Mutations::UpdateSiteSettingMenuConfiguration
+    field :update_site_setting_menu_configurations, mutation: Mutations::UpdateSiteSettingMenuConfigurations
   end
 end

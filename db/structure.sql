@@ -3737,7 +3737,7 @@ CREATE TABLE fao.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying
 );
 
@@ -8036,7 +8036,7 @@ CREATE TABLE health.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying
 );
 
@@ -13132,6 +13132,46 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 
 --
+-- Name: site_settings; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.site_settings (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    favicon_url character varying NOT NULL,
+    exchange_logo_url character varying NOT NULL,
+    open_graph_logo_url character varying NOT NULL,
+    menu_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    carousel_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    hero_card_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    default_settings boolean DEFAULT false NOT NULL,
+    enable_marketplace boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.site_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.site_settings_id_seq OWNED BY public.site_settings.id;
+
+
+--
 -- Name: software_categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -16250,6 +16290,13 @@ ALTER TABLE ONLY public.settings ALTER COLUMN id SET DEFAULT nextval('public.set
 
 
 --
+-- Name: site_settings id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_settings ALTER COLUMN id SET DEFAULT nextval('public.site_settings_id_seq'::regclass);
+
+
+--
 -- Name: software_categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -19080,6 +19127,14 @@ ALTER TABLE ONLY public.sessions
 
 ALTER TABLE ONLY public.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -27713,6 +27768,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240814120047'),
 ('20240827181759'),
 ('20240827184119'),
-('20240830132609');
+('20240830132609'),
+('20240919205513');
 
 
