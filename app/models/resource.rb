@@ -45,15 +45,12 @@ class Resource < ApplicationRecord
   end
 
   def image_file
-    return '/assets/resources/resource-placeholder.svg' if organization_id.nil?
+    placeholder_suffix = 1 + rand(6)
 
-    source_organization = Organization.find(organization_id)
-    return '/assets/resources/resource-placeholder.svg' if source_organization.nil?
-
-    if File.exist?(File.join('public', 'assets', 'organizations', "#{source_organization.slug}.png"))
-      "/assets/organizations/#{source_organization.slug}.png"
+    if File.exist?(File.join('public', 'assets', 'resources', "#{slug}.png"))
+      "/assets/resources/#{slug}.png"
     else
-      '/assets/organizations/organization-placeholder.png'
+      "/assets/resources/resource-placeholder-#{placeholder_suffix}.svg"
     end
   end
 
