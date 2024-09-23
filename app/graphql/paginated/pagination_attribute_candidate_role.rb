@@ -13,14 +13,14 @@ module Paginated
 
       return { total_count: 0 } unless an_admin
 
-      candidate_products = CandidateRole.order(:name)
+      candidate_roles = CandidateRole.order(:name)
       unless search.blank?
-        name_filter = candidate_products.email_contains(search)
-        description_filter = candidate_products.where('LOWER(description) like LOWER(?)', "%#{search}%")
-        candidate_products = candidate_products.where(id: (name_filter + description_filter).uniq)
+        name_filter = candidate_roles.email_contains(search)
+        description_filter = candidate_roles.where('LOWER(description) like LOWER(?)', "%#{search}%")
+        candidate_roles = candidate_roles.where(id: (name_filter + description_filter).uniq)
       end
 
-      { total_count: candidate_products.count }
+      { total_count: candidate_roles.count }
     end
   end
 end

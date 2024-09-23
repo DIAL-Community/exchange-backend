@@ -13,17 +13,17 @@ module Paginated
 
       return [] unless an_admin
 
-      candidate_products = CandidateRole.order(rejected: :desc)
-                                        .order(created_at: :desc)
-                                        .order(:email)
+      candidate_roles = CandidateRole.order(rejected: :desc)
+                                     .order(created_at: :desc)
+                                     .order(:email)
       unless search.blank?
-        email_filter = candidate_products.email_contains(search)
-        description_filter = candidate_products.where('LOWER(description) like LOWER(?)', "%#{search}%")
-        candidate_products = candidate_products.where(id: (email_filter + description_filter).uniq)
+        email_filter = candidate_roles.email_contains(search)
+        description_filter = candidate_roles.where('LOWER(description) like LOWER(?)', "%#{search}%")
+        candidate_roles = candidate_roles.where(id: (email_filter + description_filter).uniq)
       end
 
       offset_params = offset_attributes.to_h
-      candidate_products.limit(offset_params[:limit]).offset(offset_params[:offset])
+      candidate_roles.limit(offset_params[:limit]).offset(offset_params[:offset])
     end
   end
 end

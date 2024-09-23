@@ -26,6 +26,8 @@ module Types
     field :image_file, String, null: false
     field :image_url, String, null: true
 
+    field :published_date, GraphQL::Types::ISO8601Date, null: true
+
     field :description, String, null: true
     field :parsed_description, String, null: true
     def parsed_description
@@ -66,8 +68,6 @@ module Types
       return nil if context[:current_user].nil?
       object.submitted_by
     end
-
-    field :published_date, GraphQL::Types::ISO8601Date, null: true
 
     field :building_blocks, [Types::BuildingBlockType], null: true
     def building_blocks

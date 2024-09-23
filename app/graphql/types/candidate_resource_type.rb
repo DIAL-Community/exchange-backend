@@ -1,25 +1,25 @@
 # frozen_string_literal: true
 
 module Types
-  class CandidateProductType < Types::BaseObject
+  class CandidateResourceType < Types::BaseObject
     field :id, ID, null: false
     field :slug, String, null: false
     field :name, String, null: false
-    field :website, String, null: false
-    field :repository, String, null: false
-
-    field :submitter_email, String, null: true
-    def submitter_email
-      unless context[:current_user].nil?
-        object.submitter_email
-      end
+    field :description, String, null: false
+    field :parsed_description, String, null: true
+    def parsed_description
+      first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
+      return first_paragraph.text unless first_paragraph.nil?
+      object.description if first_paragraph.nil?
     end
 
-    field :description, String, null: true
+    field :resource_type, String, null: false
+    field :resource_link, String, null: true
+    field :link_description, String, null: false
+
+    field :published_date, GraphQL::Types::ISO8601Date, null: true
 
     field :created_at, GraphQL::Types::ISO8601Date, null: true
-
-    field :commercial_product, Boolean, null: false
 
     field :rejected, Boolean, null: true
     field :rejected_date, GraphQL::Types::ISO8601Date, null: true
@@ -45,5 +45,14 @@ module Types
       end
       approved_by
     end
+
+    field :submitter_email, String, null: true
+    def submitter_email
+      unless context[:current_user].nil?
+        object.submitter_email
+      end
+    end
+
+    field :countries, [Types::CountryType], null: false, method: :countries_ordered
   end
 end

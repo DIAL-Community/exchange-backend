@@ -3662,7 +3662,7 @@ CREATE TABLE fao.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying
 );
 
@@ -7886,7 +7886,7 @@ CREATE TABLE health.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying
 );
 
@@ -9825,6 +9825,81 @@ CREATE SEQUENCE public.candidate_products_id_seq
 --
 
 ALTER SEQUENCE public.candidate_products_id_seq OWNED BY public.candidate_products.id;
+
+
+--
+-- Name: candidate_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.candidate_resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_link character varying NOT NULL,
+    link_description character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp(6) without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp(6) without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.candidate_resources_countries (
+    id bigint NOT NULL,
+    candidate_resource_id bigint NOT NULL,
+    country_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.candidate_resources_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.candidate_resources_countries_id_seq OWNED BY public.candidate_resources_countries.id;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.candidate_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.candidate_resources_id_seq OWNED BY public.candidate_resources.id;
 
 
 --
@@ -12110,7 +12185,7 @@ CREATE TABLE public.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying
 );
 
@@ -15395,6 +15470,20 @@ ALTER TABLE ONLY public.candidate_products ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: candidate_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources ALTER COLUMN id SET DEFAULT nextval('public.candidate_resources_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources_countries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('public.candidate_resources_countries_id_seq'::regclass);
+
+
+--
 -- Name: candidate_roles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -18085,6 +18174,22 @@ ALTER TABLE ONLY public.candidate_organizations
 
 ALTER TABLE ONLY public.candidate_products
     ADD CONSTRAINT candidate_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources
+    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -21780,6 +21885,13 @@ CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON public.use_case_steps_
 
 
 --
+-- Name: candidate_resources_countries_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_resources_countries_idx ON public.candidate_resources_countries USING btree (candidate_resource_id, country_id);
+
+
+--
 -- Name: candidate_roles_unique_fields; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21791,6 +21903,13 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON public.candidate_roles USIN
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON public.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_candidate_resources_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_candidate_resources_idx ON public.candidate_resources_countries USING btree (country_id, candidate_resource_id);
 
 
 --
@@ -21910,6 +22029,20 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON public.candidate_prod
 --
 
 CREATE INDEX index_candidate_products_on_rejected_by_id ON public.candidate_products USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_approved_by_id ON public.candidate_resources USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_rejected_by_id ON public.candidate_resources USING btree (rejected_by_id);
 
 
 --
@@ -25670,6 +25803,38 @@ ALTER TABLE ONLY public.plays_building_blocks
 
 
 --
+-- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources
+    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES public.users(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES public.candidate_resources(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES public.countries(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_resources
+    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: plays_subplays child_play_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -27215,6 +27380,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240712135449'),
 ('20240721194811'),
 ('20240806130712'),
-('20240814120047');
+('20240814120047'),
+('20240827181759'),
+('20240827184119'),
+('20240830132609');
 
 
