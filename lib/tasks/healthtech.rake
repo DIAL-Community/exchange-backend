@@ -94,11 +94,13 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           health_product.save!
 
           product_description = ProductDescription.find_by(locale: 'en', product_id: health_product.id)
-          product_description = ProductDescription.new if product_description.nil?
-          product_description.product_id = health_product.id
-          product_description.locale = 'en'
-          product_description.description = solution_data[5]
-          product_description.save!
+          if product_description.nil?
+            product_description = ProductDescription.new 
+            product_description.product_id = health_product.id
+            product_description.locale = 'en'
+            product_description.description = solution_data[5]
+            product_description.save!
+          end
 
           solution_categories = solution_data[9].split(',')
           category_column_mapping = [
