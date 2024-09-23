@@ -134,6 +134,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           end
 
           health_product.website = cleanup_url(solution_data[6]) unless solution_data[6].blank?
+          #health_product.contact = solution_data[8] unless solution_data[8].blank?
 
           # populate countries
           countries = solution_data[14].split(',')
