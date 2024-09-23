@@ -7,6 +7,6 @@ module Types
     field :slug, String, null: false
     field :description, String, null: false
 
-    field :software_features, [Types::SoftwareFeatureType], null: false
+    field :software_features, [Types::SoftwareFeatureType], null: true
   end
 end
