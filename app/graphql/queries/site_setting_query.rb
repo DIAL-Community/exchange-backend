@@ -2,12 +2,14 @@
 
 module Queries
   class SiteSettingQuery < Queries::BaseQuery
+    argument :slug, String, required: false, default_value: nil
     type Types::SiteSettingType, null: true
 
-    def resolve
+    def resolve(slug:)
       return nil unless an_admin
-
-      SiteSetting.find_by(default_settings: true)
+      return SiteSetting.find_by(slug:) unless slug.nil?
+      site_settings = SiteSetting.order(updated_at: :desc)
+      site_settings.find_by(default_setting: true) || site_settings.first
     end
   end
 
@@ -16,7 +18,6 @@ module Queries
 
     def resolve
       return [] unless an_admin
-
       SiteSetting.all
     end
   end

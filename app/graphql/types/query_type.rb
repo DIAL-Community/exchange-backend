@@ -243,5 +243,8 @@ module Types
     field :software_feature, resolver: Queries::SoftwareFeatureQuery
 
     field :site_setting, resolver: Queries::SiteSettingQuery
+    field :site_settings, resolver: Queries::SiteSettingsQuery
+    field :paginated_site_settings, resolver: Paginated::PaginatedSiteSettings
+    field :pagination_attribute_site_setting, resolver: Paginated::PaginationAttributeSiteSetting
   end
 end

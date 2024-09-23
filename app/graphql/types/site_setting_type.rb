@@ -3,10 +3,11 @@
 module Types
   class SiteSettingType < BaseObject
     field :id, ID, null: false
+    field :slug, String, null: false
     field :name, String, null: false
     field :description, String, null: true
 
-    field :default_settings, Boolean, null: false
+    field :default_setting, Boolean, null: false
     field :enable_marketplace, Boolean, null: false
 
     field :favicon_url, String, null: false

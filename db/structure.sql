@@ -13137,6 +13137,7 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 
 CREATE TABLE public.site_settings (
     id bigint NOT NULL,
+    slug character varying NOT NULL,
     name character varying NOT NULL,
     description character varying NOT NULL,
     favicon_url character varying NOT NULL,
@@ -13145,7 +13146,7 @@ CREATE TABLE public.site_settings (
     menu_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
     carousel_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
     hero_card_configurations jsonb DEFAULT '"{}"'::jsonb NOT NULL,
-    default_settings boolean DEFAULT false NOT NULL,
+    default_setting boolean DEFAULT false NOT NULL,
     enable_marketplace boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL

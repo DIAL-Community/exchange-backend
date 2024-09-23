@@ -1,7 +1,10 @@
 # frozen_string_literal: true
+require 'modules/slugger'
 
 module Mutations
   class CreateSiteSetting < Mutations::BaseMutation
+    include Modules::Slugger
+
     argument :slug, String, required: true
     argument :name, String, required: true
     argument :description, String, required: true
@@ -11,7 +14,7 @@ module Mutations
     argument :open_graph_logo_url, String, required: true
 
     argument :enable_marketplace, Boolean, required: true
-    argument :default_settings, Boolean, required: true
+    argument :default_setting, Boolean, required: true
 
     argument :carousel_configurations, GraphQL::Types::JSON, required: false, default_value: []
     argument :hero_card_configurations, GraphQL::Types::JSON, required: false, default_value: []
@@ -22,7 +25,7 @@ module Mutations
 
     def resolve(
       slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
-      enable_marketplace:, default_settings:,
+      enable_marketplace:, default_setting:,
       carousel_configurations:, hero_card_configurations:, menu_configurations:
     )
       unless an_admin || a_content_editor
@@ -37,7 +40,7 @@ module Mutations
         site_setting = SiteSetting.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
-        first_duplicate = SiteSetting.slug_simple_starts_with(sector.slug)
+        first_duplicate = SiteSetting.slug_simple_starts_with(site_setting.slug)
                                      .order(slug: :desc)
                                      .first
         unless first_duplicate.nil?
@@ -53,7 +56,7 @@ module Mutations
       site_setting.open_graph_logo_url = open_graph_logo_url
 
       site_setting.enable_marketplace = enable_marketplace
-      site_setting.default_settings = default_settings
+      site_setting.default_setting = default_setting
 
       site_setting.carousel_configurations = carousel_configurations
       site_setting.hero_card_configurations = hero_card_configurations
