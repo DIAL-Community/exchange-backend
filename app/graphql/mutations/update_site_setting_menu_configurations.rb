@@ -27,16 +27,33 @@ module Mutations
         }
       end
 
+      sanitized_menu_configurations = []
       menu_configurations.each do |menu_configuration|
-        menu_configuration.delete('saved')
-        menu_configuration['slug'] = reslug_em(menu_configuration['name'])
-        menu_configuration['menuItems'].each do |menu_item|
-          menu_item.delete('saved')
-          menu_item['slug'] = reslug_em(menu_item['name'])
+        sanitized_menu_configuration = {
+          'name': menu_configuration['name'],
+          'type': menu_configuration['type'],
+          'slug': reslug_em(menu_configuration['name']),
+          'external': menu_configuration['external'],
+          'targetUrl': menu_configuration['targetUrl'],
+          'menuItemConfigurations': []
+        }
+
+        sanitized_menu_item_configurations = []
+        menu_configuration['menuItemConfigurations'].each do |menu_item_configuration|
+          sanitized_menu_item = {
+            'name': menu_item_configuration['name'],
+            'type': menu_item_configuration['type'],
+            'slug': reslug_em(menu_item_configuration['name']),
+            'external': menu_item_configuration['external'],
+            'targetUrl': menu_item_configuration['targetUrl']
+          }
+          sanitized_menu_item_configurations << sanitized_menu_item
         end
+        sanitized_menu_configuration['menuItemConfigurations'] = sanitized_menu_item_configurations
+        sanitized_menu_configurations << sanitized_menu_configuration
       end
 
-      site_setting.menu_configurations = menu_configurations
+      site_setting.menu_configurations = sanitized_menu_configurations
 
       if site_setting.save
         # Successful creation, return the created object with no errors

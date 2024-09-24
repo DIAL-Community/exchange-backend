@@ -10,7 +10,6 @@ module Mutations
     argument :slug, String, required: false
     argument :name, String, required: true
     argument :type, String, required: true
-    # Parameters for menu item only (parent menu don't have these)
     argument :external, Boolean, required: false
     argument :target_url, String, required: false
     # Parent slug is only for menu item
@@ -55,39 +54,42 @@ module Mutations
           end
           # Menu only have name field that can be updated.
           menu_configuration['name'] = name
+          menu_configuration['type'] = type
+          menu_configuration['external'] = external
+          menu_configuration['targetUrl'] = target_url
           break if menu_exists
         elsif type == 'menu-item'
           # Skip until we find the parent menu.
           next unless menu_configuration['slug'] == parent_slug
           # Initialize our menu item search flag.
           menu_item_exists = false
-          menu_configuration['menuItemConfigurations'].each do |menu_item|
+          menu_configuration['menuItemConfigurations'].each do |menu_item_configuration|
             # Skip until we find the menu item.
-            next unless menu_item['slug'] == slug
+            next unless menu_item_configuration['slug'] == slug
             # We found the menu item, update the menu item.
             menu_item_exists = true
             # Update the slug value if needed.
             updated_slug = reslug_em(name)
-            if updated_slug != menu_item['slug']
-              menu_item['slug'] = updated_slug
+            if updated_slug != menu_item_configuration['slug']
+              menu_item_configuration['slug'] = updated_slug
             end
             # Update other parts of the menu item.
-            menu_item['name'] = name
-            menu_item['type'] = type
-            menu_item['external'] = external
-            menu_item['targetUrl'] = target_url
+            menu_item_configuration['name'] = name
+            menu_item_configuration['type'] = type
+            menu_item_configuration['external'] = external
+            menu_item_configuration['targetUrl'] = target_url
           end
           # We found the menu and updated the menu, break from the loop.
           break if menu_item_exists
           # We didn't find the menu item, add it.
-          menu_item = {
+          menu_item_configuration = {
             'name': name,
             'type': type,
             'slug': reslug_em(name),
             'external': external,
             'targetUrl': target_url
           }
-          menu_configuration['menuItemConfigurations'] << menu_item
+          menu_configuration['menuItemConfigurations'] << menu_item_configuration
         end
       end
 
@@ -96,6 +98,8 @@ module Mutations
           'name': name,
           'type': type,
           'slug': reslug_em(name),
+          'external': external,
+          'targetUrl': target_url,
           'menuItemConfigurations': []
         }
       end
