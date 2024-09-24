@@ -1156,7 +1156,7 @@ type Mutation {
   updateSiteSettingCarouselConfigurations(carouselConfigurations: JSON! = [], siteSettingSlug: String!): UpdateSiteSettingCarouselConfigurationsPayload
   updateSiteSettingHeroCardConfiguration(description: String!, external: Boolean!, imageUrl: String!, name: String!, siteSettingSlug: String!, slug: String!, targetUrl: String!): UpdateSiteSettingHeroCardConfigurationPayload
   updateSiteSettingHeroCardConfigurations(heroCardConfigurations: JSON! = [], siteSettingSlug: String!): UpdateSiteSettingHeroCardConfigurationsPayload
-  updateSiteSettingMenuConfiguration(external: Boolean, name: String!, parentSlug: String, siteSettingSlug: String!, slug: String!, targetUrl: String, type: String!): UpdateSiteSettingMenuConfigurationPayload
+  updateSiteSettingMenuConfiguration(external: Boolean, name: String!, parentSlug: String, siteSettingSlug: String!, slug: String, targetUrl: String, type: String!): UpdateSiteSettingMenuConfigurationPayload
   updateSiteSettingMenuConfigurations(menuConfigurations: JSON!, siteSettingSlug: String!): UpdateSiteSettingMenuConfigurationsPayload
   updateUseCaseSdgTargets(sdgTargetIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
   updateUseCaseStepBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateUseCaseStepBuildingBlocksPayload

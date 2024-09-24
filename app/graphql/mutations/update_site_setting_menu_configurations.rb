@@ -1,7 +1,10 @@
 # frozen_string_literal: true
+require 'modules/slugger'
 
 module Mutations
   class UpdateSiteSettingMenuConfigurations < Mutations::BaseMutation
+    include Modules::Slugger
+
     argument :site_setting_slug, String, required: true
     argument :menu_configurations, GraphQL::Types::JSON, required: true
 
@@ -22,6 +25,15 @@ module Mutations
           site_setting: nil,
           errors: ['Correct site setting is required.']
         }
+      end
+
+      menu_configurations.each do |menu_configuration|
+        menu_configuration.delete('saved')
+        menu_configuration['slug'] = reslug_em(menu_configuration['name'])
+        menu_configuration['menuItems'].each do |menu_item|
+          menu_item.delete('saved')
+          menu_item['slug'] = reslug_em(menu_item['name'])
+        end
       end
 
       site_setting.menu_configurations = menu_configurations
