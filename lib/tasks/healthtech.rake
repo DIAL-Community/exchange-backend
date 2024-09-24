@@ -137,8 +137,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           # health_product.contact = solution_data[8] unless solution_data[8].blank?
 
           # populate countries
-          countries = solution_data[14].split(',')
-          countries.each do |country|
+          countries = solution_data[14].split(',') unless solution_data[14].blank?
+          countries&.each do |country|
             product_country = Country.find_by(name: country.strip)
             next if product_country.nil?
             health_product.countries << product_country unless health_product.countries.include?(product_country)
