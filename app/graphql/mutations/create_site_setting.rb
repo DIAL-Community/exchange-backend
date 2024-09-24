@@ -16,17 +16,12 @@ module Mutations
     argument :enable_marketplace, Boolean, required: true
     argument :default_setting, Boolean, required: true
 
-    argument :carousel_configurations, GraphQL::Types::JSON, required: false, default_value: []
-    argument :hero_card_configurations, GraphQL::Types::JSON, required: false, default_value: []
-    argument :menu_configurations, GraphQL::Types::JSON, required: false, default_value: []
-
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
     def resolve(
       slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
-      enable_marketplace:, default_setting:,
-      carousel_configurations:, hero_card_configurations:, menu_configurations:
+      enable_marketplace:, default_setting:
     )
       unless an_admin || a_content_editor
         return {
@@ -57,10 +52,6 @@ module Mutations
 
       site_setting.enable_marketplace = enable_marketplace
       site_setting.default_setting = default_setting
-
-      site_setting.carousel_configurations = carousel_configurations
-      site_setting.hero_card_configurations = hero_card_configurations
-      site_setting.menu_configurations = menu_configurations
 
       if site_setting.save
         # Successful creation, return the created object with no errors

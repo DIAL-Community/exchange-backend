@@ -11,14 +11,14 @@ module Mutations
     argument :name, String, required: true
     argument :type, String, required: true
     argument :external, Boolean, required: false
-    argument :target_url, String, required: false
+    argument :destination_url, String, required: false
     # Parent slug is only for menu item
     argument :parent_slug, String, required: false
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, slug:, name:, type:, external:, target_url:, parent_slug:)
+    def resolve(site_setting_slug:, slug:, name:, type:, external:, destination_url:, parent_slug:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -56,7 +56,7 @@ module Mutations
           menu_configuration['name'] = name
           menu_configuration['type'] = type
           menu_configuration['external'] = external
-          menu_configuration['targetUrl'] = target_url
+          menu_configuration['destinationUrl'] = destination_url
           break if menu_exists
         elsif type == 'menu-item'
           # Skip until we find the parent menu.
@@ -77,7 +77,7 @@ module Mutations
             menu_item_configuration['name'] = name
             menu_item_configuration['type'] = type
             menu_item_configuration['external'] = external
-            menu_item_configuration['targetUrl'] = target_url
+            menu_item_configuration['destinationUrl'] = destination_url
           end
           # We found the menu and updated the menu, break from the loop.
           break if menu_item_exists
@@ -87,7 +87,7 @@ module Mutations
             'type': type,
             'slug': reslug_em(name),
             'external': external,
-            'targetUrl': target_url
+            'destinationUrl': destination_url
           }
           menu_configuration['menuItemConfigurations'] << menu_item_configuration
         end
@@ -99,7 +99,7 @@ module Mutations
           'type': type,
           'slug': reslug_em(name),
           'external': external,
-          'targetUrl': target_url,
+          'destinationUrl': destination_url,
           'menuItemConfigurations': []
         }
       end

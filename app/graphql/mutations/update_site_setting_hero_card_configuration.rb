@@ -10,12 +10,12 @@ module Mutations
 
     argument :external, Boolean, required: true
     argument :image_url, String, required: true
-    argument :target_url, String, required: true
+    argument :destination_url, String, required: true
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, slug:, name:, description:, external:, image_url:, target_url:)
+    def resolve(site_setting_slug:, slug:, name:, description:, external:, image_url:, destination_url:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -40,7 +40,7 @@ module Mutations
         hero_card_configuration['description'] = description
         hero_card_configuration['external'] = external
         hero_card_configuration['image_url'] = image_url
-        hero_card_configuration['target_url'] = target_url
+        hero_card_configuration['destination_url'] = destination_url
       end
 
       unless hero_card_configuration_exists
@@ -50,7 +50,7 @@ module Mutations
           'description': description,
           'external': external,
           'image_url': image_url,
-          'target_url': target_url
+          'destination_url': destination_url
         }
 
         site_setting.hero_card_configurations << hero_card_configuration

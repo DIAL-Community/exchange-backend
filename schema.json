@@ -13704,42 +13704,6 @@
                   "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
-                },
-                {
-                  "name": "carouselConfigurations",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "JSON",
-                    "ofType": null
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "heroCardConfigurations",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "JSON",
-                    "ofType": null
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "menuConfigurations",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "JSON",
-                    "ofType": null
-                  },
-                  "defaultValue": "[]",
-                  "isDeprecated": false,
-                  "deprecationReason": null
                 }
               ],
               "type": {
@@ -18766,7 +18730,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "targetUrl",
+                  "name": "destinationUrl",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18936,7 +18900,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "targetUrl",
+                  "name": "destinationUrl",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -19082,7 +19046,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "targetUrl",
+                  "name": "destinationUrl",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",

@@ -1056,7 +1056,7 @@ type Mutation {
   createResourceTopic(description: String, imageFile: Upload, name: String!, parentTopicId: ID, slug: String!): CreateResourceTopicPayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
-  createSiteSetting(carouselConfigurations: JSON = [], defaultSetting: Boolean!, description: String!, enableMarketplace: Boolean!, exchangeLogoUrl: String!, faviconUrl: String!, heroCardConfigurations: JSON = [], menuConfigurations: JSON = [], name: String!, openGraphLogoUrl: String!, slug: String!): CreateSiteSettingPayload
+  createSiteSetting(defaultSetting: Boolean!, description: String!, enableMarketplace: Boolean!, exchangeLogoUrl: String!, faviconUrl: String!, name: String!, openGraphLogoUrl: String!, slug: String!): CreateSiteSettingPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
   createStarredObject(sourceObjectType: String!, sourceObjectValue: String!, starredObjectType: String!, starredObjectValue: String!): CreateStarredObjectPayload
   createSync(description: String!, destination: String!, name: String!, slug: String!, source: String!, synchronizedModels: [String!]!): CreateSyncPayload
@@ -1152,11 +1152,11 @@ type Mutation {
   updateResourceTags(slug: String!, tagNames: [String!]!): UpdateResourceTagsPayload
   updateResourceUseCases(slug: String!, useCaseSlugs: [String!]!): UpdateResourceUseCasesPayload
   updateRubricCategoryIndicators(categoryIndicatorSlugs: [String!]!, rubricCategorySlug: String!): UpdateRubricCategoryIndicatorsPayload
-  updateSiteSettingCarouselConfiguration(description: String!, external: Boolean!, imageUrl: String!, name: String!, siteSettingSlug: String!, slug: String!, targetUrl: String!): UpdateSiteSettingCarouselConfigurationPayload
+  updateSiteSettingCarouselConfiguration(description: String!, destinationUrl: String!, external: Boolean!, imageUrl: String!, name: String!, siteSettingSlug: String!, slug: String!): UpdateSiteSettingCarouselConfigurationPayload
   updateSiteSettingCarouselConfigurations(carouselConfigurations: JSON! = [], siteSettingSlug: String!): UpdateSiteSettingCarouselConfigurationsPayload
-  updateSiteSettingHeroCardConfiguration(description: String!, external: Boolean!, imageUrl: String!, name: String!, siteSettingSlug: String!, slug: String!, targetUrl: String!): UpdateSiteSettingHeroCardConfigurationPayload
+  updateSiteSettingHeroCardConfiguration(description: String!, destinationUrl: String!, external: Boolean!, imageUrl: String!, name: String!, siteSettingSlug: String!, slug: String!): UpdateSiteSettingHeroCardConfigurationPayload
   updateSiteSettingHeroCardConfigurations(heroCardConfigurations: JSON! = [], siteSettingSlug: String!): UpdateSiteSettingHeroCardConfigurationsPayload
-  updateSiteSettingMenuConfiguration(external: Boolean, name: String!, parentSlug: String, siteSettingSlug: String!, slug: String, targetUrl: String, type: String!): UpdateSiteSettingMenuConfigurationPayload
+  updateSiteSettingMenuConfiguration(destinationUrl: String, external: Boolean, name: String!, parentSlug: String, siteSettingSlug: String!, slug: String, type: String!): UpdateSiteSettingMenuConfigurationPayload
   updateSiteSettingMenuConfigurations(menuConfigurations: JSON!, siteSettingSlug: String!): UpdateSiteSettingMenuConfigurationsPayload
   updateUseCaseSdgTargets(sdgTargetIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
   updateUseCaseStepBuildingBlocks(buildingBlockSlugs: [String!]!, slug: String!): UpdateUseCaseStepBuildingBlocksPayload

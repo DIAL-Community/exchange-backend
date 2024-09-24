@@ -34,7 +34,7 @@ module Mutations
           'type': menu_configuration['type'],
           'slug': reslug_em(menu_configuration['name']),
           'external': menu_configuration['external'],
-          'targetUrl': menu_configuration['targetUrl'],
+          'destinationUrl': menu_configuration['destinationUrl'],
           'menuItemConfigurations': []
         }
 
@@ -45,7 +45,7 @@ module Mutations
             'type': menu_item_configuration['type'],
             'slug': reslug_em(menu_item_configuration['name']),
             'external': menu_item_configuration['external'],
-            'targetUrl': menu_item_configuration['targetUrl']
+            'destinationUrl': menu_item_configuration['destinationUrl']
           }
           sanitized_menu_item_configurations << sanitized_menu_item
         end

@@ -10,12 +10,12 @@ module Mutations
 
     argument :external, Boolean, required: true
     argument :image_url, String, required: true
-    argument :target_url, String, required: true
+    argument :destination_url, String, required: true
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, slug:, name:, description:, external:, image_url:, target_url:)
+    def resolve(site_setting_slug:, slug:, name:, description:, external:, image_url:, destination_url:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -41,7 +41,7 @@ module Mutations
         carousel_configuration['description'] = description
         carousel_configuration['external'] = external
         carousel_configuration['image_url'] = image_url
-        carousel_configuration['target_url'] = target_url
+        carousel_configuration['destination_url'] = destination_url
       end
 
       unless carousel_configuration_exists
@@ -51,7 +51,7 @@ module Mutations
           'description': description,
           'external': external,
           'image_url': image_url,
-          'target_url': target_url
+          'destination_url': destination_url
         }
 
         site_setting.carousel_configurations << carousel_configuration
