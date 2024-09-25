@@ -7,6 +7,7 @@ module Mutations
 
     argument :site_setting_slug, String, required: true
     # Parameters for menu (or menu item)
+    argument :id, String, required: true
     argument :slug, String, required: false
     argument :name, String, required: true
     argument :type, String, required: true
@@ -18,7 +19,7 @@ module Mutations
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, slug:, name:, type:, external:, destination_url:, parent_slug:)
+    def resolve(site_setting_slug:, id:, slug:, name:, type:, external:, destination_url:, parent_slug:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -83,6 +84,7 @@ module Mutations
           break if menu_item_exists
           # We didn't find the menu item, add it.
           menu_item_configuration = {
+            'id': id,
             'name': name,
             'type': type,
             'slug': reslug_em(name),
@@ -95,6 +97,7 @@ module Mutations
 
       if type == 'menu' && !menu_exists
         site_setting.menu_configurations << {
+          'id': id,
           'name': name,
           'type': type,
           'slug': reslug_em(name),

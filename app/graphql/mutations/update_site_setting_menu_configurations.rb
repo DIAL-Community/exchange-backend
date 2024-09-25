@@ -30,6 +30,7 @@ module Mutations
       sanitized_menu_configurations = []
       menu_configurations.each do |menu_configuration|
         sanitized_menu_configuration = {
+          'id': menu_configuration['id'],
           'name': menu_configuration['name'],
           'type': menu_configuration['type'],
           'slug': reslug_em(menu_configuration['name']),
@@ -41,6 +42,7 @@ module Mutations
         sanitized_menu_item_configurations = []
         menu_configuration['menuItemConfigurations'].each do |menu_item_configuration|
           sanitized_menu_item = {
+            'id': menu_item_configuration['id'],
             'name': menu_item_configuration['name'],
             'type': menu_item_configuration['type'],
             'slug': reslug_em(menu_item_configuration['name']),
