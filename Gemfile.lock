@@ -561,7 +561,7 @@ DEPENDENCIES
   rails (~> 7.0)
   rails-controller-testing
   recaptcha
-  roo
+  roo (~> 2.10.0)
   ros-apartment
   rspec-rails
   rswag-api

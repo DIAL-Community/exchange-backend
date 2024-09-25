@@ -2089,13 +2089,13 @@ type SoftwareCategory {
   id: ID!
   name: String!
   slug: String!
-  softwareFeatures: [SoftwareFeature!]!
+  softwareFeatures: [SoftwareFeature!]
 }
 
 type SoftwareFeature {
   categoryId: Int!
   description: String!
-  facilityScale: Int!
+  facilityScale: Int
   id: ID!
   name: String!
   slug: String!
