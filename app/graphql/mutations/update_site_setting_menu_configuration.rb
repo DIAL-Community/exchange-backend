@@ -1,25 +1,21 @@
 # frozen_string_literal: true
-require 'modules/slugger'
 
 module Mutations
   class UpdateSiteSettingMenuConfiguration < Mutations::BaseMutation
-    include Modules::Slugger
-
     argument :site_setting_slug, String, required: true
     # Parameters for menu (or menu item)
     argument :id, String, required: true
-    argument :slug, String, required: false
     argument :name, String, required: true
     argument :type, String, required: true
     argument :external, Boolean, required: false
     argument :destination_url, String, required: false
-    # Parent slug is only for menu item
-    argument :parent_slug, String, required: false
+    # Parent id is only for menu item
+    argument :parent_id, String, required: false
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, id:, slug:, name:, type:, external:, destination_url:, parent_slug:)
+    def resolve(site_setting_slug:, id:, name:, type:, external:, destination_url:, parent_id:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -45,14 +41,9 @@ module Mutations
       menu_exists = false
       site_setting.menu_configurations.each do |menu_configuration|
         if type == 'menu'
-          next unless menu_configuration['slug'] == slug
+          next unless menu_configuration['id'] == id
           # We found the menu, update the menu.
           menu_exists = true
-          # Update the slug value if needed.
-          updated_slug = reslug_em(name)
-          if updated_slug != menu_configuration['slug']
-            menu_configuration['slug'] = updated_slug
-          end
           # Menu only have name field that can be updated.
           menu_configuration['name'] = name
           menu_configuration['type'] = type
@@ -61,19 +52,14 @@ module Mutations
           break if menu_exists
         elsif type == 'menu-item'
           # Skip until we find the parent menu.
-          next unless menu_configuration['slug'] == parent_slug
+          next unless menu_configuration['id'] == parent_id
           # Initialize our menu item search flag.
           menu_item_exists = false
           menu_configuration['menuItemConfigurations'].each do |menu_item_configuration|
             # Skip until we find the menu item.
-            next unless menu_item_configuration['slug'] == slug
+            next unless menu_item_configuration['id'] == id
             # We found the menu item, update the menu item.
             menu_item_exists = true
-            # Update the slug value if needed.
-            updated_slug = reslug_em(name)
-            if updated_slug != menu_item_configuration['slug']
-              menu_item_configuration['slug'] = updated_slug
-            end
             # Update other parts of the menu item.
             menu_item_configuration['name'] = name
             menu_item_configuration['type'] = type
@@ -87,7 +73,6 @@ module Mutations
             'id': id,
             'name': name,
             'type': type,
-            'slug': reslug_em(name),
             'external': external,
             'destinationUrl': destination_url
           }
@@ -100,7 +85,6 @@ module Mutations
           'id': id,
           'name': name,
           'type': type,
-          'slug': reslug_em(name),
           'external': external,
           'destinationUrl': destination_url,
           'menuItemConfigurations': []

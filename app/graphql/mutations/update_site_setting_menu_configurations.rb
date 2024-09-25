@@ -1,10 +1,7 @@
 # frozen_string_literal: true
-require 'modules/slugger'
 
 module Mutations
   class UpdateSiteSettingMenuConfigurations < Mutations::BaseMutation
-    include Modules::Slugger
-
     argument :site_setting_slug, String, required: true
     argument :menu_configurations, GraphQL::Types::JSON, required: true
 
@@ -33,7 +30,6 @@ module Mutations
           'id': menu_configuration['id'],
           'name': menu_configuration['name'],
           'type': menu_configuration['type'],
-          'slug': reslug_em(menu_configuration['name']),
           'external': menu_configuration['external'],
           'destinationUrl': menu_configuration['destinationUrl'],
           'menuItemConfigurations': []
@@ -45,7 +41,6 @@ module Mutations
             'id': menu_item_configuration['id'],
             'name': menu_item_configuration['name'],
             'type': menu_item_configuration['type'],
-            'slug': reslug_em(menu_item_configuration['name']),
             'external': menu_item_configuration['external'],
             'destinationUrl': menu_item_configuration['destinationUrl']
           }
