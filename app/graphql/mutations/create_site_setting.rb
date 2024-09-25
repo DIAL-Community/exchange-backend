@@ -51,7 +51,6 @@ module Mutations
       site_setting.open_graph_logo_url = open_graph_logo_url
 
       site_setting.enable_marketplace = enable_marketplace
-      site_setting.default_setting = default_setting
 
       if site_setting.new_record?
         locked_default_configurations = [{
@@ -75,7 +74,19 @@ module Mutations
         site_setting.carousel_configurations = []
       end
 
-      if site_setting.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        if default_setting.to_s == 'true'
+          # Only one default setting can exist at a time.
+          SiteSetting.update_all(default_setting: false)
+          # Set the current one as the default setting.
+          site_setting.default_setting = default_setting
+        end
+        site_setting.save
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           site_setting:,
