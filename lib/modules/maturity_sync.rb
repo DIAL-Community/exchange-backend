@@ -2,7 +2,7 @@
 
 module Modules
   module MaturitySync
-    def create_category(cat_name)
+    def create_category(cat_name, cat_desc)
       category_slug = reslug_em(cat_name)
       rubric_category = RubricCategory.where(slug: category_slug)
                                       .first || RubricCategory.new
