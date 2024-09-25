@@ -53,6 +53,28 @@ module Mutations
       site_setting.enable_marketplace = enable_marketplace
       site_setting.default_setting = default_setting
 
+      if site_setting.new_record?
+        locked_default_configurations = [{
+          id: SecureRandom.uuid,
+          name: 'User Menu',
+          type: 'locked-user-menu',
+          menuItemConfigurations: []
+        }, {
+          id: SecureRandom.uuid,
+          name: 'Help Menu',
+          type: 'locked-help-menu',
+          menuItemConfigurations: []
+        }, {
+          id: SecureRandom.uuid,
+          name: 'Language Menu',
+          type: 'locked-language-menu',
+          menuItemConfigurations: []
+        }]
+        site_setting.menu_configurations = locked_default_configurations
+        site_setting.hero_card_configurations = []
+        site_setting.carousel_configurations = []
+      end
+
       if site_setting.save
         # Successful creation, return the created object with no errors
         {
