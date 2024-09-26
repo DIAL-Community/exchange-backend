@@ -147,8 +147,13 @@ namespace :configuration do
       }]
     }, {
       id: SecureRandom.uuid,
-      name: 'User Menu',
-      type: 'locked-user-menu',
+      name: 'Admin Menu',
+      type: 'locked-admin-menu',
+      menuItemConfigurations: []
+    }, {
+      id: SecureRandom.uuid,
+      name: 'Login Menu',
+      type: 'locked-login-menu',
       menuItemConfigurations: []
     }, {
       id: SecureRandom.uuid,

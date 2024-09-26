@@ -23,7 +23,9 @@ module Mutations
         }
       end
 
-      unless ['menu', 'menu-item'].include?(type)
+      locked_menu_types = ['admin', 'login', 'help', 'language'].map { |type_name| "locked-#{type_name}-menu" }
+      valid_menu_types = locked_menu_types + ['menu', 'menu-item', 'separator']
+      unless valid_menu_types.include?(type)
         return {
           site_setting: nil,
           errors: ['Only correct type is allowed.']
@@ -50,7 +52,7 @@ module Mutations
           menu_configuration['external'] = external
           menu_configuration['destinationUrl'] = destination_url
           break if menu_exists
-        elsif type == 'menu-item'
+        elsif type == 'menu-item' || type == 'separator'
           # Skip until we find the parent menu.
           next unless menu_configuration['id'] == parent_id
           # Initialize our menu item search flag.

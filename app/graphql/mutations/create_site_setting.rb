@@ -55,8 +55,13 @@ module Mutations
       if site_setting.new_record?
         locked_default_configurations = [{
           id: SecureRandom.uuid,
-          name: 'User Menu',
-          type: 'locked-user-menu',
+          name: 'Admin Menu',
+          type: 'locked-admin-menu',
+          menuItemConfigurations: []
+        }, {
+          id: SecureRandom.uuid,
+          name: 'Login Menu',
+          type: 'locked-login-menu',
           menuItemConfigurations: []
         }, {
           id: SecureRandom.uuid,
