@@ -53,29 +53,8 @@ module Mutations
       site_setting.enable_marketplace = enable_marketplace
 
       if site_setting.new_record?
-        locked_default_configurations = [{
-          id: SecureRandom.uuid,
-          name: 'Admin Menu',
-          type: 'locked-admin-menu',
-          menuItemConfigurations: []
-        }, {
-          id: SecureRandom.uuid,
-          name: 'Login Menu',
-          type: 'locked-login-menu',
-          menuItemConfigurations: []
-        }, {
-          id: SecureRandom.uuid,
-          name: 'Help Menu',
-          type: 'locked-help-menu',
-          menuItemConfigurations: []
-        }, {
-          id: SecureRandom.uuid,
-          name: 'Language Menu',
-          type: 'locked-language-menu',
-          menuItemConfigurations: []
-        }]
-        site_setting.menu_configurations = locked_default_configurations
-        site_setting.hero_card_configurations = []
+        site_setting.menu_configurations = []
+        site_setting.hero_card_section = {}
         site_setting.carousel_configurations = []
       end
 

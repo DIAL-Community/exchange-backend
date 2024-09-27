@@ -13146,7 +13146,7 @@ CREATE TABLE public.site_settings (
     open_graph_logo_url character varying NOT NULL,
     menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
     carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
-    hero_card_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
     default_setting boolean DEFAULT false NOT NULL,
     enable_marketplace boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
@@ -27771,7 +27771,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240827181759'),
 ('20240827184119'),
 ('20240830132609'),
-('20240927093418'),
-('20240919205513');
+('20240919205513'),
+('20240927093418');
 
 

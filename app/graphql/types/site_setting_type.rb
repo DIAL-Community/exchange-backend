@@ -15,7 +15,7 @@ module Types
     field :open_graph_logo_url, String, null: false
 
     field :carousel_configurations, GraphQL::Types::JSON, null: false
-    field :hero_card_configurations, GraphQL::Types::JSON, null: false
+    field :hero_card_section, GraphQL::Types::JSON, null: false
     field :menu_configurations, GraphQL::Types::JSON, null: false
   end
 end

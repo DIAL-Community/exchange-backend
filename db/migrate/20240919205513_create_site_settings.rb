@@ -13,7 +13,7 @@ class CreateSiteSettings < ActiveRecord::Migration[7.0]
 
       t.jsonb(:menu_configurations, null: false, default: '[]')
       t.jsonb(:carousel_configurations, null: false, default: '[]')
-      t.jsonb(:hero_card_configurations, null: false, default: '[]')
+      t.jsonb(:hero_card_section, null: false, default: '{}')
 
       t.boolean(:default_setting, null: false, default: false)
       t.boolean(:enable_marketplace, null: false, default: false)

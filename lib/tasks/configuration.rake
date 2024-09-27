@@ -24,167 +24,207 @@ namespace :configuration do
 
     default_menu_configurations = [{
       id: SecureRandom.uuid,
-      name: 'Marketplace',
+      name: 'ui.marketplace.label',
       type: 'menu',
       external: false,
       destinationUrl: nil,
       menuItemConfigurations: [{
         id: SecureRandom.uuid,
-        name: 'RFP Radar',
-        type: 'menu-item',
+        name: 'ui.opportunity.header',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/opportunities'
       }, {
         id: SecureRandom.uuid,
-        name: 'Storefronts',
-        type: 'menu-item',
+        name: 'ui.storefront.header',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/storefronts'
       }]
     }, {
       id: SecureRandom.uuid,
-      name: 'Catalog',
+      name: 'header.catalog',
       type: 'menu',
       external: false,
       destinationUrl: nil,
       menuItemConfigurations: [{
         id: SecureRandom.uuid,
-        name: 'Catalog',
+        name: 'header.catalog',
         type: 'separator',
         external: false,
         destinationUrl: nil
       }, {
         id: SecureRandom.uuid,
-        name: 'Use Case',
-        type: 'menu-item',
+        name: 'filter.entity.useCases',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/use-cases'
       }, {
         id: SecureRandom.uuid,
-        name: 'Building Blocks',
-        type: 'menu-item',
+        name: 'filter.entity.buildingBlocks',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/building-blocks'
       }, {
         id: SecureRandom.uuid,
-        name: 'Products',
-        type: 'menu-item',
+        name: 'filter.entity.products',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/products'
       }, {
         id: SecureRandom.uuid,
-        name: 'Supporting Tools',
+        name: 'header.supportingTools',
         type: 'separator',
         external: false,
         destinationUrl: nil
       }, {
         id: SecureRandom.uuid,
-        name: 'Maps',
-        type: 'menu-item',
+        name: 'filter.entity.maps',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/maps'
       }, {
         id: SecureRandom.uuid,
-        name: 'Open Data',
-        type: 'menu-item',
+        name: 'filter.entity.datasets',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/datasets'
       }, {
         id: SecureRandom.uuid,
-        name: 'Organizations',
-        type: 'menu-item',
+        name: 'filter.entity.organizations',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/organizations'
       }, {
         id: SecureRandom.uuid,
-        name: 'Projects',
-        type: 'menu-item',
+        name: 'filter.entity.projects',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/projects'
       }, {
         id: SecureRandom.uuid,
-        name: 'SDGs',
-        type: 'menu-item',
+        name: 'filter.entity.sdgs',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/sdgs'
       }, {
         id: SecureRandom.uuid,
-        name: 'Workflows',
-        type: 'menu-item',
+        name: 'filter.entity.workflows',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/workflows'
       }]
     }, {
       id: SecureRandom.uuid,
-      name: 'Resources',
+      name: 'header.resources',
       type: 'menu',
       external: false,
       destinationUrl: nil,
       menuItemConfigurations: [{
         id: SecureRandom.uuid,
-        name: 'Playbooks',
-        type: 'menu-item',
+        name: 'header.playbooks',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/playbooks'
       }, {
         id: SecureRandom.uuid,
-        name: 'Recommendation Wizard',
-        type: 'menu-item',
+        name: 'header.wizard',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/wizard'
       }, {
         id: SecureRandom.uuid,
-        name: 'Resource Hub',
-        type: 'menu-item',
+        name: 'header.insights',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/resources'
       }, {
         id: SecureRandom.uuid,
-        name: 'Govstack Portal',
-        type: 'menu-item',
+        name: 'header.govstack',
+        type: 'menu.item',
         external: false,
         destinationUrl: '/govstack'
       }]
     }, {
       id: SecureRandom.uuid,
-      name: 'Admin Menu',
-      type: 'locked-admin-menu',
+      name: 'ui.siteSetting.menu.adminMenu',
+      type: 'locked.admin.menu',
       menuItemConfigurations: []
     }, {
       id: SecureRandom.uuid,
-      name: 'Login Menu',
-      type: 'locked-login-menu',
+      name: 'ui.siteSetting.menu.loginMenu',
+      type: 'locked.login.menu',
       menuItemConfigurations: []
     }, {
       id: SecureRandom.uuid,
-      name: 'Help Menu',
-      type: 'locked-help-menu',
+      name: 'ui.siteSetting.menu.helpMenu',
+      type: 'locked.help.menu',
       menuItemConfigurations: []
     }, {
       id: SecureRandom.uuid,
-      name: 'Language Menu',
-      type: 'locked-language-menu',
+      name: 'ui.siteSetting.menu.languageMenu',
+      type: 'locked.language.menu',
       menuItemConfigurations: []
     }]
     default_site_setting.menu_configurations = default_menu_configurations
 
-    default_hero_card_configurations = [{
+    default_hero_card_section = {
       id: SecureRandom.uuid,
-      name: 'Hero Card 1',
-      type: 'hero-card',
-      title: 'Hero Card 1',
-      description: 'Hero Card 1',
-      imageUrl: '/ui/v1/hero-dx-bg.svg'
-    }]
-    default_site_setting.hero_card_configurations = default_hero_card_configurations
+      title: 'ui.tool.getStarted',
+      description: 'ui.tool.tagLine',
+      heroCardConfigurations: [{
+        id: SecureRandom.uuid,
+        type: 'default.useCase.heroCard',
+        name: 'Use Case Card',
+        title: 'ui.product.header',
+        description: 'useCase.hint.subtitle',
+        imageUrl: '/ui/v1/use-case-header.svg',
+        external: false,
+        destinationUrl: '/use-cases'
+      }, {
+        id: SecureRandom.uuid,
+        type: 'default.buildingBlock.heroCard',
+        name: 'Building Block Hero Card',
+        title: 'ui.buildingBlock.header',
+        description: 'buildingBlock.hint.subtitle',
+        imageUrl: '/ui/v1/building-block-header.svg',
+        external: false,
+        destinationUrl: '/building-blocks'
+      }, {
+        id: SecureRandom.uuid,
+        type: 'default.product.heroCard',
+        name: 'Product Hero Card',
+        title: 'ui.product.header',
+        description: 'product.hint.subtitle',
+        imageUrl: '/ui/v1/product-header.svg',
+        external: false,
+        destinationUrl: '/products'
+      }]
+    }
+    default_site_setting.hero_card_section = default_hero_card_section
 
     default_carousel_configurations = [{
       id: SecureRandom.uuid,
-      name: 'Carousel 1',
-      type: 'carousel',
-      title: 'Carousel 1',
-      description: 'Carousel 1',
-      imageUrl: '/ui/v1/hero-dx-bg'
+      type: 'default.exchange.carousel',
+      name: 'Exchange Carousel',
+      title: 'ui.hero.exchange.title',
+      imageUrl: nil,
+      external: false,
+      description: 'ui.hero.exchange.tagLine',
+      calloutTitle: nil,
+      destinationUrl: nil,
+      style: nil
+    }, {
+      id: SecureRandom.uuid,
+      type: 'default.marketplace.carousel',
+      name: 'Marketplace Carousel',
+      title: 'ui.marketplace.label',
+      imageUrl: nil,
+      external: false,
+      description: 'ui.marketplace.description',
+      calloutTitle: 'ui.marketplace.browse',
+      destinationUrl: '/opportunities',
+      style: nil
     }]
     default_site_setting.carousel_configurations = default_carousel_configurations
 

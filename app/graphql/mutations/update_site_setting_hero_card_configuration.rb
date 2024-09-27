@@ -4,8 +4,10 @@ module Mutations
   class UpdateSiteSettingHeroCardConfiguration < Mutations::BaseMutation
     argument :site_setting_slug, String, required: true
 
-    argument :slug, String, required: true
+    argument :id, String, required: true
+    argument :type, String, required: true
     argument :name, String, required: true
+    argument :title, String, required: true
     argument :description, String, required: true
 
     argument :external, Boolean, required: true
@@ -15,7 +17,7 @@ module Mutations
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, slug:, name:, description:, external:, image_url:, destination_url:)
+    def resolve(site_setting_slug:, id:, type:, name:, title:, description:, external:, image_url:, destination_url:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -32,28 +34,34 @@ module Mutations
       end
 
       hero_card_configuration_exists = false
-      site_setting.hero_card_configurations.each do |hero_card_configuration|
-        next if hero_card_configuration['slug'] != slug
+
+      hero_card_configurations = site_setting.hero_card_section['heroCardConfigurations']
+      hero_card_configurations.each do |hero_card_configuration|
+        next if hero_card_configuration['id'] != id
 
         hero_card_configuration_exists = true
+
+        hero_card_configuration['type'] = type
         hero_card_configuration['name'] = name
-        hero_card_configuration['description'] = description
+        hero_card_configuration['title'] = title
         hero_card_configuration['external'] = external
-        hero_card_configuration['image_url'] = image_url
-        hero_card_configuration['destination_url'] = destination_url
+        hero_card_configuration['imageUrl'] = image_url
+        hero_card_configuration['description'] = description
+        hero_card_configuration['destinationUrl'] = destination_url
       end
 
       unless hero_card_configuration_exists
         hero_card_configuration = {
+          'id': id,
+          'type': type,
           'name': name,
-          'slug': slug || reslug_em(name),
-          'description': description,
+          'title': title,
           'external': external,
-          'image_url': image_url,
-          'destination_url': destination_url
+          'imageUrl': image_url,
+          'description': description,
+          'destinationUrl': destination_url
         }
-
-        site_setting.hero_card_configurations << hero_card_configuration
+        hero_card_configurations << hero_card_configuration
       end
 
       if site_setting.save

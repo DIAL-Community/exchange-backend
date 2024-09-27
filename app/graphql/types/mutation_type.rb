@@ -198,7 +198,7 @@ module Types
     field :update_site_setting_carousel_configuration, mutation: Mutations::UpdateSiteSettingCarouselConfiguration
     field :update_site_setting_carousel_configurations, mutation: Mutations::UpdateSiteSettingCarouselConfigurations
     field :update_site_setting_hero_card_configuration, mutation: Mutations::UpdateSiteSettingHeroCardConfiguration
-    field :update_site_setting_hero_card_configurations, mutation: Mutations::UpdateSiteSettingHeroCardConfigurations
+    field :update_site_setting_hero_card_section, mutation: Mutations::UpdateSiteSettingHeroCardSection
     field :update_site_setting_menu_configuration, mutation: Mutations::UpdateSiteSettingMenuConfiguration
     field :update_site_setting_menu_configurations, mutation: Mutations::UpdateSiteSettingMenuConfigurations
   end

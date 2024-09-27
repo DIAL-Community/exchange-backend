@@ -18662,7 +18662,23 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "slug",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "type",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18694,7 +18710,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "description",
+                  "name": "title",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18742,7 +18758,55 @@
                   "deprecationReason": null
                 },
                 {
+                  "name": "description",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "destinationUrl",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "calloutTitle",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "style",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18832,7 +18896,23 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "slug",
+                  "name": "id",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "type",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18849,6 +18929,22 @@
                 },
                 {
                   "name": "name",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "title",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18937,11 +19033,43 @@
               "deprecationReason": null
             },
             {
-              "name": "updateSiteSettingHeroCardConfigurations",
+              "name": "updateSiteSettingHeroCardSection",
               "description": null,
               "args": [
                 {
                   "name": "siteSettingSlug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "heroCardSectionTitle",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "heroCardSectionDescription",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -18975,7 +19103,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "UpdateSiteSettingHeroCardConfigurationsPayload",
+                "name": "UpdateSiteSettingHeroCardSectionPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -36584,7 +36712,7 @@
               "deprecationReason": null
             },
             {
-              "name": "heroCardConfigurations",
+              "name": "heroCardSection",
               "description": null,
               "args": [
 
@@ -40865,8 +40993,8 @@
         },
         {
           "kind": "OBJECT",
-          "name": "UpdateSiteSettingHeroCardConfigurationsPayload",
-          "description": "Autogenerated return type of UpdateSiteSettingHeroCardConfigurations.",
+          "name": "UpdateSiteSettingHeroCardSectionPayload",
+          "description": "Autogenerated return type of UpdateSiteSettingHeroCardSection.",
           "fields": [
             {
               "name": "errors",
