@@ -141,10 +141,12 @@ class Product < ApplicationRecord
 
   STAGES = %w[pilot scaling mature].freeze
   validates :product_stage, inclusion: { in: STAGES }, allow_nil: true
+  validates :contact, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, ->(name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
+  scope :featured, -> { where(featured: true) }
 
   def set_extra_attribute(name:, value:, type: nil)
     self.extra_attributes ||= []
