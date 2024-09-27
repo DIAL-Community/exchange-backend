@@ -102,6 +102,32 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             product_description.save!
           end
 
+          # Create or find the organization
+          org_name = solution_data[3]
+          org_contact_email = solution_data[2]
+
+          # Check if org_name is present
+          unless org_name.blank?
+            # Find or create the contact based on email
+            contact = Contact.find_or_create_by(email: org_contact_email) do |c|
+              c.name = org_name # Assuming the name should match the organization name
+              c.slug = reslug_em(org_name)
+              # Remove setting main_contact since it doesn't exist
+            end
+
+            # Find or create the organization
+            organization = Organization.find_or_create_by(name: org_name) do |org|
+              org.slug = reslug_em(org_name)
+              # org.logo = solution_data[7] unless solution_data[7].blank? # Comment out this line
+            end
+
+            # Associate the contact with the organization
+            OrganizationContact.find_or_create_by(organization:, contact:)
+
+            # Link the organization to the product if found or created
+            OrganizationProduct.find_or_create_by(product_id: health_product.id, organization_id: organization.id)
+          end
+
           solution_categories = solution_data[9].split(',')
           category_column_mapping = [
             { name: 'Electronic Health Record', column: 45 },
@@ -125,7 +151,6 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             next if solution_features.nil?
             solution_features.split(',').each do |solution_feature|
               feature = SoftwareFeature.find_by(slug: reslug_em(solution_feature.strip))
-              # Should we create feature if not found?
               next if feature.nil?
               health_product.software_features << feature unless health_product.software_features.include?(feature)
             end
@@ -134,7 +159,6 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           end
 
           health_product.website = cleanup_url(solution_data[6]) unless solution_data[6].blank?
-          # health_product.contact = solution_data[8] unless solution_data[8].blank?
 
           # populate countries
           countries = solution_data[14].split(',') unless solution_data[14].blank?
@@ -181,40 +205,34 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             { name: 'accessibility', column: 27 }
           ]
 
-          health_indicators.each do |health_indicator|
-            category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
-            product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
-                                                        product_id: health_product.id)
-            if product_indicator.nil?
-              product_indicator = ProductIndicator.new(category_indicator_id: category_indicator.id,
-                                                      product_id: health_product.id)
-            end
+health_indicators.each do |health_indicator|
+  category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
 
-            indicator_data = vetted_data[health_indicator[:column]]
-            if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
-              product_indicator.destroy!
-            else
-              if indicator_data == 'yes' || indicator_data == 'Yes'
-                indicator_data = true
-              end
-              if indicator_data == 'no' || indicator_data == 'No'
-                indicator_data = false
-              end
-              if indicator_data.is_a?(String)
-                if indicator_data.include?("high")
-                  indicator_data = 'high'
-                end
-                if indicator_data.include?("medium")
-                  indicator_data = 'medium'
-                end
-                if indicator_data.include?("low")
-                  indicator_data = 'low'
-                end
-              end
-              product_indicator.indicator_value = indicator_data
-              product_indicator.save!
-            end
-          end
+  # Check if category_indicator is nil
+  next if category_indicator.nil?
+
+  product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
+                                               product_id: health_product.id)
+  if product_indicator.nil?
+    product_indicator = ProductIndicator.new(category_indicator_id: category_indicator.id,
+                                             product_id: health_product.id)
+  end
+
+  indicator_data = vetted_data[health_indicator[:column]]
+  if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
+    product_indicator.destroy!
+  else
+    indicator_data = true if indicator_data.downcase == 'yes'
+    indicator_data = false if indicator_data.downcase == 'no'
+    indicator_data = 'high' if indicator_data.include?("high")
+    indicator_data = 'medium' if indicator_data.include?("medium")
+    indicator_data = 'low' if indicator_data.include?("low")
+
+    product_indicator.indicator_value = indicator_data
+    product_indicator.save!
+  end
+end
+
 
           health_product.save
           calculate_maturity_scores(health_product.id)
