@@ -26,7 +26,7 @@ module Types
     field :tags, GraphQL::Types::JSON, null: true
     field :extra_attributes, [GraphQL::Types::JSON], null: true
     field :product_stage, String, null: true
-
+    field :featured, Boolean, null: true
     # TODO: Deprecate this field after migration to the new UI
     field :owner, String, null: true
     field :is_launchable, Boolean, null: true
