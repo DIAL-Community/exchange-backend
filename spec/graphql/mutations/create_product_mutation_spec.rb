@@ -12,7 +12,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $description: String!,
         $govStackEntity: Boolean,
         $productStage: String,
-        $extraAttributes: [ExtraAttributeInput!]
+        $extraAttributes: [ExtraAttributeInput!],
+        $featured: Boolean
       ) {
         createProduct(
           name: $name,
@@ -22,13 +23,15 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
           description: $description,
           govStackEntity: $govStackEntity,
           productStage: $productStage,
-          extraAttributes: $extraAttributes
+          extraAttributes: $extraAttributes,
+          featured: $featured
         ) {
           product {
             name
             slug
             govStackEntity
             productStage
+            featured
             productDescription {
               description
             }
@@ -63,7 +66,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         slug: "some-name",
         description: "Some description",
         productStage: nil,
-        extraAttributes: extra_attributes
+        extraAttributes: extra_attributes,
+        featured: true
       }
     )
 
@@ -74,6 +78,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "productDescription" => { "description" => "Some description" },
         "slug" => "some-name",
         "productStage" => nil,
+        "featured" => true,
         "extraAttributes" => extra_attributes.map(&:stringify_keys)
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
@@ -109,7 +114,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "slug" => "some-name",
         "productStage" => nil,
         "productDescription" => { "description" => "Some description" },
-        "extraAttributes" => extra_attributes.map(&:stringify_keys)
+        "extraAttributes" => extra_attributes.map(&:stringify_keys),
+        "featured" => false
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
     end
