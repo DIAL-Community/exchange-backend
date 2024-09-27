@@ -3738,7 +3738,9 @@ CREATE TABLE fao.products (
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '[]'::jsonb,
-    product_stage character varying
+    product_stage character varying,
+    featured boolean DEFAULT false,
+    contact character varying
 );
 
 
@@ -8037,7 +8039,9 @@ CREATE TABLE health.products (
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '[]'::jsonb,
-    product_stage character varying
+    product_stage character varying,
+    featured boolean DEFAULT false,
+    contact character varying
 );
 
 
@@ -12337,7 +12341,8 @@ CREATE TABLE public.products (
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '[]'::jsonb,
     product_stage character varying,
-    featured boolean DEFAULT false
+    featured boolean DEFAULT false,
+    contact character varying
 );
 
 
@@ -27715,6 +27720,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240827181759'),
 ('20240827184119'),
 ('20240830132609'),
-('20240927093418');
+('20240927093418'),
+('20240927122349');
 
 
