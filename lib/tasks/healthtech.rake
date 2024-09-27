@@ -205,34 +205,33 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             { name: 'accessibility', column: 27 }
           ]
 
-health_indicators.each do |health_indicator|
-  category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
+          health_indicators.each do |health_indicator|
+            category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
 
-  # Check if category_indicator is nil
-  next if category_indicator.nil?
+            # Check if category_indicator is nil
+            next if category_indicator.nil?
 
-  product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
-                                               product_id: health_product.id)
-  if product_indicator.nil?
-    product_indicator = ProductIndicator.new(category_indicator_id: category_indicator.id,
-                                             product_id: health_product.id)
-  end
+            product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
+                                                         product_id: health_product.id)
+            if product_indicator.nil?
+              product_indicator = ProductIndicator.new(category_indicator_id: category_indicator.id,
+                                                       product_id: health_product.id)
+            end
 
-  indicator_data = vetted_data[health_indicator[:column]]
-  if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
-    product_indicator.destroy!
-  else
-    indicator_data = true if indicator_data.downcase == 'yes'
-    indicator_data = false if indicator_data.downcase == 'no'
-    indicator_data = 'high' if indicator_data.include?("high")
-    indicator_data = 'medium' if indicator_data.include?("medium")
-    indicator_data = 'low' if indicator_data.include?("low")
+            indicator_data = vetted_data[health_indicator[:column]]
+            if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
+              product_indicator.destroy!
+            else
+              indicator_data = true if indicator_data.downcase == 'yes'
+              indicator_data = false if indicator_data.downcase == 'no'
+              indicator_data = 'high' if indicator_data.include?("high")
+              indicator_data = 'medium' if indicator_data.include?("medium")
+              indicator_data = 'low' if indicator_data.include?("low")
 
-    product_indicator.indicator_value = indicator_data
-    product_indicator.save!
-  end
-end
-
+              product_indicator.indicator_value = indicator_data
+              product_indicator.save!
+            end
+          end
 
           health_product.save
           calculate_maturity_scores(health_product.id)
