@@ -21,6 +21,7 @@ module Mutations
     argument :gov_stack_entity, Boolean, required: false, default_value: false
     argument :product_stage, String, required: false
     argument :extra_attributes, [Types::ExtraAttributeInputType], required: false
+    argument :featured, Boolean, required: false, default_value: false
 
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
@@ -28,7 +29,7 @@ module Mutations
     def resolve(
       name:, slug:, aliases: nil, website: nil, description:, image_file: nil,
       commercial_product:, pricing_url:, pricing_model:, pricing_details:, hosting_model:,
-      gov_stack_entity:, product_stage:, extra_attributes: nil
+      gov_stack_entity:, product_stage:, extra_attributes: nil, featured: nil
     )
       product = Product.find_by(slug:)
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
@@ -63,6 +64,7 @@ module Mutations
       product.pricing_model = pricing_model
       product.pricing_details = pricing_details
       product.product_stage = product_stage
+      product.featured = featured
 
       # Only admin will be allowed to set this flag
       product.gov_stack_entity = gov_stack_entity if an_admin
