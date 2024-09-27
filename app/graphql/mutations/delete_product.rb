@@ -15,6 +15,8 @@ module Mutations
         }
       end
 
+      # Delete any candidate roles that reference this product
+      CandidateRole.where(product_id: id).destroy_all
       product = Product.find_by(id:)
       assign_auditable_user(product)
       if product.destroy
