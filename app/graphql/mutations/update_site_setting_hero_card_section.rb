@@ -3,17 +3,14 @@
 module Mutations
   class UpdateSiteSettingHeroCardSection < Mutations::BaseMutation
     argument :site_setting_slug, String, required: true
-    argument :hero_card_section_title, String, required: true
-    argument :hero_card_section_description, String, required: true
+    argument :title, String, required: false
+    argument :description, String, required: false
     argument :hero_card_configurations, GraphQL::Types::JSON, required: true, default_value: []
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      site_setting_slug:, hero_card_section_title:, hero_card_section_description:,
-      hero_card_configurations:
-    )
+    def resolve(site_setting_slug:, title: nil, description: nil, hero_card_configurations:)
       unless an_admin || a_content_editor
         return {
           site_setting: nil,
@@ -44,11 +41,9 @@ module Mutations
         sanitized_hero_card_configurations << sanitized_hero_card_configuration
       end
 
-      site_setting.hero_card_configurations = {
-        'title': hero_card_section_title,
-        'description': hero_card_section_description,
-        'heroCardConfigurations': sanitized_hero_card_configurations
-      }
+      site_setting.hero_card_section['heroCardConfigurations'] = sanitized_hero_card_configurations
+      site_setting.hero_card_section['title'] = title unless title.nil?
+      site_setting.hero_card_section['description'] = description unless description.nil?
 
       if site_setting.save
         # Successful creation, return the created object with no errors
