@@ -114,29 +114,20 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             product_description.save!
           end
 
-          # Create or find the organization
           org_name = solution_data[3]
           org_contact_email = solution_data[2]
 
-          # Check if org_name is present
           unless org_name.blank?
-            # Find or create the contact based on email
             contact = Contact.find_or_create_by(email: org_contact_email) do |c|
-              c.name = org_name # Assuming the name should match the organization name
+              c.name = org_name
               c.slug = reslug_em(org_name)
-              # Remove setting main_contact since it doesn't exist
             end
 
-            # Find or create the organization
             organization = Organization.find_or_create_by(name: org_name) do |org|
               org.slug = reslug_em(org_name)
-              # org.logo = solution_data[7] unless solution_data[7].blank? # Comment out this line
             end
 
-            # Associate the contact with the organization
             OrganizationContact.find_or_create_by(organization:, contact:)
-
-            # Link the organization to the product if found or created
             OrganizationProduct.find_or_create_by(product_id: health_product.id, organization_id: organization.id)
 
             converted_logo_url = convert_to_download_link(solution_data[6])
@@ -183,7 +174,6 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           end
 
           health_product.website = cleanup_url(solution_data[54]) unless solution_data[54].blank?
-          # health_product.contact = solution_data[8] unless solution_data[8].blank?
 
           # populate countries
           countries = solution_data[13].split(',') unless solution_data[13].blank?
@@ -233,9 +223,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           health_indicators.each do |health_indicator|
             category_indicator = CategoryIndicator.find_by(slug: health_indicator[:name])
 
-            # Check if category_indicator is nil
             next if category_indicator.nil?
-
             product_indicator = ProductIndicator.find_by(category_indicator_id: category_indicator.id,
                                                          product_id: health_product.id)
             if product_indicator.nil?
