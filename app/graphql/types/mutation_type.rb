@@ -201,5 +201,8 @@ module Types
     field :update_site_setting_hero_card_section, mutation: Mutations::UpdateSiteSettingHeroCardSection
     field :update_site_setting_menu_configuration, mutation: Mutations::UpdateSiteSettingMenuConfiguration
     field :update_site_setting_menu_configurations, mutation: Mutations::UpdateSiteSettingMenuConfigurations
+
+    field :create_tenant_setting, mutation: Mutations::CreateTenantSetting
+    field :delete_tenant_setting, mutation: Mutations::DeleteTenantSetting
   end
 end

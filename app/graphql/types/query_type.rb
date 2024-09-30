@@ -244,7 +244,11 @@ module Types
 
     field :site_setting, resolver: Queries::SiteSettingQuery
     field :site_settings, resolver: Queries::SiteSettingsQuery
+    field :default_site_setting, resolver: Queries::DefaultSiteSettingQuery
     field :paginated_site_settings, resolver: Paginated::PaginatedSiteSettings
     field :pagination_attribute_site_setting, resolver: Paginated::PaginationAttributeSiteSetting
+
+    field :tenant_setting, resolver: Queries::TenantSettingQuery
+    field :tenant_settings, resolver: Queries::TenantSettingsQuery
   end
 end

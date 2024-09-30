@@ -11,6 +11,8 @@ module Paginated
         return { total_count: 0 }
       end
 
+      return { total_count: 0 } unless an_admin
+
       site_settings = SiteSetting.order(:name)
       unless search.blank?
         site_settings = site_settings.name_contains(search)
