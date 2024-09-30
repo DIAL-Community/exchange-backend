@@ -21,6 +21,7 @@ module Paginated
     argument :show_gov_stack_only, Boolean, required: false, default_value: false
     # Show only origins = 'dpga' if show_dpga_only is true.
     argument :show_dpga_only, Boolean, required: false, default_value: false
+    argument :featured, Boolean, required: false, default_value: nil
 
     type Attributes::PaginationAttributes, null: false
 
@@ -87,6 +88,7 @@ module Paginated
       products = Product.order(:name).distinct
 
       products = products.where(product_stage:) unless product_stage.nil?
+      products = products.where(featured:) unless featured.nil?
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi

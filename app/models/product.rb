@@ -141,6 +141,7 @@ class Product < ApplicationRecord
 
   STAGES = %w[pilot scaling mature].freeze
   validates :product_stage, inclusion: { in: STAGES }, allow_nil: true
+  validates :contact, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }

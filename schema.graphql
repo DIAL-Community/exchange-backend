@@ -1032,7 +1032,7 @@ type Mutation {
   createOrganization(aliases: JSON, description: String, endorserLevel: String, hasStorefront: Boolean, heroFile: Upload, imageFile: Upload, isEndorser: Boolean = false, isMni: Boolean, name: String!, slug: String!, website: String, whenEndorsed: ISO8601Date): CreateOrganizationPayload
   createPlay(buildingBlockSlugs: [String!], description: String!, draft: Boolean! = true, name: String!, owner: String!, playbookSlug: String = null, productSlugs: [String!], slug: String!, tags: [String!] = []): CreatePlayPayload
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
-  createProduct(aliases: JSON, commercialProduct: Boolean = false, description: String!, extraAttributes: [ExtraAttributeInput!], featured: Boolean = false, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, productStage: String, slug: String!, website: String): CreateProductPayload
+  createProduct(aliases: JSON, commercialProduct: Boolean = false, contact: String, description: String!, extraAttributes: [ExtraAttributeInput!], featured: Boolean = false, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, productStage: String, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
   createProject(countrySlugs: [String!]!, description: String!, endDate: ISO8601Date, name: String!, organizationId: Int, productId: Int, projectUrl: String, slug: String!, startDate: ISO8601Date): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
@@ -1480,6 +1480,7 @@ type Product {
   buildingBlocks: [BuildingBlock!]
   buildingBlocksMappingStatus: String
   commercialProduct: Boolean!
+  contact: String
   countries: [Country!]
   currentProjects(first: Int): [Project!]
   endorsers: [Endorser!]
@@ -1727,7 +1728,7 @@ type Query {
   paginationAttributeOpportunity(buildingBlocks: [String!] = [], countries: [String!] = [], organizations: [String!] = [], search: String = "", sectors: [String!] = [], showClosed: Boolean = false, showGovStackOnly: Boolean = false, tags: [String!] = [], useCases: [String!] = []): PaginationAttributes!
   paginationAttributeOrganization(aggregatorOnly: Boolean = false, countries: [String!] = [], endorserOnly: Boolean = false, search: String = "", sectors: [String!] = [], years: [Int!] = []): PaginationAttributes!
   paginationAttributePlaybook(owner: String!, search: String = "", tags: [String!] = []): PaginationAttributes!
-  paginationAttributeProduct(buildingBlocks: [String!] = [], countries: [String!] = [], isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], productStage: String = null, sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, softwareCategories: [String!] = [], softwareFeatures: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
+  paginationAttributeProduct(buildingBlocks: [String!] = [], countries: [String!] = [], featured: Boolean = null, isLinkedWithDpi: Boolean = false, licenseTypes: [String!] = [], origins: [String!] = [], productStage: String = null, sdgs: [String!] = [], search: String = "", sectors: [String!] = [], showDpgaOnly: Boolean = false, showGovStackOnly: Boolean = false, softwareCategories: [String!] = [], softwareFeatures: [String!] = [], tags: [String!] = [], useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeProject(countries: [String!] = [], organizations: [String!] = [], origins: [String!] = [], products: [String!] = [], sdgs: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): PaginationAttributes!
   paginationAttributeRegion(search: String = ""): PaginationAttributes!
   paginationAttributeResource(countries: [String!] = [], resourceTopics: [String!] = [], resourceTypes: [String!] = [], search: String = "", showInExchange: Boolean = false, showInWizard: Boolean = false, tags: [String!] = []): PaginationAttributes!
