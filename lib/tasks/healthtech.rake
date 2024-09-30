@@ -235,11 +235,13 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             if indicator_data.nil? || indicator_data.blank? || indicator_data == 'Unknown'
               product_indicator.destroy!
             else
-              indicator_data = true if indicator_data.downcase == 'yes'
-              indicator_data = false if indicator_data.downcase == 'no'
-              indicator_data = 'high' if indicator_data.include?("high")
-              indicator_data = 'medium' if indicator_data.include?("medium")
-              indicator_data = 'low' if indicator_data.include?("low")
+              indicator_data = true if indicator_data == true ||
+                (indicator_data.is_a?(String) && indicator_data.downcase == 'yes')
+              indicator_data = false if indicator_data == false ||
+                (indicator_data.is_a?(String) && indicator_data.downcase == 'no')
+              indicator_data = 'high' if indicator_data.is_a?(String) && indicator_data.include?("high")
+              indicator_data = 'medium' if indicator_data.is_a?(String) && indicator_data.include?("medium")
+              indicator_data = 'low' if indicator_data.is_a?(String) && indicator_data.include?("low")
 
               product_indicator.indicator_value = indicator_data
               product_indicator.save!
