@@ -95,7 +95,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
       vetting_sheet.each do |vetted_data|
         # Find the solution in the solution data
         solution_sheet.each do |solution_data|
-          next unless solution_data[4] == vetted_data[1]
+          next unless solution_data[4].strip == vetted_data[1].strip
           puts "Found solution: #{solution_data[4]}"
           product_name = solution_data[4]
           health_product = Product.first_duplicate(product_name, reslug_em(product_name))
