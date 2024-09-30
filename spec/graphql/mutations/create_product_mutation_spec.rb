@@ -13,7 +13,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $govStackEntity: Boolean,
         $productStage: String,
         $extraAttributes: [ExtraAttributeInput!],
-        $featured: Boolean
+        $featured: Boolean,
+        $contact: String
       ) {
         createProduct(
           name: $name,
@@ -24,7 +25,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
           govStackEntity: $govStackEntity,
           productStage: $productStage,
           extraAttributes: $extraAttributes,
-          featured: $featured
+          featured: $featured,
+          contact: $contact
         ) {
           product {
             name
@@ -32,6 +34,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
             govStackEntity
             productStage
             featured
+            contact
             productDescription {
               description
             }
@@ -67,7 +70,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         description: "Some description",
         productStage: nil,
         extraAttributes: extra_attributes,
-        featured: true
+        featured: true,
+        contact: "contact@example.com"
       }
     )
 
@@ -79,6 +83,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "slug" => "some-name",
         "productStage" => nil,
         "featured" => true,
+        "contact" => "contact@example.com",
         "extraAttributes" => extra_attributes.map(&:stringify_keys)
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
@@ -115,7 +120,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "productStage" => nil,
         "productDescription" => { "description" => "Some description" },
         "extraAttributes" => extra_attributes.map(&:stringify_keys),
-        "featured" => false
+        "featured" => false,
+        "contact" => nil
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
     end

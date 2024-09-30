@@ -12,6 +12,18 @@ include Modules::Track
 include Kramdown
 include Nokogiri
 
+def convert_to_download_link(url)
+  return url unless url.include?('/file/d/') || url.include?('/open?id=')
+
+  if url.include?('/file/d/')
+    file_id = url.split('/file/d/')[1].split('/view')[0]
+  elsif url.include?('/open?id=')
+    file_id = url.split('/open?id=')[1]
+  end
+
+  "https://drive.google.com/uc?id=#{file_id}&export=download"
+end
+
 namespace :health_sync do
   task :sync_healthtech_indicators, [:path] => :environment do |_, _params|
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
@@ -126,20 +138,32 @@ software_category_id: new_category.id).first || SoftwareFeature.new
 
             # Link the organization to the product if found or created
             OrganizationProduct.find_or_create_by(product_id: health_product.id, organization_id: organization.id)
+
+            converted_logo_url = convert_to_download_link(solution_data[6])
+            unless converted_logo_url.blank?
+              upload_user = User.find_by(username: 'admin')
+              begin
+                org_uploader = LogoUploader.new(organization, converted_logo_url, upload_user)
+                org_uploader.download!(converted_logo_url)
+                org_uploader.store!
+              rescue StandardError => e
+                puts "Unable to save image for organization: #{organization.name}. Standard error: #{e}."
+              end
+            end
           end
 
           solution_categories = solution_data[9].split(',')
           category_column_mapping = [
-            { name: 'Electronic Health Record', column: 45 },
-            { name: 'Pharmacy', column: 46 },
-            { name: 'Laboratory and Diagnostics', column: 47 },
-            { name: 'Disease Surveillance', column: 48 },
-            { name: 'National and Community Health', column: 49 },
-            { name: 'Analytics and Data Aggregation', column: 50 },
-            { name: 'AI for Health', column: 51 },
-            { name: 'Virtual Health', column: 52 },
-            { name: 'Front-line (CHW) tools', column: 53 },
-            { name: 'Vaccination', column: 54 }
+            { name: 'Electronic Health Record', column: 44 },
+            { name: 'Pharmacy', column: 45 },
+            { name: 'Laboratory and Diagnostics', column: 46 },
+            { name: 'Disease Surveillance', column: 47 },
+            { name: 'National and Community Health', column: 48 },
+            { name: 'Analytics and Data Aggregation', column: 49 },
+            { name: 'AI for Health', column: 50 },
+            { name: 'Virtual Health', column: 51 },
+            { name: 'Front-line (CHW) tools', column: 52 },
+            { name: 'Vaccination', column: 53 }
           ]
           solution_categories.each do |solution_category|
             category = SoftwareCategory.find_by(name: solution_category.strip)
@@ -158,10 +182,11 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             health_product.save!
           end
 
-          health_product.website = cleanup_url(solution_data[6]) unless solution_data[6].blank?
+          health_product.website = cleanup_url(solution_data[54]) unless solution_data[54].blank?
+          # health_product.contact = solution_data[8] unless solution_data[8].blank?
 
           # populate countries
-          countries = solution_data[14].split(',') unless solution_data[14].blank?
+          countries = solution_data[13].split(',') unless solution_data[13].blank?
           countries&.each do |country|
             product_country = Country.find_by(name: country.strip)
             next if product_country.nil?
@@ -170,8 +195,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
 
           # populate attributes for local impact and product stage
           extra_attributes = []
-          extra_attributes << { 'name': 'Relevance', 'value': solution_data[11] } unless solution_data[11].blank?
-          extra_attributes << { 'name': 'Impact', 'value': solution_data[10] } unless solution_data[10].blank?
+          extra_attributes << { 'name': 'Relevance', 'value': solution_data[10] } unless solution_data[10].blank?
+          extra_attributes << { 'name': 'Impact', 'value': solution_data[9] } unless solution_data[9].blank?
 
           extra_attributes <<  { 'name': 'Deployments', 'type': 'product_stage',
                                  'value': vetted_data[8] } unless vetted_data[8].blank?
@@ -236,11 +261,12 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           health_product.save
           calculate_maturity_scores(health_product.id)
 
-          next if solution_data[7].blank?
+          converted_logo_url = convert_to_download_link(solution_data[6])
+          next if converted_logo_url.blank?
           upload_user = User.find_by(username: 'admin')
           begin
-            uploader = LogoUploader.new(health_product, solution_data[7], upload_user)
-            uploader.download!(solution_data[7])
+            uploader = LogoUploader.new(health_product, converted_logo_url, upload_user)
+            uploader.download!(converted_logo_url)
             uploader.store!
           rescue StandardError => e
             puts "Unable to save image for: #{health_product.name}. Standard error: #{e}."
