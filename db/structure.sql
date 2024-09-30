@@ -3738,7 +3738,8 @@ CREATE TABLE fao.products (
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '[]'::jsonb,
-    product_stage character varying
+    product_stage character varying,
+    featured boolean DEFAULT false
 );
 
 
@@ -4531,6 +4532,47 @@ CREATE SEQUENCE fao.settings_id_seq
 --
 
 ALTER SEQUENCE fao.settings_id_seq OWNED BY fao.settings.id;
+
+
+--
+-- Name: site_settings; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.site_settings (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    favicon_url character varying NOT NULL,
+    exchange_logo_url character varying NOT NULL,
+    open_graph_logo_url character varying NOT NULL,
+    menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    default_setting boolean DEFAULT false NOT NULL,
+    enable_marketplace boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.site_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.site_settings_id_seq OWNED BY fao.site_settings.id;
 
 
 --
@@ -8026,7 +8068,7 @@ CREATE TABLE health.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
-    product_type character varying(20) DEFAULT 'product'::health.product_type_save,
+    product_type health.product_type_save DEFAULT 'product'::health.product_type_save,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -8037,7 +8079,8 @@ CREATE TABLE health.products (
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
     extra_attributes jsonb DEFAULT '[]'::jsonb,
-    product_stage character varying
+    product_stage character varying,
+    featured boolean DEFAULT false
 );
 
 
@@ -8830,6 +8873,47 @@ CREATE SEQUENCE health.settings_id_seq
 --
 
 ALTER SEQUENCE health.settings_id_seq OWNED BY health.settings.id;
+
+
+--
+-- Name: site_settings; Type: TABLE; Schema: health; Owner: -
+--
+
+CREATE TABLE health.site_settings (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    favicon_url character varying NOT NULL,
+    exchange_logo_url character varying NOT NULL,
+    open_graph_logo_url character varying NOT NULL,
+    menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    default_setting boolean DEFAULT false NOT NULL,
+    enable_marketplace boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: health; Owner: -
+--
+
+CREATE SEQUENCE health.site_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: health; Owner: -
+--
+
+ALTER SEQUENCE health.site_settings_id_seq OWNED BY health.site_settings.id;
 
 
 --
@@ -14655,6 +14739,13 @@ ALTER TABLE ONLY fao.settings ALTER COLUMN id SET DEFAULT nextval('fao.settings_
 
 
 --
+-- Name: site_settings id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.site_settings ALTER COLUMN id SET DEFAULT nextval('fao.site_settings_id_seq'::regclass);
+
+
+--
 -- Name: software_categories id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -15471,6 +15562,13 @@ ALTER TABLE ONLY health.sessions ALTER COLUMN id SET DEFAULT nextval('health.ses
 --
 
 ALTER TABLE ONLY health.settings ALTER COLUMN id SET DEFAULT nextval('health.settings_id_seq'::regclass);
+
+
+--
+-- Name: site_settings id; Type: DEFAULT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.site_settings ALTER COLUMN id SET DEFAULT nextval('health.site_settings_id_seq'::regclass);
 
 
 --
@@ -17229,6 +17327,14 @@ ALTER TABLE ONLY fao.settings
 
 
 --
+-- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -18178,6 +18284,14 @@ ALTER TABLE ONLY health.sessions
 
 ALTER TABLE ONLY health.settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -27772,8 +27886,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20240827181759'),
 ('20240827184119'),
 ('20240830132609'),
+('20240919205513'),
 ('20240927093418'),
-('20240927122349'),
-('20240919205513');
+('20240927122349');
 
 

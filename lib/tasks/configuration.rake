@@ -7,13 +7,13 @@ include Modules::Slugger
 namespace :configuration do
   desc 'Regenerate default site configurations.'
   task regenerate_default_site_configuration: :environment do
-    default_site_setting = SiteSetting.find_by(slug: 'default-site-setting')
+    default_site_setting = SiteSetting.find_by(slug: 'default-site-settings')
     if default_site_setting.nil?
-      default_site_setting = SiteSetting.new(slug: 'default-site-setting')
+      default_site_setting = SiteSetting.new(slug: 'default-site-settings')
     end
 
-    default_site_setting.name = 'Default Site Setting'
-    default_site_setting.description = 'Default configuration for the exchange site.'
+    default_site_setting.name = 'Default Site Settings'
+    default_site_setting.description = 'Default settings for the exchange site.'
 
     default_site_setting.favicon_url = '/favicon.ico'
     default_site_setting.exchange_logo_url = '/ui/v1/hero-dx-bg.svg'

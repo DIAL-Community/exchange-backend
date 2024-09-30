@@ -55,8 +55,8 @@ module Mutations
       if site_setting.new_record?
         site_setting.menu_configurations = []
         site_setting.hero_card_section = {
-          'title': 'Welcome to the Exchange',
-          'description': 'The Exchange is a place to share your knowledge and learn from others.',
+          'title': 'ui.tool.getStarted',
+          'description': 'ui.tool.tagLine',
           'heroCardConfigurations': []
         }
         site_setting.carousel_configurations = []
