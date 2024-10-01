@@ -30,13 +30,15 @@ module Mutations
           exchange_tenant.save
         end
 
+        ExchangeTenant.where(tenant_name:).and(ExchangeTenant.where.not(domain: tenant_domains)).destroy_all
         ExchangeTenant.update_all(allow_unsecure_read:)
         successful_operation = true
       end
 
       tenant_setting = {
+        id: SecureRandom.uuid,
         tenant_name:,
-        tenant_domains: domains,
+        tenant_domains:,
         allow_unsecure_read:
       }
 

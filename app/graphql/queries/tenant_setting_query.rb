@@ -18,7 +18,7 @@ module Queries
       end
 
       {
-        id: 0,
+        id: SecureRandom.uuid,
         tenant_name:,
         tenant_domains: tenant_domains[tenant_name],
         allow_unsecure_read: tenant_unsecure_read[tenant_name]
@@ -45,9 +45,9 @@ module Queries
       ExchangeTenant
         .distinct
         .pluck(:tenant_name)
-        .each_with_index do |tenant_name, index|
+        .each do |tenant_name|
         tenant_settings << {
-          id: index,
+          id: SecureRandom.uuid,
           tenant_name:,
           tenant_domains: tenant_domains[tenant_name],
           allow_unsecure_read: tenant_unsecure_read[tenant_name]
