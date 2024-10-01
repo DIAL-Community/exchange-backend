@@ -18,7 +18,7 @@ module Queries
       end
 
       {
-        id: SecureRandom.uuid,
+        id: tenant_name,
         tenant_name:,
         tenant_domains: tenant_domains[tenant_name],
         allow_unsecure_read: tenant_unsecure_read[tenant_name]
@@ -47,7 +47,7 @@ module Queries
         .pluck(:tenant_name)
         .each do |tenant_name|
         tenant_settings << {
-          id: SecureRandom.uuid,
+          id: tenant_name,
           tenant_name:,
           tenant_domains: tenant_domains[tenant_name],
           allow_unsecure_read: tenant_unsecure_read[tenant_name]

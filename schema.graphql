@@ -2216,6 +2216,7 @@ type TaskTrackerDescription {
 type TenantSetting {
   allowUnsecureRead: Boolean!
   id: ID!
+  initialized: Boolean!
   tenantDomains: [String!]!
   tenantName: String!
 }

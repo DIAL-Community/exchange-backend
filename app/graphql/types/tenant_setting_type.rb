@@ -7,5 +7,10 @@ module Types
     field :tenant_domains, [String], null: false
 
     field :allow_unsecure_read, Boolean, null: false
+
+    field :initialized, Boolean, null: false
+    def initialized
+      Apartment.tenant_names.include?(object[:tenant_name])
+    end
   end
 end

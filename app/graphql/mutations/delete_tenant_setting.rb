@@ -23,16 +23,19 @@ module Mutations
         }
       end
 
+      Apartment::Tenant.drop(tenant_name)
+
       successful_operation = false
       ActiveRecord::Base.transaction do
-        exchange_tenants.destroy_all!
+        exchange_tenants.destroy_all
         successful_operation = true
       end
 
       tenant_setting = {
+        id: tenant_name,
         tenant_name:,
-        tenant_domains: exchange_tenants.each(&:domain),
-        allow_unsecure_read: exchange_tenants.first.allow_unsecure_read
+        tenant_domains: [],
+        allow_unsecure_read: false
       }
 
       if successful_operation

@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require 'modules/site_configuration'
+
 module Mutations
   class CreateTenantSetting < Mutations::BaseMutation
+    include Modules::SiteConfiguration
+
     argument :tenant_name, String, required: true
     argument :tenant_domains, [String], required: true
 
@@ -18,6 +22,29 @@ module Mutations
         }
       end
 
+      existing_tenant = Apartment.tenant_names.include?(tenant_name)
+      unless existing_tenant
+        Apartment::Tenant.create(tenant_name)
+
+        Apartment::Tenant.switch(tenant_name) do
+          # Generate the default site configuration.
+          create_default_site_configuration
+
+          admin_email = "admin@#{tenant_name}.org"
+          admin_user = User.new({
+            email: admin_email,
+            username: 'admin',
+            password: "admin-#{tenant_name}",
+            password_confirmation: "admin-#{tenant_name}",
+            roles: ['admin']
+          })
+          admin_user.confirm
+          if admin_user.save
+            puts "Admin user created for tenant #{tenant_name} with email: #{admin_email}."
+          end
+        end
+      end
+
       successful_operation = false
       ActiveRecord::Base.transaction do
         tenant_domains.each do |tenant_domain|
@@ -32,11 +59,12 @@ module Mutations
 
         ExchangeTenant.where(tenant_name:).and(ExchangeTenant.where.not(domain: tenant_domains)).destroy_all
         ExchangeTenant.update_all(allow_unsecure_read:)
+
         successful_operation = true
       end
 
       tenant_setting = {
-        id: SecureRandom.uuid,
+        id: tenant_name,
         tenant_name:,
         tenant_domains:,
         allow_unsecure_read:
