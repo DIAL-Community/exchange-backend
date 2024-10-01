@@ -79,7 +79,7 @@ module Paginated
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
-      product_stages:, software_categories:, software_features:
+      product_stages:, software_categories:, software_features:, featured:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
