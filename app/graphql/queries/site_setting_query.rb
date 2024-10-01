@@ -28,7 +28,7 @@ module Queries
     type Types::SiteSettingType, null: true
 
     def resolve
-      SiteSetting.find_by(default_setting: true)
+      SiteSetting.find_by(default_setting: true) || SiteSetting.first
     end
   end
 end

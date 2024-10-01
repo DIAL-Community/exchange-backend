@@ -24,7 +24,7 @@ module Mutations
       end
 
       locked_menu_types = ['admin', 'login', 'help', 'language'].map { |type_name| "locked-#{type_name}-menu" }
-      valid_menu_types = locked_menu_types + ['menu', 'menu-item', 'separator']
+      valid_menu_types = locked_menu_types + ['menu', 'menu.item', 'separator']
       unless valid_menu_types.include?(type)
         return {
           site_setting: nil,
