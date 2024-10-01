@@ -32,6 +32,55 @@ module Mutations
           # Generate the default site configuration.
           create_default_site_configuration
 
+          %w[
+            countries
+            provinces
+            districts
+            origins
+            sustainable_development_goals
+            sdg_targets
+            sectors
+            settings
+            rubric_categories
+            rubric_category_descriptions
+          ].each do |table|
+            query = <<-TABLE_INSERT_SQL
+              INSERT INTO "#{sanitized_tenant_name}".#{table} SELECT * FROM  public.#{table};
+            TABLE_INSERT_SQL
+            ActiveRecord::Base.connection.exec_query(query)
+            query = <<-TABLE_SEQUENCE_SQL
+              SELECT                                                                              \
+                setval(pg_get_serial_sequence('"#{sanitized_tenant_name}".#{table}', 'id'), MAX(id))
+              FROM "#{sanitized_tenant_name}".#{table};
+            TABLE_SEQUENCE_SQL
+            ActiveRecord::Base.connection.exec_query(query)
+          end
+
+          # Category Indicators table has a special type, so do it separately
+          query = <<-CATEGORY_INDICATOR_SQL
+            INSERT INTO "#{sanitized_tenant_name}".category_indicators
+              SELECT
+                id,
+                name,
+                slug,
+                indicator_type::text::"#{sanitized_tenant_name}".category_indicator_type,
+                weight,
+                rubric_category_id,
+                data_source,
+                source_indicator,
+                created_at,
+                updated_at,
+                script_name
+              FROM public.category_indicators;
+            CATEGORY_INDICATOR_SQL
+          ActiveRecord::Base.connection.exec_query(query)
+
+          query = <<-CATEGORY_INDICATOR_DESCRIPTION_SQL
+            INSERT INTO "#{sanitized_tenant_name}".category_indicator_descriptions
+            SELECT * FROM  public.category_indicator_descriptions;
+          CATEGORY_INDICATOR_DESCRIPTION_SQL
+          ActiveRecord::Base.connection.exec_query(query)
+
           admin_email = "admin@#{sanitized_tenant_name}.org"
           admin_user = User.new({
             email: admin_email,

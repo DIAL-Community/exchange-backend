@@ -23,7 +23,7 @@ module Mutations
       slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
       enable_marketplace:, default_setting:
     )
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           site_setting: nil,
           errors: ['Must have proper rights to update a site setting object.']

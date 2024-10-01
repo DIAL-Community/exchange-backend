@@ -18,7 +18,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(site_setting_slug:, id:, type:, name:, title:, description:, external:, image_url:, destination_url:)
-      unless an_admin || a_content_editor
+      unless an_admin
         return {
           site_setting: nil,
           errors: ['Must have proper rights to update a site setting object.']

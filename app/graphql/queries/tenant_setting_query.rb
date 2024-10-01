@@ -6,6 +6,8 @@ module Queries
     type Types::TenantSettingType, null: true
 
     def resolve(tenant_name:)
+      return nil unless an_admin
+
       tenant_domains = {}
       tenant_unsecure_read = {}
       ExchangeTenant.where(tenant_name:).each do |exchange_tenant|
@@ -30,6 +32,8 @@ module Queries
     type [Types::TenantSettingType], null: true
 
     def resolve
+      return [] unless an_admin
+
       tenant_domains = {}
       tenant_unsecure_read = {}
       ExchangeTenant.all.each do |exchange_tenant|
@@ -44,6 +48,7 @@ module Queries
       tenant_settings = []
       ExchangeTenant
         .distinct
+        .order(:tenant_name)
         .pluck(:tenant_name)
         .each do |tenant_name|
         tenant_settings << {
