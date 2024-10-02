@@ -123,8 +123,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
               c.slug = reslug_em(org_name)
             end
 
-            organization = Organization.find_or_create_by(name: org_name) do |org|
-              org.slug = reslug_em(org_name)
+            organization = Organization.find_or_create_by(name: org_name.strip) do |org|
+              org.slug = reslug_em(org_name.strip)
             end
 
             OrganizationContact.find_or_create_by(organization:, contact:)
