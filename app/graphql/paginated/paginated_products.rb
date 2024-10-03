@@ -88,7 +88,6 @@ module Paginated
 
       products = Product.order(:name).distinct
 
-      puts "FEATURED: #{featured}"
       products = products.where(featured:) unless featured.nil? || featured == false
       products = products.where(product_stage:) unless product_stage.nil?
 

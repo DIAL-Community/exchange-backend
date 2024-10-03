@@ -12,6 +12,7 @@ module Types
     field :product, resolver: Queries::ProductQuery
     field :owned_products, resolver: Queries::OwnedProductsQuery
     field :compare_products, resolver: Queries::CompareProductsQuery
+    field :search_products, resolver: Queries::SearchProductsQuery
 
     field :datasets, resolver: Queries::DatasetsQuery
     field :dataset, resolver: Queries::DatasetQuery

@@ -88,7 +88,7 @@ module Paginated
       products = Product.order(:name).distinct
 
       products = products.where(product_stage:) unless product_stage.nil?
-      products = products.where(featured:) unless featured.nil?
+      products = products.where(featured:) unless featured.nil? || featured == false
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi
