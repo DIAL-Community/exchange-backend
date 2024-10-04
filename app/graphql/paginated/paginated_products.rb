@@ -90,7 +90,6 @@ module Paginated
 
       products = products.where(featured:) unless featured.nil? || featured == false
 
-
       if product_stages.present? && product_stages.any?
         products = products.where(product_stage: product_stages)
       end
