@@ -32,8 +32,8 @@ module Types
     field :building_blocks, resolver: Queries::BuildingBlocksQuery
     field :building_block, resolver: Queries::BuildingBlockQuery
 
-    field :sectors, resolver: Queries::SectorsQuery
     field :sector, resolver: Queries::SectorQuery
+    field :sectors, resolver: Queries::SectorsQuery
 
     field :origins, resolver: Queries::OriginsQuery
 
@@ -241,5 +241,14 @@ module Types
     field :software_category, resolver: Queries::SoftwareCategoryQuery
     field :software_features, resolver: Queries::SoftwareFeaturesQuery
     field :software_feature, resolver: Queries::SoftwareFeatureQuery
+
+    field :site_setting, resolver: Queries::SiteSettingQuery
+    field :site_settings, resolver: Queries::SiteSettingsQuery
+    field :default_site_setting, resolver: Queries::DefaultSiteSettingQuery
+    field :paginated_site_settings, resolver: Paginated::PaginatedSiteSettings
+    field :pagination_attribute_site_setting, resolver: Paginated::PaginationAttributeSiteSetting
+
+    field :tenant_setting, resolver: Queries::TenantSettingQuery
+    field :tenant_settings, resolver: Queries::TenantSettingsQuery
   end
 end

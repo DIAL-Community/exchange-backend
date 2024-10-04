@@ -28,14 +28,12 @@ class AuthenticationController < Devise::SessionsController
   def sign_in_ux
     user = User.find_by(email: params['user']['email'])
     if user.nil? || !user.valid_password?(params['user']['password'])
-      puts "HERE"
       return respond_to do |format|
         format.json { render(json: unauthorized_response, status: :unauthorized) }
       end
     end
 
     if user.valid_password?(params['user']['password']) && !user.confirmed?
-      puts "OR HERE"
       return respond_to do |format|
         format.json { render(json: unauthorized_response, status: :forbidden) }
       end
