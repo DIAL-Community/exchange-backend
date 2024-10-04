@@ -123,8 +123,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
               c.slug = reslug_em(org_name)
             end
 
-            organization = Organization.find_or_create_by(name: org_name) do |org|
-              org.slug = reslug_em(org_name)
+            organization = Organization.find_or_create_by(name: org_name.strip) do |org|
+              org.slug = reslug_em(org_name.strip)
             end
 
             OrganizationContact.find_or_create_by(organization:, contact:)
@@ -143,7 +143,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             end
           end
 
-          solution_categories = solution_data[9].split(',')
+          solution_categories = solution_data[8].split(',')
           category_column_mapping = [
             { name: 'Electronic Health Record', column: 44 },
             { name: 'Pharmacy', column: 45 },
