@@ -143,7 +143,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
             end
           end
 
-          solution_categories = solution_data[9].split(',')
+          solution_categories = solution_data[8].split(',')
           category_column_mapping = [
             { name: 'Electronic Health Record', column: 44 },
             { name: 'Pharmacy', column: 45 },

@@ -192,4 +192,48 @@ module Queries
       compared_products
     end
   end
+
+  def filter_products(search, countries, products)
+    products = Product.all
+    if !search.nil? && !search.to_s.strip.empty?
+      name_products = products.name_contains(search)
+      desc_products = products.joins(:product_descriptions)
+                              .where('LOWER(description) like LOWER(?)', "%#{search}%")
+      products = products.where(id: (name_products + desc_products).uniq)
+    end
+
+    filtered_countries = countries.reject { |x| x.nil? || x.empty? }
+    unless filtered_countries.empty?
+      products = products.left_joins(:countries, :products)
+                         .where(countries: { id: filtered_countries })
+                         .or(products.left_joins(:countries, :products)
+                         .where(products: { id: Product.joins(:countries)
+                         .where(countries: { id: filtered_countries }) }))
+    end
+
+    filtered_products = products.reject { |x| x.nil? || x.empty? }
+    unless filtered_products.empty?
+      products = products.where(products: { id: filtered_products })
+    end
+
+    products = products.order(:name)
+    products
+  end
+
+  class SearchProductsQuery < Queries::BaseQuery
+    include ActionView::Helpers::TextHelper
+    include Queries
+
+    argument :search, String, required: false, default_value: ''
+    argument :countries, [String], required: false, default_value: []
+    argument :products, [String], required: false, default_value: []
+
+    type Types::ProductType.connection_type, null: false
+
+    def resolve(search:, countries:, products:)
+      products = filter_products(search, countries, products)
+      products = products.eager_load(:countries).uniq
+      products
+    end
+  end
 end

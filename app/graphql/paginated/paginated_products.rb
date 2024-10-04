@@ -14,7 +14,7 @@ module Paginated
     argument :origins, [String], required: false, default_value: []
     argument :software_categories, [String], required: false, default_value: []
     argument :software_features, [String], required: false, default_value: []
-    argument :product_stage, String, required: false, default_value: nil
+    argument :product_stages, [String], required: false, default_value: nil
     argument :featured, Boolean, required: false, default_value: nil
 
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
@@ -79,7 +79,7 @@ module Paginated
 
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
-      workflows:, sdgs:, origins:, software_categories:, software_features:, product_stage:,
+      workflows:, sdgs:, origins:, software_categories:, software_features:, product_stages: [],
       is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:, featured:, offset_attributes:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
@@ -88,9 +88,11 @@ module Paginated
 
       products = Product.order(:name).distinct
 
-      puts "FEATURED: #{featured}"
       products = products.where(featured:) unless featured.nil? || featured == false
-      products = products.where(product_stage:) unless product_stage.nil?
+
+      if product_stages.present? && product_stages.any?
+        products = products.where(product_stage: product_stages)
+      end
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi

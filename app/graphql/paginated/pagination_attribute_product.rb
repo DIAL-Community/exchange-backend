@@ -14,7 +14,7 @@ module Paginated
     argument :origins, [String], required: false, default_value: []
     argument :software_categories, [String], required: false, default_value: []
     argument :software_features, [String], required: false, default_value: []
-    argument :product_stage, String, required: false, default_value: nil
+    argument :product_stages, [String], required: false, default_value: nil
 
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
     # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
@@ -79,7 +79,7 @@ module Paginated
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
-      product_stage:, software_categories:, software_features:, featured:
+      product_stages:, software_categories:, software_features:, featured:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
@@ -87,8 +87,11 @@ module Paginated
 
       products = Product.order(:name).distinct
 
-      products = products.where(product_stage:) unless product_stage.nil?
-      products = products.where(featured:) unless featured.nil?
+      products = products.where(featured:) unless featured.nil? || featured == false
+
+      if product_stages.present? && product_stages.any?
+        products = products.where(product_stage: product_stages)
+      end
 
       filtered, filtered_building_blocks = filter_building_blocks(
         sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi
