@@ -2,6 +2,8 @@
 
 module Types
   class OpportunityType < Types::BaseObject
+    include ActionView::Helpers::SanitizeHelper
+
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
@@ -15,15 +17,7 @@ module Types
       return if object.description.nil?
 
       object_description = object.description
-      object_description_html = Nokogiri::HTML.fragment(object_description)
-
-      parsed_description = ''
-      object_description_html.traverse do |node|
-        if node.text?
-          parsed_description += node.text
-        end
-      end
-      parsed_description
+      strip_links(object_description)
     end
 
     field :contact_name, String, null: true

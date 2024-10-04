@@ -18,6 +18,8 @@ module Types
   end
 
   class ResourceType < Types::BaseObject
+    include ActionView::Helpers::SanitizeHelper
+
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
@@ -31,9 +33,10 @@ module Types
     field :description, String, null: true
     field :parsed_description, String, null: true
     def parsed_description
-      first_paragraph = Nokogiri::HTML.fragment(object.description).at('p')
-      return first_paragraph.text unless first_paragraph.nil?
-      object.description if first_paragraph.nil?
+      return if object.description.nil?
+
+      object_description = object.description
+      strip_links(object_description)
     end
 
     field :show_in_exchange, Boolean, null: false
