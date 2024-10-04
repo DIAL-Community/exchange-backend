@@ -145,7 +145,7 @@ class UseCasesController < ApplicationController
 
   def complex_search
     page_size = 20
-    use_cases = UseCase.order(:slug)
+    use_cases = UseCase.order(:name).distinct
 
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
@@ -154,59 +154,24 @@ class UseCasesController < ApplicationController
       use_cases = use_cases.where(maturity: UseCase.entity_status_types[:PUBLISHED])
     end
 
-    use_cases = use_cases.name_contains(params[:search]) if params[:search].present?
-
-    sdg_use_case_slugs = []
-    # Allowing 'sdgs' or 'sustainable_development_goals' as param.
-    sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sdgs]) if valid_array_parameter(params[:sdgs])
-    if sdg_use_case_slugs.nil? && valid_array_parameter(params[:sustainable_development_goals])
-      sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sustainable_development_goals])
+    if params[:show_gov_stack_only].present? && params[:show_gov_stack_only].to_s == 'true'
+      use_cases = use_cases.where(gov_stack_entity: true)
     end
 
-    # Get building blocks from products param.
-    building_block_product_slugs = []
-    if valid_array_parameter(params[:products])
-      building_block_product_slugs = building_blocks_from_product_slugs(params[:products])
+    unless params[:search].blank?
+      name_filter = use_cases.name_contains(params[:search])
+      desc_filter = use_cases.left_joins(:use_case_descriptions)
+                             .where('LOWER(use_case_descriptions.description) like LOWER(?)', "%#{params[:search]}%")
+      use_cases = use_cases.where(id: (name_filter + desc_filter).uniq)
     end
 
-    building_block_slugs = building_block_product_slugs
-    if valid_array_parameter(params[:building_blocks])
-      if building_block_slugs.nil? || building_block_slugs.empty?
-        building_block_slugs = params[:building_blocks]
-      else
-        building_block_slugs &= params[:building_blocks]
-      end
+    filtered_sdgs = params[:sdgs].reject { |x| x.nil? || x.empty? }
+    unless filtered_sdgs.empty?
+      sdg_numbers = SustainableDevelopmentGoal.where(slug: filtered_sdgs)
+                                              .select(:number)
+      use_cases = use_cases.left_joins(:sdg_targets)
+                           .where(sdg_targets: { sdg_number: sdg_numbers })
     end
-    workflow_building_block_slugs = workflows_from_building_block_slugs(building_block_slugs)
-
-    workflow_slugs = workflow_building_block_slugs
-    if valid_array_parameter(params[:workflows])
-      if workflow_slugs.nil? || workflow_slugs.empty?
-        workflow_slugs = params[:workflows]
-      else
-        workflow_slugs &= params[:workflows]
-      end
-    end
-    workflow_use_case_slugs = use_cases_from_workflow_slugs(workflow_slugs)
-
-    use_case_slugs = workflow_use_case_slugs
-    if valid_array_parameter(params[:use_cases])
-      if use_case_slugs.nil? || use_case_slugs.empty?
-        use_case_slugs = params[:use_cases]
-      else
-        use_case_slugs &= params[:use_cases]
-      end
-    end
-
-    if use_case_slugs.nil? || use_case_slugs.empty?
-      use_case_slugs = sdg_use_case_slugs
-    elsif !sdg_use_case_slugs.nil? && !sdg_use_case_slugs.empty?
-      use_case_slugs &= sdg_use_case_slugs
-    end
-
-    use_case_slugs = use_case_slugs.reject { |x| x.nil? || x.empty? }
-    use_cases = use_cases.where('use_cases.slug in (?)', use_case_slugs) \
-      unless use_case_slugs.nil? || use_case_slugs.empty?
 
     if params[:page_size].present?
       if params[:page_size].to_i.positive?

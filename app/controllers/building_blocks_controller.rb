@@ -129,68 +129,73 @@ class BuildingBlocksController < ApplicationController
 
   def complex_search
     page_size = 20
-    building_blocks = BuildingBlock
+    building_blocks = BuildingBlock.distinct
 
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
-    if params[:search].present?
-      name_bbs = building_blocks.name_contains(params[:search])
-      desc_bbs = building_blocks.joins(:building_block_descriptions)
-                                .where('LOWER(building_block_descriptions.description) like LOWER(?)',
-                                       "%#{params[:search]}%")
-      building_blocks = building_blocks.where(id: (name_bbs + desc_bbs).uniq)
+    search = params[:search]
+    if search.present?
+      name_filter = building_blocks.name_contains(search)
+      desc_filter = building_blocks.joins(:building_block_descriptions)
+                                   .where('LOWER(building_block_descriptions.description) like LOWER(?)', "%#{search}%")
+      building_blocks = building_blocks.where(id: (name_filter + desc_filter).uniq)
     end
 
-    sdg_use_case_slugs = []
-    sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sdgs]) if valid_array_parameter(params[:sdgs])
-    if sdg_use_case_slugs.nil? && valid_array_parameter(params[:sustainable_development_goals])
-      sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sustainable_development_goals])
+    filtered = false
+
+    sdg_use_case_ids = []
+    filtered_sdgs = params[:sdgs].reject { |x| x.nil? || x.empty? }
+    unless filtered_sdgs.empty?
+      filtered = true
+      sdg_numbers = SustainableDevelopmentGoal.where(id: filtered_sdgs)
+                                              .select(:number)
+      sdg_use_cases = UseCase.joins(:sdg_targets)
+                             .where(sdg_targets: { sdg_number: sdg_numbers })
+      sdg_use_case_ids += sdg_use_cases.ids unless sdg_use_cases.empty?
     end
 
-    use_case_slugs = sdg_use_case_slugs
-    if valid_array_parameter(params[:use_cases])
-      if use_case_slugs.nil? || use_case_slugs.empty?
-        use_case_slugs = params[:use_cases]
-      else
-        use_case_slugs &= params[:use_cases]
+    use_case_ids = []
+    filtered_use_cases = params[:use_cases].reject { |x| x.nil? || x.empty? }
+    unless filtered_use_cases.empty?
+      filtered = true
+      use_case_ids += UseCase.where(slug: filtered_use_cases).ids
+    end
+
+    workflow_slugs = []
+    filtered_use_cases = use_case_ids + sdg_use_case_ids
+    unless filtered_use_cases.empty?
+      filtered = true
+      use_case_workflows = Workflow.joins(:use_case_steps)
+                                   .where(use_case_steps: { use_case_id: filtered_use_cases })
+      workflow_slugs += use_case_workflows.map(&:slug) unless use_case_workflows.empty?
+    end
+
+    filtered_workflows = workflow_slugs + params[:workflows].reject { |x| x.nil? || x.empty? }
+    filtered = true unless params[:workflows].empty?
+
+    if filtered && filtered_workflows.empty?
+      building_blocks = BuildingBlock.none
+    else
+      unless filtered_workflows.empty?
+        building_blocks = building_blocks.joins(:workflows)
+                                         .where(workflows: { slug: filtered_workflows })
+      end
+
+      if params[:show_mature].present? && params[:show_mature].to_s.downcase == 'true'
+        published_building_block = BuildingBlock.entity_status_types[:PUBLISHED]
+        building_blocks = building_blocks.where(maturity: published_building_block)
+      end
+
+      if params[:show_gov_stack_only].present? && params[:show_gov_stack_only].to_s.downcase == 'true'
+        building_blocks = building_blocks.where(gov_stack_entity: true)
+      end
+
+      filterd_category_types = params[:category_types].reject { |x| x.nil? || x.empty? }
+      unless filterd_category_types.empty?
+        building_blocks = building_blocks.where(category: filterd_category_types)
       end
     end
-    use_case_workflow_slugs = workflows_from_use_case_slugs(use_case_slugs)
-
-    workflow_slugs = use_case_workflow_slugs
-    if valid_array_parameter(params[:workflows])
-      if workflow_slugs.nil? || workflow_slugs.empty?
-        workflow_slugs = params[:workflows]
-      else
-        workflow_slugs &= params[:workflows]
-      end
-    end
-    workflow_building_block_slugs = building_blocks_from_workflow_slugs(workflow_slugs)
-
-    building_block_slugs = workflow_building_block_slugs
-    if valid_array_parameter(params[:building_blocks])
-      if building_block_slugs.nil? || building_block_slugs.empty?
-        building_block_slugs = params[:building_blocks]
-      else
-        building_block_slugs &= params[:building_blocks]
-      end
-    end
-
-    building_block_product_slugs = []
-    if valid_array_parameter(params[:products])
-      building_block_product_slugs = building_blocks_from_product_slugs(params[:products])
-    end
-
-    if building_block_slugs.nil? || building_block_slugs.empty?
-      building_block_slugs = building_block_product_slugs
-    elsif !building_block_product_slugs.nil? && !building_block_product_slugs.empty?
-      building_block_slugs &= building_block_product_slugs
-    end
-
-    building_block_slugs = building_block_slugs.reject { |x| x.nil? || x.empty? }
-    building_blocks = building_blocks.where(slug: building_block_slugs) \
-      unless building_block_slugs.nil? || building_block_slugs.empty?
 
     if params[:page_size].present?
       if params[:page_size].to_i.positive?

@@ -9,6 +9,8 @@ module Types
   end
 
   class OrganizationType < Types::BaseObject
+    include ActionView::Helpers::SanitizeHelper
+
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
@@ -38,8 +40,7 @@ module Types
       return if object.organization_description_localized.nil?
 
       object_description = object.organization_description_localized.description
-      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
-      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+      strip_links(object_description)
     end
 
     field :countries, [Types::CountryType], null: false, method: :organization_countries_ordered

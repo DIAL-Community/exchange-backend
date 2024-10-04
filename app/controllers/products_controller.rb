@@ -183,104 +183,154 @@ class ProductsController < ApplicationController
     end
   end
 
+  def filter_building_blocks(sdgs, use_cases, workflows, building_blocks, is_linked_with_dpi)
+    filtered = false
+
+    sdg_use_case_ids = []
+    filtered_sdgs = sdgs.reject { |x| x.nil? || x.empty? }
+    unless filtered_sdgs.empty?
+      filtered = true
+      sdg_numbers = SustainableDevelopmentGoal.where(slug: filtered_sdgs)
+                                              .select(:number)
+      sdg_use_cases = UseCase.joins(:sdg_targets)
+                             .where(sdg_targets: { sdg_number: sdg_numbers })
+      sdg_use_case_ids += sdg_use_cases.ids unless sdg_use_cases.empty?
+    end
+
+    use_case_ids = []
+    filtered_use_cases = use_cases.reject { |x| x.nil? || x.empty? }
+    unless filtered_use_cases.empty?
+      filtered = true
+      use_case_ids += UseCase.where(slug: filtered_use_cases).ids
+    end
+
+    workflow_slugs = []
+    filtered_use_cases = sdg_use_case_ids + use_case_ids
+    unless filtered_use_cases.empty?
+      filtered = true
+      use_case_workflows = Workflow.joins(:use_case_steps)
+                                   .where(use_case_steps: { use_case_id: filtered_use_cases })
+      workflow_slugs += use_case_workflows.map(&:slug) unless use_case_workflows.empty?
+    end
+
+    building_block_slugs = []
+    filtered_workflows = workflow_slugs + workflows.reject { |x| x.nil? || x.empty? }
+    unless filtered_workflows.empty?
+      filtered = true
+      workflow_building_blocks = BuildingBlock.joins(:workflows)
+                                              .where(workflows: { slug: filtered_workflows })
+      building_block_slugs += workflow_building_blocks.map(&:slug) unless workflow_building_blocks.empty?
+    end
+
+    building_block_slugs += building_blocks.reject { |x| x.nil? || x.empty? }
+    filtered = true unless params[:building_blocks].empty?
+
+    if is_linked_with_dpi
+      filtered = true
+      dpi_building_block = BuildingBlock.category_types[:DPI]
+      dpi_building_blocks = BuildingBlock.where(category: dpi_building_block)
+      unless building_block_slugs.empty?
+        dpi_building_blocks = dpi_building_blocks.where(slug: building_block_slugs)
+      end
+      building_block_slugs = dpi_building_blocks.map(&:slug)
+    end
+
+    [filtered, building_block_slugs]
+  end
+
   def complex_search
     page_size = 20
-    products = Product
 
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
-    products = products.name_contains(params[:search]) if params[:search].present?
+    products = Product.order(:name).distinct
+    filtered, building_block_slugs = filter_building_blocks(
+      params[:sdgs],
+      params[:use_cases],
+      params[:workflows],
+      params[:building_blocks],
+      params[:is_linked_with_dpi]
+    )
+    if filtered && building_block_slugs.empty?
+      products = Product.none
+    else
+      unless building_block_slugs.empty?
+        products = products.joins(:building_blocks)
+                           .where(building_blocks: { slug: building_block_slugs })
+      end
 
-    if params[:origins].present?
-      origins = params[:origins].reject { |x| x.nil? || x.empty? }
-      unless origins.empty?
+      search = params[:search]
+      if !search.nil? && !search.to_s.strip.blank?
+        name_products = products.name_contains(search)
+        desc_products = products
+                        .joins(:product_descriptions)
+                        .where('LOWER(product_descriptions.description) like LOWER(?)', "%#{search}%")
+        alias_products = products
+                         .where("LOWER(array_to_string(aliases,',')) like LOWER(?)", "%#{search}%")
+        by_sectors = Product
+                     .joins(:sectors)
+                     .where('LOWER(sectors.name) LIKE LOWER(?)', "%#{search}%")
+                     .ids
+
+        products = products.where(id: (name_products + desc_products + alias_products + by_sectors).uniq)
+      end
+
+      if params[:show_dpga_only].present? && params[:show_dpga_only].to_s.downcase == 'true'
         products = products.joins(:origins)
-                           .where(origins: { slug: origins })
+                           .where(origins: { slug: 'dpga' })
+
+        products = products.left_outer_joins(:endorsers)
+                           .where.not(endorsers: { id: nil })
       end
-    end
 
-    if params[:tags].present?
-      filtered_tags = params[:tags].reject { |x| x.nil? || x.blank? }
-      unless filtered_tags.empty?
-        products = products.where(
-          " tags @> '{#{filtered_tags.join(',').downcase}}'::varchar[] or "\
-          " tags @> '{#{filtered_tags.join(',')}}'::varchar[]"
-        )
+      if params[:origins].present?
+        origins = params[:origins].reject { |x| x.nil? || x.empty? }
+        products = products.joins(:origins)
+                           .where(origins: { slug: origins }) unless origins.empty?
       end
-    end
 
-    if params[:sectors].present?
-      sectors = params[:sectors].reject { |x| x.nil? || x.empty? }
+      if params[:countries].present?
+        filtered_countries = params[:countries].reject { |x| x.nil? || x.empty? }
+        products = products.joins(:countries)
+                           .where(countries: { slug: filtered_countries }) unless filtered_countries.empty?
+      end
 
-      filtered_sectors = []
-      sectors.each do |sector|
-        current_sector = Sector.find_by(slug: sector)
-        filtered_sectors << current_sector.id unless current_sector.nil?
-        if current_sector.parent_sector_id.nil?
-          child_sectors = Sector.where(parent_sector_id: current_sector.id)
-          filtered_sectors += child_sectors.map(&:id)
+      if params[:origins].present?
+        filtered_origins = params[:origins].reject { |x| x.nil? || x.empty? }
+        products = products.joins(:origins)
+                           .where(origins: { slug: filtered_origins }) unless filtered_origins.empty?
+      end
+
+      if params[:sectors].present?
+        filtered_sectors = params[:sectors].reject { |x| x.nil? || x.empty? }
+        products = products.joins(:sectors)
+                           .where(sectors: { slug: filtered_sectors }) unless filtered_sectors.empty?
+      end
+
+      if params[:tags].present?
+        filtered_tags = params[:tags].reject { |x| x.nil? || x.blank? }
+        unless filtered_tags.empty?
+          tags = Tag.where(slug: filtered_tags).map(&:name)
+          products = products.where(
+            " tags @> '{#{tags.join(',').downcase}}'::varchar[] or "\
+            " tags @> '{#{tags.join(',')}}'::varchar[]"
+          )
         end
       end
-      unless filtered_sectors.empty?
-        products = products.joins(:sectors)
-                           .where(sectors: { id: filtered_sectors })
+
+      if (params[:license_types] - ['oss_only']).empty? &&
+        (['oss_only'] - params[:license_types]).empty?
+        products = products.where(commercial_product: false)
+      elsif (params[:license_types] - ['commercial_only']).empty? &&
+        (['commercial_only'] - params[:license_types]).empty?
+        products = products.where(commercial_product: true)
+      end
+
+      if params[:show_gov_stack_only].present? && params[:show_gov_stack_only].to_s.downcase == 'true'
+        products = products.where(gov_stack_entity: true)
       end
     end
-
-    sdg_use_case_slugs = []
-    if valid_array_parameter(params[:sdgs])
-      sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sdgs])
-      products = products.joins(:sustainable_development_goals)
-                         .where(sustainable_development_goals: { slug: params[:sdgs] })
-    end
-    if sdg_use_case_slugs.nil? && valid_array_parameter(params[:sustainable_development_goals])
-      sdg_use_case_slugs = use_cases_from_sdg_slugs(params[:sustainable_development_goals])
-      products = products.joins(:sustainable_development_goals)
-                         .where(sustainable_development_goals: { slug: params[:sustainable_development_goals] })
-    end
-
-    use_case_slugs = sdg_use_case_slugs
-    if valid_array_parameter(params[:use_cases])
-      if use_case_slugs.nil? || use_case_slugs.empty?
-        use_case_slugs = params[:use_cases]
-      else
-        use_case_slugs &= params[:use_cases]
-      end
-    end
-    use_case_workflow_slugs = workflows_from_use_case_slugs(use_case_slugs)
-
-    workflow_slugs = use_case_workflow_slugs
-    if valid_array_parameter(params[:workflows])
-      if workflow_slugs.nil? || workflow_slugs.empty?
-        workflow_slugs = params[:workflows]
-      else
-        workflow_slugs &= params[:workflows]
-      end
-    end
-    workflow_building_block_slugs = building_blocks_from_workflow_slugs(workflow_slugs)
-
-    building_block_slugs = workflow_building_block_slugs
-    if valid_array_parameter(params[:building_blocks])
-      if building_block_slugs.nil? || building_block_slugs.empty?
-        building_block_slugs = params[:building_blocks]
-      else
-        building_block_slugs &= params[:building_blocks]
-      end
-    end
-    building_block_product_slugs = products_from_building_block_slugs(building_block_slugs)
-
-    product_slugs = building_block_product_slugs
-    if valid_array_parameter(params[:products])
-      if product_slugs.nil? || product_slugs.empty?
-        product_slugs = params[:products] \
-      else
-        product_slugs &= params[:products] \
-      end
-    end
-
-    product_slugs = product_slugs.reject { |x| x.nil? || x.empty? } unless product_slugs.nil?
-    products = products.where(slug: product_slugs) unless product_slugs.nil? || product_slugs.empty?
 
     if params[:page_size].present?
       if params[:page_size].to_i.positive?
