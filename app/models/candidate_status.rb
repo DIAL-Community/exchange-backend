@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 class CandidateStatus < ApplicationRecord
-  scope :name_contains, ->(name) { where('LOWER(datasets.name) like LOWER(?)', "%#{name}%") }
-  scope :slug_starts_with, ->(slug) { where('LOWER(datasets.slug) like LOWER(?)', "#{slug}%\\_") }
+  scope :name_contains, ->(name) { where('LOWER(candidate_statuses.name) like LOWER(?)', "%#{name}%") }
+  scope :slug_starts_with, ->(slug) { where('LOWER(candidate_statuses.slug) like LOWER(?)', "#{slug}%\\_") }
 
-  has_many :next_candidate_statuses, class_name: 'CandidateStatus', foreign_key: 'previous_candidate_status_id'
-  belongs_to :previous_candidate_status, class_name: 'CandidateStatus', optional: true
+  has_many :candidate_status_relationships,
+    foreign_key: :current_candidate_status_id,
+    class_name: 'CandidateStatusRelationship'
+
+  has_many :next_candidate_statuses,
+    through: :candidate_status_relationships,
+    source: :next_candidate_status
 
   # overridden
   def generate_slug

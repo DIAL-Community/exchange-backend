@@ -204,5 +204,8 @@ module Types
 
     field :create_tenant_setting, mutation: Mutations::CreateTenantSetting
     field :delete_tenant_setting, mutation: Mutations::DeleteTenantSetting
+
+    field :create_candidate_status, mutation: Mutations::CreateCandidateStatus
+    field :delete_candidate_status, mutation: Mutations::DeleteCandidateStatus
   end
 end
