@@ -23,9 +23,15 @@ module Mutations
 
       status_transition_text = <<-TRANSITION_TEXT
         <div class='flex flex-row gap-2 my-3'>
-          <div class='font-semibold'>#{candidate_product.candidate_status&.name || 'N/A'}</div>
-          <div class='font-semibold'>→</div>
-          <div class='font-semibold'>#{candidate_status.name}</div>
+          <div class='font-semibold'>
+            #{candidate_product.candidate_status&.name || 'Candidate Information Received'}
+          </div>
+          <div class='font-semibold'>
+            →
+          </div>
+          <div class='font-semibold'>
+            #{candidate_status.name}
+          </div>
         </div>
       TRANSITION_TEXT
 

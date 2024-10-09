@@ -1783,6 +1783,7 @@ type Query {
   handbooks: [Handbook!]!
   hubContact(email: String!, source: String! = "exchange"): Contact
   hubContacts(search: String = ""): [Contact!]!
+  initialCandidateStatuses(search: String = ""): [CandidateStatus!]!
   me: User!
   message(slug: String!): Message
   messages(search: String = ""): [Message!]!

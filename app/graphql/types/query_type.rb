@@ -254,6 +254,7 @@ module Types
 
     field :candidate_status, resolver: Queries::CandidateStatusQuery
     field :candidate_statuses, resolver: Queries::CandidateStatusesQuery
+    field :initial_candidate_statuses, resolver: Queries::InitialCandidateStatusesQuery
     field :paginated_candidate_statuses, resolver: Paginated::PaginatedCandidateStatuses
     field :pagination_attribute_candidate_status, resolver: Paginated::PaginationAttributeCandidateStatus
   end
