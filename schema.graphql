@@ -199,6 +199,7 @@ type CandidateStatus {
   initialStatus: Boolean!
   name: String!
   nextCandidateStatuses: [CandidateStatus!]
+  previousCandidateStatuses: [CandidateStatus!]
   slug: String!
   terminalStatus: Boolean!
 }
