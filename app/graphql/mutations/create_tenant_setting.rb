@@ -108,7 +108,11 @@ module Mutations
           exchange_tenant = ExchangeTenant.find_by(tenant_name: sanitized_tenant_name, domain: tenant_domain)
           next unless exchange_tenant.nil?
 
-          exchange_tenant = ExchangeTenant.new(tenant_name: sanitized_tenant_name, domain: tenant_domain)
+          exchange_tenant = ExchangeTenant.new(
+            allow_unsecure_read:,
+            tenant_name: sanitized_tenant_name,
+            domain: tenant_domain
+          )
           exchange_tenant.save
         end
 

@@ -16,6 +16,7 @@ module Types
     end
 
     field :description, String, null: true
+    field :candidate_status, CandidateStatusType, null: true
 
     field :created_at, GraphQL::Types::ISO8601Date, null: true
 

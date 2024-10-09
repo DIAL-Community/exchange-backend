@@ -139,6 +139,7 @@ type CandidateOrganization {
 type CandidateProduct {
   approvedBy: String
   approvedDate: ISO8601Date
+  candidateStatus: CandidateStatus
   commercialProduct: Boolean!
   createdAt: ISO8601Date
   description: String

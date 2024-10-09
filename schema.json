@@ -1467,6 +1467,20 @@
               "deprecationReason": null
             },
             {
+              "name": "candidateStatus",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CandidateStatus",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "commercialProduct",
               "description": null,
               "args": [
