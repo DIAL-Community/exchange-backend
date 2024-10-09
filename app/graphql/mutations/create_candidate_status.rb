@@ -37,6 +37,20 @@ module Mutations
         end
       end
 
+      # Re-slug if the name is updated (not the same with the one in the db).
+      if candidate_status.name != name
+        candidate_status.name = name
+        candidate_status.slug = reslug_em(name)
+
+        # Check if we need to add _dup to the slug.
+        first_duplicate = CandidateStatus.slug_simple_starts_with(candidate_status.slug)
+                                         .order(slug: :desc)
+                                         .first
+        unless first_duplicate.nil?
+          candidate_status.slug += generate_offset(first_duplicate)
+        end
+      end
+
       # Update field of the candidate_status object
       candidate_status.name = name
       candidate_status.description = description
