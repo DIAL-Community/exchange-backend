@@ -118,7 +118,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           org_contact_email = solution_data[2]
 
           unless org_name.blank?
-            contact = Contact.find_or_create_by(email: org_contact_email) do |c|
+            contact = Contact.find_or_create_by(email: org_contact_email.strip) do |c|
               c.name = org_name
               c.slug = reslug_em(org_name)
             end
