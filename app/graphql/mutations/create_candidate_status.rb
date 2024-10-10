@@ -64,7 +64,13 @@ module Mutations
       end
       candidate_status.next_candidate_statuses = next_candidate_statuses
 
-      if candidate_status.save
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        candidate_status.save!
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful creation, return the created object with no errors
         {
           candidate_status:,

@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
+require 'modules/slugger'
+
 module Mutations
   class UpdateCandidateProductStatus < Mutations::BaseMutation
+    include Modules::Slugger
+
     argument :slug, String, required: true
     argument :description, String, required: false
     argument :candidate_status_slug, String, required: true
@@ -10,8 +14,6 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, description: nil, candidate_status_slug:)
-      candidate_product = CandidateProduct.find_by(slug:)
-
       unless an_admin
         return {
           candidate_product: nil,
@@ -19,7 +21,21 @@ module Mutations
         }
       end
 
+      candidate_product = CandidateProduct.find_by(slug:)
+      unless candidate_product.rejected.nil?
+        return {
+          candidate_product: nil,
+          errors: ['Candidate product has already been processed.']
+        }
+      end
+
       candidate_status = CandidateStatus.find_by(slug: candidate_status_slug)
+      if candidate_product.nil?
+        return {
+          candidate_product: nil,
+          errors: ['Invalid candidate status value.']
+        }
+      end
 
       status_transition_text = <<-TRANSITION_TEXT
         <div class='flex flex-row gap-2 my-3'>
@@ -58,6 +74,16 @@ module Mutations
         )
         comment.save!
 
+        if candidate_status.name.include?('Reject')
+          reject_candidate(candidate_product)
+        elsif candidate_status.name.include?('Deny')
+          reject_candidate(candidate_product)
+        elsif candidate_status.name.include?('Denied')
+          reject_candidate(candidate_product)
+        elsif candidate_status.name.include?('Approve')
+          approve_candidate(candidate_product)
+        end
+
         successful_operation = true
       end
 
@@ -74,6 +100,71 @@ module Mutations
           errors: candidate_product.errors.full_messages
         }
       end
+    end
+
+    def reject_candidate(candidate_product)
+      candidate_product.rejected = true
+      candidate_product.rejected_date = Time.now
+      candidate_product.rejected_by_id = context[:current_user].id
+      candidate_product.save!
+    end
+
+    def approve_candidate(candidate_product)
+      candidate_product.rejected = false
+      candidate_product.approved_date = Time.now
+      candidate_product.approved_by_id = context[:current_user].id
+
+      product = Product.new
+      product.name = candidate_product.name
+      product.slug = reslug_em(candidate_product.name)
+
+      product.approval_status = candidate_product.candidate_status
+
+      product.website = candidate_product.website
+      product.commercial_product = candidate_product.commercial_product
+
+      # Check if we need to add _dup to the slug.
+      first_duplicate = Product.slug_simple_starts_with(product.slug)
+                               .order(slug: :desc).first
+      unless first_duplicate.nil?
+        product.slug += generate_offset(first_duplicate)
+      end
+
+      assign_auditable_user(product)
+      product.save!
+
+      unless candidate_product.repository.nil?
+        product_description = ProductDescription.find_by(product_id: product.id, locale: I18n.locale)
+        product_description = ProductDescription.new if product_description.nil?
+        product_description.description = candidate_product.description
+        product_description.product_id = product.id
+        product_description.locale = I18n.locale
+
+        assign_auditable_user(product_description)
+        product_description.save!
+      end
+
+      unless candidate_product.repository.nil?
+        product_repository = ProductRepository.new
+        product_repository.name = "#{candidate_product.name} Repository"
+        product_repository.slug = reslug_em(product_repository.name)
+
+        product_repositorys = ProductRepository.where(slug: product_repository.slug)
+        unless product_repositorys.empty?
+          first_duplicate = ProductRepository.slug_starts_with(product_repository.slug)
+                                             .order(slug: :desc).first
+          product_repository.slug += generate_offset(first_duplicate)
+        end
+
+        product_repository.absolute_url = candidate_product.repository
+        product_repository.description = "Default repository for #{candidate_product.name}."
+        product_repository.main_repository = true
+        product_repository.product = product
+
+        product_repository.save!
+      end
+
+      candidate_product.save!
     end
   end
 end

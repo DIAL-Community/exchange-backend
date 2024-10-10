@@ -7,7 +7,8 @@ class CandidateStatus < ApplicationRecord
   has_many :next_candidate_status_relationships,
     join_table: 'candidate_status_relationships',
     foreign_key: 'current_candidate_status_id',
-    class_name: 'CandidateStatusRelationship'
+    class_name: 'CandidateStatusRelationship',
+    dependent: :destroy
 
   has_many :next_candidate_statuses,
     through: :next_candidate_status_relationships,
@@ -16,7 +17,8 @@ class CandidateStatus < ApplicationRecord
   has_many :previous_candidate_status_relationships,
     join_table: 'candidate_status_relationships',
     foreign_key: 'next_candidate_status_id',
-    class_name: 'CandidateStatusRelationship'
+    class_name: 'CandidateStatusRelationship',
+    dependent: :destroy
 
   has_many :previous_candidate_statuses,
     through: :previous_candidate_status_relationships,
