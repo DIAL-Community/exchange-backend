@@ -139,12 +139,16 @@ type CandidateOrganization {
 type CandidateProduct {
   approvedBy: String
   approvedDate: ISO8601Date
+  candidateProductCategoryIndicators: [CandidateProductCategoryIndicator!]
   candidateStatus: CandidateStatus
   commercialProduct: Boolean!
   createdAt: ISO8601Date
   description: String
   id: ID!
+  maturityScoreDetails: JSON
   name: String!
+  notAssignedCategoryIndicators: [CategoryIndicator!]
+  overallMaturityScore: Float
   rejected: Boolean
   rejectedBy: String
   rejectedDate: ISO8601Date
@@ -152,6 +156,14 @@ type CandidateProduct {
   slug: String!
   submitterEmail: String
   website: String!
+}
+
+type CandidateProductCategoryIndicator {
+  candidateProductId: ID!
+  categoryIndicator: CategoryIndicator!
+  categoryIndicatorId: ID!
+  id: ID!
+  indicatorValue: String!
 }
 
 type CandidateResource {
