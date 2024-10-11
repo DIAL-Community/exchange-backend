@@ -208,6 +208,7 @@ module Types
     field :create_candidate_status, mutation: Mutations::CreateCandidateStatus
     field :delete_candidate_status, mutation: Mutations::DeleteCandidateStatus
 
+    field :update_candidate_product_category_indicators, mutation: Mutations::UpdateCandidateProductCategoryIndicators
     field :update_candidate_product_status, mutation: Mutations::UpdateCandidateProductStatus
   end
 end

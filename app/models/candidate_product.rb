@@ -4,9 +4,8 @@ class CandidateProduct < ApplicationRecord
   scope :slug_starts_with, ->(slug) { where('LOWER(slug) like LOWER(?)', "#{slug}\\_%") }
   scope :name_contains, ->(name) { where('LOWER(name) like LOWER(?)', "%#{name}%") }
 
-  belongs_to(:candidate_status)
-
   has_many :candidate_product_category_indicators, dependent: :delete_all
+  belongs_to :candidate_status, optional: true
 
   def overall_maturity_score
     return nil if maturity_score.nil?
