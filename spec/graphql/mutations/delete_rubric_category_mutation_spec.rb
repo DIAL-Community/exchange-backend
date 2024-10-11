@@ -33,7 +33,7 @@ RSpec.describe(Mutations::DeleteRubricCategory, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['deleteRubricCategory']['rubricCategory'])
-        .to(be(nil))
+        .to(eq({ 'id' => '1000' }))
       expect(result['data']['deleteRubricCategory']['errors'])
         .to(eq([]))
     end
