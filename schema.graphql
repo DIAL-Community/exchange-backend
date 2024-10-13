@@ -211,6 +211,7 @@ type CandidateStatus {
   initialStatus: Boolean!
   name: String!
   nextCandidateStatuses: [CandidateStatus!]
+  notificationTemplate: String!
   previousCandidateStatuses: [CandidateStatus!]
   slug: String!
   terminalStatus: Boolean!
@@ -1090,7 +1091,7 @@ type Mutation {
   createCandidateOrganization(captcha: String!, createStorefront: Boolean!, description: String!, email: String!, name: String!, organizationName: String!, slug: String, title: String, website: String!): CreateCandidateOrganizationPayload
   createCandidateProduct(captcha: String!, commercialProduct: Boolean = false, description: String!, name: String!, repository: String, slug: String = "", submitterEmail: String!, website: String!): CreateCandidateProductPayload
   createCandidateResource(captcha: String!, countrySlugs: [String!]!, description: String!, linkDescription: String!, name: String!, publishedDate: ISO8601Date!, resourceLink: String!, resourceType: String!, slug: String!, submitterEmail: String!): CreateCandidateResourcePayload
-  createCandidateStatus(description: String = null, initialStatus: Boolean! = false, name: String!, nextCandidateStatusSlugs: [String!]! = [], slug: String!, terminalStatus: Boolean! = false): CreateCandidateStatusPayload
+  createCandidateStatus(description: String!, initialStatus: Boolean! = false, name: String!, nextCandidateStatusSlugs: [String!]! = [], notificationTemplate: String!, slug: String!, terminalStatus: Boolean! = false): CreateCandidateStatusPayload
   createCategory(description: String = null, name: String!, slug: String!): CreateCategoryPayload
   createCategoryIndicator(dataSource: String, description: String, indicatorType: String, name: String!, rubricCategorySlug: String, scriptName: String, slug: String!, weight: Float!): CreateCategoryIndicatorPayload
   createChatbotConversation(chatbotQuestion: String!, sessionIdentifier: String!): CreateChatbotConversationPayload

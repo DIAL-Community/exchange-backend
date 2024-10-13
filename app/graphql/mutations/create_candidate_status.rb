@@ -8,7 +8,8 @@ module Mutations
 
     argument :slug, String, required: true
     argument :name, String, required: true
-    argument :description, String, required: false, default_value: nil
+    argument :description, String, required: true
+    argument :notification_template, String, required: true
     argument :initial_status, Boolean, required: true, default_value: false
     argument :terminal_status, Boolean, required: true, default_value: false
     argument :next_candidate_status_slugs, [String], required: true, default_value: []
@@ -16,7 +17,10 @@ module Mutations
     field :candidate_status, Types::CandidateStatusType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, name:, description:, initial_status:, terminal_status:, next_candidate_status_slugs:)
+    def resolve(
+      slug:, name:, description:, notification_template:,
+      initial_status:, terminal_status:, next_candidate_status_slugs:
+    )
       unless an_admin
         return {
           candidate_status: nil,
@@ -54,6 +58,8 @@ module Mutations
       # Update field of the candidate_status object
       candidate_status.name = name
       candidate_status.description = description
+      candidate_status.notification_template = notification_template
+
       candidate_status.initial_status = initial_status
       candidate_status.terminal_status = terminal_status
 

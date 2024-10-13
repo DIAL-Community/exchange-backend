@@ -11,6 +11,8 @@ module Paginated
         return { total_count: 0 }
       end
 
+      return { total_count: 0 } unless an_admin
+
       candidate_statuses = CandidateStatus.order(:name)
       unless search.blank?
         candidate_statuses = candidate_statuses.name_contains(search)

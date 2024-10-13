@@ -11,6 +11,8 @@ module Paginated
         return []
       end
 
+      return [] unless an_admin
+
       candidate_statuses = CandidateStatus.order(:name)
       unless search.blank?
         candidate_statuses = candidate_statuses.name_contains(search)

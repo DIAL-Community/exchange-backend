@@ -10,6 +10,8 @@ module Types
     field :initial_status, Boolean, null: false
     field :terminal_status, Boolean, null: false
 
+    field :notification_template, String, null: false
+
     field :next_candidate_statuses, [Types::CandidateStatusType], null: true
     field :previous_candidate_statuses, [Types::CandidateStatusType], null: true
   end
