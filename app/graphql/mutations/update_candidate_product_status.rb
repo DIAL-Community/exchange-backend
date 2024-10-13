@@ -37,16 +37,19 @@ module Mutations
         }
       end
 
+      current_candidate_status = candidate_status.name
+      previous_candidate_status = candidate_product.candidate_status&.name || 'Candidate Information Received'
+
       status_transition_text = <<-TRANSITION_TEXT
         <div class='flex flex-row gap-2 my-3'>
           <div class='font-semibold'>
-            #{candidate_product.candidate_status&.name || 'Candidate Information Received'}
+            #{previous_candidate_status}
           </div>
           <div class='font-semibold'>
             →
           </div>
           <div class='font-semibold'>
-            #{candidate_status.name}
+            #{current_candidate_status}
           </div>
         </div>
       TRANSITION_TEXT
@@ -82,6 +85,23 @@ module Mutations
           reject_candidate(candidate_product)
         elsif candidate_status.name.include?('Approve')
           approve_candidate(candidate_product)
+        end
+
+        destination_email_addresses = [candidate_product.submitter_email]
+
+        destination_email_addresses.each do |destination_email_address|
+          CandidateMailer
+            .with(
+              current_candidate: candidate_product,
+              current_user: User.find_by(email: destination_email_address),
+              sender_email: 'no-reply@exchange.com',
+              current_status: current_candidate_status,
+              previous_status: previous_candidate_status,
+              destination_email: destination_email_address,
+              notification_template: candidate_status.notification_template,
+            )
+            .notify_candidate_status_update
+            .deliver_now
         end
 
         successful_operation = true

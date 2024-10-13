@@ -879,10 +879,13 @@ CREATE TABLE public.candidate_statuses (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     notification_template character varying DEFAULT '      <p>
-        Hi {recipientUsername},
+        Hi {{current-user}},
       </p>
       <p>
-        Your candidate status {submissionLink} has been updated.
+        Your candidate''s status, ''{{candidate-name}}'', has been updated.
+      </p>
+      <p>
+        The previous status was ''{{previous-status}}'' and the current status is ''{{current-status}}''.
       </p>
 '::character varying NOT NULL
 );
