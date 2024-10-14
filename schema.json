@@ -23929,6 +23929,20 @@
               "deprecationReason": null
             },
             {
+              "name": "approvalStatus",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CandidateStatus",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "buildingBlocks",
               "description": null,
               "args": [

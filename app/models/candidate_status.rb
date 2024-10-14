@@ -24,6 +24,13 @@ class CandidateStatus < ApplicationRecord
     through: :previous_candidate_status_relationships,
     source: :current_candidate_status
 
+  scope :name_contains_private, ->() { where("candidate_statuses.name ILIKE '%private%'") }
+  scope :name_contains_internal, ->() { where("candidate_statuses.name ILIKE '%internal%'") }
+  scope :name_contains_approved, ->() { where("candidate_statuses.name ILIKE '%approved%'") }
+
+  scope :name_contains_denied, ->() { where("candidate_statuses.name ILIKE '%denied%'") }
+  scope :name_contains_rejected, ->() { where("candidate_statuses.name ILIKE '%rejected%'") }
+
   # overridden
   def generate_slug
     self.slug = reslug_em(name, 64)
