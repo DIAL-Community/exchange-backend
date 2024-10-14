@@ -1219,7 +1219,7 @@ type Mutation {
   updateSiteSettingCarouselConfiguration(calloutTitle: String!, description: String!, destinationUrl: String!, external: Boolean!, id: String!, imageUrl: String!, name: String!, siteSettingSlug: String!, style: String!, title: String!, type: String!): UpdateSiteSettingCarouselConfigurationPayload
   updateSiteSettingCarouselConfigurations(carouselConfigurations: JSON! = [], siteSettingSlug: String!): UpdateSiteSettingCarouselConfigurationsPayload
   updateSiteSettingHeroCardConfiguration(description: String!, destinationUrl: String!, external: Boolean!, id: String!, imageUrl: String!, name: String!, siteSettingSlug: String!, title: String!, type: String!): UpdateSiteSettingHeroCardConfigurationPayload
-  updateSiteSettingHeroCardSection(description: String, heroCardConfigurations: JSON! = [], siteSettingSlug: String!, title: String): UpdateSiteSettingHeroCardSectionPayload
+  updateSiteSettingHeroCardSection(description: String, heroCardConfigurations: JSON! = [], siteSettingSlug: String!, title: String, wysiwygDescription: String): UpdateSiteSettingHeroCardSectionPayload
   updateSiteSettingMenuConfiguration(destinationUrl: String, external: Boolean, id: String!, name: String!, parentId: String, siteSettingSlug: String!, type: String!): UpdateSiteSettingMenuConfigurationPayload
   updateSiteSettingMenuConfigurations(menuConfigurations: JSON!, siteSettingSlug: String!): UpdateSiteSettingMenuConfigurationsPayload
   updateUseCaseSdgTargets(sdgTargetIds: [Int!]!, slug: String!): UpdateUseCaseSdgTargetsPayload
