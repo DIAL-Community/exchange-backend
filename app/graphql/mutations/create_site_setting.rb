@@ -64,9 +64,9 @@ module Mutations
 
       successful_operation = false
       ActiveRecord::Base.transaction do
-        if default_setting.to_s == 'true'
+        current_default_setting = SiteSetting.find_by(default_setting: true)
+        if default_setting.to_s == 'true' && current_default_setting&.slug != site_setting.slug
           # Only one default setting can exist at a time.
-          current_default_setting = SiteSetting.find_by(default_setting: true)
           current_default_setting&.update(default_setting: false)
           # Set the current one as the default setting.
           site_setting.default_setting = true
