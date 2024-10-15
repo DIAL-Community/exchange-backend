@@ -28,6 +28,7 @@ module Types
     field :product_stage, String, null: true
     field :featured, Boolean, null: true
     field :contact, String, null: true
+
     # TODO: Deprecate this field after migration to the new UI
     field :owner, String, null: true
     field :is_launchable, Boolean, null: true
@@ -107,5 +108,7 @@ module Types
     field :is_linked_with_dpi, Boolean, null: false, method: :is_linked_with_dpi
 
     field :playbooks, [Types::PlaybookType], null: true
+
+    field :approval_status, CandidateStatusType, null: true
   end
 end

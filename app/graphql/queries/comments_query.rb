@@ -12,7 +12,7 @@ module Queries
         comment_object_type:,
         comment_object_id:,
         parent_comment_id: nil
-      )
+      ).order(created_at: :asc)
     end
   end
 

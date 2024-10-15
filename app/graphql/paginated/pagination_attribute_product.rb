@@ -169,6 +169,16 @@ module Paginated
 
       products = products.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
 
+      if context[:current_user].nil?
+        private_statuses = CandidateStatus.name_contains_private.map(&:id)
+        internal_statuses = CandidateStatus.name_contains_internal.map(&:id)
+        approved_statuses = CandidateStatus.name_contains_approved.map(&:id)
+        candidate_statuses = (private_statuses & approved_statuses) + (internal_statuses & approved_statuses)
+
+        where_statement = 'approval_status_id IS NOT NULL AND approval_status_id IN (?)'
+        products = products.where.not(where_statement, candidate_statuses)
+      end
+
       { total_count: products.distinct.count }
     end
   end
