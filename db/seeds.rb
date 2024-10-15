@@ -120,9 +120,9 @@ if Stylesheet.where(portal: 'playbooks').count.zero?
                      background_color: '#004300')
 end
 
-if Origin.where(slug: 'manually_entered').count.zero?
+if Origin.where(slug: 'manually-entered').count.zero?
   Origin.create(name: 'Manually Entered', description: 'Project information are manually entered by user.',
-                slug: 'manually_entered')
+                slug: 'manually-entered')
 end
 
 if Endorser.where(slug: 'dpga').count.zero?

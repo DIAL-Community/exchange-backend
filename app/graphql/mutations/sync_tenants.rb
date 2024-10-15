@@ -157,7 +157,7 @@ module Mutations
         organization_slugs = source_product.organizations.map(&:slug)
         sync_organizations(source_tenant, destination_tenant, organization_slugs)
 
-        puts "Syncing building block '#{slug}'..."
+        puts "Syncing product '#{slug}'..."
         Apartment::Tenant.switch!(destination_tenant)
         destination_product = Product.find_by(slug:)
         if destination_product.nil?
@@ -187,7 +187,7 @@ module Mutations
 
         amoeba_project = source_project.amoeba_dup
 
-        puts "Syncing building block '#{slug}'..."
+        puts "Syncing project '#{slug}'..."
         Apartment::Tenant.switch!(destination_tenant)
         destination_project = Project.find_by(slug:)
         if destination_project.nil?

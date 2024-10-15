@@ -16,6 +16,13 @@ module Types
     end
 
     field :description, String, null: true
+    field :candidate_status, CandidateStatusType, null: true
+
+    field :not_assigned_category_indicators, [Types::CategoryIndicatorType], null: true
+    field :candidate_product_category_indicators, [Types::CandidateProductCategoryIndicatorType], null: true
+
+    field :overall_maturity_score, Float, null: true
+    field :maturity_score_details, GraphQL::Types::JSON, null: true
 
     field :created_at, GraphQL::Types::ISO8601Date, null: true
 

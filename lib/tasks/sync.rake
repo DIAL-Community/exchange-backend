@@ -128,7 +128,7 @@ namespace :sync do
     nominee_data = JSON.parse(dpg_response)
 
     dpga_origin = Origin.find_by(slug: 'dpga')
-    manual_origin = Origin.find_by(slug: 'manually_entered')
+    manual_origin = Origin.find_by(slug: 'manually-entered')
     dpga_list = []
 
     all_dpgs_nominees = dpg_data + nominee_data

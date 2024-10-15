@@ -9,6 +9,7 @@ include Modules::SiteConfiguration
 namespace :site_configuration do
   desc 'Regenerate default site configurations.'
   task regenerate_default_site_configuration: :environment do
+    create_default_site_configuration
     Apartment.tenant_names.each do |tenant_name|
       Apartment::Tenant.switch(tenant_name) do
         create_default_site_configuration
