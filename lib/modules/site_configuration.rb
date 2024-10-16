@@ -11,9 +11,9 @@ module Modules
       default_site_setting.name = 'Default Site Settings'
       default_site_setting.description = 'Default settings for the exchange site.'
 
-      default_site_setting.favicon_url = '/favicon.ico'
-      default_site_setting.exchange_logo_url = '/ui/v1/hero-dx-bg.svg'
-      default_site_setting.open_graph_logo_url = '/ui/v1/hero-dx-bg.svg'
+      default_site_setting.favicon_url = 'exchange.dial.global/favicon.ico'
+      default_site_setting.exchange_logo_url = 'exchange.dial.global/ui/v1/exchange-logo.svg'
+      default_site_setting.open_graph_logo_url = 'exchange.dial.global/ui/v1/exchange-logo.svg'
 
       default_site_setting.enable_marketplace = true
       default_site_setting.default_setting = true

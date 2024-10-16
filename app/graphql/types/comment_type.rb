@@ -12,6 +12,11 @@ module Types
     field :parent_comment_id, String, null: true
     field :replies, [Types::CommentType], null: true
 
+    field :timestamp, GraphQL::Types::ISO8601DateTime, null: false
+    def timestamp
+      object.created_at
+    end
+
     # Added fields to match frontent library
     field :com_id, String, null: false
     field :user_id, String, null: false

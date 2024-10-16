@@ -52,7 +52,7 @@ module Mutations
           menu_configuration['external'] = external
           menu_configuration['destinationUrl'] = destination_url
           break if menu_exists
-        elsif type == 'menu-item' || type == 'separator'
+        elsif type == 'menu.item' || type == 'separator'
           # Skip until we find the parent menu.
           next unless menu_configuration['id'] == parent_id
           # Initialize our menu item search flag.

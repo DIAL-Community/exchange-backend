@@ -98,32 +98,6 @@
       high:
         - operator: greaterThan
           value: 100
-- category: Community Health
-  indicators:
-    - name: Commits
-      low:
-        - operator: lessThan
-          value: 49
-      medium:
-        - operator: greaterThan
-          value: 50
-        - operator: lessThan
-          value: 999
-      high:
-        - operator: greaterThan
-          value: 1000
-    - name: Contributors
-      low:
-        - operator: lessThan
-          value: 4
-      medium:
-        - operator: greaterThan
-          value: 5
-        - operator: lessThan
-          value: 19
-      high:
-        - operator: greaterThan
-          value: 20
 - category: Code Review
   indicators:
     - name: Language

@@ -38,7 +38,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
-    create(:origin, slug: 'manually_entered')
+    create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
     create(:country, slug: 'canada')
 
@@ -65,7 +65,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
 
   it 'is successful - admin can update project name and slug remains the same' do
     create(:project, name: "Some name", slug: "some-name")
-    create(:origin, slug: 'manually_entered')
+    create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
     create(:country, slug: 'canada')
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
@@ -104,7 +104,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
 
   it 'is successful - handles non-existent country slugs gracefully' do
     expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
-    create(:origin, slug: 'manually_entered')
+    create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
 
     result = execute_graphql(

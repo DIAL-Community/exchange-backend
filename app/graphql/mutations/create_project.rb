@@ -65,7 +65,7 @@ module Mutations
       project.project_url = project_url unless project_url.nil?
 
       # Defaulting to manually entered
-      project.origin = Origin.find_by(slug: 'manually_entered') if project.origin.nil?
+      project.origin = Origin.find_by(slug: 'manually-entered') if project.origin.nil?
 
       unless product_id.nil?
         product = Product.find_by(id: product_id)

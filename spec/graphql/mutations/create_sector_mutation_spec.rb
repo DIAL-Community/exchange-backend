@@ -68,7 +68,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   end
 
   it 'is successful - missing locale will store the correct with current locale value' do
-    create(:origin, name: "Manually Entered", slug: "manually_entered")
+    create(:origin, name: "Manually Entered", slug: "manually-entered")
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     # Creating new sector using random origin id
@@ -88,7 +88,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   end
 
   it 'is successful - valid locale will store the correct value' do
-    create(:origin, name: "Manually Entered", slug: "manually_entered")
+    create(:origin, name: "Manually Entered", slug: "manually-entered")
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     # Creating new sector using random origin id
@@ -109,7 +109,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   end
 
   it 'is successful - random locale will be replaced with current locale value' do
-    create(:origin, name: "Manually Entered", slug: "manually_entered")
+    create(:origin, name: "Manually Entered", slug: "manually-entered")
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     # Creating new sector using random origin id
@@ -130,7 +130,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   end
 
   it 'is successful - setting the origin to default when value is random' do
-    origin = create(:origin, name: "Manually Entered", slug: "manually_entered")
+    origin = create(:origin, name: "Manually Entered", slug: "manually-entered")
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     # Creating new sector using random origin id
@@ -163,7 +163,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   end
 
   it 'is successful - setting the origin to default value of manually entered' do
-    origin = create(:origin, name: "Manually Entered", slug: "manually_entered")
+    origin = create(:origin, name: "Manually Entered", slug: "manually-entered")
     expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
 
     # Creating new sector using only required fields.
