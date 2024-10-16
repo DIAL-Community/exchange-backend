@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 rubric_categories = RubricCategory.where("slug SIMILAR TO '(" \
-"financial_sustainability|licensing|product_design|compliance|utility_and_impact|" \
-"product_quality|community_health|dependency_and_risk|knowledge_management|governance|" \
-"repository_info|consensus_building|independence|licenses_and_copyright|" \
-"software_code|software_quality|software_releases)%'")
+"financial-sustainability|licensing|product-design|compliance|utility-and-impact|" \
+"product-quality|community-health|dependency-and-risk|knowledge-management|governance|" \
+"repository-info|consensus-building|independence|licenses-and-copyright|" \
+"software-code|software-quality|software-releases)%'")
 puts "Rubric categories length: #{rubric_categories.length}."
 rubric_categories.each do |rubric_category|
   puts "Removing rubric category: #{rubric_category.name}."
@@ -20,5 +20,5 @@ rubric_categories.each do |rubric_category|
   end
 
   puts "Rubric category: #{rubric_category.name} deleted." if rubric_category.destroy
-  puts "--"
+  puts "-------"
 end

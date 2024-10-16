@@ -9,6 +9,8 @@ class Product < ApplicationRecord
 
   attr_accessor :product_description
 
+  belongs_to :approval_status, class_name: 'CandidateStatus', foreign_key: 'approval_status_id', optional: true
+
   has_many :product_indicators, dependent: :delete_all
   has_many :product_repositories, dependent: :delete_all
   has_many :product_descriptions, dependent: :delete_all
@@ -184,6 +186,7 @@ class Product < ApplicationRecord
   amoeba do
     enable
 
+    nullify :approval_status_id
     exclude_association :endorsers
     exclude_association :include_relationships
     exclude_association :interop_relationships

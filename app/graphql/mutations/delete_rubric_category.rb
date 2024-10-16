@@ -21,13 +21,13 @@ module Mutations
       if rubric_category.destroy
         # Successful deletion, return the deleted rubric category with no errors
         {
-          rubric_category: nil,
+          rubric_category:,
           errors: []
         }
       else
         # Failed delete, return the errors to the client
         {
-          rubric_category:,
+          rubric_category: nil,
           errors: rubric_category.errors.full_messages
         }
       end

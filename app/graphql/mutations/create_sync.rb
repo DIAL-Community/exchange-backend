@@ -30,7 +30,7 @@ module Mutations
       sync = TenantSyncConfiguration.find_by(slug:)
       sync = TenantSyncConfiguration.find_by(name:) if sync.nil?
       if sync.nil?
-        sync = TenantSyncConfiguration.new(name:, slug: slug_em(name))
+        sync = TenantSyncConfiguration.new(name:, slug: reslug_em(name))
 
         # Check if we need to add _dup to the slug.
         first_duplicate = TenantSyncConfiguration.slug_simple_starts_with(sync.slug)

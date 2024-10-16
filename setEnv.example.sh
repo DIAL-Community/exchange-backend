@@ -20,11 +20,7 @@ if [ "${user_env:0:1}" == "d" ] || [ "${user_env:0:1}" == "D" ]; then
   export TEST_DATABASE_PASSWORD=<DB password>
   export ESRI_CLIENT_ID=<esri client id>
   export ESRI_CLIENT_SECRET=<esri secret>
-  export GOOGLE_TRACKER=<google tracker id>
   export GOOGLE_API_KEY=<google map api key>
-  export JENKINS_URL=<jenkins host url>
-  export JENKINS_USER=<jenkins user>
-  export JENKINS_PASSWORD=<jenkins password>
   export MAIL_API_KEY=<mailer api key>
   export MAIL_DOMAIN=<mailer domain>
   export CAPTCHA_SITE_KEY=<your captcha site key>
@@ -47,11 +43,7 @@ if [ "${user_env:0:1}" == "t" ] || [ "${user_env:0:1}" == "T" ]; then
   export TEST_DATABASE_PASSWORD=<DB password>
   export ESRI_CLIENT_ID=<esri client id>
   export ESRI_CLIENT_SECRET=<esri secret>
-  export GOOGLE_TRACKER=<google tracker id>
   export GOOGLE_API_KEY=<google map api key>
-  export JENKINS_URL=<jenkins host url>
-  export JENKINS_USER=<jenkins user>
-  export JENKINS_PASSWORD=<jenkins password>
   export MAIL_API_KEY=<mailer api key>
   export MAIL_DOMAIN=<mailer domain>
   export CAPTCHA_SITE_KEY=<your captcha site key>
@@ -74,11 +66,7 @@ if [ "${user_env:0:1}" == "p" ] || [ "${user_env:0:1}" == "P" ]; then
   export TEST_DATABASE_PASSWORD=<DB password>
   export ESRI_CLIENT_ID=<esri client id>
   export ESRI_CLIENT_SECRET=<esri secret>
-  export GOOGLE_TRACKER=<google tracker id>
   export GOOGLE_API_KEY=<google map api key>
-  export JENKINS_URL=<jenkins host url>
-  export JENKINS_USER=<jenkins user>
-  export JENKINS_PASSWORD=<jenkins password>
   export MAIL_API_KEY=<mailer api key>
   export MAIL_DOMAIN=<mailer domain>
   export CAPTCHA_SITE_KEY=<your captcha site key>

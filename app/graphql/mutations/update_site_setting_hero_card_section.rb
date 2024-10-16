@@ -5,12 +5,13 @@ module Mutations
     argument :site_setting_slug, String, required: true
     argument :title, String, required: false
     argument :description, String, required: false
+    argument :wysiwyg_description, String, required: false
     argument :hero_card_configurations, GraphQL::Types::JSON, required: true, default_value: []
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, title: nil, description: nil, hero_card_configurations:)
+    def resolve(site_setting_slug:, title:, description:, wysiwyg_description:, hero_card_configurations:)
       unless an_admin
         return {
           site_setting: nil,
@@ -42,8 +43,10 @@ module Mutations
       end
 
       site_setting.hero_card_section['heroCardConfigurations'] = sanitized_hero_card_configurations
+
       site_setting.hero_card_section['title'] = title unless title.nil?
       site_setting.hero_card_section['description'] = description unless description.nil?
+      site_setting.hero_card_section['wysiwygDescription'] = wysiwyg_description unless wysiwyg_description.nil?
 
       if site_setting.save
         # Successful creation, return the created object with no errors
