@@ -27,7 +27,7 @@ class ProductPolicy < ApplicationPolicy
     return false if user.nil?
 
     if @record.is_a?(Product) && user.user_products.include?(@record.id) &&
-       user.roles.include?(User.user_roles[:product_user])
+       user.roles.include?(User.user_roles[:product_owner])
       return true
     end
 
@@ -45,7 +45,7 @@ class ProductPolicy < ApplicationPolicy
   def removing_mapping_allowed?
     return false if user.nil?
 
-    return true if user.roles.include?(User.user_roles[:product_user]) &&
+    return true if user.roles.include?(User.user_roles[:product_owner]) &&
                    @record.is_a?(Product) && user.user_products.include?(@record.id)
 
     user.roles.include?(User.user_roles[:admin]) ||
@@ -57,7 +57,7 @@ class ProductPolicy < ApplicationPolicy
   def adding_mapping_allowed?
     return false if user.nil?
 
-    return true if user.roles.include?(User.user_roles[:product_user]) &&
+    return true if user.roles.include?(User.user_roles[:product_owner]) &&
                    @record.is_a?(Product) && user.user_products.include?(@record.id)
 
     user.roles.include?(User.user_roles[:admin]) ||

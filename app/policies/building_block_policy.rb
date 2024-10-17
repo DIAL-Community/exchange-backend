@@ -11,7 +11,6 @@ class BuildingBlockPolicy < ApplicationPolicy
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:ict4sdg]) ||
       user.roles.include?(User.user_roles[:content_editor]) ||
       user.roles.include?(User.user_roles[:content_writer])
   end
@@ -19,8 +18,7 @@ class BuildingBlockPolicy < ApplicationPolicy
   def delete_allowed?
     return false if user.nil?
 
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:ict4sdg])
+    user.roles.include?(User.user_roles[:admin])
   end
 
   def view_allowed?

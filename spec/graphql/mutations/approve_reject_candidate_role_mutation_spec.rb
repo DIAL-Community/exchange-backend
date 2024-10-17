@@ -27,10 +27,13 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
   it 'approves candidate role for product - user is an admin' do
     create(:product, id: 1001)
     create(:user, email: 'nonadmin@gmail.com')
-    candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['product_user'],
-                                             rejected: nil,
-                                             product_id: 1001)
+    candidate_role = create(
+      :candidate_role,
+      email: 'nonadmin@gmail.com',
+      roles: ['product_owner'],
+      rejected: nil,
+      product_id: 1001
+    )
 
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
@@ -82,7 +85,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
     create(:organization, id: 1001)
     create(:user, email: 'nonadmin@gmail.com')
     candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['org_user'],
+                                             roles: ['organization_owner'],
                                              rejected: nil,
                                              organization_id: 1001)
 
@@ -108,7 +111,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
   it 'rejects candidate dataset - user is an admin' do
     create(:organization, id: 1001)
     candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['org_user'],
+                                             roles: ['organization_owner'],
                                              rejected: nil,
                                              organization_id: 1001)
 
@@ -134,7 +137,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
   it 'fails - user is not an admin' do
     create(:organization, id: 1001)
     candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['org_user'],
+                                             roles: ['organization_owner'],
                                              rejected: nil,
                                              organization_id: 1001)
 
@@ -160,7 +163,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
   it 'fails - user is not logged in' do
     create(:organization, id: 1001)
     candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['org_user'],
+                                             roles: ['organization_owner'],
                                              rejected: nil,
                                              organization_id: 1001)
 
@@ -183,7 +186,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
   it 'fails - wrong action provided' do
     create(:organization, id: 1001)
     candidate_role = create(:candidate_role, email: 'nonadmin@gmail.com',
-                                             roles: ['org_user'],
+                                             roles: ['organization_owner'],
                                              rejected: nil,
                                              organization_id: 1001)
 

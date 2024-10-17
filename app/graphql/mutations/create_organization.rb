@@ -118,7 +118,7 @@ module Mutations
         # Only assigning ownership when the user is creating organization and not yet owning organization
         if creating_record && has_storefront && !an_admin && !an_org_owner(organization&.id)
           current_user.organization_id = organization.id
-          current_user.roles << User.user_roles[:org_user]
+          current_user.roles << User.user_roles[:organization_owner]
           if current_user.save!
             puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
           end

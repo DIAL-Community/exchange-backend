@@ -9,15 +9,19 @@ class User < ApplicationRecord
 
   enum user_role: {
     admin: 'admin',
+
+    mni: 'mni',
     ict4sdg: 'ict4sdg',
     principle: 'principle',
+
     user: 'user',
-    org_user: 'org_user',
-    org_product_user: 'org_product_user',
-    product_user: 'product_user',
-    mni: 'mni',
+
+    product_owner: 'product_owner',
+    organization_owner: 'organization_owner',
+
     content_writer: 'content_writer',
     content_editor: 'content_editor',
+
     adli_admin: 'adli_admin',
     adli_user: 'adli_user'
   }
@@ -134,7 +138,7 @@ class User < ApplicationRecord
       verified = organization.website.include?(email_domain)
       if verified
         roles.delete_at(roles.index(User.user_roles[:user]) || roles.length)
-        roles.push(User.user_roles[:org_user])
+        roles.push(User.user_roles[:organization_owner])
       else
         errors.add(:organization_id, I18n.translate('view.devise.organization-nomatch'))
       end
@@ -149,7 +153,7 @@ class User < ApplicationRecord
 
     # Delete the default assigned role
     roles.delete_at(roles.index(User.user_roles[:user]) || roles.length)
-    roles.push(User.user_roles[:product_user])
+    roles.push(User.user_roles[:product_owner])
     skip_confirmation_notification!
   end
 

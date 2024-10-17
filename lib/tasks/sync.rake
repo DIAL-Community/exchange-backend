@@ -646,7 +646,7 @@ namespace :sync do
 
       if !organizations.nil? && !organizations.empty? && !existing_project.organizations.include?(organizations.first)
         project_organization = ProjectOrganization.new
-        project_organization.org_type = 'owner'
+        project_organization.organization_type = 'owner'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = organizations.first.id
         if project_organization.save
@@ -662,7 +662,7 @@ namespace :sync do
           existing_project.organizations.include?(donor_organizations.first)
 
         project_organization = ProjectOrganization.new
-        project_organization.org_type = 'funder'
+        project_organization.organization_type = 'funder'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = donor_organizations.first.id
         if project_organization.save
@@ -677,7 +677,7 @@ namespace :sync do
           existing_project.organizations.include?(implementer_organizations.first)
 
         project_organization = ProjectOrganization.new
-        project_organization.org_type = 'implementer'
+        project_organization.organization_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id
         if project_organization.save

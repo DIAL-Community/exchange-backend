@@ -20,26 +20,37 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
-      unless an_admin || a_content_editor
+      building_block_policy = Pundit.policy(context[:current_user], BuildingBlock.new)
+      unless building_block_policy.update_allowed?
         return {
           building_block: nil,
-          errors: ['Must be admin or content editor to create building block']
+          errors: ['Must be admin or content editor to create / update building block.']
         }
       end
 
       building_block = BuildingBlock.find_by(slug:)
       if building_block.nil?
-        building_block = BuildingBlock.new(name:)
-        slug = reslug_em(name)
-
-        # Check if we need to add _dup to the slug.
-        first_duplicate = BuildingBlock.slug_simple_starts_with(slug)
+        building_block = BuildingBlock.new(name:, slug: reslug_em(name))
+        # Check if we need to add _duplicate to the slug.
+        first_duplicate = BuildingBlock.slug_simple_starts_with(reslug_em(name))
                                        .order(slug: :desc)
                                        .first
-        if !first_duplicate.nil?
-          building_block.slug = slug + generate_offset(first_duplicate)
-        else
-          building_block.slug = slug
+        unless first_duplicate.nil?
+          building_block.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      # Re-slug if the name is updated (not the same with the one in the db).
+      if building_block.name != name
+        building_block.name = name
+        building_block.slug = reslug_em(name)
+
+        # Check if we need to add _duplicate to the slug.
+        first_duplicate = BuildingBlock.slug_simple_starts_with(reslug_em(name))
+                                       .order(slug: :desc)
+                                       .first
+        unless first_duplicate.nil?
+          building_block.slug += generate_offset(first_duplicate)
         end
       end
 
@@ -95,11 +106,6 @@ module Mutations
           errors: building_block.errors.full_messages
         }
       end
-    end
-
-    def self.authorized?(object, context)
-      pundit = Pundit.policy(context[:current_user], BuildingBlock.new)
-      super && pundit.update_allowed?
     end
   end
 end

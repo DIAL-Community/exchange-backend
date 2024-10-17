@@ -127,7 +127,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(eq({
           "name" => "Some new name",
-          "slug" => "some-name",
+          "slug" => "some-new-name",
           "buildingBlockDescription" => { "description" => "some description" },
           "maturity" => "BETA",
           "category" => nil,
@@ -191,7 +191,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(be(nil))
       expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq(['Must be admin or content editor to create building block']))
+        .to(eq(['Must be admin or content editor to create / update building block.']))
     end
   end
 
@@ -212,7 +212,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(be(nil))
       expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq(['Must be admin or content editor to create building block']))
+        .to(eq(['Must be admin or content editor to create / update building block.']))
     end
   end
 end

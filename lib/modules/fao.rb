@@ -82,7 +82,7 @@ module Modules
 
       if fao_product[8].downcase == 'yes' && !existing_product.organizations.include?(fao_organization)
         product_organization = OrganizationProduct.new
-        product_organization.org_type = 'owner'
+        product_organization.organization_type = 'owner'
         product_organization.product_id = existing_product.id
         product_organization.organization_id = fao_organization.id
         product_organization.save
@@ -107,7 +107,7 @@ module Modules
         unless existing_product.organizations.include?(organization)
           puts "  Adding organization to product: #{organization.name}."
           organization_product = OrganizationProduct.new
-          organization_product.org_type = organization['org_type']
+          organization_product.organization_type = organization['organization_type']
           organization_product.organization_id = organization.id
           organization_product.product_id = existing_product.id
           organization_product.save

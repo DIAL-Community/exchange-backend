@@ -207,7 +207,7 @@ namespace :data do
       installation_organization = Organization.find_by(slug: organization_setting.value)
       return if installation_organization.nil?
 
-      unassociated_users = User.where('role NOT IN (?)', %w[org_user org_product_user product_user])
+      unassociated_users = User.where('role NOT IN (?)', %w[organization_owner product_owner])
       unassociated_users.each do |user|
         # Update the organization and skip the validation.
         user.organization_id = installation_organization.id

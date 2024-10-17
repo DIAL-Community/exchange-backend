@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/BlockNesting
 # rubocop:disable Style/ClassVars
 
 # TODO: Revisit this module to reduce the if nesting.
@@ -556,7 +555,7 @@ module Modules
             organization.save
 
             organization_product = OrganizationProduct.new
-            organization_product.org_type = organization['org_type']
+            organization_product.organization_type = organization['org_type']
             organization_product.organization_id = organization.id
             organization_product.product_id = existing_product.id
             organization_product.save
@@ -570,7 +569,7 @@ module Modules
 
           puts "  Adding organization to product: #{organization.name}."
           organization_product = OrganizationProduct.new
-          organization_product.org_type = organization['org_type']
+          organization_product.organization_type = organization['org_type']
           organization_product.organization_id = organization.id
           organization_product.product_id = existing_product.id
           organization_product.save
@@ -652,7 +651,7 @@ module Modules
 
       if !implementer_organizations.empty? && !existing_project.organizations.include?(implementer_organizations.first)
         project_organization = ProjectOrganization.new
-        project_organization.org_type = 'implementer'
+        project_organization.organization_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id
         project_organization.save
@@ -912,4 +911,3 @@ module Modules
   end
 end
 # rubocop:enable Style/ClassVars
-# rubocop:enable Metrics/BlockNesting

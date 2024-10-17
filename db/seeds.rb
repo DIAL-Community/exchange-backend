@@ -68,58 +68,6 @@ if Tag.where(slug: 'covid19').count.zero?
              })
 end
 
-if PortalView.where(slug: 'default').count.zero?
-  PortalView.create!(name: 'Default',
-                     slug: 'default',
-                     description: 'Default portal view',
-                     top_navs: %w[sdgs use_cases workflows building_blocks products organizations],
-                     filter_navs: %w[sdgs use_cases workflows building_blocks products organizations locations
-                                     sectors],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if PortalView.where(slug: 'projects').count.zero?
-  PortalView.create!(name: 'Projects',
-                     slug: 'projects',
-                     description: 'Projects view',
-                     top_navs: %w[products organizations projects],
-                     filter_navs: %w[products organizations locations projects],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if PortalView.where(slug: 'playbooks').count.zero?
-  PortalView.create!(name: 'Playbooks',
-                     slug: 'playbooks',
-                     description: 'Playbooks view',
-                     top_navs: %w[playbooks plays use_cases products organizations],
-                     filter_navs: %w[playbooks plays use_cases products organizations],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if Stylesheet.where(portal: 'default').count.zero?
-  Stylesheet.create!(portal: 'default',
-                     background_color: '#000043')
-end
-
-if Stylesheet.where(portal: 'projects').count.zero?
-  Stylesheet.create!(portal: 'projects',
-                     background_color: '#430000')
-end
-
-if Stylesheet.where(portal: 'playbooks').count.zero?
-  Stylesheet.create!(portal: 'playbooks',
-                     background_color: '#004300')
-end
-
 if Origin.where(slug: 'manually-entered').count.zero?
   Origin.create(name: 'Manually Entered', description: 'Project information are manually entered by user.',
                 slug: 'manually-entered')

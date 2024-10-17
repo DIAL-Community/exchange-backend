@@ -15,7 +15,7 @@ class OrganizationPolicy < ApplicationPolicy
        user.roles.include?(User.user_roles[:mni])
       %i[id name is_endorser is_mni when_endorsed endorser_level website slug logo
          organization_description aliases]
-    elsif user.roles.include?(User.user_roles[:org_user]) &&
+    elsif user.roles.include?(User.user_roles[:organization_owner]) &&
           @record.is_a?(Organization) && user.organization_id == @record.id
       %i[name logo organization_description]
     else
@@ -33,7 +33,7 @@ class OrganizationPolicy < ApplicationPolicy
   def mod_allowed?
     return false if user.nil?
 
-    return true if user.roles.include?(User.user_roles[:org_user]) &&
+    return true if user.roles.include?(User.user_roles[:organization_owner]) &&
                    @record.is_a?(Organization) && user.organization_id == @record.id
 
     return true if user.roles.include?(User.user_roles[:principle]) &&
@@ -58,7 +58,7 @@ class OrganizationPolicy < ApplicationPolicy
     # return true if user.roles.include?(User.user_roles[:mni]) ||
     #     user.roles.include?(User.user_roles[:admin])
 
-    # return true if user.roles.include?(User.user_roles[:org_user]) &&
+    # return true if user.roles.include?(User.user_roles[:organization_owner]) &&
     #     @record.is_a?(Organization) && user.organization_id == @record.id
 
     # # get the org for the user
@@ -83,7 +83,7 @@ class OrganizationPolicy < ApplicationPolicy
   def removing_mapping_allowed?
     return false if user.nil?
 
-    return true if user.roles.include?(User.user_roles[:org_user]) &&
+    return true if user.roles.include?(User.user_roles[:organization_owner]) &&
                    @record.is_a?(Organization) && user.organization_id == @record.id
 
     user.roles.include?(User.user_roles[:admin]) ||
@@ -95,7 +95,7 @@ class OrganizationPolicy < ApplicationPolicy
   def adding_mapping_allowed?
     return false if user.nil?
 
-    return true if user.roles.include?(User.user_roles[:org_user]) &&
+    return true if user.roles.include?(User.user_roles[:organization_owner]) &&
                    @record.is_a?(Organization) && user.organization_id == @record.id
 
     user.roles.include?(User.user_roles[:admin]) ||

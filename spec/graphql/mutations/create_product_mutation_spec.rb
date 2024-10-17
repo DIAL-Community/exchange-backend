@@ -92,7 +92,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
 
   it 'fails - setting gov stack field as non-admin' do
     created_product = create(:product, name: 'Some Name', slug: 'some-name')
-    owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_user], user_products: [created_product.id])
+    owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_owner], user_products: [created_product.id])
 
     extra_attributes = [
       { "name" => "impact", "type" => "product_scale", "value" => "Very High" },

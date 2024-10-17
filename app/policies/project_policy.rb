@@ -11,8 +11,8 @@ class ProjectPolicy < ApplicationPolicy
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:org_user]) ||
-      user.roles.include?(User.user_roles[:product_user])
+      user.roles.include?(User.user_roles[:organization_owner]) ||
+      user.roles.include?(User.user_roles[:product_owner])
   end
 
   def view_allowed?

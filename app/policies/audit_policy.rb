@@ -8,6 +8,8 @@ class AuditPolicy < ApplicationPolicy
   end
 
   def view_allowed?
-    !user.nil? && user.roles.include?(User.user_roles[:admin])
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
   end
 end

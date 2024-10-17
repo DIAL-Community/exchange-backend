@@ -36,7 +36,7 @@ module Mutations
       end
 
       if entity == 'PRODUCT'
-        role = 'product_user'
+        role = 'product_owner'
         candidate_role = CandidateRole.find_by(
           email: context[:current_user].email,
           roles: [role],
@@ -44,7 +44,7 @@ module Mutations
           rejected: nil
         )
       elsif entity == 'ORGANIZATION'
-        role = 'org_user'
+        role = 'organization_owner'
         candidate_role = CandidateRole.find_by(
           email: context[:current_user].email,
           roles: [role],
