@@ -96,5 +96,10 @@ module Mutations
         }
       end
     end
+
+    def self.authorized?(object, context)
+      pundit = Pundit.policy(context[:current_user], BuildingBlock.new)
+      super && pundit.update_allowed?
+    end
   end
 end

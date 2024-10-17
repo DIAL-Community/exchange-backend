@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
   post '/entities/process-file', to: 'entities#process_file'
 
-  root to: redirect(path: '/products')
+  root to: redirect(path: '/api-docs')
 
   devise_for :users, controllers: {
     confirmations: 'confirmations',
@@ -25,7 +25,6 @@ Rails.application.routes.draw do
   end
 
   devise_scope :user do
-    get '/users', to: 'users#index'
     get '/users/password', to: 'devise/passwords#new'
     post '/authenticate/credentials', to: 'authentication#sign_in_ux'
     post '/authenticate/auth0', to: 'authentication#sign_in_auth0'
