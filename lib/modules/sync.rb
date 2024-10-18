@@ -96,15 +96,11 @@ module Modules
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
 
-            unless existing_dataset.id.nil?
-              dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
-                dataset_id: existing_dataset.id,
-                sustainable_development_goal_id: sdg.id
-              )
-              next unless dataset_sdg.nil?
-            end
-
-            dataset_sdg = DatasetSustainableDevelopmentGoal.new
+            dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
+              dataset_id: existing_dataset.id,
+              sustainable_development_goal_id: sdg.id
+            )
+            dataset_sdg = DatasetSustainableDevelopmentGoal.new if dataset_sdg.nil?
             dataset_sdg.sustainable_development_goal_id = sdg.id
             dataset_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
@@ -118,16 +114,13 @@ module Modules
             organization = Organization.find_by(name: organization_entry['name'])
             next if organization.nil?
 
-            unless is_new
-              organization_dataset = OrganizationDataset.find_by(
-                dataset_id: existing_dataset.id,
-                organization_id: organization.id,
-                organization_type: organization_entry['org_type']
-              )
-              next unless organization_dataset.nil?
-            end
+            organization_dataset = OrganizationDataset.find_by(
+              dataset_id: existing_dataset.id,
+              organization_id: organization.id,
+              organization_type: organization_entry['org_type']
+            )
 
-            organization_dataset = OrganizationDataset.new
+            organization_dataset = OrganizationDataset.new if organization_dataset.nil?
             organization_dataset.organization_id = organization.id
             organization_dataset.organization_type = organization_entry['org_type']
 
@@ -220,15 +213,12 @@ module Modules
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
 
-            unless existing_product.id.nil?
-              product_sdg = ProductSustainableDevelopmentGoal.find_by(
-                product_id: existing_product.id,
-                sustainable_development_goal_id: sdg.id
-              )
-              next unless product_sdg.nil?
-            end
+            product_sdg = ProductSustainableDevelopmentGoal.find_by(
+              product_id: existing_product.id,
+              sustainable_development_goal_id: sdg.id
+            )
 
-            product_sdg = ProductSustainableDevelopmentGoal.new
+            product_sdg = ProductSustainableDevelopmentGoal.new if product_sdg.nil?
             product_sdg.sustainable_development_goal_id = sdg.id
             product_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
