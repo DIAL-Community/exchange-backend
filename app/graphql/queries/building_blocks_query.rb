@@ -8,6 +8,7 @@ module Queries
     def resolve(search:)
       building_blocks = BuildingBlock.order(:name)
       building_blocks = building_blocks.name_contains(search) unless search.blank?
+      validate_access_to_resource(building_blocks)
       building_blocks
     end
   end
@@ -17,7 +18,9 @@ module Queries
     type Types::BuildingBlockType, null: true
 
     def resolve(slug:)
-      BuildingBlock.find_by(slug:)
+      building_block = BuildingBlock.find_by(slug:)
+      validate_access_to_resource(building_block)
+      building_block
     end
   end
 end

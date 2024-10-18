@@ -17,12 +17,12 @@ class GraphqlController < ApplicationController
   end
 
   def execute
-    variables = prepare_variables(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
+    variables = prepare_variables(params[:variables])
     context = {
-      # Query context goes here, for example:
-      current_user:
+      current_user:,
+      operation_context:
     }
     result = RegistrySchema.execute(query, variables:, context:, operation_name:)
     render(json: result)
@@ -31,6 +31,10 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  def operation_context
+    request.headers['Xchange-Graph-Query-Context']
+  end
 
   def current_user
     return nil if request.headers['Authorization'].blank?
@@ -53,7 +57,8 @@ class GraphqlController < ApplicationController
     when Hash
       variables_param
     when ActionController::Parameters
-      variables_param.to_unsafe_hash # GraphQL-Ruby will validate name and type of incoming variables.
+      # GraphQL-Ruby will validate name and type of incoming variables.
+      variables_param.to_unsafe_hash
     when nil
       {}
     else

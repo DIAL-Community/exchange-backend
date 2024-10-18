@@ -7,6 +7,16 @@ class BuildingBlockPolicy < ApplicationPolicy
     super(user, record)
   end
 
+  def available?
+    # TODO: Initial implementation of CDS-2062.
+    # Implementation will be as follows:
+    # - Use this to toggle the availability of a building block section.
+    # - We can store the toggle in database and query them for the value (or config file).
+    # - Query will return 'BAD_REQUEST' if it is not available. UI will re-route to the home page.
+    # - For now, we are just returning false
+    true
+  end
+
   def update_allowed?
     return false if user.nil?
 
