@@ -21,7 +21,7 @@ module Paginated
       search:, show_in_wizard:, show_in_exchange:, offset_attributes:,
       resource_types:, resource_topics:, tags:, countries:
     )
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

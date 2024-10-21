@@ -82,7 +82,7 @@ module Paginated
       workflows:, sdgs:, origins:, software_categories:, software_features:, product_stage:,
       is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:, featured:, offset_attributes:
     )
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

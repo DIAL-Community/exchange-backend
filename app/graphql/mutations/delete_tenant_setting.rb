@@ -35,7 +35,7 @@ module Mutations
         id: tenant_name,
         tenant_name:,
         tenant_domains: [],
-        allow_unsecure_read: false
+        allow_unsecured_read: false
       }
 
       if successful_operation

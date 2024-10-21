@@ -81,7 +81,7 @@ module Paginated
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
       product_stage:, software_categories:, software_features:, featured:
     )
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
       end
 

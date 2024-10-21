@@ -9,12 +9,12 @@ module Mutations
     argument :tenant_name, String, required: true
     argument :tenant_domains, [String], required: true
 
-    argument :allow_unsecure_read, Boolean, required: true
+    argument :allow_unsecured_read, Boolean, required: true
 
     field :tenant_setting, Types::TenantSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(tenant_name:, tenant_domains:, allow_unsecure_read:)
+    def resolve(tenant_name:, tenant_domains:, allow_unsecured_read:)
       unless an_admin
         return {
           tenant_setting: nil,
@@ -109,7 +109,7 @@ module Mutations
           next unless exchange_tenant.nil?
 
           exchange_tenant = ExchangeTenant.new(
-            allow_unsecure_read:,
+            allow_unsecured_read:,
             tenant_name: sanitized_tenant_name,
             domain: tenant_domain
           )
@@ -118,7 +118,7 @@ module Mutations
 
         ExchangeTenant.where(tenant_name: sanitized_tenant_name)
                       .and(ExchangeTenant.where.not(domain: tenant_domains)).destroy_all
-        ExchangeTenant.update_all(allow_unsecure_read:)
+        ExchangeTenant.update_all(allow_unsecured_read:)
 
         successful_operation = true
       end
@@ -127,7 +127,7 @@ module Mutations
         id: sanitized_tenant_name,
         tenant_name: sanitized_tenant_name,
         tenant_domains:,
-        allow_unsecure_read:
+        allow_unsecured_read:
       }
 
       if successful_operation

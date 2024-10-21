@@ -16,14 +16,14 @@ module Queries
           tenant_domains[exchange_tenant.tenant_name] = []
         end
         tenant_domains[exchange_tenant.tenant_name] << exchange_tenant.domain
-        tenant_unsecure_read[exchange_tenant.tenant_name] = exchange_tenant.allow_unsecure_read
+        tenant_unsecure_read[exchange_tenant.tenant_name] = exchange_tenant.allow_unsecured_read
       end
 
       {
         id: tenant_name,
         tenant_name:,
         tenant_domains: tenant_domains[tenant_name],
-        allow_unsecure_read: tenant_unsecure_read[tenant_name]
+        allow_unsecured_read: tenant_unsecure_read[tenant_name]
       }
     end
   end
@@ -42,7 +42,7 @@ module Queries
           tenant_domains[exchange_tenant.tenant_name] = []
         end
         tenant_domains[exchange_tenant.tenant_name] << exchange_tenant.domain
-        tenant_unsecure_read[exchange_tenant.tenant_name] = exchange_tenant.allow_unsecure_read
+        tenant_unsecure_read[exchange_tenant.tenant_name] = exchange_tenant.allow_unsecured_read
       end
 
       tenant_settings = []
@@ -55,7 +55,7 @@ module Queries
           id: tenant_name,
           tenant_name:,
           tenant_domains: tenant_domains[tenant_name],
-          allow_unsecure_read: tenant_unsecure_read[tenant_name]
+          allow_unsecured_read: tenant_unsecure_read[tenant_name]
         }
       end
       tenant_settings

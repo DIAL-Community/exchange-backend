@@ -12,7 +12,7 @@ module Paginated
     type [Types::OrganizationType], null: false
 
     def resolve(search:, sectors:, countries:, years:, aggregator_only:, endorser_only:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

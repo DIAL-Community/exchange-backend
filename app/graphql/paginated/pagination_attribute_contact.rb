@@ -9,7 +9,7 @@ module Paginated
     def resolve(search:)
       return { total_count: 0 } unless an_admin
 
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return { total_count: 0 }
       end
 

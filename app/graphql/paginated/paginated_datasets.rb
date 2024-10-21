@@ -13,7 +13,7 @@ module Paginated
     type [Types::DatasetType], null: false
 
     def resolve(search:, sectors:, sdgs:, tags:, origins:, dataset_types:, countries:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

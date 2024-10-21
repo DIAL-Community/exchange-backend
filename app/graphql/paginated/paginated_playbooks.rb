@@ -9,7 +9,7 @@ module Paginated
     type [Types::PlaybookType], null: false
 
     def resolve(search:, owner:, tags:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

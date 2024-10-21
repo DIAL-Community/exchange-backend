@@ -14,7 +14,7 @@ module Paginated
     type [Types::ProjectType], null: false
 
     def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

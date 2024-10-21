@@ -246,10 +246,10 @@ CREATE TYPE fao.opportunity_type_type AS ENUM (
 
 
 --
--- Name: org_type; Type: TYPE; Schema: fao; Owner: -
+-- Name: organization_type; Type: TYPE; Schema: fao; Owner: -
 --
 
-CREATE TYPE fao.org_type AS ENUM (
+CREATE TYPE fao.organization_type AS ENUM (
     'owner',
     'maintainer',
     'funder',
@@ -287,15 +287,15 @@ CREATE TYPE fao.user_role AS ENUM (
     'ict4sdg',
     'principle',
     'user',
-    'org_user',
-    'org_product_user',
-    'product_user',
+    'organization_owner',
+    'product_owner',
     'mni',
     'content_writer',
     'content_editor',
     'dataset_user',
     'adli_admin',
-    'adli_user'
+    'adli_user',
+    'candidate_editor'
 );
 
 
@@ -1842,7 +1842,7 @@ CREATE TABLE fao.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecure_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -2345,7 +2345,7 @@ CREATE TABLE fao.organization_datasets (
     id bigint NOT NULL,
     organization_id bigint NOT NULL,
     dataset_id bigint NOT NULL,
-    organization_type fao.org_type DEFAULT 'owner'::fao.org_type NOT NULL,
+    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type NOT NULL,
     slug character varying NOT NULL
 );
 
@@ -2411,7 +2411,7 @@ CREATE TABLE fao.organization_products (
     product_id bigint NOT NULL,
     id bigint NOT NULL,
     slug character varying NOT NULL,
-    org_type fao.org_type DEFAULT 'owner'::fao.org_type
+    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type
 );
 
 
@@ -3554,7 +3554,7 @@ ALTER SEQUENCE fao.projects_id_seq OWNED BY fao.projects.id;
 CREATE TABLE fao.projects_organizations (
     project_id bigint NOT NULL,
     organization_id bigint NOT NULL,
-    org_type fao.org_type DEFAULT 'owner'::fao.org_type,
+    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type,
     featured_project boolean DEFAULT false NOT NULL
 );
 
@@ -6194,7 +6194,7 @@ CREATE TABLE public.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecure_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -18739,6 +18739,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241017203838'),
 ('20241017205222'),
 ('20241017210146'),
-('20241017211746');
+('20241017211746'),
+('20241020121626');
 
 

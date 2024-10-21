@@ -32,9 +32,9 @@ module Queries
       end
     end
 
-    def unsecure_read_allowed
+    def unsecured_read_allowed
       current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
-      current_tenant.nil? ? true : current_tenant.allow_unsecure_read
+      current_tenant.nil? ? true : current_tenant.allow_unsecured_read
     end
 
     def an_admin

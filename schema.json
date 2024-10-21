@@ -14867,7 +14867,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "allowUnsecureRead",
+                  "name": "allowUnsecuredRead",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -39779,7 +39779,7 @@
           "description": null,
           "fields": [
             {
-              "name": "allowUnsecureRead",
+              "name": "allowUnsecuredRead",
               "description": null,
               "args": [
 

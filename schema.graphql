@@ -1121,7 +1121,7 @@ type Mutation {
   createSync(description: String!, destination: String!, name: String!, slug: String!, source: String!, synchronizedModels: [String!]!): CreateSyncPayload
   createTag(description: String, name: String!, slug: String!): CreateTagPayload
   createTaskTracker(description: String!, name: String!, slug: String!): CreateTaskTrackerPayload
-  createTenantSetting(allowUnsecureRead: Boolean!, tenantDomains: [String!]!, tenantName: String!): CreateTenantSettingPayload
+  createTenantSetting(allowUnsecuredRead: Boolean!, tenantDomains: [String!]!, tenantName: String!): CreateTenantSettingPayload
   createUseCase(description: String!, govStackEntity: Boolean = false, imageFile: Upload = null, markdownUrl: String = null, maturity: String!, name: String!, sectorSlug: String!, slug: String!): CreateUseCasePayload
   createUseCaseStep(description: String = null, name: String!, slug: String = null, stepNumber: Int!, useCaseId: Int!): CreateUseCaseStepPayload
   createUser(confirmed: Boolean, email: String!, organizations: JSON! = [], products: JSON = [], roles: JSON = [], username: String!): CreateUserPayload
@@ -2326,7 +2326,7 @@ type TaskTrackerDescription {
 }
 
 type TenantSetting {
-  allowUnsecureRead: Boolean!
+  allowUnsecuredRead: Boolean!
   id: ID!
   initialized: Boolean!
   tenantDomains: [String!]!

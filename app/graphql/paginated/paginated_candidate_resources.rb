@@ -10,7 +10,7 @@ module Paginated
     type [Types::CandidateResourceType], null: false
 
     def resolve(search:, countries:, in_review_only:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
+      if !unsecured_read_allowed && context[:current_user].nil?
         return []
       end
 

@@ -6,7 +6,7 @@ module Types
     field :tenant_name, String, null: false
     field :tenant_domains, [String], null: false
 
-    field :allow_unsecure_read, Boolean, null: false
+    field :allow_unsecured_read, Boolean, null: false
 
     field :initialized, Boolean, null: false
     def initialized
