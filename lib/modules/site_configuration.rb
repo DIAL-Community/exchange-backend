@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'modules/slugger'
+include Modules::Slugger
+
 module Modules
   module SiteConfiguration
     def create_default_site_configuration
@@ -226,6 +229,76 @@ module Modules
 
       if default_site_setting.save
         puts 'Default site setting configuration has been regenerated.'
+      end
+    end
+
+    def create_default_candidate_approval_workflow
+      approved_status_name = 'Approved'
+      approved_candidate_status = CandidateStatus.find_by(slug: reslug_em(approved_status_name))
+      if approved_candidate_status.nil?
+        approved_candidate_status = CandidateStatus.new(
+          name: approved_status_name,
+          slug: reslug_em(approved_status_name)
+        )
+      end
+      approved_candidate_status.terminal_status = true
+      approved_candidate_status.description = <<-CandidateStatusDescription
+        <p>
+          This is the status that is assigned to a candidate when the candidate has been approved through the
+          approval workflow. This status is terminal and cannot be changed.
+        </p>
+      CandidateStatusDescription
+
+      if approved_candidate_status.save!
+        puts 'Default "Approved" status for the candidate approval workflow has been regenerated.'
+      end
+
+      rejected_status_name = 'Rejected'
+      rejected_candidate_status = CandidateStatus.find_by(slug: reslug_em(rejected_status_name))
+      if rejected_candidate_status.nil?
+        rejected_candidate_status = CandidateStatus.new(
+          name: rejected_status_name,
+          slug: reslug_em(rejected_status_name)
+        )
+      end
+      rejected_candidate_status.terminal_status = true
+      rejected_candidate_status.description = <<-CandidateStatusDescription
+        <p>
+          This is the status that is assigned to a candidate when the candidate has been rejected through the
+          approval workflow. This status is terminal and cannot be changed.
+        </p>
+      CandidateStatusDescription
+
+      if rejected_candidate_status.save!
+        puts 'Default "Rejected" status for the candidate approval workflow has been regenerated.'
+      end
+
+      initial_status_name = 'Exchange Workflow - Initial Status'
+      initial_candidate_status = CandidateStatus.find_by(slug: reslug_em(initial_status_name))
+      if initial_candidate_status.nil?
+        initial_candidate_status = CandidateStatus.new(
+          name: initial_status_name,
+          slug: reslug_em(initial_status_name)
+        )
+      end
+
+      initial_candidate_status.initial_status = true
+      initial_candidate_status.description = <<-CandidateStatusDescription
+        <p>
+          This is the initial status of the candidate in the approval process workflow. This status is used
+          to indicate that the candidate has been submitted successfully. The candidate will be approved or
+          rejected based on the approval workflow.
+        </p>
+      CandidateStatusDescription
+
+      if initial_candidate_status.save!
+        puts 'Default "Initial" status for the candidate approval workflow has been regenerated.'
+      end
+
+      initial_candidate_status.next_candidate_statuses << approved_candidate_status
+      initial_candidate_status.next_candidate_statuses << rejected_candidate_status
+      if initial_candidate_status.save!
+        puts 'Candidate status relationships have been regenerated.'
       end
     end
   end
