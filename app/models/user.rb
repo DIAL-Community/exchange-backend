@@ -122,7 +122,7 @@ class User < ApplicationRecord
 
     # Find the default organization and allow installation organization to register
     # with their email address.
-    organization_setting = Setting.find_by(slug: Rails.configuration.settings['install_org_key'])
+    organization_setting = Setting.find_by(slug: Rails.configuration.settings['installation_organization_key'])
     if organization_setting
       installation_organization = Organization.find_by(slug: organization_setting.value)
       if installation_organization && email.end_with?(installation_organization.website)

@@ -202,7 +202,7 @@ namespace :data do
   end
 
   task associate_with_organization: :environment do
-    organization_setting = Setting.find_by(slug: Rails.configuration.settings['install_org_key'])
+    organization_setting = Setting.find_by(slug: Rails.configuration.settings['installation_organization_key'])
     if organization_setting
       installation_organization = Organization.find_by(slug: organization_setting.value)
       return if installation_organization.nil?
