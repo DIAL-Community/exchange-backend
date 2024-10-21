@@ -85,13 +85,27 @@ class OrganizationsController < ApplicationController
     current_page = 1
     current_page = params[:page].to_i if params[:page].present? && params[:page].to_i.positive?
 
-    organizations = organizations.name_contains(params[:search]) if params[:search].present?
+    if params[:aggregator].present? && params[:aggregator].to_s.downcase == 'true'
+      organizations = organizations.where(is_mni: true)
+    end
+
+    if params[:endorser].present? && params[:endorser].to_s.downcase == 'true'
+      organizations = organizations.where(is_endorser: true)
+    end
+
+    search = params[:search]
+    unless search.blank?
+      name_filter = organizations.name_contains(search)
+      desc_filter = organizations.left_joins(:organization_descriptions)
+                                 .where('LOWER(organization_descriptions.description) like LOWER(?)', "%#{search}%")
+      organizations = organizations.where(id: (name_filter + desc_filter).uniq)
+    end
 
     if params[:countries].present?
       countries = params[:countries].reject { |x| x.nil? || x.empty? }
       unless countries.empty?
         organizations = organizations.joins(:countries)
-                                     .where('countries.code in (?)', countries)
+                                     .where(countries: { slug: countries })
       end
     end
 
@@ -99,12 +113,12 @@ class OrganizationsController < ApplicationController
       sectors = params[:sectors].reject { |x| x.nil? || x.empty? }
       unless sectors.empty?
         organizations = organizations.joins(:sectors)
-                                     .where('sectors.slug in (?)', sectors)
+                                     .where(sectors: { slug: sectors })
       end
     end
 
-    if params[:endorsing_years].present?
-      years = params[:endorsing_years].reject { |x| x.nil? || x.empty? }
+    if params[:years].present?
+      years = params[:years].reject { |x| x.nil? || x.empty? }
       organizations = organizations.where('extract(year from when_endorsed) in (?)', years) \
         unless years.empty?
     end

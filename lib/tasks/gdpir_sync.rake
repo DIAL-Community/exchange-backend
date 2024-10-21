@@ -17,13 +17,13 @@ namespace :gdpir_sync do
 
     gdpir_name = 'Global Digital Public Infrastructure Repository'
     gdpir_origin = Origin.find_by(slug: 'gdpir')
-    gdpir_origin = Origin.find_by(slug: slug_em(gdpir_name)) if gdpir_origin.nil?
+    gdpir_origin = Origin.find_by(slug: reslug_em(gdpir_name)) if gdpir_origin.nil?
     if gdpir_origin.nil?
       gdpir_origin = Origin.new
     end
 
     gdpir_origin.name = gdpir_name
-    gdpir_origin.slug = slug_em(gdpir_name)
+    gdpir_origin.slug = reslug_em(gdpir_name)
     gdpir_origin.description = <<~DESCRIPTION
       The GDPIR is designed to be a resource for key lessons and knowledge available from G20
       members and guest countries, enabling easy discoverability. It is aimed at addressing
@@ -201,7 +201,7 @@ namespace :gdpir_sync do
     if product.nil?
       product = Product.new(
         name: dpi_product_title,
-        slug: slug_em(dpi_product_title),
+        slug: reslug_em(dpi_product_title),
         website: cleanup_url(dpi_product_url)
       )
     end
@@ -264,9 +264,9 @@ namespace :gdpir_sync do
         repository_section_header.text.include?('Repository')
 
         product_repository_name = "#{product.name} Repository"
-        product_repository = ProductRepository.find_by(slug: slug_em(product_repository_name))
+        product_repository = ProductRepository.find_by(slug: reslug_em(product_repository_name))
         if product_repository.nil?
-          product_repository = ProductRepository.new(slug: slug_em(product_repository_name))
+          product_repository = ProductRepository.new(slug: reslug_em(product_repository_name))
 
           product_repositories = ProductRepository.where(slug: product_repository.slug)
           unless product_repositories.empty?

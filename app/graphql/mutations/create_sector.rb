@@ -47,7 +47,7 @@ module Mutations
       if sector_origin_id.nil? || Origin.find_by(id: sector_origin_id).nil?
         # This origin is added through seeds.rb. Defaulting to this if the origin from the UI is nil
         # or the user entered random origin value.
-        origin = Origin.find_by(slug: 'manually_entered')
+        origin = Origin.find_by(slug: 'manually-entered')
         sector_origin_id = origin.id
       end
       assign_auditable_user(sector)

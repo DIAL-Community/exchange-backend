@@ -15,6 +15,8 @@ module Types
   end
 
   class ProductType < Types::BaseObject
+    include ActionView::Helpers::SanitizeHelper
+
     field :id, ID, null: false
     field :name, String, null: false
     field :slug, String, null: false
@@ -24,6 +26,8 @@ module Types
     field :tags, GraphQL::Types::JSON, null: true
     field :extra_attributes, [GraphQL::Types::JSON], null: true
     field :product_stage, String, null: true
+    field :featured, Boolean, null: true
+    field :contact, String, null: true
 
     # TODO: Deprecate this field after migration to the new UI
     field :owner, String, null: true
@@ -54,8 +58,7 @@ module Types
       return if object.product_description_localized.nil?
 
       object_description = object.product_description_localized.description
-      first_paragraph = Nokogiri::HTML.fragment(object_description).at('p')
-      first_paragraph.nil? ? object_description : first_paragraph.inner_html
+      strip_links(object_description)
     end
 
     field :origins, [Types::OriginType], null: true
@@ -105,5 +108,7 @@ module Types
     field :is_linked_with_dpi, Boolean, null: false, method: :is_linked_with_dpi
 
     field :playbooks, [Types::PlaybookType], null: true
+
+    field :approval_status, CandidateStatusType, null: true
   end
 end

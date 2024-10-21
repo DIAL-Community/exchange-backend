@@ -12,7 +12,9 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $description: String!,
         $govStackEntity: Boolean,
         $productStage: String,
-        $extraAttributes: [ExtraAttributeInput!]
+        $extraAttributes: [ExtraAttributeInput!],
+        $featured: Boolean,
+        $contact: String
       ) {
         createProduct(
           name: $name,
@@ -22,13 +24,17 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
           description: $description,
           govStackEntity: $govStackEntity,
           productStage: $productStage,
-          extraAttributes: $extraAttributes
+          extraAttributes: $extraAttributes,
+          featured: $featured,
+          contact: $contact
         ) {
           product {
             name
             slug
             govStackEntity
             productStage
+            featured
+            contact
             productDescription {
               description
             }
@@ -63,7 +69,9 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         slug: "some-name",
         description: "Some description",
         productStage: nil,
-        extraAttributes: extra_attributes
+        extraAttributes: extra_attributes,
+        featured: true,
+        contact: "contact@example.com"
       }
     )
 
@@ -74,6 +82,8 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "productDescription" => { "description" => "Some description" },
         "slug" => "some-name",
         "productStage" => nil,
+        "featured" => true,
+        "contact" => "contact@example.com",
         "extraAttributes" => extra_attributes.map(&:stringify_keys)
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
@@ -109,7 +119,9 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         "slug" => "some-name",
         "productStage" => nil,
         "productDescription" => { "description" => "Some description" },
-        "extraAttributes" => extra_attributes.map(&:stringify_keys)
+        "extraAttributes" => extra_attributes.map(&:stringify_keys),
+        "featured" => false,
+        "contact" => nil
       }))
       expect(result['data']['createProduct']['errors']).to(eq([]))
     end

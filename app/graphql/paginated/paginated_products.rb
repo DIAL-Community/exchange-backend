@@ -15,6 +15,7 @@ module Paginated
     argument :software_categories, [String], required: false, default_value: []
     argument :software_features, [String], required: false, default_value: []
     argument :product_stage, String, required: false, default_value: nil
+    argument :featured, Boolean, required: false, default_value: nil
 
     argument :is_linked_with_dpi, Boolean, required: false, default_value: false
     # Show only flagged gov_stack_entity. Query: gov_stack_entity = true if show_gov_stack_only is true.
@@ -79,7 +80,7 @@ module Paginated
     def resolve(
       search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, software_categories:, software_features:, product_stage:,
-      is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:, offset_attributes:
+      is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:, featured:, offset_attributes:
     )
       if !unsecure_read_allowed && context[:current_user].nil?
         return []
@@ -87,6 +88,7 @@ module Paginated
 
       products = Product.order(:name).distinct
 
+      products = products.where(featured:) unless featured.nil? || featured == false
       products = products.where(product_stage:) unless product_stage.nil?
 
       filtered, filtered_building_blocks = filter_building_blocks(
@@ -168,6 +170,16 @@ module Paginated
       end
 
       products = products.where(gov_stack_entity: show_gov_stack_only) if show_gov_stack_only
+
+      if context[:current_user].nil?
+        private_statuses = CandidateStatus.name_contains_private.map(&:id)
+        internal_statuses = CandidateStatus.name_contains_internal.map(&:id)
+        approved_statuses = CandidateStatus.name_contains_approved.map(&:id)
+        candidate_statuses = (private_statuses & approved_statuses) + (internal_statuses & approved_statuses)
+
+        where_statement = 'approval_status_id IS NOT NULL AND approval_status_id IN (?)'
+        products = products.where.not(where_statement, candidate_statuses)
+      end
 
       offset_params = offset_attributes.to_h
       products.limit(offset_params[:limit]).offset(offset_params[:offset]).distinct

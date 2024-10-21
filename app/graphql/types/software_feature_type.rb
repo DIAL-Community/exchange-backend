@@ -6,7 +6,7 @@ module Types
     field :name, String, null: false
     field :slug, String, null: false
     field :description, String, null: false
-    field :facility_scale, Integer, null: false
+    field :facility_scale, Integer, null: true
     field :category_id, Integer, null: false
     def category_id
       object.software_category.id

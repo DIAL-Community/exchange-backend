@@ -9,6 +9,8 @@ class Product < ApplicationRecord
 
   attr_accessor :product_description
 
+  belongs_to :approval_status, class_name: 'CandidateStatus', foreign_key: 'approval_status_id', optional: true
+
   has_many :product_indicators, dependent: :delete_all
   has_many :product_repositories, dependent: :delete_all
   has_many :product_descriptions, dependent: :delete_all
@@ -141,10 +143,12 @@ class Product < ApplicationRecord
 
   STAGES = %w[pilot scaling mature].freeze
   validates :product_stage, inclusion: { in: STAGES }, allow_nil: true
+  validates :contact, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
 
   scope :name_contains, ->(name) { where('LOWER(products.name) like LOWER(?)', "%#{name}%") }
   scope :slug_starts_with, ->(slug) { where('LOWER(products.slug) like LOWER(?)', "#{slug}%\\_") }
   scope :name_and_slug_search, ->(name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
+  scope :featured, -> { where(featured: true) }
 
   def set_extra_attribute(name:, value:, type: nil)
     self.extra_attributes ||= []
@@ -182,6 +186,7 @@ class Product < ApplicationRecord
   amoeba do
     enable
 
+    nullify :approval_status_id
     exclude_association :endorsers
     exclude_association :include_relationships
     exclude_association :interop_relationships
@@ -304,13 +309,13 @@ class Product < ApplicationRecord
       return "#{options[:api_path]}/products/#{slug}" unless options[:govstack_path].present?
     end
     return options[:item_path] if options[:item_path].present?
-    return "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
+    "#{options[:collection_path]}/#{slug}" if options[:collection_path].present?
   end
 
   def collection_url(options = {})
     return "#{options[:api_path]}/products" if options[:api_path].present?
     return options[:item_path].sub("/#{slug}", '') if options[:item_path].present?
-    return options[:collection_path] if options[:collection_path].present?
+    options[:collection_path] if options[:collection_path].present?
   end
 
   def api_path(options = {})
@@ -322,7 +327,7 @@ class Product < ApplicationRecord
 
     if options[:collection_path].present?
       return options[:collection_path].sub('/govstack_products', '') if options[:govstack_path].present?
-      return options[:collection_path].sub('/products', '') unless options[:govstack_path].present?
+      options[:collection_path].sub('/products', '') unless options[:govstack_path].present?
     end
   end
 

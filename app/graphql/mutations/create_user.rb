@@ -28,7 +28,7 @@ module Mutations
                         password:,
                         password_confirmation: password)
 
-        send_email_with_password(username, email)
+        send_email_with_password(username, email, password)
       end
       assign_auditable_user(user)
 
@@ -77,10 +77,12 @@ module Mutations
       chars.sort_by { rand }.join[0...10]
     end
 
-    def send_email_with_password(username, email)
+    def send_email_with_password(username, email, password)
       email_subject = 'Password for your account'
 
-      email_body = "Hi #{username}! <br />Your account have been created.<br />"
+      email_body = "Hi #{username}! <br />Your account has been created.<br />
+        Your temporary password is: #{password}<br />
+        Please log in using this password and use the 'My Profile' page to change your password."
 
       AdminMailer.send_mail_from_client(
         'notifier@exchange.dial.global',
