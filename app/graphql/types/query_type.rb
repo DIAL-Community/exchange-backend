@@ -30,8 +30,8 @@ module Types
     field :project, resolver: Queries::ProjectQuery
     field :search_projects, resolver: Queries::SearchProjectsQuery
 
-    field :building_blocks, resolver: Queries::BuildingBlocksQuery
     field :building_block, resolver: Queries::BuildingBlockQuery
+    field :building_blocks, resolver: Queries::BuildingBlocksQuery
 
     field :sector, resolver: Queries::SectorQuery
     field :sectors, resolver: Queries::SectorsQuery
