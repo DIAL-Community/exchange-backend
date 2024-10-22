@@ -191,7 +191,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(be(nil))
       expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq(['Must be admin or content editor to create / update building block.']))
+        .to(eq(['Editing building block is not allowed.']))
     end
   end
 
@@ -212,7 +212,7 @@ RSpec.describe(Mutations::CreateBuildingBlock, type: :graphql) do
       expect(result['data']['createBuildingBlock']['buildingBlock'])
         .to(be(nil))
       expect(result['data']['createBuildingBlock']['errors'])
-        .to(eq(['Must be admin or content editor to create / update building block.']))
+        .to(eq(['Editing building block is not allowed.']))
     end
   end
 end

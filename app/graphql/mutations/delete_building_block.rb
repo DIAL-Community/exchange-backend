@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      building_block = BuildingBlock.find_by(id:)
+      building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
+      unless building_block_policy.delete_allowed?
         return {
           building_block: nil,
-          errors: ['Must be admin to delete a building block.']
+          errors: ['Deleting building block is not allowed.']
         }
       end
 
-      building_block = BuildingBlock.find_by(id:)
       assign_auditable_user(building_block)
       if building_block.destroy
         # Successful deletion, return the deleted building_block with no errors

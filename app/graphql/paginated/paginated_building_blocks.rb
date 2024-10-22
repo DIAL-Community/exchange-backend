@@ -21,9 +21,8 @@ module Paginated
       search:, sdgs:, use_cases:, workflows:, category_types:, filter_blocks:,
       show_mature:, show_gov_stack_only:, offset_attributes:
     )
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return []
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(BuildingBlock.new)
 
       building_blocks = BuildingBlock.order(:name).distinct if filter_blocks.empty?
       building_blocks = BuildingBlock.where(id: filter_blocks) if filter_blocks.any?

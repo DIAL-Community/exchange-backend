@@ -6,8 +6,8 @@ module Mutations
   class CreateBuildingBlock < Mutations::BaseMutation
     include Modules::Slugger
 
-    argument :name, String, required: true
     argument :slug, String, required: true
+    argument :name, String, required: true
     argument :description, String, required: true
     argument :maturity, String, required: true
     argument :category, String, required: false
@@ -19,16 +19,16 @@ module Mutations
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
-      building_block_policy = Pundit.policy(context[:current_user], BuildingBlock.new)
-      unless building_block_policy.update_allowed?
+    def resolve(slug:, name:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
+      building_block = BuildingBlock.find_by(slug:) unless slug.blank?
+      building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
+      unless building_block_policy.edit_allowed?
         return {
           building_block: nil,
-          errors: ['Must be admin or content editor to create / update building block.']
+          errors: ['Editing building block is not allowed.']
         }
       end
 
-      building_block = BuildingBlock.find_by(slug:)
       if building_block.nil?
         building_block = BuildingBlock.new(name:, slug: reslug_em(name))
         # Check if we need to add _duplicate to the slug.

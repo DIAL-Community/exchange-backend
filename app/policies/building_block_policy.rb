@@ -17,7 +17,7 @@ class BuildingBlockPolicy < ApplicationPolicy
     true
   end
 
-  def update_allowed?
+  def edit_allowed?
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin]) ||
@@ -32,6 +32,9 @@ class BuildingBlockPolicy < ApplicationPolicy
   end
 
   def view_allowed?
-    true
+    current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
+    return true if current_tenant.nil? || current_tenant.allow_unsecured_read
+
+    false
   end
 end

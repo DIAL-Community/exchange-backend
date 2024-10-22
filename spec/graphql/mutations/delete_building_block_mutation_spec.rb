@@ -18,10 +18,11 @@ RSpec.describe(Mutations::DeleteBuildingBlock, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:building_block, id: 1000, name: 'Some Building Block', slug: 'some-building_block')
-    expect_any_instance_of(Mutations::DeleteBuildingBlock).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -46,7 +47,7 @@ RSpec.describe(Mutations::DeleteBuildingBlock, type: :graphql) do
       expect(result['data']['deleteBuildingBlock']['buildingBlock'])
         .to(be(nil))
       expect(result['data']['deleteBuildingBlock']['errors'])
-        .to(eq(["Must be admin to delete a building block."]))
+        .to(eq(["Deleting building block is not allowed."]))
     end
   end
 end

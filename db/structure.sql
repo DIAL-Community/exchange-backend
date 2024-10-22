@@ -135,10 +135,7 @@ CREATE TYPE fao.comment_object_type AS ENUM (
     'CITY',
     'CONTACT',
     'RESOURCE',
-    'PLAY',
-    'SITE_SETTING',
-    'TENANT_SETTING',
-    'CANDIDATE_RESOURCE'
+    'PLAY'
 );
 
 
@@ -176,6 +173,23 @@ CREATE TYPE fao.entity_status_type AS ENUM (
     'VALIDATED',
     'PUBLISHED',
     'DRAFT'
+);
+
+
+--
+-- Name: filter_nav; Type: TYPE; Schema: fao; Owner: -
+--
+
+CREATE TYPE fao.filter_nav AS ENUM (
+    'sdgs',
+    'use_cases',
+    'workflows',
+    'building_blocks',
+    'products',
+    'projects',
+    'locations',
+    'sectors',
+    'organizations'
 );
 
 
@@ -246,14 +260,35 @@ CREATE TYPE fao.opportunity_type_type AS ENUM (
 
 
 --
--- Name: organization_type; Type: TYPE; Schema: fao; Owner: -
+-- Name: org_type; Type: TYPE; Schema: fao; Owner: -
 --
 
-CREATE TYPE fao.organization_type AS ENUM (
+CREATE TYPE fao.org_type AS ENUM (
     'owner',
     'maintainer',
     'funder',
     'implementer'
+);
+
+
+--
+-- Name: org_type_orig; Type: TYPE; Schema: fao; Owner: -
+--
+
+CREATE TYPE fao.org_type_orig AS ENUM (
+    'owner',
+    'maintainer'
+);
+
+
+--
+-- Name: org_type_save; Type: TYPE; Schema: fao; Owner: -
+--
+
+CREATE TYPE fao.org_type_save AS ENUM (
+    'owner',
+    'maintainer',
+    'funder'
 );
 
 
@@ -269,12 +304,37 @@ CREATE TYPE fao.product_type AS ENUM (
 
 
 --
+-- Name: product_type_save; Type: TYPE; Schema: fao; Owner: -
+--
+
+CREATE TYPE fao.product_type_save AS ENUM (
+    'product',
+    'dataset'
+);
+
+
+--
 -- Name: relationship_type; Type: TYPE; Schema: fao; Owner: -
 --
 
 CREATE TYPE fao.relationship_type AS ENUM (
     'composed',
     'interoperates'
+);
+
+
+--
+-- Name: top_nav; Type: TYPE; Schema: fao; Owner: -
+--
+
+CREATE TYPE fao.top_nav AS ENUM (
+    'sdgs',
+    'use_cases',
+    'workflows',
+    'building_blocks',
+    'products',
+    'projects',
+    'organizations'
 );
 
 
@@ -287,15 +347,15 @@ CREATE TYPE fao.user_role AS ENUM (
     'ict4sdg',
     'principle',
     'user',
-    'organization_owner',
-    'product_owner',
+    'org_user',
+    'org_product_user',
+    'product_user',
     'mni',
     'content_writer',
     'content_editor',
     'dataset_user',
     'adli_admin',
-    'adli_user',
-    'candidate_editor'
+    'adli_user'
 );
 
 
@@ -868,39 +928,6 @@ ALTER SEQUENCE fao.candidate_organizations_id_seq OWNED BY fao.candidate_organiz
 
 
 --
--- Name: candidate_product_category_indicators; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.candidate_product_category_indicators (
-    id bigint NOT NULL,
-    candidate_product_id bigint NOT NULL,
-    category_indicator_id bigint NOT NULL,
-    indicator_value character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.candidate_product_category_indicators_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.candidate_product_category_indicators_id_seq OWNED BY fao.candidate_product_category_indicators.id;
-
-
---
 -- Name: candidate_products; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -919,9 +946,7 @@ CREATE TABLE fao.candidate_products (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     description character varying,
-    commercial_product boolean DEFAULT false NOT NULL,
-    candidate_status_id bigint,
-    maturity_score jsonb DEFAULT '{}'::jsonb
+    commercial_product boolean DEFAULT false NOT NULL
 );
 
 
@@ -942,81 +967,6 @@ CREATE SEQUENCE fao.candidate_products_id_seq
 --
 
 ALTER SEQUENCE fao.candidate_products_id_seq OWNED BY fao.candidate_products.id;
-
-
---
--- Name: candidate_resources; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.candidate_resources (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
-    resource_type character varying NOT NULL,
-    resource_link character varying NOT NULL,
-    link_description character varying NOT NULL,
-    submitter_email character varying NOT NULL,
-    rejected boolean,
-    rejected_date timestamp(6) without time zone,
-    rejected_by_id bigint,
-    approved_date timestamp(6) without time zone,
-    approved_by_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: candidate_resources_countries; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.candidate_resources_countries (
-    id bigint NOT NULL,
-    candidate_resource_id bigint NOT NULL,
-    country_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.candidate_resources_countries_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.candidate_resources_countries_id_seq OWNED BY fao.candidate_resources_countries.id;
-
-
---
--- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.candidate_resources_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.candidate_resources_id_seq OWNED BY fao.candidate_resources.id;
 
 
 --
@@ -1058,83 +1008,6 @@ CREATE SEQUENCE fao.candidate_roles_id_seq
 --
 
 ALTER SEQUENCE fao.candidate_roles_id_seq OWNED BY fao.candidate_roles.id;
-
-
---
--- Name: candidate_status_relationships; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.candidate_status_relationships (
-    id bigint NOT NULL,
-    current_candidate_status_id bigint NOT NULL,
-    next_candidate_status_id bigint NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: candidate_status_relationships_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.candidate_status_relationships_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: candidate_status_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.candidate_status_relationships_id_seq OWNED BY fao.candidate_status_relationships.id;
-
-
---
--- Name: candidate_statuses; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.candidate_statuses (
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    name character varying NOT NULL,
-    description character varying NOT NULL,
-    initial_status boolean DEFAULT false NOT NULL,
-    terminal_status boolean DEFAULT false NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    notification_template character varying DEFAULT '      <p>
-        Hi {{current-user}},
-      </p>
-      <p>
-        Your candidate''s status, ''{{candidate-name}}'', has been updated.
-      </p>
-      <p>
-        The previous status was ''{{previous-status}}'' and the current status is ''{{current-status}}''.
-      </p>
-'::character varying NOT NULL
-);
-
-
---
--- Name: candidate_statuses_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.candidate_statuses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: candidate_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.candidate_statuses_id_seq OWNED BY fao.candidate_statuses.id;
 
 
 --
@@ -1218,8 +1091,7 @@ CREATE TABLE fao.chatbot_conversations (
     chatbot_answer character varying NOT NULL,
     user_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL,
-    chatbot_response jsonb DEFAULT '{}'::jsonb
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -1434,8 +1306,7 @@ CREATE TABLE fao.countries (
     longitude numeric NOT NULL,
     aliases character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    description character varying
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1842,7 +1713,7 @@ CREATE TABLE fao.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecure_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -2345,7 +2216,7 @@ CREATE TABLE fao.organization_datasets (
     id bigint NOT NULL,
     organization_id bigint NOT NULL,
     dataset_id bigint NOT NULL,
-    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type NOT NULL,
+    organization_type fao.org_type DEFAULT 'owner'::fao.org_type NOT NULL,
     slug character varying NOT NULL
 );
 
@@ -2411,7 +2282,7 @@ CREATE TABLE fao.organization_products (
     product_id bigint NOT NULL,
     id bigint NOT NULL,
     slug character varying NOT NULL,
-    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type
+    org_type fao.org_type DEFAULT 'owner'::fao.org_type
 );
 
 
@@ -2960,6 +2831,76 @@ ALTER SEQUENCE fao.plays_products_id_seq OWNED BY fao.plays_products.id;
 
 
 --
+-- Name: plays_subplays; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.plays_subplays (
+    id bigint NOT NULL,
+    parent_play_id bigint NOT NULL,
+    child_play_id bigint NOT NULL,
+    "order" integer
+);
+
+
+--
+-- Name: plays_subplays_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.plays_subplays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_subplays_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.plays_subplays_id_seq OWNED BY fao.plays_subplays.id;
+
+
+--
+-- Name: portal_views; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.portal_views (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    top_navs character varying[] DEFAULT '{}'::character varying[],
+    filter_navs character varying[] DEFAULT '{}'::character varying[],
+    user_roles character varying[] DEFAULT '{}'::character varying[],
+    product_views character varying[] DEFAULT '{}'::character varying[],
+    organization_views character varying[] DEFAULT '{}'::character varying[],
+    subdomain character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: portal_views_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.portal_views_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: portal_views_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.portal_views_id_seq OWNED BY fao.portal_views.id;
+
+
+--
 -- Name: principle_descriptions; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3023,16 +2964,6 @@ ALTER SEQUENCE fao.product_building_blocks_id_seq OWNED BY fao.product_building_
 
 
 --
--- Name: product_categories; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.product_categories (
-    product_id bigint,
-    software_category_id bigint
-);
-
-
---
 -- Name: product_classifications; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3093,16 +3024,6 @@ CREATE SEQUENCE fao.product_descriptions_id_seq
 --
 
 ALTER SEQUENCE fao.product_descriptions_id_seq OWNED BY fao.product_descriptions.id;
-
-
---
--- Name: product_features; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.product_features (
-    product_id bigint,
-    software_feature_id bigint
-);
 
 
 --
@@ -3299,7 +3220,7 @@ CREATE TABLE fao.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
-    product_type fao.product_type DEFAULT 'product'::fao.product_type,
+    product_type fao.product_type_save DEFAULT 'product'::fao.product_type_save,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -3309,11 +3230,7 @@ CREATE TABLE fao.products (
     pricing_url character varying,
     languages jsonb,
     gov_stack_entity boolean DEFAULT false NOT NULL,
-    extra_attributes jsonb DEFAULT '[]'::jsonb,
-    product_stage character varying,
-    featured boolean DEFAULT false,
-    contact character varying,
-    approval_status_id bigint
+    extra_attributes jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -3554,7 +3471,7 @@ ALTER SEQUENCE fao.projects_id_seq OWNED BY fao.projects.id;
 CREATE TABLE fao.projects_organizations (
     project_id bigint NOT NULL,
     organization_id bigint NOT NULL,
-    organization_type fao.organization_type DEFAULT 'owner'::fao.organization_type,
+    org_type fao.org_type DEFAULT 'owner'::fao.org_type,
     featured_project boolean DEFAULT false NOT NULL
 );
 
@@ -3769,40 +3686,6 @@ ALTER SEQUENCE fao.resource_topics_id_seq OWNED BY fao.resource_topics.id;
 
 
 --
--- Name: resource_types; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.resource_types (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    locale character varying DEFAULT 'en'::character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: resource_types_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.resource_types_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.resource_types_id_seq OWNED BY fao.resource_types.id;
-
-
---
 -- Name: resources; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -3823,8 +3706,7 @@ CREATE TABLE fao.resources (
     featured boolean DEFAULT false NOT NULL,
     resource_filename character varying,
     resource_topics character varying[] DEFAULT '{}'::character varying[],
-    organization_id bigint,
-    submitted_by_id bigint
+    organization_id bigint
 );
 
 
@@ -4109,115 +3991,6 @@ ALTER SEQUENCE fao.settings_id_seq OWNED BY fao.settings.id;
 
 
 --
--- Name: site_settings; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.site_settings (
-    id bigint NOT NULL,
-    slug character varying NOT NULL,
-    name character varying NOT NULL,
-    description character varying NOT NULL,
-    favicon_url character varying NOT NULL,
-    exchange_logo_url character varying NOT NULL,
-    open_graph_logo_url character varying NOT NULL,
-    menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
-    carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
-    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
-    default_setting boolean DEFAULT false NOT NULL,
-    enable_marketplace boolean DEFAULT false NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: site_settings_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.site_settings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.site_settings_id_seq OWNED BY fao.site_settings.id;
-
-
---
--- Name: software_categories; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.software_categories (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: software_categories_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.software_categories_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: software_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.software_categories_id_seq OWNED BY fao.software_categories.id;
-
-
---
--- Name: software_features; Type: TABLE; Schema: fao; Owner: -
---
-
-CREATE TABLE fao.software_features (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    facility_scale integer,
-    software_category_id bigint,
-    created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
-);
-
-
---
--- Name: software_features_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
---
-
-CREATE SEQUENCE fao.software_features_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: software_features_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
---
-
-ALTER SEQUENCE fao.software_features_id_seq OWNED BY fao.software_features.id;
-
-
---
 -- Name: starred_objects; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -4251,6 +4024,39 @@ CREATE SEQUENCE fao.starred_objects_id_seq
 --
 
 ALTER SEQUENCE fao.starred_objects_id_seq OWNED BY fao.starred_objects.id;
+
+
+--
+-- Name: stylesheets; Type: TABLE; Schema: fao; Owner: -
+--
+
+CREATE TABLE fao.stylesheets (
+    id bigint NOT NULL,
+    portal character varying,
+    background_color character varying,
+    about_page character varying DEFAULT ''::character varying NOT NULL,
+    footer_content character varying DEFAULT ''::character varying NOT NULL,
+    header_logo character varying
+);
+
+
+--
+-- Name: stylesheets_id_seq; Type: SEQUENCE; Schema: fao; Owner: -
+--
+
+CREATE SEQUENCE fao.stylesheets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: stylesheets_id_seq; Type: SEQUENCE OWNED BY; Schema: fao; Owner: -
+--
+
+ALTER SEQUENCE fao.stylesheets_id_seq OWNED BY fao.stylesheets.id;
 
 
 --
@@ -9340,13 +9146,6 @@ ALTER TABLE ONLY fao.candidate_organizations ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: candidate_product_category_indicators id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_product_category_indicators ALTER COLUMN id SET DEFAULT nextval('fao.candidate_product_category_indicators_id_seq'::regclass);
-
-
---
 -- Name: candidate_products id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9354,38 +9153,10 @@ ALTER TABLE ONLY fao.candidate_products ALTER COLUMN id SET DEFAULT nextval('fao
 
 
 --
--- Name: candidate_resources id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources ALTER COLUMN id SET DEFAULT nextval('fao.candidate_resources_id_seq'::regclass);
-
-
---
--- Name: candidate_resources_countries id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('fao.candidate_resources_countries_id_seq'::regclass);
-
-
---
 -- Name: candidate_roles id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.candidate_roles ALTER COLUMN id SET DEFAULT nextval('fao.candidate_roles_id_seq'::regclass);
-
-
---
--- Name: candidate_status_relationships id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_status_relationships ALTER COLUMN id SET DEFAULT nextval('fao.candidate_status_relationships_id_seq'::regclass);
-
-
---
--- Name: candidate_statuses id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_statuses ALTER COLUMN id SET DEFAULT nextval('fao.candidate_statuses_id_seq'::regclass);
 
 
 --
@@ -9746,6 +9517,20 @@ ALTER TABLE ONLY fao.plays_products ALTER COLUMN id SET DEFAULT nextval('fao.pla
 
 
 --
+-- Name: plays_subplays id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.plays_subplays ALTER COLUMN id SET DEFAULT nextval('fao.plays_subplays_id_seq'::regclass);
+
+
+--
+-- Name: portal_views id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.portal_views ALTER COLUMN id SET DEFAULT nextval('fao.portal_views_id_seq'::regclass);
+
+
+--
 -- Name: principle_descriptions id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9893,13 +9678,6 @@ ALTER TABLE ONLY fao.resource_topics ALTER COLUMN id SET DEFAULT nextval('fao.re
 
 
 --
--- Name: resource_types id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.resource_types ALTER COLUMN id SET DEFAULT nextval('fao.resource_types_id_seq'::regclass);
-
-
---
 -- Name: resources id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
@@ -9956,31 +9734,17 @@ ALTER TABLE ONLY fao.settings ALTER COLUMN id SET DEFAULT nextval('fao.settings_
 
 
 --
--- Name: site_settings id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.site_settings ALTER COLUMN id SET DEFAULT nextval('fao.site_settings_id_seq'::regclass);
-
-
---
--- Name: software_categories id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.software_categories ALTER COLUMN id SET DEFAULT nextval('fao.software_categories_id_seq'::regclass);
-
-
---
--- Name: software_features id; Type: DEFAULT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.software_features ALTER COLUMN id SET DEFAULT nextval('fao.software_features_id_seq'::regclass);
-
-
---
 -- Name: starred_objects id; Type: DEFAULT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.starred_objects ALTER COLUMN id SET DEFAULT nextval('fao.starred_objects_id_seq'::regclass);
+
+
+--
+-- Name: stylesheets id; Type: DEFAULT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.stylesheets ALTER COLUMN id SET DEFAULT nextval('fao.stylesheets_id_seq'::regclass);
 
 
 --
@@ -11007,14 +10771,6 @@ ALTER TABLE ONLY fao.candidate_organizations
 
 
 --
--- Name: candidate_product_category_indicators candidate_product_category_indicators_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_product_category_indicators
-    ADD CONSTRAINT candidate_product_category_indicators_pkey PRIMARY KEY (id);
-
-
---
 -- Name: candidate_products candidate_products_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11023,43 +10779,11 @@ ALTER TABLE ONLY fao.candidate_products
 
 
 --
--- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources_countries
-    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
-
-
---
--- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources
-    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
-
-
---
 -- Name: candidate_roles candidate_roles_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.candidate_roles
     ADD CONSTRAINT candidate_roles_pkey PRIMARY KEY (id);
-
-
---
--- Name: candidate_status_relationships candidate_status_relationships_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_status_relationships
-    ADD CONSTRAINT candidate_status_relationships_pkey PRIMARY KEY (id);
-
-
---
--- Name: candidate_statuses candidate_statuses_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_statuses
-    ADD CONSTRAINT candidate_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -11471,6 +11195,22 @@ ALTER TABLE ONLY fao.plays_products
 
 
 --
+-- Name: plays_subplays plays_subplays_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.plays_subplays
+    ADD CONSTRAINT plays_subplays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: portal_views portal_views_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.portal_views
+    ADD CONSTRAINT portal_views_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: principle_descriptions principle_descriptions_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11639,14 +11379,6 @@ ALTER TABLE ONLY fao.resource_topics
 
 
 --
--- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.resource_types
-    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
-
-
---
 -- Name: resources resources_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -11719,35 +11451,19 @@ ALTER TABLE ONLY fao.settings
 
 
 --
--- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.site_settings
-    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
-
-
---
--- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.software_categories
-    ADD CONSTRAINT software_categories_pkey PRIMARY KEY (id);
-
-
---
--- Name: software_features software_features_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.software_features
-    ADD CONSTRAINT software_features_pkey PRIMARY KEY (id);
-
-
---
 -- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.starred_objects
     ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: stylesheets stylesheets_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.stylesheets
+    ADD CONSTRAINT stylesheets_pkey PRIMARY KEY (id);
 
 
 --
@@ -12919,27 +12635,6 @@ CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON fao.use_case_steps_bui
 
 
 --
--- Name: candidate_product_category_indicator_main_index; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX candidate_product_category_indicator_main_index ON fao.candidate_product_category_indicators USING btree (candidate_product_id, category_indicator_id);
-
-
---
--- Name: candidate_product_category_indicator_reverse_index; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX candidate_product_category_indicator_reverse_index ON fao.candidate_product_category_indicators USING btree (category_indicator_id, candidate_product_id);
-
-
---
--- Name: candidate_resources_countries_idx; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX candidate_resources_countries_idx ON fao.candidate_resources_countries USING btree (candidate_resource_id, country_id);
-
-
---
 -- Name: candidate_roles_unique_fields; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -12947,31 +12642,10 @@ CREATE UNIQUE INDEX candidate_roles_unique_fields ON fao.candidate_roles USING b
 
 
 --
--- Name: candidate_status_relationships_main_index; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX candidate_status_relationships_main_index ON fao.candidate_status_relationships USING btree (current_candidate_status_id, next_candidate_status_id);
-
-
---
--- Name: candidate_status_relationships_reverse_index; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX candidate_status_relationships_reverse_index ON fao.candidate_status_relationships USING btree (next_candidate_status_id, current_candidate_status_id);
-
-
---
 -- Name: classifications_products_idx; Type: INDEX; Schema: fao; Owner: -
 --
 
 CREATE UNIQUE INDEX classifications_products_idx ON fao.product_classifications USING btree (classification_id, product_id);
-
-
---
--- Name: countries_candidate_resources_idx; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE UNIQUE INDEX countries_candidate_resources_idx ON fao.candidate_resources_countries USING btree (country_id, candidate_resource_id);
 
 
 --
@@ -13087,31 +12761,10 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON fao.candidate_product
 
 
 --
--- Name: index_candidate_products_on_candidate_status_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_candidate_products_on_candidate_status_id ON fao.candidate_products USING btree (candidate_status_id);
-
-
---
 -- Name: index_candidate_products_on_rejected_by_id; Type: INDEX; Schema: fao; Owner: -
 --
 
 CREATE INDEX index_candidate_products_on_rejected_by_id ON fao.candidate_products USING btree (rejected_by_id);
-
-
---
--- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_candidate_resources_on_approved_by_id ON fao.candidate_resources USING btree (approved_by_id);
-
-
---
--- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_candidate_resources_on_rejected_by_id ON fao.candidate_resources USING btree (rejected_by_id);
 
 
 --
@@ -13577,20 +13230,6 @@ CREATE INDEX index_principle_descriptions_on_digital_principle_id ON fao.princip
 
 
 --
--- Name: index_product_categories_on_product_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_product_categories_on_product_id ON fao.product_categories USING btree (product_id);
-
-
---
--- Name: index_product_categories_on_software_category_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_product_categories_on_software_category_id ON fao.product_categories USING btree (software_category_id);
-
-
---
 -- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13609,20 +13248,6 @@ CREATE INDEX index_product_classifications_on_product_id ON fao.product_classifi
 --
 
 CREATE INDEX index_product_descriptions_on_product_id ON fao.product_descriptions USING btree (product_id);
-
-
---
--- Name: index_product_features_on_product_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_product_features_on_product_id ON fao.product_features USING btree (product_id);
-
-
---
--- Name: index_product_features_on_software_feature_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_product_features_on_software_feature_id ON fao.product_features USING btree (software_feature_id);
 
 
 --
@@ -13672,13 +13297,6 @@ CREATE INDEX index_products_endorsers_on_endorser_id ON fao.products_endorsers U
 --
 
 CREATE INDEX index_products_endorsers_on_product_id ON fao.products_endorsers USING btree (product_id);
-
-
---
--- Name: index_products_on_approval_status_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_products_on_approval_status_id ON fao.products USING btree (approval_status_id);
 
 
 --
@@ -13843,13 +13461,6 @@ CREATE INDEX index_resources_on_organization_id ON fao.resources USING btree (or
 
 
 --
--- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_resources_on_submitted_by_id ON fao.resources USING btree (submitted_by_id);
-
-
---
 -- Name: index_resources_use_cases; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -13917,13 +13528,6 @@ CREATE UNIQUE INDEX index_sessions_on_session_id ON fao.sessions USING btree (se
 --
 
 CREATE INDEX index_sessions_on_updated_at ON fao.sessions USING btree (updated_at);
-
-
---
--- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: fao; Owner: -
---
-
-CREATE INDEX index_software_features_on_software_category_id ON fao.software_features USING btree (software_category_id);
 
 
 --
@@ -14071,6 +13675,13 @@ CREATE UNIQUE INDEX organizations_resources_idx ON fao.organizations_resources U
 --
 
 CREATE UNIQUE INDEX origins_products_idx ON fao.products_origins USING btree (origin_id, product_id);
+
+
+--
+-- Name: play_rel_index; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE UNIQUE INDEX play_rel_index ON fao.plays_subplays USING btree (parent_play_id, child_play_id);
 
 
 --
@@ -15777,67 +15388,11 @@ ALTER TABLE ONLY fao.plays_building_blocks
 
 
 --
--- Name: candidate_product_category_indicators candidate_products_category_indicators_candidate_product_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+-- Name: plays_subplays child_play_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
-ALTER TABLE ONLY fao.candidate_product_category_indicators
-    ADD CONSTRAINT candidate_products_category_indicators_candidate_product_fk FOREIGN KEY (candidate_product_id) REFERENCES fao.candidate_products(id);
-
-
---
--- Name: candidate_product_category_indicators candidate_products_category_indicators_category_indicator_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_product_category_indicators
-    ADD CONSTRAINT candidate_products_category_indicators_category_indicator_fk FOREIGN KEY (category_indicator_id) REFERENCES fao.category_indicators(id);
-
-
---
--- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources
-    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES fao.users(id);
-
-
---
--- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources_countries
-    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES fao.candidate_resources(id);
-
-
---
--- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources_countries
-    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES fao.countries(id);
-
-
---
--- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_resources
-    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES fao.users(id);
-
-
---
--- Name: candidate_status_relationships candidate_status_relationships_current_candidate_status_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_status_relationships
-    ADD CONSTRAINT candidate_status_relationships_current_candidate_status_fk FOREIGN KEY (current_candidate_status_id) REFERENCES fao.candidate_statuses(id);
-
-
---
--- Name: candidate_status_relationships candidate_status_relationships_next_candidate_status_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_status_relationships
-    ADD CONSTRAINT candidate_status_relationships_next_candidate_status_fk FOREIGN KEY (next_candidate_status_id) REFERENCES fao.candidate_statuses(id);
+ALTER TABLE ONLY fao.plays_subplays
+    ADD CONSTRAINT child_play_fk FOREIGN KEY (child_play_id) REFERENCES fao.plays(id);
 
 
 --
@@ -15905,27 +15460,11 @@ ALTER TABLE ONLY fao.datasets_origins
 
 
 --
--- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_categories
-    ADD CONSTRAINT fk_rails_156a781ad6 FOREIGN KEY (software_category_id) REFERENCES fao.software_categories(id);
-
-
---
 -- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
 ALTER TABLE ONLY fao.product_classifications
     ADD CONSTRAINT fk_rails_16035b6309 FOREIGN KEY (classification_id) REFERENCES fao.classifications(id);
-
-
---
--- Name: products fk_rails_178d05e423; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.products
-    ADD CONSTRAINT fk_rails_178d05e423 FOREIGN KEY (approval_status_id) REFERENCES fao.candidate_statuses(id) ON DELETE SET NULL;
 
 
 --
@@ -15942,14 +15481,6 @@ ALTER TABLE ONLY fao.chatbot_conversations
 
 ALTER TABLE ONLY fao.use_case_steps
     ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES fao.use_cases(id);
-
-
---
--- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.software_features
-    ADD CONSTRAINT fk_rails_1aba49ed7b FOREIGN KEY (software_category_id) REFERENCES fao.software_categories(id);
 
 
 --
@@ -16014,14 +15545,6 @@ ALTER TABLE ONLY fao.opportunities_building_blocks
 
 ALTER TABLE ONLY fao.candidate_organizations
     ADD CONSTRAINT fk_rails_246998b230 FOREIGN KEY (rejected_by_id) REFERENCES fao.users(id);
-
-
---
--- Name: candidate_products fk_rails_266c90eecf; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.candidate_products
-    ADD CONSTRAINT fk_rails_266c90eecf FOREIGN KEY (candidate_status_id) REFERENCES fao.candidate_statuses(id) ON DELETE SET NULL;
 
 
 --
@@ -16102,14 +15625,6 @@ ALTER TABLE ONLY fao.organization_descriptions
 
 ALTER TABLE ONLY fao.projects_digital_principles
     ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES fao.digital_principles(id);
-
-
---
--- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.resources
-    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES fao.users(id);
 
 
 --
@@ -16369,14 +15884,6 @@ ALTER TABLE ONLY fao.projects_countries
 
 
 --
--- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_features
-    ADD CONSTRAINT fk_rails_9019f50ede FOREIGN KEY (product_id) REFERENCES fao.products(id);
-
-
---
 -- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -16398,22 +15905,6 @@ ALTER TABLE ONLY fao.use_case_descriptions
 
 ALTER TABLE ONLY fao.opportunities_sectors
     ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES fao.sectors(id);
-
-
---
--- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_categories
-    ADD CONSTRAINT fk_rails_98a9a32a41 FOREIGN KEY (product_id) REFERENCES fao.products(id);
-
-
---
--- Name: product_features fk_rails_9cbbc9970e; Type: FK CONSTRAINT; Schema: fao; Owner: -
---
-
-ALTER TABLE ONLY fao.product_features
-    ADD CONSTRAINT fk_rails_9cbbc9970e FOREIGN KEY (software_feature_id) REFERENCES fao.software_features(id);
 
 
 --
@@ -16806,6 +16297,14 @@ ALTER TABLE ONLY fao.organizations_sectors
 
 ALTER TABLE ONLY fao.organizations_sectors
     ADD CONSTRAINT organizations_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES fao.sectors(id);
+
+
+--
+-- Name: plays_subplays parent_play_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.plays_subplays
+    ADD CONSTRAINT parent_play_fk FOREIGN KEY (parent_play_id) REFERENCES fao.plays(id);
 
 
 --

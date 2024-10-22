@@ -5,25 +5,35 @@ module Queries
     def validate_access_to_resource(resource)
       operation_context = context[:operation_context]
       current_policy = Pundit.policy(context[:current_user], resource)
-      if !current_policy.available?
+
+      unless current_policy.available?
         raise GraphQL::ExecutionError.new(
           'Building block is not available.',
           extensions: { 'code' => BAD_REQUEST }
         )
-      elsif operation_context == EDITING_CONTEXT
-        if context[:current_user].nil?
+      end
+
+      if operation_context == VIEWING_CONTEXT
+        if !current_policy.view_allowed? && context[:current_user].nil?
           raise GraphQL::ExecutionError.new(
-            'Editing is not allowed.',
+            'Viewing is not allowed.',
             extensions: { 'code' => UNAUTHORIZED }
           )
-        elsif !current_policy.update_allowed?
+        end
+        if !current_policy.view_allowed? && !context[:current_user].nil?
           raise GraphQL::ExecutionError.new(
-            'Editing is not allowed.',
+            'Viewing is not allowed.',
             extensions: { 'code' => FORBIDDEN }
           )
         end
-      elsif operation_context == VIEWING_CONTEXT
-        unless current_policy.view_allowed?
+      else
+        if !current_policy.edit_allowed? && context[:current_user].nil?
+          raise GraphQL::ExecutionError.new(
+            'Viewing is not allowed.',
+            extensions: { 'code' => UNAUTHORIZED }
+          )
+        end
+        if !current_policy.edit_allowed? && !context[:current_user].nil?
           raise GraphQL::ExecutionError.new(
             'Viewing is not allowed.',
             extensions: { 'code' => FORBIDDEN }
