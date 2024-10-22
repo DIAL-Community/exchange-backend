@@ -16,4 +16,14 @@ namespace :site_configuration do
       end
     end
   end
+
+  desc 'Regenerate default candidate approval workflow configurations.'
+  task regenerate_default_candidate_approval_workflow: :environment do
+    create_default_candidate_approval_workflow
+    Apartment.tenant_names.each do |tenant_name|
+      Apartment::Tenant.switch(tenant_name) do
+        create_default_candidate_approval_workflow
+      end
+    end
+  end
 end
