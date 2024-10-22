@@ -5,7 +5,11 @@ class NilClassPolicy < ApplicationPolicy
     false
   end
 
-  def view_allowed?
+  def create_allowed?
+    false
+  end
+
+  def edit_allowed?
     false
   end
 
@@ -13,7 +17,7 @@ class NilClassPolicy < ApplicationPolicy
     false
   end
 
-  def update_allowed?
+  def view_allowed?
     false
   end
 end

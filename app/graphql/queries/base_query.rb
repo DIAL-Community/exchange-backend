@@ -29,13 +29,13 @@ module Queries
       else
         if !current_policy.edit_allowed? && context[:current_user].nil?
           raise GraphQL::ExecutionError.new(
-            'Viewing is not allowed.',
+            "#{operation_context.titlecase} is not allowed.",
             extensions: { 'code' => UNAUTHORIZED }
           )
         end
         if !current_policy.edit_allowed? && !context[:current_user].nil?
           raise GraphQL::ExecutionError.new(
-            'Viewing is not allowed.',
+            "#{operation_context.titlecase} is not allowed.",
             extensions: { 'code' => FORBIDDEN }
           )
         end
