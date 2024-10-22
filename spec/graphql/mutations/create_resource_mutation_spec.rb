@@ -65,8 +65,6 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
       }
     )
 
-    puts "Result: #{result.inspect}"
-
     aggregate_failures do
       expect(result['data']['createResource']['resource'])
         .to(eq({ "name" => "Some Name", "slug" => "some-name", "showInExchange" => false, "showInWizard" => true }))

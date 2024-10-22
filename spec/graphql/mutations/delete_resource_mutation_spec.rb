@@ -26,7 +26,6 @@ RSpec.describe(Mutations::DeleteResource, type: :graphql) do
       mutation,
       variables: { id: '1000' }
     )
-    puts "Result: #{result.to_json}"
 
     aggregate_failures do
       expect(result['data']['deleteResource']['resource']).to(eq({ 'id' => '1000' }))

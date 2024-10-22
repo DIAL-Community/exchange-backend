@@ -3,7 +3,7 @@
 require 'graph_helpers'
 require 'rails_helper'
 
-RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
+RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
   let(:query) do
     <<~GQL
       query CandidateDatasets ($search: String!) {
@@ -22,7 +22,8 @@ RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       query,
-      variables: { search: "Random" }
+      variables: { search: "Random" },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
@@ -33,13 +34,16 @@ RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
   it 'fails - user is not logged in' do
     create(:candidate_dataset, name: 'Some Random Candidate')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      nil,
       query,
-      variables: { search: "Random" }
+      variables: { search: "Random" },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
-      expect(result['data']['candidateDatasets']).to(eq([]))
+      expect(result['data']).to(eq(nil))
+      expect(result['errors']).not_to(eq(nil))
     end
   end
 
@@ -51,11 +55,13 @@ RSpec.describe(Queries::CandidateDatasetsQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       query,
-      variables: { search: "Random" }
+      variables: { search: "Random" },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
-      expect(result['data']['candidateDatasets']).to(eq([]))
+      expect(result['data']).to(eq(nil))
+      expect(result['errors']).not_to(eq(nil))
     end
   end
 end

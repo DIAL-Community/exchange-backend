@@ -82,7 +82,6 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
         ]
       },
     )
-    puts result.inspect
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product']['extraAttributes'])
         .to(eq([
@@ -111,7 +110,6 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
         ]
       },
     )
-    puts result.inspect
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product'])
         .to(eq(nil))
@@ -136,7 +134,6 @@ extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "t
         ]
       },
     )
-    puts result.inspect
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product']['extraAttributes'])
         .to(eq([
@@ -163,7 +160,6 @@ extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "t
         ]
       },
     )
-    puts result.inspect
     aggregate_failures do
       expect(result['data']['updateProductExtraAttributes']['product'])
         .to(eq(nil))

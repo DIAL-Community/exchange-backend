@@ -93,8 +93,8 @@ module Types
     field :candidate_roles, resolver: Queries::CandidateRolesQuery
     field :candidate_role, resolver: Queries::CandidateRoleQuery
 
-    field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
     field :candidate_dataset, resolver: Queries::CandidateDatasetQuery
+    field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
 
     field :candidate_resources, resolver: Queries::CandidateResourcesQuery
     field :candidate_resource, resolver: Queries::CandidateResourceQuery

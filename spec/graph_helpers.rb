@@ -20,7 +20,11 @@ module GraphHelpers
   def execute_graphql_as_user(user, query, **kwargs)
     RegistrySchema.execute(
       query,
-      context: { controller:, current_user: user },
+      context: {
+        controller:,
+        current_user: user,
+        operation_context: kwargs[:operation_context]
+      },
       variables: kwargs[:variables]
     )
   end
