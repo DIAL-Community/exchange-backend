@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Queries
-
   class CandidateResourceQuery < Queries::BaseQuery
     argument :slug, String, required: true
     type Types::CandidateResourceType, null: true

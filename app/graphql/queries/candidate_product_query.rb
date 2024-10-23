@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Queries
-
   class CandidateProductQuery < Queries::BaseQuery
     argument :slug, String, required: true
     type Types::CandidateProductType, null: true
@@ -12,7 +11,7 @@ module Queries
       candidate_product
     end
   end
-  
+
   class CandidateProductsQuery < Queries::BaseQuery
     argument :search, String, required: false, default_value: ''
     type [Types::CandidateProductType], null: false
