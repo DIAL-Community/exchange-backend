@@ -19,14 +19,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, website:, visualization_url:, dataset_type:, submitter_email:, description:, captcha:)
-      unless !context[:current_user].nil?
+      candidate_dataset = CandidateDataset.find_by(slug:)
+      candidate_dataset_policy = Pundit.policy(context[:current_user], candidate_dataset || CandidateDataset.new)
+      unless candidate_dataset_policy.create_allowed?
         return {
           candidate_dataset: nil,
           errors: ['Must be logged in to create / edit a candidate dataset']
         }
       end
 
-      candidate_dataset = CandidateDataset.find_by(slug:)
       if candidate_dataset.nil?
         slug = reslug_em(name)
         candidate_dataset = CandidateDataset.new(name:, slug:)
