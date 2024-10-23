@@ -8,11 +8,9 @@ module Queries
     type [Types::CandidateRoleType], null: false
 
     def resolve(product_id:, organization_id:)
-      return [] unless an_admin
-
-      candidate_roles = CandidateRole
+      validate_access_to_resource(CandidateRole.new)
+      candidate_roles = CandidateRole.order(:created_at)
       candidate_roles = candidate_roles.where(product_id:) unless product_id.nil?
-
       candidate_roles = candidate_roles.where(organization_id:) unless organization_id.nil?
       candidate_roles
     end
@@ -28,7 +26,7 @@ module Queries
     type Types::CandidateRoleType, null: true
 
     def resolve(id:, email:, product_id:, organization_id:, dataset_id:)
-      return nil if context[:current_user].nil?
+      validate_access_to_resource(CandidateRole.new)
 
       unless id.nil?
         candidate_role = CandidateRole.find(id)

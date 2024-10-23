@@ -14,14 +14,18 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, description: nil, candidate_status_slug:)
-      unless an_admin
+      candidate_product = CandidateProduct.find_by(slug:)
+      candidate_product_policy = Pundit.policy(
+        context[:current_user],
+        candidate_product || CandidateProduct.new
+      )
+      unless candidate_product_policy.edit_allowed?
         return {
           candidate_product: nil,
-          errors: ['Must be admin to update a candidate product.']
+          errors: ['Editing candidate product is not allowed.']
         }
       end
 
-      candidate_product = CandidateProduct.find_by(slug:)
       unless candidate_product.rejected.nil?
         return {
           candidate_product: nil,

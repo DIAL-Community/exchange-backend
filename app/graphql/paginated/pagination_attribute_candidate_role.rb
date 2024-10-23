@@ -7,12 +7,7 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
-
-      return { total_count: 0 } unless an_admin
-
+      validate_access_to_resource(CandidateRole.new)
       candidate_roles = CandidateRole.order(:name)
       unless search.blank?
         name_filter = candidate_roles.email_contains(search)

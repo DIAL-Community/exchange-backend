@@ -7,27 +7,24 @@ class ProductPolicy < ApplicationPolicy
     super(user, record)
   end
 
-  def permitted_attributes
-    if mod_allowed?
-      %i[name is_launchable website slug aliases tags default_url logo start_assessment
-         product_description]
-    else
-      []
-    end
+  def available?
+    true
   end
 
   def create_allowed?
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:content_editor])
+      user.roles.include?(User.user_roles[:content_editor]) ||
+      user.roles.include?(User.user_roles[:content_writer])
   end
 
-  def mod_allowed?
+  def edit_allowed?
     return false if user.nil?
 
-    if @record.is_a?(Product) && user.user_products.include?(@record.id) &&
-       user.roles.include?(User.user_roles[:product_owner])
+    if @record.is_a?(Product) &&
+      user.user_products.include?(@record.id) &&
+      user.roles.include?(User.user_roles[:product_owner])
       return true
     end
 
@@ -36,40 +33,16 @@ class ProductPolicy < ApplicationPolicy
       user.roles.include?(User.user_roles[:content_writer])
   end
 
+  def delete_allowed?
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
+  end
+
   def view_allowed?
-    true
-  end
+    current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
+    return true if current_tenant.nil? || current_tenant.allow_unsecured_read
 
-  # Admin and content editor are allowed to remove product mapping.
-  # Product owner is allowed if the product belongs to the owner.
-  def removing_mapping_allowed?
-    return false if user.nil?
-
-    return true if user.roles.include?(User.user_roles[:product_owner]) &&
-                   @record.is_a?(Product) && user.user_products.include?(@record.id)
-
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:content_editor])
-  end
-
-  # Admin, content editor and content writer are allowed to add product mapping.
-  # Product owner is allowed if the product belongs to the owner.
-  def adding_mapping_allowed?
-    return false if user.nil?
-
-    return true if user.roles.include?(User.user_roles[:product_owner]) &&
-                   @record.is_a?(Product) && user.user_products.include?(@record.id)
-
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:content_editor]) ||
-      user.roles.include?(User.user_roles[:content_writer])
-  end
-
-  def beta_only?
-    return true if user.nil?
-
-    !user.roles.include?(User.user_roles[:content_editor]) &&
-      !user.roles.include?(User.user_roles[:admin]) &&
-      !user.roles.include?(User.user_roles[:ict4sdg])
+    false
   end
 end

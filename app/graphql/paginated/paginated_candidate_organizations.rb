@@ -7,12 +7,7 @@ module Paginated
     type [Types::CandidateOrganizationType], null: false
 
     def resolve(search:, offset_attributes:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return []
-      end
-
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateOrganization.new)
       candidate_organizations = CandidateOrganization.order(rejected: :desc)
                                                      .order(created_at: :desc)
                                                      .order(:name)

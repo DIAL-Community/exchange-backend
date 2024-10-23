@@ -13,14 +13,17 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, action:)
-      unless an_admin
+      candidate_organization = CandidateOrganization.find_by(slug:)
+      candidate_organization_policy = Pundit.policy(
+        context[:current_user],
+        candidate_organization || CandidateOrganization.new
+      )
+      unless candidate_organization_policy.edit_allowed?
         return {
           candidate_organization: nil,
-          errors: ['Must be admin to approve or reject candidate organization']
+          errors: ['Editing candidate organization is not allowed.']
         }
       end
-
-      candidate_organization = CandidateOrganization.find_by(slug:)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_organization)

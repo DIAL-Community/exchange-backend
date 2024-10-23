@@ -13,14 +13,17 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(candidate_role_id:, action:)
-      unless an_admin
+      candidate_role = CandidateRole.find_by(id: candidate_role_id)
+      candidate_role_policy = Pundit.policy(
+        context[:current_user],
+        candidate_role || CandidateRole.new
+      )
+      unless candidate_role_policy.edit_allowed?
         return {
           candidate_role: nil,
-          errors: ['Must be admin to approve or reject candidate role']
+          errors: ['Editing candidate role is not allowed.']
         }
       end
-
-      candidate_role = CandidateRole.find_by(id: candidate_role_id)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_role)
@@ -101,7 +104,7 @@ module Mutations
         candidate_role.rejected_by_id = context[:current_user].id
       end
 
-      return true if candidate_role.save!
+      true if candidate_role.save!
     end
   end
 end

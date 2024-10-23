@@ -13,7 +13,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(entity:, entity_id:)
-      if context[:current_user].nil?
+      candidate_role_policy = Pundit.policy(context[:current_user], CandidateRole.new)
+      if !candidate_role_policy.create_allowed?
         return {
           candidate_role: nil,
           errors: ['Must be logged in to apply as owner']

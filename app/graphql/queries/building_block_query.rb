@@ -8,7 +8,8 @@ module Queries
     def resolve(slug:)
       # Validate access to the current entity type.
       validate_access_to_resource(BuildingBlock.new)
-      BuildingBlock.find_by(slug:)
+      building_block = BuildingBlock.find_by(slug:) unless slug.blank?
+      building_block
     end
   end
 

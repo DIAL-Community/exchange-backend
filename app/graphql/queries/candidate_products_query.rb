@@ -6,8 +6,7 @@ module Queries
     type [Types::CandidateProductType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateProduct.new)
       candidate_products = CandidateProduct.order(:name)
       candidate_products = candidate_products.name_contains(search) unless search.blank?
       candidate_products
@@ -19,9 +18,9 @@ module Queries
     type Types::CandidateProductType, null: true
 
     def resolve(slug:)
-      return nil unless an_admin
-
-      CandidateProduct.find_by(slug:)
+      validate_access_to_resource(CandidateProduct.new)
+      candidate_product = CandidateProduct.find_by(slug:) unless slug.blank?
+      candidate_product
     end
   end
 end

@@ -6,8 +6,7 @@ module Queries
     type [Types::CandidateOrganizationType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateOrganization.new)
       candidate_organizations = CandidateOrganization.order(:name)
       candidate_organizations = candidate_organizations.name_contains(search) unless search.blank?
       candidate_organizations
@@ -19,9 +18,9 @@ module Queries
     type Types::CandidateOrganizationType, null: true
 
     def resolve(slug:)
-      return nil unless an_admin
-
-      CandidateOrganization.find_by(slug:)
+      validate_access_to_resource(CandidateOrganization.new)
+      candidate_organization = CandidateOrganization.find_by(slug:) unless slug.blank?
+      candidate_organization
     end
   end
 end

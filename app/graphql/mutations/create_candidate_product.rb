@@ -19,14 +19,18 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
-      unless !context[:current_user].nil?
+      candidate_product = CandidateProduct.find_by(slug:)
+      candidate_product_policy = Pundit.policy(
+        context[:current_user],
+        candidate_product || CandidateProduct.new
+      )
+      unless candidate_product_policy.edit_allowed?
         return {
           candidate_dataset: nil,
-          errors: ['Must be logged in to create / edit a candidate product']
+          errors: ['Creating / editing candidate product is not allowed.']
         }
       end
 
-      candidate_product = CandidateProduct.find_by(slug:)
       if !candidate_product.nil? && !candidate_product.rejected.nil?
         return {
           candidate_product: nil,

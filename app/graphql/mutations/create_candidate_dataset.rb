@@ -20,11 +20,14 @@ module Mutations
 
     def resolve(name:, slug:, website:, visualization_url:, dataset_type:, submitter_email:, description:, captcha:)
       candidate_dataset = CandidateDataset.find_by(slug:)
-      candidate_dataset_policy = Pundit.policy(context[:current_user], candidate_dataset || CandidateDataset.new)
+      candidate_dataset_policy = Pundit.policy(
+        context[:current_user],
+        candidate_dataset || CandidateDataset.new
+      )
       unless candidate_dataset_policy.create_allowed?
         return {
           candidate_dataset: nil,
-          errors: ['Must be logged in to create / edit a candidate dataset']
+          errors: ['Creating / editing candidate dataset is not allowed.']
         }
       end
 

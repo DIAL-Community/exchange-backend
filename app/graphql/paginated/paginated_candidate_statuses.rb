@@ -7,12 +7,7 @@ module Paginated
     type [Types::CandidateStatusType], null: false
 
     def resolve(search:, offset_attributes:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return []
-      end
-
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateStatus.new)
       candidate_statuses = CandidateStatus.order(:name)
       unless search.blank?
         candidate_statuses = candidate_statuses.name_contains(search)

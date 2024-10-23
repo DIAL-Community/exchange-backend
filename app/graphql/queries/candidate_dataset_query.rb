@@ -7,7 +7,8 @@ module Queries
 
     def resolve(slug:)
       validate_access_to_resource(CandidateDataset.new)
-      CandidateDataset.find_by(slug:)
+      candidate_dataset = CandidateDataset.find_by(slug:) unless slug.blank?
+      candidate_dataset
     end
   end
 

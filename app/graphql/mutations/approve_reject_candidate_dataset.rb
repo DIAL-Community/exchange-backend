@@ -14,7 +14,10 @@ module Mutations
 
     def resolve(slug:, action:)
       candidate_dataset = CandidateDataset.find_by(slug:)
-      candidate_dataset_policy = Pundit.policy(context[:current_user], candidate_dataset || CandidateDataset.new)
+      candidate_dataset_policy = Pundit.policy(
+        context[:current_user],
+        candidate_dataset || CandidateDataset.new
+      )
       unless candidate_dataset_policy.edit_allowed?
         return {
           candidate_dataset: nil,

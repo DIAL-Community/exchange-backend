@@ -156,7 +156,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
       expect(result['data']['approveRejectCandidateRole']['candidateRole'])
         .to(be(nil))
       expect(result['data']['approveRejectCandidateRole']['errors'])
-        .to(eq(['Must be admin to approve or reject candidate role']))
+        .to(eq(['Editing candidate role is not allowed.']))
     end
   end
 
@@ -179,7 +179,7 @@ RSpec.describe(Mutations::ApproveRejectCandidateRole, type: :graphql) do
       expect(result['data']['approveRejectCandidateRole']['candidateRole'])
         .to(be(nil))
       expect(result['data']['approveRejectCandidateRole']['errors'])
-        .to(eq(['Must be admin to approve or reject candidate role']))
+        .to(eq(['Editing candidate role is not allowed.']))
     end
   end
 

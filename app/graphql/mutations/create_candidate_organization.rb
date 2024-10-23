@@ -20,14 +20,18 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, organization_name:, create_storefront:, website:, description:, name:, email:, title:, captcha:)
-      unless !context[:current_user].nil?
+      candidate_organization = CandidateOrganization.find_by(slug:)
+      candidate_organization_policy = Pundit.policy(
+        context[:current_user],
+        candidate_organization || CandidateOrganization.new
+      )
+      unless candidate_organization_policy.edit_allowed?
         return {
           candidate_organization: nil,
-          errors: ['Must be logged in to create / edit a candidate organization']
+          errors: ['Creating / editing candidate organization is not allowed.']
         }
       end
 
-      candidate_organization = CandidateOrganization.find_by(slug:)
       if candidate_organization.nil?
         candidate_params = { name: organization_name, website:, description: }
         candidate_params[:slug] = reslug_em(candidate_params[:name])
