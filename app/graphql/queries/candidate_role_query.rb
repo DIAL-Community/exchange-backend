@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 module Queries
-  class CandidateRolesQuery < Queries::BaseQuery
-    argument :product_id, String, required: false, default_value: nil
-    argument :organization_id, String, required: false, default_value: nil
-    argument :dataset_id, String, required: false, default_value: nil
-    type [Types::CandidateRoleType], null: false
-
-    def resolve(product_id:, organization_id:)
-      validate_access_to_resource(CandidateRole.new)
-      candidate_roles = CandidateRole.order(:created_at)
-      candidate_roles = candidate_roles.where(product_id:) unless product_id.nil?
-      candidate_roles = candidate_roles.where(organization_id:) unless organization_id.nil?
-      candidate_roles
-    end
-  end
-
   class CandidateRoleQuery < Queries::BaseQuery
     argument :id, ID, required: false, default_value: nil
     argument :email, String, required: false, default_value: nil
@@ -43,6 +28,21 @@ module Queries
 
       candidate_roles = candidate_roles.where(email:).order(updated_at: :desc) unless email.nil?
       candidate_roles.first
+    end
+  end
+
+  class CandidateRolesQuery < Queries::BaseQuery
+    argument :product_id, String, required: false, default_value: nil
+    argument :organization_id, String, required: false, default_value: nil
+    argument :dataset_id, String, required: false, default_value: nil
+    type [Types::CandidateRoleType], null: false
+
+    def resolve(product_id:, organization_id:)
+      validate_access_to_resource(CandidateRole.new)
+      candidate_roles = CandidateRole.order(:created_at)
+      candidate_roles = candidate_roles.where(product_id:) unless product_id.nil?
+      candidate_roles = candidate_roles.where(organization_id:) unless organization_id.nil?
+      candidate_roles
     end
   end
 end

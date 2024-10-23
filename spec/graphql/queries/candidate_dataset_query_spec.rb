@@ -16,7 +16,6 @@ RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
 
   it 'searches existing candidate datasets' do
     create(:candidate_dataset, name: 'Some Random Candidate')
-
     user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
     result = execute_graphql_as_user(
@@ -49,7 +48,6 @@ RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
 
   it 'fails - user is not an admin' do
     create(:candidate_dataset, name: 'Some Random Candidate')
-
     user = create(:user, email: 'user@gmail.com')
 
     result = execute_graphql_as_user(

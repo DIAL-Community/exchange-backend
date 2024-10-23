@@ -34,9 +34,10 @@ class RubricCategoryPolicy < ApplicationPolicy
   end
 
   def view_allowed?
-    current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
-    return true if current_tenant.nil? || current_tenant.allow_unsecured_read
+    return false if user.nil?
 
-    false
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:content_editor]) ||
+      user.roles.include?(User.user_roles[:content_writer])
   end
 end

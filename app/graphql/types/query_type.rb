@@ -84,20 +84,20 @@ module Types
     field :workflows, resolver: Queries::WorkflowsQuery
     field :workflow, resolver: Queries::WorkflowQuery
 
-    field :candidate_products, resolver: Queries::CandidateProductsQuery
     field :candidate_product, resolver: Queries::CandidateProductQuery
+    field :candidate_products, resolver: Queries::CandidateProductsQuery
 
-    field :candidate_organizations, resolver: Queries::CandidateOrganizationsQuery
     field :candidate_organization, resolver: Queries::CandidateOrganizationQuery
+    field :candidate_organizations, resolver: Queries::CandidateOrganizationsQuery
 
-    field :candidate_roles, resolver: Queries::CandidateRolesQuery
     field :candidate_role, resolver: Queries::CandidateRoleQuery
+    field :candidate_roles, resolver: Queries::CandidateRolesQuery
 
     field :candidate_dataset, resolver: Queries::CandidateDatasetQuery
     field :candidate_datasets, resolver: Queries::CandidateDatasetsQuery
 
-    field :candidate_resources, resolver: Queries::CandidateResourcesQuery
     field :candidate_resource, resolver: Queries::CandidateResourceQuery
+    field :candidate_resources, resolver: Queries::CandidateResourcesQuery
 
     field :playbooks, resolver: Queries::PlaybooksQuery
     field :playbook, resolver: Queries::PlaybookQuery
@@ -117,11 +117,11 @@ module Types
     field :comments, resolver: Queries::CommentsQuery
     field :count_comments, resolver: Queries::CountCommentsQuery
 
-    field :rubric_categories, resolver: Queries::RubricCategoriesQuery
     field :rubric_category, resolver: Queries::RubricCategoryQuery
+    field :rubric_categories, resolver: Queries::RubricCategoriesQuery
 
-    field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
+    field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
 
     field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery

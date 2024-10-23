@@ -1894,7 +1894,7 @@ type Query {
   resourceTypes(search: String = ""): [ResourceType!]!
   resources(search: String = ""): [Resource!]!
   rubricCategories(search: String): [RubricCategory!]!
-  rubricCategory(slug: String!): RubricCategory!
+  rubricCategory(slug: String!): RubricCategory
   sdg(slug: String!): SustainableDevelopmentGoal
   sdgTargets(search: String = ""): [SustainableDevelopmentGoalTarget!]!
   sdgs(search: String = ""): [SustainableDevelopmentGoal!]!

@@ -20,7 +20,9 @@ class TaskTrackerPolicy < ApplicationPolicy
   end
 
   def delete_allowed?
-    false
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
   end
 
   def view_allowed?

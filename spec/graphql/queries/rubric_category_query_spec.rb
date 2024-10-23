@@ -3,7 +3,7 @@
 require 'graph_helpers'
 require 'rails_helper'
 
-RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
+RSpec.describe(Queries::RubricCategoryQuery, type: :graphql) do
   let(:query) do
     <<~GQL
       query RubricCategories ($search: String) {
@@ -30,11 +30,12 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
 
   it 'pulls list of rubric categories - user is logged as admin' do
     create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75)
-    expect_any_instance_of(Queries::RubricCategoriesQuery).to(receive(:an_admin).and_return(true))
-
-    result = execute_graphql(
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
+    result = execute_graphql_as_user(
+      admin_user,
       query,
-      variables: { search: 'Some' }
+      variables: { search: 'Some' },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
@@ -49,25 +50,27 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
 
   it 'pulls empty list - user is not logged as admin' do
     create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75)
-    expect_any_instance_of(Queries::RubricCategoriesQuery).to(receive(:an_admin).and_return(false))
-
-    result = execute_graphql(
+    user = create(:user, email: 'user@gmail.com')
+    result = execute_graphql_as_user(
+      user,
       query,
-      variables: { search: 'Some' }
+      variables: { search: 'Some' },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
-      expect(result['data']['rubricCategories']).to(eq([]))
+      expect(result['errors']).not_to(eq(nil))
     end
   end
 
   it 'pulls specific rubric category - user is logged as admin' do
     create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75)
-    expect_any_instance_of(Queries::RubricCategoryQuery).to(receive(:an_admin).and_return(true))
-
-    result = execute_graphql(
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
+    result = execute_graphql_as_user(
+      admin_user,
       detail_query,
-      variables: { slug: 'some-rubric_category' }
+      variables: { slug: 'some-rubric_category' },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
@@ -82,15 +85,16 @@ RSpec.describe(Queries::RubricCategoriesQuery, type: :graphql) do
 
   it 'pulls null rubric category - user is not logged as admin' do
     create(:rubric_category, name: 'Some Rubric Category', slug: 'some-rubric_category', weight: 0.75)
-    expect_any_instance_of(Queries::RubricCategoryQuery).to(receive(:an_admin).and_return(false))
-
-    result = execute_graphql(
+    user = create(:user, email: 'user@gmail.com')
+    result = execute_graphql_as_user(
+      user,
       detail_query,
-      variables: { slug: 'some-rubric_category' }
+      variables: { slug: 'some-rubric_category' },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
-      expect(result['data']).to(eq(nil))
+      expect(result['errors']).not_to(eq(nil))
     end
   end
 end
