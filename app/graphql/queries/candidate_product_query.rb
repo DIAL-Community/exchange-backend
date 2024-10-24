@@ -6,8 +6,8 @@ module Queries
     type Types::CandidateProductType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(CandidateProduct.new)
-      candidate_product = CandidateProduct.find_by(slug:) unless slug.blank?
+      candidate_product = CandidateProduct.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_resource(candidate_product || CandidateProduct.new)
       candidate_product
     end
   end

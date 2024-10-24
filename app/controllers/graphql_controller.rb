@@ -33,7 +33,7 @@ class GraphqlController < ApplicationController
   private
 
   def operation_context
-    request.headers['Xchange-Graph-Query-Context']
+    request.headers[GRAPH_QUERY_CONTEXT_KEY]
   end
 
   def current_user

@@ -13,9 +13,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sectors:, sdgs:, tags:, origins:, dataset_types:, countries:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Dataset.new)
 
       datasets = Dataset.order(:name)
       unless search.blank?

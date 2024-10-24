@@ -21,14 +21,17 @@ module Mutations
     def resolve(name:, slug:, indicator_type: nil, rubric_category_slug: nil,
       weight:, data_source: nil, script_name: nil, description: nil)
 
-      unless an_admin
+      category_indicator = CategoryIndicator.find_by(slug:)
+      category_indicator_policy = Pundit.policy(
+        context[:current_user],
+        category_indicator || CategoryIndicator.new
+      )
+      unless category_indicator_policy.edit_allowed?
         return {
           category_indicator: nil,
           errors: ['Must be admin to create a category indicator.']
         }
       end
-
-      category_indicator = CategoryIndicator.find_by(slug:)
 
       if category_indicator.nil?
         category_indicator = CategoryIndicator.new(name:)

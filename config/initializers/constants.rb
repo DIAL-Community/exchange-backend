@@ -14,6 +14,8 @@ FORBIDDEN = 'FORBIDDEN'
 # Unauthenticated user trying to access a protected resource.
 UNAUTHORIZED = 'UNAUTHORIZED'
 
+GRAPH_QUERY_CONTEXT_KEY = 'Xchange-Graph-Query-Context'
+
 VIEWING_CONTEXT = 'viewing'
 EDITING_CONTEXT = 'editing'
 DELETING_CONTEXT = 'deleting'

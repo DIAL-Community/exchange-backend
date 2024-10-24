@@ -9,9 +9,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, sdgs:, use_cases:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Workflow.new)
 
       workflows = Workflow.order(:name).distinct
       unless search.blank?

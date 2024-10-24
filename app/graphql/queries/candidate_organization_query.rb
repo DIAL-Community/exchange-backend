@@ -6,8 +6,8 @@ module Queries
     type Types::CandidateOrganizationType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(CandidateOrganization.new)
-      candidate_organization = CandidateOrganization.find_by(slug:) unless slug.blank?
+      candidate_organization = CandidateOrganization.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_resource(candidate_organization || CandidateOrganization.new)
       candidate_organization
     end
   end

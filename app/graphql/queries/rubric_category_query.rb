@@ -6,8 +6,8 @@ module Queries
     type Types::RubricCategoryType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(RubricCategory.new)
-      rubric_category = RubricCategory.find_by(slug:) unless slug.blank?
+      rubric_category = RubricCategory.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_resource(rubric_category || RubricCategory.new)
       rubric_category
     end
   end

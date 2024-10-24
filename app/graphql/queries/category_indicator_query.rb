@@ -6,8 +6,8 @@ module Queries
     type Types::CategoryIndicatorType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(CategoryIndicator.new)
-      category_indicator = CategoryIndicator.find_by(slug:) unless slug.blank?
+      category_indicator = CategoryIndicator.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_resource(category_indicator || CategoryIndicator.new)
       category_indicator
     end
   end

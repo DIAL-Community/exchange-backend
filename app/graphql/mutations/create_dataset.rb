@@ -26,6 +26,17 @@ module Mutations
     def resolve(name:, slug:, aliases:, website:, visualization_url: nil, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
       dataset = Dataset.find_by(slug:)
+      dataset_policy = Pundit.policy(
+        context[:current_user],
+        dataset || Dataset.new
+      )
+      unless dataset_policy.edit_allowed?
+        return {
+          dataset: nil,
+          errors: ['Must be admin or dataset owner to create / edit a dataset']
+        }
+      end
+
       if dataset.nil?
         dataset = Dataset.new(name:)
         dataset.slug = reslug_em(name)
@@ -35,15 +46,8 @@ module Mutations
           first_duplicate = Dataset.slug_simple_starts_with(dataset.slug)
                                    .order(slug: :desc)
                                    .first
-          dataset.slug = dataset.slug + generate_offset(first_duplicate) unless first_duplicate.nil?
+          dataset.slug = generate_offset(first_duplicate)
         end
-      end
-
-      unless an_admin || a_dataset_owner(dataset.id)
-        return {
-          dataset: nil,
-          errors: ['Must be admin or dataset owner to create / edit a dataset']
-        }
       end
 
       dataset.name = name

@@ -2,20 +2,20 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :handbooks, resolver: Queries::HandbooksQuery
     field :handbook, resolver: Queries::HandbookQuery
-    field :search_handbook, resolver: Queries::SearchHandbookQuery
+    field :handbooks, resolver: Queries::HandbooksQuery
     field :page_contents, resolver: Queries::PageContentsQuery
+    field :search_handbook, resolver: Queries::SearchHandbookQuery
     field :export_page_contents, resolver: Queries::ExportPageContentsQuery
 
-    field :products, resolver: Queries::ProductsQuery
     field :product, resolver: Queries::ProductQuery
+    field :products, resolver: Queries::ProductsQuery
     field :owned_products, resolver: Queries::OwnedProductsQuery
-    field :compare_products, resolver: Queries::CompareProductsQuery
     field :search_products, resolver: Queries::SearchProductsQuery
+    field :compare_products, resolver: Queries::CompareProductsQuery
 
-    field :datasets, resolver: Queries::DatasetsQuery
     field :dataset, resolver: Queries::DatasetQuery
+    field :datasets, resolver: Queries::DatasetsQuery
     field :owned_datasets, resolver: Queries::OwnedDatasetsQuery
 
     field :spreadsheet_product, resolver: Queries::SpreadsheetProductQuery
@@ -26,8 +26,8 @@ module Types
 
     field :endorsers, resolver: Queries::EndorsersQuery
 
-    field :projects, resolver: Queries::ProjectsQuery
     field :project, resolver: Queries::ProjectQuery
+    field :projects, resolver: Queries::ProjectsQuery
     field :search_projects, resolver: Queries::SearchProjectsQuery
 
     field :building_block, resolver: Queries::BuildingBlockQuery
@@ -36,53 +36,57 @@ module Types
     field :sector, resolver: Queries::SectorQuery
     field :sectors, resolver: Queries::SectorsQuery
 
+    field :origin, resolver: Queries::OriginQuery
     field :origins, resolver: Queries::OriginsQuery
 
-    field :use_cases, resolver: Queries::UseCasesQuery
     field :use_case, resolver: Queries::UseCaseQuery
+    field :use_cases, resolver: Queries::UseCasesQuery
     field :use_cases_for_sector, resolver: Queries::UseCasesForSectorQuery
 
-    field :use_cases_steps, resolver: Queries::UseCasesStepsQuery
-    field :use_case_steps, resolver: Queries::UseCaseStepsQuery
     field :use_case_step, resolver: Queries::UseCaseStepQuery
+    field :use_case_steps, resolver: Queries::UseCaseStepsQuery
+    field :use_cases_steps, resolver: Queries::UseCasesStepsQuery
 
-    field :users, resolver: Queries::UsersQuery
     field :user, resolver: Queries::UserQuery
+    field :users, resolver: Queries::UsersQuery
     field :user_authentication_token_check, resolver: Queries::UserAuthenticationTokenCheckQuery
+
     field :user_roles, resolver: Queries::UserRolesQuery
     field :user_email_check, resolver: Queries::UserEmailCheckQuery
 
-    field :countries, resolver: Queries::CountriesQuery
     field :country, resolver: Queries::CountryQuery
+    field :countries, resolver: Queries::CountriesQuery
     field :countries_with_resources, resolver: Queries::CountriesWithResourcesQuery
 
-    field :organizations, resolver: Queries::OrganizationsQuery
     field :organization, resolver: Queries::OrganizationQuery
+    field :organizations, resolver: Queries::OrganizationsQuery
     field :search_organizations, resolver: Queries::SearchOrganizationsQuery
 
-    field :opportunities, resolver: Queries::OpportunitiesQuery
     field :opportunity, resolver: Queries::OpportunityQuery
+    field :opportunities, resolver: Queries::OpportunitiesQuery
 
-    field :aggregators, resolver: Queries::AggregatorsQuery
     field :aggregator, resolver: Queries::AggregatorQuery
+    field :aggregators, resolver: Queries::AggregatorsQuery
 
     field :capabilities, resolver: Queries::CapabilitiesQuery
     field :operator_services, resolver: Queries::OperatorServicesQuery
+
     field :capability_only, resolver: Queries::CapabilityOnlyQuery
     field :operator_service_only, resolver: Queries::OperatorServiceOnlyQuery
 
-    field :sdgs, resolver: Queries::SustainableDevelopmentGoalsQuery
     field :sdg, resolver: Queries::SustainableDevelopmentGoalQuery
+    field :sdgs, resolver: Queries::SustainableDevelopmentGoalsQuery
 
+    field :sdg_target, resolver: Queries::SustainableDevelopmentGoalTargetQuery
     field :sdg_targets, resolver: Queries::SustainableDevelopmentGoalTargetsQuery
 
-    field :tags, resolver: Queries::TagsQuery
     field :tag, resolver: Queries::TagQuery
+    field :tags, resolver: Queries::TagsQuery
 
     field :wizard, resolver: Queries::WizardQuery
 
-    field :workflows, resolver: Queries::WorkflowsQuery
     field :workflow, resolver: Queries::WorkflowQuery
+    field :workflows, resolver: Queries::WorkflowsQuery
 
     field :candidate_product, resolver: Queries::CandidateProductQuery
     field :candidate_products, resolver: Queries::CandidateProductsQuery
@@ -99,17 +103,17 @@ module Types
     field :candidate_resource, resolver: Queries::CandidateResourceQuery
     field :candidate_resources, resolver: Queries::CandidateResourcesQuery
 
-    field :playbooks, resolver: Queries::PlaybooksQuery
     field :playbook, resolver: Queries::PlaybookQuery
+    field :playbooks, resolver: Queries::PlaybooksQuery
     field :search_playbook_tags, resolver: Queries::SearchPlaybookTagsQuery
 
-    field :plays, resolver: Queries::PlaysQuery
     field :play, resolver: Queries::PlayQuery
+    field :plays, resolver: Queries::PlaysQuery
     field :search_plays, resolver: Queries::SearchPlaysQuery
     field :search_playbook_plays, resolver: Queries::SearchPlaybookPlaysQuery
 
-    field :moves, resolver: Queries::MovesQuery
     field :move, resolver: Queries::MoveQuery
+    field :moves, resolver: Queries::MovesQuery
     field :search_moves, resolver: Queries::SearchMovesQuery
 
     field :me, resolver: Queries::MeQuery
@@ -123,8 +127,8 @@ module Types
     field :category_indicator, resolver: Queries::CategoryIndicatorQuery
     field :category_indicators, resolver: Queries::CategoryIndicatorsQuery
 
-    field :resources, resolver: Queries::ResourcesQuery
     field :resource, resolver: Queries::ResourceQuery
+    field :resources, resolver: Queries::ResourcesQuery
     field :resource_types, resolver: Queries::ResourceTypesQuery
 
     field :paginated_use_cases, resolver: Paginated::PaginatedUseCases
@@ -140,6 +144,7 @@ module Types
 
     field :paginated_organizations, resolver: Paginated::PaginatedOrganizations
     field :pagination_attribute_organization, resolver: Paginated::PaginationAttributeOrganization
+
     field :paginated_storefronts, resolver: Paginated::PaginatedStorefronts
     field :pagination_attribute_storefront, resolver: Paginated::PaginationAttributeStorefront
 
@@ -176,17 +181,17 @@ module Types
     field :paginated_workflows, resolver: Paginated::PaginatedWorkflows
     field :pagination_attribute_workflow, resolver: Paginated::PaginationAttributeWorkflow
 
+    field :city, resolver: Queries::CityQuery
+    field :cities, resolver: Queries::CitiesQuery
     field :paginated_cities, resolver: Paginated::PaginatedCities
     field :pagination_attribute_city, resolver: Paginated::PaginationAttributeCity
-    field :cities, resolver: Queries::CitiesQuery
-    field :city, resolver: Queries::CityQuery
 
+    field :contact, resolver: Queries::ContactQuery
+    field :contacts, resolver: Queries::ContactsQuery
+    field :hub_contact, resolver: Queries::UserContactQuery
+    field :hub_contacts, resolver: Queries::HubContactsQuery
     field :paginated_contacts, resolver: Paginated::PaginatedContacts
     field :pagination_attribute_contact, resolver: Paginated::PaginationAttributeContact
-    field :contacts, resolver: Queries::ContactsQuery
-    field :hub_contacts, resolver: Queries::HubContactsQuery
-    field :contact, resolver: Queries::ContactQuery
-    field :hub_contact, resolver: Queries::UserContactQuery
 
     field :paginated_opportunities, resolver: Paginated::PaginatedOpportunities
     field :pagination_attribute_opportunity, resolver: Paginated::PaginationAttributeOpportunity
@@ -200,48 +205,50 @@ module Types
     field :paginated_users, resolver: Paginated::PaginatedUsers
     field :pagination_attribute_user, resolver: Paginated::PaginationAttributeUser
 
-    field :bookmark, resolver: Queries::BookmarkQuery
     field :owners, resolver: Queries::OwnersQuery
+    field :bookmark, resolver: Queries::BookmarkQuery
 
+    field :task_tracker, resolver: Queries::TaskTrackerQuery
+    field :task_trackers, resolver: Queries::TaskTrackersQuery
     field :paginated_task_trackers, resolver: Paginated::PaginatedTaskTrackers
     field :pagination_attribute_task_tracker, resolver: Paginated::PaginationAttributeTaskTracker
-    field :task_trackers, resolver: Queries::TaskTrackersQuery
-    field :task_tracker, resolver: Queries::TaskTrackerQuery
 
-    field :regions, resolver: Queries::RegionsQuery
     field :region, resolver: Queries::RegionQuery
+    field :regions, resolver: Queries::RegionsQuery
     field :paginated_regions, resolver: Paginated::PaginatedRegions
     field :pagination_attribute_region, resolver: Paginated::PaginationAttributeRegion
 
-    field :syncs, resolver: Queries::SyncsQuery
     field :sync, resolver: Queries::SyncQuery
+    field :syncs, resolver: Queries::SyncsQuery
     field :paginated_syncs, resolver: Paginated::PaginatedSyncs
     field :pagination_attribute_sync, resolver: Paginated::PaginationAttributeSync
 
-    field :starred_objects, resolver: Queries::StarredObjectsQuery
     field :starred_object, resolver: Queries::StarredObjectQuery
+    field :starred_objects, resolver: Queries::StarredObjectsQuery
 
-    field :authors, resolver: Queries::AuthorsQuery
     field :author, resolver: Queries::AuthorQuery
+    field :authors, resolver: Queries::AuthorsQuery
 
-    field :resource_topics, resolver: Queries::ResourceTopicsQuery
     field :resource_topic, resolver: Queries::ResourceTopicQuery
+    field :resource_topics, resolver: Queries::ResourceTopicsQuery
     field :resource_topic_resources, resolver: Queries::ResourceTopicResourcesQuery
+
     field :paginated_resource_topics, resolver: Paginated::PaginatedResourceTopics
     field :pagination_attribute_resource_topic, resolver: Paginated::PaginationAttributeResourceTopic
 
     field :chatbot_conversations, resolver: Queries::ChatbotConversationsQuery
     field :chatbot_conversation_starters, resolver: Queries::ChatbotConversationStartersQuery
 
+    field :message, resolver: Queries::MessageQuery
+    field :messages, resolver: Queries::MessagesQuery
     field :paginated_messages, resolver: Paginated::PaginatedMessages
     field :pagination_attribute_message, resolver: Paginated::PaginationAttributeMessage
-    field :messages, resolver: Queries::MessagesQuery
-    field :message, resolver: Queries::MessageQuery
 
-    field :software_categories, resolver: Queries::SoftwareCategoriesQuery
     field :software_category, resolver: Queries::SoftwareCategoryQuery
-    field :software_features, resolver: Queries::SoftwareFeaturesQuery
+    field :software_categories, resolver: Queries::SoftwareCategoriesQuery
+
     field :software_feature, resolver: Queries::SoftwareFeatureQuery
+    field :software_features, resolver: Queries::SoftwareFeaturesQuery
 
     field :site_setting, resolver: Queries::SiteSettingQuery
     field :site_settings, resolver: Queries::SiteSettingsQuery

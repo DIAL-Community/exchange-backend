@@ -16,7 +16,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug: nil, description: nil)
-      unless an_admin
+      country_policy = Pundit.policy(context[:current_user], Contact.new)
+      unless country_policy.edit_allowed?
         return {
           country: nil,
           errors: ['Must be admin to create a country.']

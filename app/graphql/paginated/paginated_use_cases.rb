@@ -10,9 +10,8 @@ module Paginated
     type [Types::UseCaseType], null: false
 
     def resolve(search:, sdgs:, show_beta:, show_gov_stack_only:, offset_attributes:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return []
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(UseCase.new)
 
       use_cases = UseCase.order(:name).distinct
       unless search.blank?

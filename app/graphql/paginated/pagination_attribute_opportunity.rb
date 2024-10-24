@@ -27,9 +27,8 @@ module Paginated
       show_closed:,
       show_gov_stack_only:
     )
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Opportunity.new)
 
       opportunities = Opportunity.order_by_status.order(:closing_date)
       unless search.blank?

@@ -7,7 +7,9 @@ module Paginated
     type [Types::CandidateProductType], null: false
 
     def resolve(search:, offset_attributes:)
+      # Validate access to the current entity type.
       validate_access_to_resource(CandidateProduct.new)
+
       candidate_products = CandidateProduct.order(rejected: :desc)
                                            .order(created_at: :desc)
                                            .order(:name)

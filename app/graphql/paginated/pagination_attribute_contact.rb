@@ -7,11 +7,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:)
-      return { total_count: 0 } unless an_admin
-
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Contact.new)
 
       contacts = Contact.order(:name)
       unless search.blank?

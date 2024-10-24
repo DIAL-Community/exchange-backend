@@ -7,7 +7,8 @@ module Paginated
     type [Types::SyncType], null: false
 
     def resolve(search:, offset_attributes:)
-      return [] unless an_admin
+      # Validate access to the current entity type.
+      validate_access_to_resource(SiteSetting.new)
 
       syncs = TenantSyncConfiguration.order(:name)
       unless search.blank?

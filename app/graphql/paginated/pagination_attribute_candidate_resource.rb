@@ -9,7 +9,9 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, countries:, in_review_only:)
+      # Validate access to the current entity type.
       validate_access_to_resource(CandidateResource.new)
+
       candidate_resources = CandidateResource.order(:name)
       unless search.blank?
         name_filter = candidate_resources.name_contains(search)

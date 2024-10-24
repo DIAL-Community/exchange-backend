@@ -2,13 +2,26 @@
 
 module Queries
   class BaseQuery < GraphQL::Schema::Resolver
+    def valid_slug?(slug)
+      return false if slug.nil? || slug.empty?
+      !slug.start_with?(GRAPH_QUERY_CONTEXT_KEY.downcase)
+    end
+
+    def valid_id?(id)
+      return false if id.nil? || id.empty?
+      id.start_with?(GRAPH_QUERY_CONTEXT_KEY.downcase)
+    end
+
     def validate_access_to_resource(resource)
       operation_context = context[:operation_context]
       current_policy = Pundit.policy(context[:current_user], resource)
 
+      puts "Receiving resource: #{resource.class}"
+      puts "Processing graph query using policy: #{current_policy.class}"
+
       unless current_policy.available?
         raise GraphQL::ExecutionError.new(
-          'Building block is not available.',
+          'Resource is not available.',
           extensions: { 'code' => BAD_REQUEST }
         )
       end

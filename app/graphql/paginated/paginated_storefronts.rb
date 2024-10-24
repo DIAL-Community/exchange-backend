@@ -13,9 +13,8 @@ module Paginated
     type [Types::OrganizationType], null: false
 
     def resolve(search:, sectors:, countries:, building_blocks:, specialties:, certifications:, offset_attributes:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return []
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Organization.new)
 
       organizations = Organization.order(:name).where(has_storefront: true)
 

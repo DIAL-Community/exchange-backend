@@ -11,12 +11,10 @@ module Queries
     type Types::CandidateRoleType, null: true
 
     def resolve(id:, email:, product_id:, organization_id:, dataset_id:)
-      validate_access_to_resource(CandidateRole.new)
+      candidate_role = CandidateRole.find(id) if valid_id?(id)
+      validate_access_to_resource(candidate_role || CandidateRole.new)
 
-      unless id.nil?
-        candidate_role = CandidateRole.find(id)
-        return candidate_role unless candidate_role.nil?
-      end
+      return candidate_role unless candidate_role.nil?
 
       candidate_roles = CandidateRole
       candidate_roles = candidate_roles.where(product_id: product_id.to_i) if !product_id.nil? && !product_id.blank?

@@ -6,7 +6,7 @@ module Queries
     type Types::TenantSettingType, null: true
 
     def resolve(tenant_name:)
-      return nil unless an_admin
+      validate_access_to_resource(SiteSetting.new)
 
       tenant_domains = {}
       tenant_unsecure_read = {}
@@ -32,7 +32,7 @@ module Queries
     type [Types::TenantSettingType], null: true
 
     def resolve
-      return [] unless an_admin
+      validate_access_to_resource(SiteSetting.new)
 
       tenant_domains = {}
       tenant_unsecure_read = {}

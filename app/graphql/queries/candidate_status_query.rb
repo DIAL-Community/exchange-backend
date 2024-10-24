@@ -6,8 +6,8 @@ module Queries
     type Types::CandidateStatusType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(CandidateStatus.new)
-      candidate_status = CandidateStatus.find_by(slug:) unless slug.blank?
+      candidate_status = CandidateStatus.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_resource(candidate_status || CandidateStatus.new)
       candidate_status
     end
   end

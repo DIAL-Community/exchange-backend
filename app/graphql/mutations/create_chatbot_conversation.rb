@@ -9,7 +9,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(chatbot_question:, session_identifier:)
-      if context[:current_user].nil?
+      chatbot_conversation_policy = Pundit.policy(context[:current_user], ChatbotConversation.new)
+      if chatbot_conversation_policy.edit_allowed?
         return {
           chatbot_conversation: nil,
           errors: ['Must be logged in to use this feature']

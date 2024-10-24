@@ -19,7 +19,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, email:, title:, slug:, source:, biography:, social_networking_services:)
-      if context[:current_user].nil?
+      contact_policy = Pundit.policy(context[:current_user], Contact.new)
+      unless contact_policy.edit_allowed?
         return {
           contact: nil,
           errors: ['Must be an logged in to create / edit contact.']

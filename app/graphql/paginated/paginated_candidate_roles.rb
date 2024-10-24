@@ -7,7 +7,9 @@ module Paginated
     type [Types::CandidateRoleType], null: false
 
     def resolve(search:, offset_attributes:)
+      # Validate access to the current entity type.
       validate_access_to_resource(CandidateRole.new)
+
       candidate_roles = CandidateRole.order(rejected: :desc)
                                      .order(created_at: :desc)
                                      .order(:email)

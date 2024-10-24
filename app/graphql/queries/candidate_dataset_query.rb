@@ -6,8 +6,9 @@ module Queries
     type Types::CandidateDatasetType, null: true
 
     def resolve(slug:)
-      validate_access_to_resource(CandidateDataset.new)
-      candidate_dataset = CandidateDataset.find_by(slug:) unless slug.blank?
+      candidate_dataset = CandidateDataset.find_by(slug:) if valid_slug?(slug)
+      # Validate access to the current object or entity type.
+      validate_access_to_resource(candidate_dataset || CandidateDataset.new)
       candidate_dataset
     end
   end

@@ -14,9 +14,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, countries:, products:, organizations:, sectors:, tags:, sdgs:, origins:)
-      if !unsecured_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Project.new)
 
       projects = Project.all
       if !search.nil? && !search.to_s.strip.empty?

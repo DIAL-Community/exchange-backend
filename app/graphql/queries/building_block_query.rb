@@ -6,9 +6,9 @@ module Queries
     type Types::BuildingBlockType, null: true
 
     def resolve(slug:)
-      # Validate access to the current entity type.
-      validate_access_to_resource(BuildingBlock.new)
-      building_block = BuildingBlock.find_by(slug:) unless slug.blank?
+      building_block = BuildingBlock.find_by(slug:) if valid_slug?(slug)
+      # Validate access to the current object or entity type.
+      validate_access_to_resource(building_block || BuildingBlock.new)
       building_block
     end
   end
