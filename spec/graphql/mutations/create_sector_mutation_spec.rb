@@ -48,9 +48,10 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     origin = create(:origin, name: "Example Origin", slug: "example_origin")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some name",
@@ -69,10 +70,11 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - missing locale will store the correct with current locale value' do
     create(:origin, name: "Manually Entered", slug: "manually-entered")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
     # Creating new sector using random origin id
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Without Locale",
@@ -89,10 +91,11 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - valid locale will store the correct value' do
     create(:origin, name: "Manually Entered", slug: "manually-entered")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
     # Creating new sector using random origin id
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "DE Locale",
@@ -110,10 +113,11 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - random locale will be replaced with current locale value' do
     create(:origin, name: "Manually Entered", slug: "manually-entered")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
     # Creating new sector using random origin id
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Random Locale",
@@ -131,10 +135,11 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - setting the origin to default when value is random' do
     origin = create(:origin, name: "Manually Entered", slug: "manually-entered")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
     # Creating new sector using random origin id
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Random Origin",
@@ -149,11 +154,13 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
         .to(eq({ "name" => "Random Origin", "slug" => "random-origin", "locale" => "en", "isDisplayable" => false }))
     end
 
-    query_result = execute_graphql(
+    query_result = execute_graphql_as_user(
+      admin_user,
       sector_query,
       variables: {
         slug: "random-origin"
-      }
+      },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
@@ -164,10 +171,11 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
 
   it 'is successful - setting the origin to default value of manually entered' do
     origin = create(:origin, name: "Manually Entered", slug: "manually-entered")
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
     # Creating new sector using only required fields.
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some name",
@@ -181,11 +189,13 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
         .to(eq({ "name" => "Some name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
 
-    query_result = execute_graphql(
+    query_result = execute_graphql_as_user(
+      admin_user,
       sector_query,
       variables: {
         slug: "some-name"
-      }
+      },
+      operation_context: VIEWING_CONTEXT
     )
 
     aggregate_failures do
@@ -203,9 +213,10 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       originId: origin.id,
       parentSectorId: nil
     }
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    allow_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )
@@ -216,7 +227,8 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
         .to(eq({ "name" => "Some name", "slug" => "some-name", "locale" => "en", "isDisplayable" => false }))
     end
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )
@@ -232,7 +244,8 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
         }))
     end
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )
@@ -251,9 +264,10 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
   it 'is successful - admin can update sector name and slug remains the same' do
     origin = create(:origin, name: "Example Origin", slug: "example_origin")
     create(:sector, name: "Some name", slug: "some-name", is_displayable: false, origin_id: origin.id, locale: 'en')
-    expect_any_instance_of(Mutations::CreateSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some new name",
