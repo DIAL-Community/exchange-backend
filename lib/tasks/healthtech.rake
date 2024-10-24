@@ -99,7 +99,7 @@ software_category_id: new_category.id).first || SoftwareFeature.new
           puts "Found solution: #{solution_data[4]}"
           product_name = solution_data[4]
           health_product = Product.first_duplicate(product_name, reslug_em(product_name))
-          #next unless health_product.nil?
+          next unless health_product.nil?
           puts "Creating new product: #{product_name}"
           health_product = Product.new if health_product.nil?
 
