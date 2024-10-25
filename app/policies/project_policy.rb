@@ -19,6 +19,27 @@ class ProjectPolicy < ApplicationPolicy
       user.roles.include?(User.user_roles[:content_writer])
   end
 
+  def edit_allowed?
+    return false if user.nil?
+
+    product_ids = record.products.map(&:id)
+    organization_ids = record.organizations.map(&:id)
+
+    if user.roles.include?(User.user_roles[:product_owner]) &&
+      !(product_ids & user.user_products).empty?
+      return true
+    end
+
+    if user.roles.include?(User.user_roles[:organization_owner]) &&
+      organization_ids.include?(user.organization_id)
+      return true
+    end
+
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:content_editor]) ||
+      user.roles.include?(User.user_roles[:content_writer])
+  end
+
   def delete_allowed?
     return false if user.nil?
 

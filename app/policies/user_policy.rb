@@ -19,6 +19,8 @@ class UserPolicy < ApplicationPolicy
 
   def edit_allowed?
     return false if user.nil?
+    # Allow editing their own user record.
+    return true if user.id == record.id
 
     user.roles.include?(User.user_roles[:admin])
   end
@@ -31,6 +33,8 @@ class UserPolicy < ApplicationPolicy
 
   def view_allowed?
     return false if user.nil?
+    # Allow viewing their own user record.
+    return true if user.id == record.id
 
     user.roles.include?(User.user_roles[:admin])
   end

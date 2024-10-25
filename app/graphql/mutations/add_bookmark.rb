@@ -9,8 +9,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(data:, type:)
-      bookmark_policy = Pundit.policy(context[:current_user], BookmarkPolicy.new)
-      unless bookmark_policy.create_allowed?
+      user_bookmark_policy = Pundit.policy(context[:current_user], context[:current_user])
+      unless user_bookmark_policy.edit_allowed?
         return {
           bookmark: nil,
           errors: ['Must be logged in to edit bookmark.']
