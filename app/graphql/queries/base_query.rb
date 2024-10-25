@@ -26,31 +26,62 @@ module Queries
         )
       end
 
-      if operation_context == VIEWING_CONTEXT
-        if !current_policy.view_allowed? && context[:current_user].nil?
-          raise GraphQL::ExecutionError.new(
-            'Viewing is not allowed.',
-            extensions: { 'code' => UNAUTHORIZED }
-          )
+      case operation_context
+      when VIEWING_CONTEXT
+        unless current_policy.view_allowed?
+          if context[:current_user].nil?
+            raise GraphQL::ExecutionError.new(
+              "Viewing is not allowed.",
+              extensions: { 'code' => UNAUTHORIZED }
+            )
+          else
+            raise GraphQL::ExecutionError.new(
+              "Viewing is not allowed.",
+              extensions: { 'code' => FORBIDDEN }
+            )
+          end
         end
-        if !current_policy.view_allowed? && !context[:current_user].nil?
-          raise GraphQL::ExecutionError.new(
-            'Viewing is not allowed.',
-            extensions: { 'code' => FORBIDDEN }
-          )
+      when EDITING_CONTEXT
+        unless current_policy.edit_allowed?
+          if context[:current_user].nil?
+            raise GraphQL::ExecutionError.new(
+              "Editing is not allowed.",
+              extensions: { 'code' => UNAUTHORIZED }
+            )
+          else
+            raise GraphQL::ExecutionError.new(
+              "Editing is not allowed.",
+              extensions: { 'code' => FORBIDDEN }
+            )
+          end
         end
-      else
-        if !current_policy.edit_allowed? && context[:current_user].nil?
-          raise GraphQL::ExecutionError.new(
-            "#{operation_context.titlecase} is not allowed.",
-            extensions: { 'code' => UNAUTHORIZED }
-          )
+      when CREATING_CONTEXT
+        unless current_policy.create_allowed?
+          if context[:current_user].nil?
+            raise GraphQL::ExecutionError.new(
+              "Creating is not allowed.",
+              extensions: { 'code' => UNAUTHORIZED }
+            )
+          else
+            raise GraphQL::ExecutionError.new(
+              "Creating is not allowed.",
+              extensions: { 'code' => FORBIDDEN }
+            )
+          end
         end
-        if !current_policy.edit_allowed? && !context[:current_user].nil?
-          raise GraphQL::ExecutionError.new(
-            "#{operation_context.titlecase} is not allowed.",
-            extensions: { 'code' => FORBIDDEN }
-          )
+      when DELETING_CONTEXT
+        unless current_policy.delete_allowed?
+          if context[:current_user].nil?
+            raise GraphQL::ExecutionError.new(
+              "Deleting is not allowed.",
+              extensions: { 'code' => UNAUTHORIZED }
+            )
+          else
+            raise GraphQL::ExecutionError.new(
+              "Deleting is not allowed.",
+              extensions: { 'code' => FORBIDDEN }
+            )
+          end
         end
       end
     end

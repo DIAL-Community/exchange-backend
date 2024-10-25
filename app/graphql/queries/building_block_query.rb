@@ -9,6 +9,26 @@ module Queries
       building_block = BuildingBlock.find_by(slug:) if valid_slug?(slug)
       # Validate access to the current object or entity type.
       validate_access_to_resource(building_block || BuildingBlock.new)
+
+      # TODO: Need to group the permission request with the original data request.
+      # Currently it is sending separate graph query. We need to reply with the error
+      # if the original request also include permission checking in the header of the
+      # request.
+      #
+      # Adding multiple graph error along with the graph data:
+      # context.add_error(
+      #   GraphQL::ExecutionError.new(
+      #     'Editing is not allowed.',
+      #     extensions: { 'code' => NO_EDITING }
+      #   )
+      # )
+      # context.add_error(
+      #   GraphQL::ExecutionError.new(
+      #     'Deleting is not allowed.',
+      #     extensions: { 'code' => NO_DELETING }
+      #   )
+      # )
+
       building_block
     end
   end
