@@ -14,16 +14,24 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:)
-      unless an_admin
+      task_tracker = TaskTracker.find_by(slug:)
+      if task_tracker.nil?
+        task_tracker = TaskTracker.find_by(name:)
+      end
+
+      task_tracker_policy = Pundit.policy(context[:current_user], task_tracker || TaskTracker.new)
+      if task_tracker.nil? && !task_tracker_policy.create_allowed?
         return {
           task_tracker: nil,
           errors: ['Creating / editing task tracker is not allowed.']
         }
       end
 
-      task_tracker = TaskTracker.find_by(slug:)
-      if task_tracker.nil?
-        task_tracker = TaskTracker.find_by(name:)
+      if !task_tracker.nil? && !task_tracker_policy.edit_allowed?
+        return {
+          task_tracker: nil,
+          errors: ['Creating / editing task tracker is not allowed.']
+        }
       end
 
       # Prevent creating new task tracker. Only allow updating the description.

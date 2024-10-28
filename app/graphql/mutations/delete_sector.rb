@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      sector = Sector.find_by(id:)
+      sector_policy = Pundit.policy(context[:current_user], sector || Sector.new)
+      if sector.nil? || !sector_policy.delete_allowed?
         return {
           sector: nil,
-          errors: ['Must be admin to delete a sector.']
+          errors: ['Deleting sector is not allowed.']
         }
       end
 
-      sector = Sector.find_by(id:)
       assign_auditable_user(sector)
       if sector.destroy
         # Successful deletion, return the deleted sector with no errors

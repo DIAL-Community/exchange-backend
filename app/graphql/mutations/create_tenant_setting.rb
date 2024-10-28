@@ -15,7 +15,8 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(tenant_name:, tenant_domains:, allow_unsecured_read:)
-      unless an_admin
+      tenant_setting_policy = Pundit.policy(context[:current_user], SiteSetting.new)
+      unless tenant_setting_policy.create_allowed?
         return {
           tenant_setting: nil,
           errors: ['Creating / editing tenant setting is not allowed.']

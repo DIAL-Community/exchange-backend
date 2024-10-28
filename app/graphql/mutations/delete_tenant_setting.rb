@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(tenant_name:)
-      unless an_admin
-        return {
-          tenant_setting: nil,
-          errors: ['Must be admin to delete a tenant setting.']
-        }
-      end
-
       exchange_tenants = ExchangeTenant.where(tenant_name:)
-      if exchange_tenants.empty?
+      exchange_tenant_policy = Pundit.policy(context[:current_user], ExchangeTenant.new)
+      if exchange_tenants.empty? || !exchange_tenant_policy.delete_allowed?
         return {
           tenant_setting: nil,
-          errors: ['Unable to find tenants with matching name.']
+          errors: ['Deleting tenant setting is not allowed.']
         }
       end
 

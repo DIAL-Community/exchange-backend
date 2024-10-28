@@ -22,15 +22,15 @@ module Mutations
     def resolve(name:, slug:, start_date:, end_date:, project_url:, description:, product_id:, organization_id:,
       country_slugs:)
       project = Project.find_by(slug:)
-      check = false
-      if project.nil?
-        check = an_admin || (a_product_owner(product_id) unless product_id.nil?) ||
-                (an_org_owner(organization_id) unless organization_id.nil?)
-      else
-        check = an_admin || product_owner_check_for_project(project) || org_owner_check_for_project(project)
+      project_policy = Pundit.policy(context[:current_user], project || Project.new)
+      if project.nil? && !project_policy.create_allowed?
+        return {
+          project: nil,
+          errors: ['Creating / editing project is not allowed.']
+        }
       end
 
-      unless check
+      if !project.nil? && !project_policy.edit_allowed?
         return {
           project: nil,
           errors: ['Creating / editing project is not allowed.']
@@ -46,7 +46,7 @@ module Mutations
           first_duplicate = Project.slug_simple_starts_with(project.slug)
                                    .order(slug: :desc)
                                    .first
-          project.slug = project.slug + generate_offset(first_duplicate)
+          project.slug += generate_offset(first_duplicate)
         end
       end
 

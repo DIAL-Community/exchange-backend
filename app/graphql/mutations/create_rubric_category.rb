@@ -15,26 +15,33 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, weight:, description:)
-      unless an_admin
+      rubric_category = RubricCategory.find_by(slug:)
+      rubric_category_policy = Pundit.policy(context[:current_user], rubric_category || RubricCategory.new)
+
+      if rubric_category.nil? && !rubric_category_policy.create_allowed?
         return {
           rubric_category: nil,
           errors: ['Creating / editing rubric category is not allowed.']
         }
       end
 
-      rubric_category = RubricCategory.find_by(slug:)
+      if !rubric_category.nil? && !rubric_category_policy.edit_allowed?
+        return {
+          rubric_category: nil,
+          errors: ['Creating / editing rubric category is not allowed.']
+        }
+      end
+
       if rubric_category.nil?
-        rubric_category = RubricCategory.new(name:)
         slug = reslug_em(name)
+        rubric_category = RubricCategory.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = RubricCategory.slug_simple_starts_with(slug)
                                         .order(slug: :desc)
                                         .first
-        if !first_duplicate.nil?
-          rubric_category.slug = slug + generate_offset(first_duplicate)
-        else
-          rubric_category.slug = slug
+        unless first_duplicate.nil?
+          rubric_category.slug += generate_offset(first_duplicate)
         end
       end
 

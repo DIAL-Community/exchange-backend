@@ -22,7 +22,14 @@ module Mutations
       # Find the correct policy
       candidate_dataset = CandidateDataset.find_by(slug:)
       candidate_dataset_policy = Pundit.policy(context[:current_user], candidate_dataset || CandidateDataset.new)
-      unless candidate_dataset_policy.create_allowed?
+      if candidate_dataset.nil? && !candidate_dataset_policy.create_allowed?
+        return {
+          candidate_dataset: nil,
+          errors: ['Creating / editing candidate dataset is not allowed.']
+        }
+      end
+
+      if !candidate_dataset.nil? && !candidate_dataset_policy.edit_allowed?
         return {
           candidate_dataset: nil,
           errors: ['Creating / editing candidate dataset is not allowed.']

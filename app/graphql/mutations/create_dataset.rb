@@ -28,7 +28,15 @@ module Mutations
       # Find the correct policy
       dataset = Dataset.find_by(slug:)
       dataset_policy = Pundit.policy(context[:current_user], dataset || Dataset.new)
-      unless dataset_policy.edit_allowed?
+
+      if dataset.nil? && !dataset_policy.create_allowed?
+        return {
+          dataset: nil,
+          errors: ['Creating / editing dataset is not allowed.']
+        }
+      end
+
+      if !dataset.nil? && !dataset_policy.edit_allowed?
         return {
           dataset: nil,
           errors: ['Creating / editing dataset is not allowed.']
@@ -44,7 +52,7 @@ module Mutations
           first_duplicate = Dataset.slug_simple_starts_with(dataset.slug)
                                    .order(slug: :desc)
                                    .first
-          dataset.slug = generate_offset(first_duplicate)
+          dataset.slug += generate_offset(first_duplicate)
         end
       end
 

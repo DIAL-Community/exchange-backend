@@ -13,14 +13,23 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(email:, roles:, username:, organizations:, products:, confirmed:)
-      unless an_admin
+      user = User.find_by(email:)
+      user_policy = Pundit.policy(context[:current_user], user || User.new)
+
+      if user.nil? && !user_policy.create_allowed?
         return {
           user: nil,
           errors: ['Creating / editing user is not allowed.']
         }
       end
 
-      user = User.find_by(email:)
+      if !user.nil? && !user_policy.edit_allowed?
+        return {
+          user: nil,
+          errors: ['Creating / editing user is not allowed.']
+        }
+      end
+
       if user.nil?
         password = random_password
         user = User.new(email:,

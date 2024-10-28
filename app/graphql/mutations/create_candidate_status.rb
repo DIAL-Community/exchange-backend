@@ -22,7 +22,14 @@ module Mutations
       # Find the correct policy
       candidate_status = CandidateStatus.find_by(slug:)
       candidate_status_policy = Pundit.policy(context[:current_user], candidate_status || CandidateStatus.new)
-      unless candidate_status_policy.edit_allowed?
+      if candidate_status.nil? && !candidate_status_policy.create_allowed?
+        return {
+          candidate_status: nil,
+          errors: ['Creating / editing candidate status is not allowed.']
+        }
+      end
+
+      if !candidate_status.nil? && !candidate_status_policy.edit_allowed?
         return {
           candidate_status: nil,
           errors: ['Creating / editing candidate status is not allowed.']

@@ -9,11 +9,8 @@ module Mutations
 
     def resolve(id:)
       candidate_status = CandidateStatus.find_by(id:)
-      candidate_status_policy = Pundit.policy(
-        context[:current_user],
-        candidate_status || CandidateStatus.new
-      )
-      unless candidate_status_policy.delete_allowed?
+      candidate_status_policy = Pundit.policy(context[:current_user], candidate_status || CandidateStatus.new)
+      if candidate_status.nil? || !candidate_status_policy.delete_allowed?
         return {
           candidate_status: nil,
           errors: ['Deleting candidate status is not allowed.']

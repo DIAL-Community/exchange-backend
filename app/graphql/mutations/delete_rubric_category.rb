@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      rubric_category = RubricCategory.find_by(id:)
+      rubric_category_policy = Pundit.policy(context[:current_user], rubric_category || RubricCategory.new)
+      if rubric_category.nil? || !rubric_category_policy.delete_allowed?
         return {
           rubric_category: nil,
-          errors: ['Must be admin to delete a rubric category']
+          errors: ['Deleting rubric category is not allowed.']
         }
       end
 
-      rubric_category = RubricCategory.find_by(id:)
       assign_auditable_user(rubric_category)
 
       if rubric_category.destroy

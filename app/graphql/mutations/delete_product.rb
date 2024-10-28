@@ -8,18 +8,29 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      product = Product.find_by(id:)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? || !product_policy.delete_allowed?
         return {
           product: nil,
-          errors: ['Must be admin to delete a product.']
+          errors: ['Deleting product is not allowed.']
         }
       end
 
       # Delete any candidate roles that reference this product
-      CandidateRole.where(product_id: id).destroy_all
-      product = Product.find_by(id:)
-      assign_auditable_user(product)
-      if product.destroy
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        candidate_roles = CandidateRole.where(product_id: id).destroy_all
+        puts "Deleted #{candidate_roles.count} candidate roles."
+
+        assign_auditable_user(product)
+        product.destroy!
+
+        successful_operation = true
+      end
+
+      if successful_operation
         # Successful deletion, return the deleted product with no errors
         {
           product:,

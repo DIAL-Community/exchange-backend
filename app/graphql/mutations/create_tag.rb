@@ -14,17 +14,24 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:)
-      unless an_admin
+      tag = Tag.find_by(slug:)
+      if tag.nil?
+        tag = Tag.find_by(name:)
+      end
+
+      tag_policy = Pundit.policy(context[:current_user], tag || Tag.new)
+      if tag.nil? && !tag_policy.create_allowed?
         return {
           tag: nil,
           errors: ['Creating / editing tag is not allowed.']
         }
       end
 
-      # Prevent duplicating tag by the name of the tag.
-      tag = Tag.find_by(slug:)
-      if tag.nil?
-        tag = Tag.find_by(name:)
+      if !tag.nil? && !tag_policy.edit_allowed?
+        return {
+          tag: nil,
+          errors: ['Creating / editing tag is not allowed.']
+        }
       end
 
       if tag.nil?

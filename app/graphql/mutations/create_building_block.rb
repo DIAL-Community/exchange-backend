@@ -23,7 +23,14 @@ module Mutations
       # Find the correct policy
       building_block = BuildingBlock.find_by(slug:)
       building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
-      unless building_block_policy.edit_allowed?
+      if building_block.nil? && !building_block_policy.create_allowed?
+        return {
+          building_block: nil,
+          errors: ['Creating / editing building block is not allowed.']
+        }
+      end
+
+      if !building_block.nil? && !building_block_policy.edit_allowed?
         return {
           building_block: nil,
           errors: ['Creating / editing building block is not allowed.']

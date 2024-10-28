@@ -8,20 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      tag = Tag.find_by(id:)
+      tag_policy = Pundit.policy(context[:current_user], tag || Tag.new)
+      if tag.nil? || !tag_policy.delete_allowed?
         return {
           tag: nil,
-          errors: ['Must be admin to delete a tag.']
+          errors: ['Deleting tag is not allowed.']
         }
       end
 
-      tag = Tag.find_by(id:)
-      if tag.nil?
-        return {
-          tag: nil,
-          errors: ['Unable to uniquely identify tag to delete.']
-        }
-      end
       assign_auditable_user(tag)
 
       successful_operation = false

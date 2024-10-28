@@ -18,8 +18,18 @@ module Mutations
 
     def resolve(city_name:, province_name:, country_name:, slug:)
       # Find the correct policy
-      city_policy = Pundit.policy(context[:current_user], City.new)
-      unless city_policy.edit_allowed?
+      city = City.find_by(slug:)
+      city = City.find_by(name: city_name) if city.nil?
+      city_policy = Pundit.policy(context[:current_user], city || City.new)
+
+      if city.nil? && !city_policy.create_allowed?
+        return {
+          city: nil,
+          errors: ['Creating / editing city is not allowed.']
+        }
+      end
+
+      if !city.nil? && !city_policy.edit_allowed?
         return {
           city: nil,
           errors: ['Creating / editing city is not allowed.']
@@ -45,8 +55,6 @@ module Mutations
         errors: ['Unable to resolve province name.']
       } if province.nil?
 
-      city = City.find_by(slug:)
-      city = City.find_by(name: city_name) if city.nil?
       city = find_city(
         city_name,
         province.name,

@@ -31,7 +31,14 @@ module Mutations
       opportunity_status:, opportunity_origin:, opening_date:, closing_date:, image_file:, gov_stack_entity:)
       opportunity = Opportunity.find_by(slug:)
       opportunity_policy = Pundit.policy(context[:current_user], opportunity || Opportunity.new)
-      unless opportunity_policy.edit_allowed?
+      if opportunity.nil? && !opportunity_policy.create_allowed?
+        return {
+          opportunity: nil,
+          errors: ['Creating / editing opportunity is not allowed.']
+        }
+      end
+
+      if !opportunity.nil? && !opportunity_policy.edit_allowed?
         return {
           opportunity: nil,
           errors: ['Creating / editing opportunity is not allowed.']
@@ -47,7 +54,7 @@ module Mutations
           first_duplicate = Opportunity.slug_simple_starts_with(opportunity.slug)
                                        .order(slug: :desc)
                                        .first
-          opportunity.slug = opportunity.slug + generate_offset(first_duplicate)
+          opportunity.slug += generate_offset(first_duplicate)
         end
       end
 

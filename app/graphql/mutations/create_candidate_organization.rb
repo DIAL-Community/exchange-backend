@@ -22,11 +22,25 @@ module Mutations
     def resolve(slug:, organization_name:, create_storefront:, website:, description:, name:, email:, title:, captcha:)
       # Find the correct policy
       candidate_organization = CandidateOrganization.find_by(slug:)
+      if !candidate_organization.nil? && !candidate_organization.rejected.nil?
+        return {
+          candidate_organization: nil,
+          errors: ['Attempting to edit rejected or approved candidate organization.']
+        }
+      end
+
       candidate_organization_policy = Pundit.policy(
         context[:current_user],
         candidate_organization || CandidateOrganization.new
       )
-      unless candidate_organization_policy.edit_allowed?
+      if candidate_organization.nil? && !candidate_organization_policy.create_allowed?
+        return {
+          candidate_organization: nil,
+          errors: ['Creating / editing candidate organization is not allowed.']
+        }
+      end
+
+      if !candidate_organization.nil? && !candidate_organization_policy.edit_allowed?
         return {
           candidate_organization: nil,
           errors: ['Creating / editing candidate organization is not allowed.']
@@ -46,11 +60,6 @@ module Mutations
         end
 
         candidate_organization = CandidateOrganization.new(candidate_params)
-      elsif !candidate_organization.nil? && !candidate_organization.rejected.nil?
-        return {
-          candidate_organization: nil,
-          errors: ['Attempting to edit rejected or approved candidate organization.']
-        }
       end
 
       candidate_organization.name = organization_name

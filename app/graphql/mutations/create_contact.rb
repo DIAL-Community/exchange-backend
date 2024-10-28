@@ -23,7 +23,15 @@ module Mutations
       contact = Contact.find_by(slug:)
       contact = Contact.find_by(email:) if contact.nil?
       contact_policy = Pundit.policy(context[:current_user], contact || Contact.new)
-      unless contact_policy.edit_allowed?
+
+      if contact.nil? && !contact_policy.create_allowed?
+        return {
+          contact: nil,
+          errors: ['Creating / editing contact is not allowed.']
+        }
+      end
+
+      if !contact.nil? && !contact_policy.edit_allowed?
         return {
           contact: nil,
           errors: ['Creating / editing contact is not allowed.']

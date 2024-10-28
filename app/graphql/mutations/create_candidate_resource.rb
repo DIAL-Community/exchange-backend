@@ -27,8 +27,22 @@ module Mutations
       country_slugs:, submitter_email:, captcha:)
       # Find the correct policy
       candidate_resource = CandidateResource.find_by(slug:)
+      if !candidate_resource.nil? && !candidate_resource.rejected.nil?
+        return {
+          candidate_resource: nil,
+          errors: ['Attempting to edit rejected or approved candidate resource.']
+        }
+      end
+
       candidate_resource_policy = Pundit.policy(context[:current_user], candidate_resource || CandidateResource.new)
-      unless candidate_resource_policy.edit_allowed?
+      if candidate_resource.nil? && !candidate_resource_policy.create_allowed?
+        return {
+          candidate_resource: nil,
+          errors: ['Creating / editing candidate resource is not allowed.']
+        }
+      end
+
+      if !candidate_resource.nil? && !candidate_resource_policy.edit_allowed?
         return {
           candidate_resource: nil,
           errors: ['Creating / editing candidate resource is not allowed.']
@@ -46,11 +60,6 @@ module Mutations
         unless first_duplicate.nil?
           candidate_resource.slug = slug + generate_offset(first_duplicate)
         end
-      elsif candidate_resource.nil? && candidate_resource.rejected.nil?
-        return {
-          candidate_resource: nil,
-          errors: ['Attempting to edit rejected or approved candidate resource.']
-        }
       end
 
       candidate_resource.name = name

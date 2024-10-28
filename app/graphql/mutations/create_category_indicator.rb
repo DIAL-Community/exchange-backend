@@ -23,7 +23,14 @@ module Mutations
       # Find the correct policy
       category_indicator = CategoryIndicator.find_by(slug:)
       category_indicator_policy = Pundit.policy(context[:current_user], category_indicator || CategoryIndicator.new)
-      unless category_indicator_policy.edit_allowed?
+      if category_indicator.nil? && !category_indicator_policy.create_allowed?
+        return {
+          category_indicator: nil,
+          errors: ['Creating / editing category indicator is not allowed.']
+        }
+      end
+
+      if !category_indicator.nil? && !category_indicator_policy.edit_allowed?
         return {
           category_indicator: nil,
           errors: ['Creating / editing category indicator is not allowed.']

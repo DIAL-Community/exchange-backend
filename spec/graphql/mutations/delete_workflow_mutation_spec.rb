@@ -19,9 +19,10 @@ RSpec.describe(Mutations::DeleteWorkflow, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     create(:workflow, id: 1000, name: 'Some Workflow', slug: 'some-workflow')
-    expect_any_instance_of(Mutations::DeleteWorkflow).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -46,7 +47,7 @@ RSpec.describe(Mutations::DeleteWorkflow, type: :graphql) do
       expect(result['data']['deleteWorkflow']['workflow'])
         .to(be(nil))
       expect(result['data']['deleteWorkflow']['errors'])
-        .to(eq(["Must be admin to delete a workflow."]))
+        .to(eq(["Deleting workflow is not allowed."]))
     end
   end
 end

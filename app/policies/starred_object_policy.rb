@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ResourcePolicy < ApplicationPolicy
+class StarredObjectPolicy < ApplicationPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -13,24 +13,19 @@ class ResourcePolicy < ApplicationPolicy
 
   def create_allowed?
     return false if user.nil?
-
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:adli_admin]) ||
-      user.roles.include?(User.user_roles[:content_editor]) ||
-      user.roles.include?(User.user_roles[:content_writer])
+    true
   end
 
   def edit_allowed?
     return false if user.nil?
+    return true if user.id == record.starred_by_id
 
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:adli_admin]) ||
-      user.roles.include?(User.user_roles[:content_editor]) ||
-      user.roles.include?(User.user_roles[:content_writer])
+    user.roles.include?(User.user_roles[:admin])
   end
 
   def delete_allowed?
     return false if user.nil?
+    return true if user.id == record.starred_by_id
 
     user.roles.include?(User.user_roles[:admin])
   end

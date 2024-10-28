@@ -9,12 +9,12 @@ module Mutations
 
     def resolve(id:)
       category_indicator = CategoryIndicator.find_by(id:)
-
-      unless an_admin
+      category_indicator_policy = Pundit.policy(context[:current_user], category_indicator || CategoryIndicator.new)
+      if category_indicator.nil? || !category_indicator_policy.delete_allowed?
         return {
           category_indicator: nil,
           rubric_category_slug: nil,
-          errors: ['Must be admin to delete a category indicator']
+          errors: ['Deleting catagory indicator is not allowed.']
         }
       end
 

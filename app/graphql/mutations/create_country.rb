@@ -20,7 +20,15 @@ module Mutations
       country = Country.find_by(name:)
       country = Country.find_by(slug:) if country.nil? && !slug.nil?
       country_policy = Pundit.policy(context[:current_user], country || Contact.new)
-      unless country_policy.edit_allowed?
+
+      if country.nil? && !country_policy.create_allowed?
+        return {
+          country: nil,
+          errors: ['Creating / editing country is not allowed.']
+        }
+      end
+
+      if !country.nil? && !country_policy.edit_allowed?
         return {
           country: nil,
           errors: ['Creating / editing country is not allowed.']

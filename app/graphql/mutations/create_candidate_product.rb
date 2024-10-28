@@ -21,18 +21,25 @@ module Mutations
     def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
       # Find the correct policy
       candidate_product = CandidateProduct.find_by(slug:)
+      if !candidate_product.nil? && !candidate_product.rejected.nil?
+        return {
+          candidate_product: nil,
+          errors: ['Attempting to edit rejected or approved candidate product.']
+        }
+      end
+
       candidate_product_policy = Pundit.policy(context[:current_user], candidate_product || CandidateProduct.new)
-      unless candidate_product_policy.edit_allowed?
+      if candidate_product.nil? && !candidate_product_policy.create_allowed?
         return {
           candidate_dataset: nil,
           errors: ['Creating / editing candidate product is not allowed.']
         }
       end
 
-      if !candidate_product.nil? && !candidate_product.rejected.nil?
+      if !candidate_product.nil? && !candidate_product_policy.edit_allowed?
         return {
           candidate_product: nil,
-          errors: ['Attempting to edit rejected or approved candidate product.']
+          errors: ['Creating / editing candidate product is not allowed.']
         }
       end
 

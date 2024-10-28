@@ -37,12 +37,14 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
+
     create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
     create(:country, slug: 'canada')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some name", slug: "", description: "some description", countrySlugs: ["usa", "canada"] }
     )
@@ -68,9 +70,11 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
     create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
     create(:country, slug: 'canada')
-    expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some new name", slug: "some-name", description: "some description", countrySlugs: ["usa"] }
     )
@@ -103,11 +107,13 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
   end
 
   it 'is successful - handles non-existent country slugs gracefully' do
-    expect_any_instance_of(Mutations::CreateProject).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
+
     create(:origin, slug: 'manually-entered')
     create(:country, slug: 'usa')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some name", slug: "", description: "some description", countrySlugs: ["usa", "nonexistent"] }
     )

@@ -31,9 +31,10 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
   end
 
   it 'creates use case - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some name", slug: "", description: "some description" },
     )
@@ -48,9 +49,9 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
   end
 
   it 'creates use case - user is logged in as content editor' do
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:a_content_editor).and_return(true))
-
-    result = execute_graphql(
+    content_editor_user = create(:user, email: 'content-editor-user@gmail.com', roles: ['content_editor'])
+    result = execute_graphql_as_user(
+      content_editor_user,
       mutation,
       variables: { name: "Some name", slug: "", description: "some description" },
     )
@@ -65,10 +66,11 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
   end
 
   it 'updates name for existing method matched by slug' do
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
     create(:workflow, name: "Some name", slug: "some-name")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some new name", slug: "some-name", description: "some description" },
     )
@@ -83,10 +85,11 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
   end
 
   it 'generate offset for new use case with duplicated name' do
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
     create(:workflow, name: "Some name", slug: "some-name")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some name", slug: "", description: "some description" },
     )
@@ -101,9 +104,6 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
   end
 
   it 'fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::CreateWorkflow).to(receive(:a_content_editor).and_return(false))
-
     result = execute_graphql(
       mutation,
       variables: { name: "Some name", slug: "", description: "some description" },

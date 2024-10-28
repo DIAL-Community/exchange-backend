@@ -16,7 +16,16 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:, step_number:, use_case_id:)
-      unless an_admin || a_content_editor
+      use_case = UseCase.find_by(id: use_case_id)
+      use_case_policy = Pundit.policy(context[:current_user], use_case || UseCase.new)
+      if use_case.nil? && !use_case_policy.create_allowed?
+        return {
+          use_case_step: nil,
+          errors: ['Creating / editing use case step is not allowed.']
+        }
+      end
+
+      if !use_case.nil? && !use_case_policy.edit_allowed?
         return {
           use_case_step: nil,
           errors: ['Creating / editing use case step is not allowed.']
@@ -25,17 +34,15 @@ module Mutations
 
       use_case_step = UseCaseStep.find_by(slug:)
       if use_case_step.nil?
-        use_case_step = UseCaseStep.new(name:)
         slug = reslug_em(name)
+        use_case_step = UseCaseStep.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = UseCaseStep.slug_simple_starts_with(slug)
                                      .order(slug: :desc)
                                      .first
-        if !first_duplicate.nil?
-          use_case_step.slug = slug + generate_offset(first_duplicate)
-        else
-          use_case_step.slug = slug
+        unless first_duplicate.nil?
+          use_case_step.slug += generate_offset(first_duplicate)
         end
       end
 

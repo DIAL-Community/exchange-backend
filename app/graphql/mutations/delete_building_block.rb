@@ -10,7 +10,7 @@ module Mutations
     def resolve(id:)
       building_block = BuildingBlock.find_by(id:)
       building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
-      unless building_block_policy.delete_allowed?
+      if building_block.nil? || !building_block_policy.delete_allowed?
         return {
           building_block: nil,
           errors: ['Deleting building block is not allowed.']

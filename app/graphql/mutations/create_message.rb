@@ -23,7 +23,15 @@ module Mutations
     def resolve(name:, message_template:, message_type:, message_datetime:, visible:, location:, location_type:)
       message = Message.find_by(slug: reslug_em(name))
       message_policy = Pundit.policy(context[:current_user], message || Message.new)
-      unless message_policy.edit_allowed?
+
+      if message.nil? && !message_policy.create_allowed?
+        return {
+          message: nil,
+          errors: ['Creating / editing message is not allowed.']
+        }
+      end
+
+      if !message.nil? && !message_policy.edit_allowed?
         return {
           user: nil,
           errors: ['Creating / editing message is not allowed.']

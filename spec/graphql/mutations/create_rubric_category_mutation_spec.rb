@@ -34,9 +34,10 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
   end
 
   it 'creates rubric category - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateRubricCategory).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some name", slug: "", weight: 0.75, description: "some description" }
     )
@@ -54,10 +55,11 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
   end
 
   it 'updates a name without changing slug' do
-    expect_any_instance_of(Mutations::CreateRubricCategory).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin@gmail.com', roles: ['admin'])
     create(:rubric_category, name: "Some name", slug: "some-name")
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { name: "Some new name", slug: "some-name", weight: 0.6, description: "some description" }
     )
@@ -75,8 +77,6 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
   end
 
   it 'fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::CreateRubricCategory).to(receive(:an_admin).and_return(false))
-
     result = execute_graphql(
       mutation,
       variables: { name: "Some name", slug: "", weight: 0.75, description: "some description" }

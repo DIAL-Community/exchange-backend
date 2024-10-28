@@ -33,7 +33,15 @@ module Mutations
       gov_stack_entity:, product_stage:, extra_attributes: nil, featured: nil, contact: nil
     )
       product = Product.find_by(slug:)
-      unless an_admin || (a_product_owner(product.id) unless product.nil?)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? && !product_policy.create_allowed?
+        return {
+          product: nil,
+          errors: ['Creating / editing product is not allowed.']
+        }
+      end
+
+      if !product.nil? && !product_policy.edit_allowed?
         return {
           product: nil,
           errors: ['Creating / editing product is not allowed.']
@@ -49,7 +57,7 @@ module Mutations
           first_duplicate = Product.slug_simple_starts_with(product.slug)
                                    .order(slug: :desc)
                                    .first
-          product.slug = product.slug + generate_offset(first_duplicate)
+          product.slug += generate_offset(first_duplicate)
         end
       end
 

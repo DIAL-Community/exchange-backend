@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          country: nil,
-          errors: ['Must be admin to delete a country.']
-        }
-      end
-
       country = Country.find_by(id:)
-      if country.nil?
+      country_policy = Pundit.policy(context[:current_user], country || Country.new)
+      if country.nil? || !country_policy.delete_allowed?
         return {
           country: nil,
-          errors: ['Unable to uniquely identify country to delete.']
+          errors: ['Deleting country is not allowed.']
         }
       end
 

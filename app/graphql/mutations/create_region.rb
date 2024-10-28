@@ -15,7 +15,17 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:, aliases:)
-      unless an_admin
+      region = Region.find_by(slug:)
+      region_policy = Pundit.policy(context[:current_user], region || Region.new)
+
+      if region.nil? && !region_policy.create_allowed?
+        return {
+          region: nil,
+          errors: ['Creating / editing region is not allowed.']
+        }
+      end
+
+      if !region.nil? && !region_policy.edit_allowed?
         return {
           region: nil,
           errors: ['Creating / editing region is not allowed.']
@@ -31,7 +41,7 @@ module Mutations
                                 .order(slug: :desc)
                                 .first
         unless first_duplicate.nil?
-          region.slug = region.slug + generate_offset(first_duplicate)
+          region.slug += generate_offset(first_duplicate)
         end
       end
 

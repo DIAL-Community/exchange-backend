@@ -23,10 +23,11 @@ RSpec.describe(Mutations::DeleteOrganization, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:organization, id: 1000, name: 'Some Org', slug: 'some-org', website: 'some.org', countries: [], sectors: [])
-    expect_any_instance_of(Mutations::DeleteOrganization).to(receive(:an_admin).and_return(true))
+    create(:organization, id: 1000, name: 'Some Org', slug: 'some-org', website: 'some.org')
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -40,7 +41,7 @@ RSpec.describe(Mutations::DeleteOrganization, type: :graphql) do
   end
 
   it 'fails - user is not logged in' do
-    create(:organization, id: 1000, name: 'Some Org', slug: 'some-org', website: 'some.org', countries: [], sectors: [])
+    create(:organization, id: 1000, name: 'Some Org', slug: 'some-org', website: 'some.org')
 
     result = execute_graphql(
       mutation,
@@ -51,7 +52,7 @@ RSpec.describe(Mutations::DeleteOrganization, type: :graphql) do
       expect(result['data']['deleteOrganization']['organization'])
         .to(be(nil))
       expect(result['data']['deleteOrganization']['errors'])
-        .to(eq(["Must be admin to delete an organization"]))
+        .to(eq(["Deleting organization is not allowed."]))
     end
   end
 end
