@@ -8,7 +8,7 @@ module Queries
     def resolve(slug:)
       candidate_dataset = CandidateDataset.find_by(slug:) if valid_slug?(slug)
       # Validate access to the current object or entity type.
-      validate_access_to_resource(candidate_dataset || CandidateDataset.new)
+      validate_access_to_instance(candidate_dataset || CandidateDataset.new)
       candidate_dataset
     end
   end

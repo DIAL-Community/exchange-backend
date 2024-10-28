@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       sdg = SustainableDevelopmentGoal.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(sdg || SustainableDevelopmentGoal.new)
+      validate_access_to_instance(sdg || SustainableDevelopmentGoal.new)
       sdg
     end
   end

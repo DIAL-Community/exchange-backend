@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       use_case = UseCase.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(use_case || UseCase.new)
+      validate_access_to_instance(use_case || UseCase.new)
       use_case
     end
   end

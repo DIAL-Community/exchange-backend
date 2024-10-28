@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       rubric_category = RubricCategory.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(rubric_category || RubricCategory.new)
+      validate_access_to_instance(rubric_category || RubricCategory.new)
       rubric_category
     end
   end

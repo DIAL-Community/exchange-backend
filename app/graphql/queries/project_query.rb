@@ -11,7 +11,7 @@ module Queries
 
     def resolve(slug:)
       project = Project.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(project || Project.new)
+      validate_access_to_instance(project || Project.new)
       project
     end
   end

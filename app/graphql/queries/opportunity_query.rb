@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       opportunity = Opportunity.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(opportunity || Opportunity.new)
+      validate_access_to_instance(opportunity || Opportunity.new)
       opportunity
     end
   end

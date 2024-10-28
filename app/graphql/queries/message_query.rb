@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       message = Message.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(message || Message.new)
+      validate_access_to_instance(message || Message.new)
       message
     end
   end

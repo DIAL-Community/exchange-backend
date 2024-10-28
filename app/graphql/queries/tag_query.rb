@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       tag = Tag.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(tag || Tag.new)
+      validate_access_to_instance(tag || Tag.new)
       tag
     end
   end

@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       organization = Organization.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(organization || Organization.new)
+      validate_access_to_instance(organization || Organization.new)
       organization
     end
   end

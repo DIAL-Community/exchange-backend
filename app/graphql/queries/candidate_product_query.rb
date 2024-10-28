@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       candidate_product = CandidateProduct.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(candidate_product || CandidateProduct.new)
+      validate_access_to_instance(candidate_product || CandidateProduct.new)
       candidate_product
     end
   end

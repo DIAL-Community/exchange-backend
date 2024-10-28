@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       sector = Sector.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(sector || Sector.new)
+      validate_access_to_instance(sector || Sector.new)
       sector
     end
   end

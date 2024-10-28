@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       workflow = Workflow.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(workflow || Workflow.new)
+      validate_access_to_instance(workflow || Workflow.new)
       workflow
     end
   end

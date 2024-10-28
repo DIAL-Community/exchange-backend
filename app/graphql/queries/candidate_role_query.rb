@@ -12,7 +12,7 @@ module Queries
 
     def resolve(id:, email:, product_id:, organization_id:, dataset_id:)
       candidate_role = CandidateRole.find(id) if valid_id?(id)
-      validate_access_to_resource(candidate_role || CandidateRole.new)
+      validate_access_to_instance(candidate_role || CandidateRole.new)
 
       return candidate_role unless candidate_role.nil?
 

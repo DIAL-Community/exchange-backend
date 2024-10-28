@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       resource = Resource.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(resource || Resource.new)
+      validate_access_to_instance(resource || Resource.new)
       resource
     end
   end

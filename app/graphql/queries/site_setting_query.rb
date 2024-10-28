@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       site_setting = SiteSetting.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(site_setting || SiteSetting.new)
+      validate_access_to_instance(site_setting || SiteSetting.new)
       site_setting
     end
   end

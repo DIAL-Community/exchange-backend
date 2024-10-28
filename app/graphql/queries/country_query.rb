@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       country = Country.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(country || Country.new)
+      validate_access_to_instance(country || Country.new)
       country
     end
   end

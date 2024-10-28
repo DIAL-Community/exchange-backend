@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       candidate_status = CandidateStatus.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(candidate_status || CandidateStatus.new)
+      validate_access_to_instance(candidate_status || CandidateStatus.new)
       candidate_status
     end
   end

@@ -16,7 +16,7 @@ module Queries
       return nil if !an_admin && !an_adli_admin && current_user_slug != slug
 
       contact = Contact.find_by(slug:, source:) if valid_slug?(slug)
-      validate_access_to_resource(contact || Contact.new)
+      validate_access_to_instance(contact || Contact.new)
       contact
     end
   end
@@ -31,17 +31,6 @@ module Queries
       contacts = Contact.order(:name)
       contacts = contacts.name_contains(search) unless search.blank?
       contacts
-    end
-  end
-
-  class HubContactsQuery < Queries::BaseQuery
-    argument :search, String, required: false, default_value: ''
-    type [Types::ContactType], null: false
-
-    def resolve(search:)
-      contacts = Contact.order(:name)
-      contacts = contacts.name_contains(search) unless search.blank?
-      contacts.where(source: DPI_TENANT_NAME)
     end
   end
 
@@ -61,8 +50,20 @@ module Queries
       return nil if !an_admin && !an_adli_admin && current_user_email != email
 
       contact = Contact.find_by(email:, source:)
-      validate_access_to_resource(contact || Contact.new)
+      validate_access_to_instance(contact || Contact.new)
       contact
+    end
+  end
+
+  class HubContactsQuery < Queries::BaseQuery
+    argument :search, String, required: false, default_value: ''
+    type [Types::ContactType], null: false
+
+    def resolve(search:)
+      validate_access_to_resource(Contact.new)
+      contacts = Contact.order(:name)
+      contacts = contacts.name_contains(search) unless search.blank?
+      contacts.where(source: DPI_TENANT_NAME)
     end
   end
 end

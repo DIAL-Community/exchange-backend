@@ -6,7 +6,9 @@ module Queries
     type Types::OrganizationType, null: true
 
     def resolve(slug:)
-      Organization.find_by(slug:)
+      organization = Organization.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_instance(organization || Organization.new)
+      organization
     end
   end
 
@@ -15,6 +17,7 @@ module Queries
     type [Types::OrganizationType], null: false
 
     def resolve(search:)
+      validate_access_to_resource(Organization.new)
       organizations = Organization.order(:name)
       organizations = organizations.name_contains(search) unless search.blank?
       organizations.where(is_mni: true)

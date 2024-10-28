@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       dataset = Dataset.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(dataset || Dataset.new)
+      validate_access_to_instance(dataset || Dataset.new)
       dataset
     end
   end

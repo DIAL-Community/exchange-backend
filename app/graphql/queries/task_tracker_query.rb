@@ -7,7 +7,7 @@ module Queries
 
     def resolve(slug:)
       task_tracker = TaskTracker.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_resource(task_tracker || TaskTracker.new)
+      validate_access_to_instance(task_tracker || TaskTracker.new)
       task_tracker
     end
   end
