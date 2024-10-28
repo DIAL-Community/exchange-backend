@@ -12281,7 +12281,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -12293,7 +12293,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -13606,7 +13606,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13618,7 +13618,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13630,7 +13630,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13658,7 +13658,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13670,7 +13670,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },

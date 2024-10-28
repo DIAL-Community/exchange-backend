@@ -16,7 +16,7 @@ module Mutations
       unless an_admin
         return {
           user: nil,
-          errors: ['Must be an admin to update user data.']
+          errors: ['Creating / editing user is not allowed.']
         }
       end
 

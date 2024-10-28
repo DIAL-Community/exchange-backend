@@ -27,16 +27,14 @@ module Mutations
     field :opportunity, Types::OpportunityType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, web_address:, description:, contact_name:, contact_email:,
-      opportunity_type:, opportunity_status:, opportunity_origin:,
-      opening_date:, closing_date:, image_file:, gov_stack_entity:
-    )
+    def resolve(name:, slug:, web_address:, description:, contact_name:, contact_email:, opportunity_type:,
+      opportunity_status:, opportunity_origin:, opening_date:, closing_date:, image_file:, gov_stack_entity:)
       opportunity = Opportunity.find_by(slug:)
-      unless an_admin
+      opportunity_policy = Pundit.policy(context[:current_user], opportunity || Opportunity.new)
+      unless opportunity_policy.edit_allowed?
         return {
           opportunity: nil,
-          errors: ['Must be admin to create an opportunity']
+          errors: ['Creating / editing opportunity is not allowed.']
         }
       end
 

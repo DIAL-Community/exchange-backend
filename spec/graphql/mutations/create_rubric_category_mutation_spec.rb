@@ -86,7 +86,7 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
       expect(result['data']['createRubricCategory']['rubricCategory'])
         .to(be(nil))
       expect(result['data']['createRubricCategory']['errors'])
-        .to(eq(['Must be admin to create a rubric category']))
+        .to(eq(['Creating / editing rubric category is not allowed.']))
     end
   end
 
@@ -100,7 +100,7 @@ RSpec.describe(Mutations::CreateRubricCategory, type: :graphql) do
       expect(result['data']['createRubricCategory']['rubricCategory'])
         .to(be(nil))
       expect(result['data']['createRubricCategory']['errors'])
-        .to(eq(['Must be admin to create a rubric category']))
+        .to(eq(['Creating / editing rubric category is not allowed.']))
     end
   end
 end

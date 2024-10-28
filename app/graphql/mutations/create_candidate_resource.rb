@@ -23,16 +23,11 @@ module Mutations
     field :candidate_resource, Types::CandidateResourceType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, description:, published_date:,
-      resource_type:, resource_link:, link_description:,
-      country_slugs:, submitter_email:, captcha:
-    )
+    def resolve(name:, slug:, description:, published_date:, resource_type:, resource_link:, link_description:,
+      country_slugs:, submitter_email:, captcha:)
+      # Find the correct policy
       candidate_resource = CandidateResource.find_by(slug:)
-      candidate_resource_policy = Pundit.policy(
-        context[:current_user],
-        candidate_resource || CandidateResource.new
-      )
+      candidate_resource_policy = Pundit.policy(context[:current_user], candidate_resource || CandidateResource.new)
       unless candidate_resource_policy.edit_allowed?
         return {
           candidate_resource: nil,

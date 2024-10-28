@@ -17,15 +17,11 @@ module Mutations
     field :candidate_status, Types::CandidateStatusType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      slug:, name:, description:, notification_template:,
-      initial_status:, terminal_status:, next_candidate_status_slugs:
-    )
+    def resolve(slug:, name:, description:, notification_template:, initial_status:, terminal_status:,
+      next_candidate_status_slugs:)
+      # Find the correct policy
       candidate_status = CandidateStatus.find_by(slug:)
-      candidate_status_policy = Pundit.policy(
-        context[:current_user],
-        candidate_status || CandidateStatus.new
-      )
+      candidate_status_policy = Pundit.policy(context[:current_user], candidate_status || CandidateStatus.new)
       unless candidate_status_policy.edit_allowed?
         return {
           candidate_status: nil,

@@ -20,7 +20,7 @@ module Mutations
       unless an_admin
         return {
           sector: nil,
-          errors: ['Must be admin or content editor to create a sector']
+          errors: ['Creating / editing sector is not allowed.']
         }
       end
 

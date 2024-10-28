@@ -115,7 +115,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
     aggregate_failures do
       expect(result['data']['createResource']['resource']).to(be(nil))
       expect(result['data']['createResource']['errors'])
-        .to(eq(["Must be admin or content editor to create a resource."]))
+        .to(eq(['Creating / editing resource is not allowed.']))
     end
   end
 
@@ -138,7 +138,7 @@ RSpec.describe(Mutations::CreateResource, type: :graphql) do
     aggregate_failures do
       expect(result['data']['createResource']['resource']).to(be(nil))
       expect(result['data']['createResource']['errors'])
-        .to(eq(["Must be admin or content editor to create a resource."]))
+        .to(eq(['Creating / editing resource is not allowed.']))
     end
   end
 end

@@ -17,7 +17,7 @@ module Mutations
       unless an_admin
         return {
           tag: nil,
-          errors: ['Must be an admin to create / edit a tag']
+          errors: ['Creating / editing tag is not allowed.']
         }
       end
 

@@ -13,6 +13,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, action:)
+      # Find the correct policy
       candidate_organization = CandidateOrganization.find_by(slug:)
       candidate_organization_policy = Pundit.policy(
         context[:current_user],

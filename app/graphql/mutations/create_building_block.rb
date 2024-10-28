@@ -20,11 +20,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, name:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
+      # Find the correct policy
       building_block = BuildingBlock.find_by(slug:)
-      building_block_policy = Pundit.policy(
-        context[:current_user],
-        building_block || BuildingBlock.new
-      )
+      building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
       unless building_block_policy.edit_allowed?
         return {
           building_block: nil,

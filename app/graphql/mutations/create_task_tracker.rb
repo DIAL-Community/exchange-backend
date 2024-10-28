@@ -17,7 +17,7 @@ module Mutations
       unless an_admin
         return {
           task_tracker: nil,
-          errors: ['Must be an admin to create / edit a task_tracker']
+          errors: ['Creating / editing task tracker is not allowed.']
         }
       end
 

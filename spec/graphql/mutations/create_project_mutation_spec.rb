@@ -98,7 +98,7 @@ RSpec.describe(Mutations::CreateProject, type: :graphql) do
       expect(result['data']['createProject']['project'])
         .to(be(nil))
       expect(result['data']['createProject']['errors'])
-        .to(eq(['Must be admin, product owner or organization owner to create a project']))
+        .to(eq(['Creating / editing project is not allowed.']))
     end
   end
 

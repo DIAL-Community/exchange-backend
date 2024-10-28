@@ -22,7 +22,7 @@ module Mutations
       if product.nil? || (!a_product_owner(product.id) && !an_admin)
         return {
           product_repository: nil,
-          errors: ['Unable to create product repository object.']
+          errors: ['Creating / editing product repository is not allowed.']
         }
       end
 

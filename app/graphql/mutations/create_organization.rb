@@ -23,11 +23,8 @@ module Mutations
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, aliases:, website: nil,
-      is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
-      has_storefront: nil, description:, image_file: nil, hero_file: nil
-    )
+    def resolve(name:, slug:, aliases:, website: nil, is_endorser: nil, when_endorsed: nil, endorser_level: nil,
+      is_mni: nil, has_storefront: nil, description:, image_file: nil, hero_file: nil)
       # Allowed to create record:
       # - Admin user
       # - Non admin user where email host is part of the organization's website
@@ -41,7 +38,7 @@ module Mutations
       if current_user.nil?
         return {
           organization: nil,
-          errors: ['Must be logged in create / edit an organization.']
+          errors: ['Creating / editing organization is not allowed.']
         }
       end
 

@@ -20,7 +20,7 @@ module Mutations
       unless an_admin
         return {
           resource_topic: nil,
-          errors: ['Must be an admin to create / edit a resource topic']
+          errors: ['Creating / editing resource topic is not allowed.']
         }
       end
 

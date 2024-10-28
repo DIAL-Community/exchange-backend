@@ -18,7 +18,7 @@ module Mutations
       unless an_admin
         return {
           region: nil,
-          errors: ['Must be admin or content editor to create or edit a region']
+          errors: ['Creating / editing region is not allowed.']
         }
       end
 

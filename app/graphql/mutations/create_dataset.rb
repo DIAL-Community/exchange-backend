@@ -25,15 +25,13 @@ module Mutations
 
     def resolve(name:, slug:, aliases:, website:, visualization_url: nil, geographic_coverage:,
       time_range:, dataset_type:, license:, languages:, data_format:, description:, image_file: nil)
+      # Find the correct policy
       dataset = Dataset.find_by(slug:)
-      dataset_policy = Pundit.policy(
-        context[:current_user],
-        dataset || Dataset.new
-      )
+      dataset_policy = Pundit.policy(context[:current_user], dataset || Dataset.new)
       unless dataset_policy.edit_allowed?
         return {
           dataset: nil,
-          errors: ['Must be admin or dataset owner to create / edit a dataset']
+          errors: ['Creating / editing dataset is not allowed.']
         }
       end
 

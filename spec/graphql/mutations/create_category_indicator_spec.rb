@@ -140,7 +140,7 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['createCategoryIndicator']['errors'])
-        .to(eq(['Must be admin to create a category indicator.']))
+        .to(eq(['Creating / editing category indicator is not allowed.']))
     end
   end
 
@@ -167,7 +167,7 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['createCategoryIndicator']['errors'])
-        .to(eq(['Must be admin to create a category indicator.']))
+        .to(eq(['Creating / editing category indicator is not allowed.']))
     end
   end
 end

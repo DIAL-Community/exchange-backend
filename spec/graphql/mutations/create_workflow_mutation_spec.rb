@@ -113,7 +113,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
       expect(result['data']['createWorkflow']['workflow'])
         .to(be(nil))
       expect(result['data']['createWorkflow']['errors'])
-        .to(eq(['Must be admin or content editor to create workflow']))
+        .to(eq(['Creating / editing workflow is not allowed.']))
     end
   end
 
@@ -127,7 +127,7 @@ RSpec.describe(Mutations::CreateWorkflow, type: :graphql) do
       expect(result['data']['createWorkflow']['workflow'])
         .to(be(nil))
       expect(result['data']['createWorkflow']['errors'])
-        .to(eq(['Must be admin or content editor to create workflow']))
+        .to(eq(['Creating / editing workflow is not allowed.']))
     end
   end
 end

@@ -36,7 +36,7 @@ module Mutations
       unless an_admin || (a_product_owner(product.id) unless product.nil?)
         return {
           product: nil,
-          errors: ['Must be admin or product owner to create a product']
+          errors: ['Creating / editing product is not allowed.']
         }
       end
 

@@ -18,7 +18,7 @@ module Mutations
       unless an_admin || a_content_editor
         return {
           workflow: nil,
-          errors: ['Must be admin or content editor to create workflow']
+          errors: ['Creating / editing workflow is not allowed.']
         }
       end
 

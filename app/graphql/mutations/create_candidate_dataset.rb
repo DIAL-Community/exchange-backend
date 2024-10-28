@@ -19,11 +19,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, website:, visualization_url:, dataset_type:, submitter_email:, description:, captcha:)
+      # Find the correct policy
       candidate_dataset = CandidateDataset.find_by(slug:)
-      candidate_dataset_policy = Pundit.policy(
-        context[:current_user],
-        candidate_dataset || CandidateDataset.new
-      )
+      candidate_dataset_policy = Pundit.policy(context[:current_user], candidate_dataset || CandidateDataset.new)
       unless candidate_dataset_policy.create_allowed?
         return {
           candidate_dataset: nil,

@@ -145,7 +145,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createProduct']['product']).to(be(nil))
-      expect(result['data']['createProduct']['errors']).to(eq(['Must be admin or product owner to create a product']))
+      expect(result['data']['createProduct']['errors']).to(eq(['Creating / editing product is not allowed.']))
     end
   end
 end

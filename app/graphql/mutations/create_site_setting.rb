@@ -26,7 +26,7 @@ module Mutations
       unless an_admin
         return {
           site_setting: nil,
-          errors: ['Must have proper rights to update a site setting object.']
+          errors: ['Creating / editing site setting is not allowed.']
         }
       end
 

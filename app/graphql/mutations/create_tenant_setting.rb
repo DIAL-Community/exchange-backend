@@ -18,7 +18,7 @@ module Mutations
       unless an_admin
         return {
           tenant_setting: nil,
-          errors: ['Must have proper rights to update a tenant setting object.']
+          errors: ['Creating / editing tenant setting is not allowed.']
         }
       end
 

@@ -11,7 +11,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(email:, roles:, username:, confirmed:)
-      user_policy = Pundit.policy(context[:current_user], User.new)
+      # Find the correct policy
+      user = User.find_by(email:)
+      user_policy = Pundit.policy(context[:current_user], user || User.new)
       unless user_policy.create_allowed?
         return {
           user: nil,
@@ -19,15 +21,9 @@ module Mutations
         }
       end
 
-      user = User.find_by(email:)
       if user.nil?
         password = random_password
-        user = User.new(
-          email:,
-          created_at: Time.now,
-          password:,
-          password_confirmation: password
-        )
+        user = User.new(email:, created_at: Time.now, password:, password_confirmation: password)
       end
       assign_auditable_user(user)
 

@@ -18,7 +18,7 @@ module Mutations
       unless an_admin
         return {
           rubric_category: nil,
-          errors: ['Must be admin to create a rubric category']
+          errors: ['Creating / editing rubric category is not allowed.']
         }
       end
 

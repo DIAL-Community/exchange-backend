@@ -9,6 +9,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(data:, type:)
+      # Find the correct policy
       user_bookmark_policy = Pundit.policy(context[:current_user], context[:current_user])
       unless user_bookmark_policy.edit_allowed?
         return {
