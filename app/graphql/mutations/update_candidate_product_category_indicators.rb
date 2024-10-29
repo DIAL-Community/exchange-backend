@@ -10,10 +10,7 @@ module Mutations
 
     def resolve(category_indicator_values:, slug:)
       candidate_product = CandidateProduct.find_by(slug:)
-      candidate_product_policy = Pundit.policy(
-        context[:current_user],
-        candidate_product || CandidateProduct.new
-      )
+      candidate_product_policy = Pundit.policy(context[:current_user], candidate_product || CandidateProduct.new)
       unless candidate_product_policy.edit_allowed?
         return {
           candidate_product: nil,

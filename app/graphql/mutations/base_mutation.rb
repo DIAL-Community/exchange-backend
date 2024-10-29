@@ -8,7 +8,9 @@ module Mutations
     object_class Types::BaseObject
 
     def ready?(**args)
-      puts "Processing record: #{args[:slug] || args[:id]}."
+      unless args[:slug].nil?
+        puts "Processing record: #{args[:slug]}."
+      end
       true
     end
 

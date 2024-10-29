@@ -27,9 +27,11 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
 
   it 'is successful - adds new fields related to product scale' do
     create(:product, name: 'Test Product', slug: 'test-product', extra_attributes: [])
-    expect_any_instance_of(Mutations::UpdateProductExtraAttributes).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         slug: 'test-product',
@@ -69,9 +71,11 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     create(:product, name: 'Test Product', slug: 'test-product', extra_attributes: [])
-    expect_any_instance_of(Mutations::UpdateProductExtraAttributes).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         slug: 'test-product',
@@ -89,8 +93,7 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
           { "name" => "impact", "value" => "High Impact", "type" => "string" },
           { "name" => "years_in_production", "value" => "10", "type" => "integer" }
         ]))
-      expect(result['data']['updateProductExtraAttributes']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateProductExtraAttributes']['errors']).to(eq([]))
       expect(result['data']['updateProductExtraAttributes']['message'])
         .to(eq('Product extra attributes updated successfully'))
     end
@@ -111,21 +114,25 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
       },
     )
     aggregate_failures do
-      expect(result['data']['updateProductExtraAttributes']['product'])
-        .to(eq(nil))
+      expect(result['data']['updateProductExtraAttributes']['product']).to(eq(nil))
       expect(result['data']['updateProductExtraAttributes']['errors'])
-        .to(eq(['Must be admin or product owner to update product attributes.']))
-      expect(result['data']['updateProductExtraAttributes']['message'])
-        .to(eq(nil))
+        .to(eq(['Editing product is not allowed.']))
+      expect(result['data']['updateProductExtraAttributes']['message']).to(eq(nil))
     end
   end
 
   it 'is successful - updates only one field' do
-    create(:product, name: 'Test Product', slug: 'test-product',
-extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "type" => "string" }])
-    expect_any_instance_of(Mutations::UpdateProductExtraAttributes).to(receive(:an_admin).and_return(true))
+    create(
+      :product,
+      name: 'Test Product',
+      slug: 'test-product',
+      extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "type" => "string" }]
+    )
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         slug: 'test-product',
@@ -140,16 +147,16 @@ extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "t
           { "name" => "local_ownership", "value" => "Old Ownership", "type" => "string" },
           { "name" => "impact", "value" => "Updated Impact", "type" => "string" }
         ]))
-      expect(result['data']['updateProductExtraAttributes']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateProductExtraAttributes']['errors']).to(eq([]))
       expect(result['data']['updateProductExtraAttributes']['message'])
         .to(eq('Product extra attributes updated successfully'))
     end
   end
 
   it 'fails - product not found' do
-    expect_any_instance_of(Mutations::UpdateProductExtraAttributes).to(receive(:an_admin).and_return(true))
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         slug: 'non-existent-product',
@@ -161,12 +168,10 @@ extra_attributes: [{ "name" => "local_ownership", "value" => "Old Ownership", "t
       },
     )
     aggregate_failures do
-      expect(result['data']['updateProductExtraAttributes']['product'])
-        .to(eq(nil))
+      expect(result['data']['updateProductExtraAttributes']['product']).to(eq(nil))
       expect(result['data']['updateProductExtraAttributes']['errors'])
-        .to(eq(['Product not found.']))
-      expect(result['data']['updateProductExtraAttributes']['message'])
-        .to(eq(nil))
+        .to(eq(['Editing product is not allowed.']))
+      expect(result['data']['updateProductExtraAttributes']['message']).to(eq(nil))
     end
   end
 end

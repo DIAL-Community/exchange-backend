@@ -59,8 +59,7 @@ RSpec.describe(Mutations::UpdateOpportunityOrganizations, type: :graphql) do
             { "slug" => second_organization.slug }
           ]
         }))
-      expect(result['data']['updateOpportunityOrganizations']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateOpportunityOrganizations']['errors']).to(eq([]))
     end
   end
 
@@ -89,10 +88,9 @@ RSpec.describe(Mutations::UpdateOpportunityOrganizations, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateOpportunityOrganizations']['opportunity'])
-        .to(eq(nil))
+      expect(result['data']['updateOpportunityOrganizations']['opportunity']).to(eq(nil))
       expect(result['data']['updateOpportunityOrganizations']['errors'])
-        .to(eq(['Must have proper rights to update an opportunity']))
+        .to(eq(['Editing opportunity is not allowed.']))
     end
   end
 end

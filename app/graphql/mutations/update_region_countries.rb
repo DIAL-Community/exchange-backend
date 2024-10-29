@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(country_slugs:, slug:)
       region = Region.find_by(slug:)
-
-      unless an_admin
+      region_policy = Pundit.policy(context[:current_user], region || Region.new)
+      if region.nil? || !region_policy.edit_allowed?
         return {
           region: nil,
-          errors: ['Must have proper rights to update a region']
+          errors: ['Editing region is not allowed.']
         }
       end
 

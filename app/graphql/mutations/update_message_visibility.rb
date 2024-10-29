@@ -9,14 +9,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, visibility:)
-      unless an_admin || an_adli_admin
+      message = Message.find_by(slug:)
+      message_policy = Pundit.policy(context[:current_user], message || Message.new)
+      if message.nil? || !message_policy.edit_allowed?
         return {
           message: nil,
-          errors: ['Must have proper rights to update visibility of a message.']
+          errors: ['Editing message is not allowed.']
         }
       end
 
-      message = Message.find_by(slug:)
       message.visible = visibility
 
       if message.save

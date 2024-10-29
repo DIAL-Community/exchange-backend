@@ -37,8 +37,6 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     create(:city, name: "City 1", id: 1, province: province_1)
     create(:city, name: "City 2", id: 2, province: province_2)
-    expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_admin)
-                                                                .and_return(true))
 
     offices_data = [{
       cityName: "City 1",
@@ -52,7 +50,10 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
       countryName: "Country 2"
     }]
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { offices: offices_data, slug: 'some-name' }
     )
@@ -74,7 +75,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
   end
 
   it 'is successful - user is logged in as organization owner' do
-    create(:organization, name: 'Some Name', slug: 'some-name', offices: [])
+    create(:organization, id: 10004, name: 'Some Name', slug: 'some-name', offices: [], website: 'website.com')
     country_3 = create(:country, name: "Country 3", code_longer: "C03", code: "C3", id: 3)
     country_4 = create(:country, name: "Country 4", code_longer: "C04", code: "C4", id: 4)
 
@@ -83,8 +84,6 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     create(:city, name: "City 3", id: 1, province: province_3)
     create(:city, name: "City 4", id: 2, province: province_4)
-    expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_org_owner)
-                                                                .and_return(true))
 
     offices_data = [{
       cityName: "City 3",
@@ -98,7 +97,15 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
       countryName: "Country 4"
     }]
 
-    result = execute_graphql(
+    owner_user = create(
+      :user,
+      organization_id: 10004,
+      email: 'admin-user@website.com',
+      roles: ['organization_owner']
+    )
+
+    result = execute_graphql_as_user(
+      owner_user,
       mutation,
       variables: { offices: offices_data, slug: 'some-name' }
     )
@@ -142,7 +149,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateOrganizationOffices']['organization']).to(be(nil))
       expect(result['data']['updateOrganizationOffices']['errors'])
-        .to(eq(['Must be admin or organization owner to update an organization']))
+        .to(eq(['Editing organization is not allowed.']))
     end
   end
 
@@ -156,10 +163,6 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     create(:city, name: "City 1", id: 1, province: province_1)
     create(:city, name: "City 2", id: 2, province: province_2)
-    expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_admin)
-                                                                .and_return(false))
-    expect_any_instance_of(Mutations::UpdateOrganizationOffices).to(receive(:an_org_owner)
-                                                                .and_return(false))
 
     offices_data = [{
       cityName: "City 1",
@@ -181,7 +184,7 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateOrganizationOffices']['organization']).to(be(nil))
       expect(result['data']['updateOrganizationOffices']['errors'])
-        .to(eq(['Must be admin or organization owner to update an organization']))
+        .to(eq(['Editing organization is not allowed.']))
     end
   end
 end

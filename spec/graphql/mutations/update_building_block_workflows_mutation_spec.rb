@@ -29,59 +29,56 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
   it 'is successful - user is logged in as admin' do
     admin_user = create(:user, email: 'admin@gmail.com', roles: [:admin])
     create(:building_block, name: 'Some Name', slug: 'some-name',
-                      workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+                      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')])
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql_as_user(
       admin_user,
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock'])
-        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "wf_2" }, { "slug" => "wf_3" }] }))
-      expect(result['data']['updateBuildingBlockWorkflows']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "workflow-2" }, { "slug" => "workflow-3" }] }))
+      expect(result['data']['updateBuildingBlockWorkflows']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
     content_editor_user = create(:user, email: 'admin@gmail.com', roles: [:admin, :content_editor])
     create(:building_block, name: 'Some Name', slug: 'some-name',
-                      workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+                      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')])
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql_as_user(
       content_editor_user,
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock'])
-        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "wf_2" }, { "slug" => "wf_3" }] }))
-      expect(result['data']['updateBuildingBlockWorkflows']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "workflow-2" }, { "slug" => "workflow-3" }] }))
+      expect(result['data']['updateBuildingBlockWorkflows']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user has not proper rights' do
     create(:building_block, name: 'Some Name', slug: 'some-name',
-                     workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+                     workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')])
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql(
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock'])
-        .to(eq(nil))
+      expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockWorkflows']['errors'])
         .to(eq(['Editing building block is not allowed.']))
     end
@@ -89,18 +86,17 @@ RSpec.describe(Mutations::UpdateBuildingBlockWorkflows, type: :graphql) do
 
   it 'is fails - user is not logged in' do
     create(:building_block, name: 'Some Name', slug: 'some-name',
-                     workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+                     workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')])
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql(
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock'])
-        .to(eq(nil))
+      expect(result['data']['updateBuildingBlockWorkflows']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockWorkflows']['errors'])
         .to(eq(['Editing building block is not allowed.']))
     end

@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(country_slugs:, slug:)
       opportunity = Opportunity.find_by(slug:)
-
-      unless an_admin || an_org_owner(opportunity.id)
+      opportunity_policy = Pundit.policy(context[:current_user], opportunity || Opportunity.new)
+      if opportunity.nil? || !opportunity_policy.edit_allowed?
         return {
           opportunity: nil,
-          errors: ['Must have proper rights to update an opportunity']
+          errors: ['Editing opportunity is not allowed.']
         }
       end
 

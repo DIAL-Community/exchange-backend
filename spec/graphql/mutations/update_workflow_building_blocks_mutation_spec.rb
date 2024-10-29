@@ -27,83 +27,103 @@ RSpec.describe(Mutations::UpdateWorkflowBuildingBlocks, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:workflow, name: 'Some Name', slug: 'some-name',
-                           building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
-    create(:building_block, slug: 'bb_2', name: 'BB 2')
-    create(:building_block, slug: 'bb_3', name: 'BB 3')
-    expect_any_instance_of(Mutations::UpdateWorkflowBuildingBlocks).to(receive(:an_admin).and_return(true))
+    create(
+      :workflow,
+      name: 'Some Name',
+      slug: 'some-name',
+      building_blocks: [create(:building_block, slug: 'building-block-1', name: 'Building Block 1')]
+    )
+    create(:building_block, slug: 'building-block-2', name: 'Building Block 2')
+    create(:building_block, slug: 'building-block-3', name: 'Building Block 3')
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
+      variables: { buildingBlockSlugs: ['building-block-2', 'building-block-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateWorkflowBuildingBlocks']['workflow'])
-        .to(eq({ "slug" => "some-name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
+        .to(eq({
+          "slug" => "some-name",
+          "buildingBlocks" => [{ "slug" => "building-block-2" }, { "slug" => "building-block-3" }]
+        }))
       expect(result['data']['updateWorkflowBuildingBlocks']['errors'])
         .to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:workflow, name: 'Some Name', slug: 'some-name',
-                           building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
-    create(:building_block, slug: 'bb_2', name: 'BB 2')
-    create(:building_block, slug: 'bb_3', name: 'BB 3')
-    expect_any_instance_of(Mutations::UpdateWorkflowBuildingBlocks).to(receive(:a_content_editor).and_return(true))
+    create(
+      :workflow,
+      name: 'Some Name',
+      slug: 'some-name',
+      building_blocks: [create(:building_block, slug: 'building-block-1', name: 'Building Block 1')]
+    )
+    create(:building_block, slug: 'building-block-2', name: 'Building Block 2')
+    create(:building_block, slug: 'building-block-3', name: 'Building Block 3')
 
-    result = execute_graphql(
+    editor_user = create(:user, email: 'editor-user@gmail.com', roles: ['content_editor'])
+
+    result = execute_graphql_as_user(
+      editor_user,
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
+      variables: { buildingBlockSlugs: ['building-block-2', 'building-block-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateWorkflowBuildingBlocks']['workflow'])
-        .to(eq({ "slug" => "some-name", "buildingBlocks" => [{ "slug" => "bb_2" }, { "slug" => "bb_3" }] }))
-      expect(result['data']['updateWorkflowBuildingBlocks']['errors'])
-        .to(eq([]))
+        .to(eq({
+          "slug" => "some-name",
+          "buildingBlocks" => [{ "slug" => "building-block-2" }, { "slug" => "building-block-3" }]
+        }))
+      expect(result['data']['updateWorkflowBuildingBlocks']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::UpdateWorkflowBuildingBlocks).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::UpdateWorkflowBuildingBlocks).to(receive(:a_content_editor).and_return(false))
-
-    create(:workflow, name: 'Some Name', slug: 'some-name',
-                           building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
-    create(:building_block, slug: 'bb_2', name: 'BB 2')
-    create(:building_block, slug: 'bb_3', name: 'BB 3')
+    create(
+      :workflow,
+      name: 'Some Name',
+      slug: 'some-name',
+      building_blocks: [create(:building_block, slug: 'building-block-1', name: 'Building Block 1')]
+    )
+    create(:building_block, slug: 'building-block-2', name: 'Building Block 2')
+    create(:building_block, slug: 'building-block-3', name: 'Building Block 3')
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
+      variables: { buildingBlockSlugs: ['building-block-2', 'building-block-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateWorkflowBuildingBlocks']['workflow'])
-        .to(eq(nil))
+      expect(result['data']['updateWorkflowBuildingBlocks']['workflow']).to(eq(nil))
       expect(result['data']['updateWorkflowBuildingBlocks']['errors'])
-        .to(eq(['Must be admin or content editor to update workflow']))
+        .to(eq(['Editing workflow is not allowed.']))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:workflow, name: 'Some Name', slug: 'some-name',
-                           building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
-    create(:building_block, slug: 'bb_2', name: 'BB 2')
-    create(:building_block, slug: 'bb_3', name: 'BB 3')
+    create(
+      :workflow,
+      name: 'Some Name',
+      slug: 'some-name',
+      building_blocks: [create(:building_block, slug: 'building-block-1', name: 'Building Block 1')]
+    )
+    create(:building_block, slug: 'building-block-2', name: 'Building Block 2')
+    create(:building_block, slug: 'building-block-3', name: 'Building Block 3')
 
     result = execute_graphql(
       mutation,
-      variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name' },
+      variables: { buildingBlockSlugs: ['building-block-2', 'building-block-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateWorkflowBuildingBlocks']['workflow'])
-        .to(eq(nil))
+      expect(result['data']['updateWorkflowBuildingBlocks']['workflow']).to(eq(nil))
       expect(result['data']['updateWorkflowBuildingBlocks']['errors'])
-        .to(eq(['Must be admin or content editor to update workflow']))
+        .to(eq(['Editing workflow is not allowed.']))
     end
   end
 end

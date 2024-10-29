@@ -27,83 +27,96 @@ RSpec.describe(Mutations::UpdateUseCaseStepDatasets, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                      datasets: [create(:dataset, slug: 'dataset_1', name: 'Dataset 1')])
-    create(:dataset, slug: 'dataset_2', name: 'Dataset 2')
-    create(:dataset, slug: 'dataset_3', name: 'Dataset 3')
-    expect_any_instance_of(Mutations::UpdateUseCaseStepDatasets).to(receive(:an_admin).and_return(true))
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      datasets: [create(:dataset, slug: 'dataset-1', name: 'Dataset 1')]
+    )
+    create(:dataset, slug: 'dataset-2', name: 'Dataset 2')
+    create(:dataset, slug: 'dataset-3', name: 'Dataset 3')
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some-name' },
+      variables: { datasetSlugs: ['dataset-2', 'dataset-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepDatasets']['useCaseStep'])
-        .to(eq({ "slug" => "some-name", "datasets" => [{ "slug" => "dataset_2" }, { "slug" => "dataset_3" }] }))
-      expect(result['data']['updateUseCaseStepDatasets']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "datasets" => [{ "slug" => "dataset-2" }, { "slug" => "dataset-3" }] }))
+      expect(result['data']['updateUseCaseStepDatasets']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                      datasets: [create(:dataset, slug: 'dataset_1', name: 'Dataset 1')])
-    create(:dataset, slug: 'dataset_2', name: 'Dataset 2')
-    create(:dataset, slug: 'dataset_3', name: 'Dataset 3')
-    expect_any_instance_of(Mutations::UpdateUseCaseStepDatasets).to(receive(:a_content_editor).and_return(true))
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      datasets: [create(:dataset, slug: 'dataset-1', name: 'Dataset 1')]
+    )
+    create(:dataset, slug: 'dataset-2', name: 'Dataset 2')
+    create(:dataset, slug: 'dataset-3', name: 'Dataset 3')
 
-    result = execute_graphql(
+    editor_user = create(:user, email: 'user@gmail.com', roles: ['content_editor'])
+
+    result = execute_graphql_as_user(
+      editor_user,
       mutation,
-      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some-name' },
+      variables: { datasetSlugs: ['dataset-2', 'dataset-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepDatasets']['useCaseStep'])
-        .to(eq({ "slug" => "some-name", "datasets" => [{ "slug" => "dataset_2" }, { "slug" => "dataset_3" }] }))
-      expect(result['data']['updateUseCaseStepDatasets']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "datasets" => [{ "slug" => "dataset-2" }, { "slug" => "dataset-3" }] }))
+      expect(result['data']['updateUseCaseStepDatasets']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::UpdateUseCaseStepDatasets).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::UpdateUseCaseStepDatasets).to(receive(:a_content_editor).and_return(false))
-
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                     datasets: [create(:dataset, slug: 'dataset_1', name: 'Dataset 1')])
-    create(:dataset, slug: 'dataset_2', name: 'Dataset 2')
-    create(:dataset, slug: 'dataset_3', name: 'Dataset 3')
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      datasets: [create(:dataset, slug: 'dataset-1', name: 'Dataset 1')]
+    )
+    create(:dataset, slug: 'dataset-2', name: 'Dataset 2')
+    create(:dataset, slug: 'dataset-3', name: 'Dataset 3')
 
     result = execute_graphql(
       mutation,
-      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some-name' },
+      variables: { datasetSlugs: ['dataset-2', 'dataset-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseStepDatasets']['useCaseStep'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseStepDatasets']['useCaseStep']).to(eq(nil))
       expect(result['data']['updateUseCaseStepDatasets']['errors'])
-        .to(eq(['Must be admin or content editor to update use case step']))
+        .to(eq(['Editing use case step is not allowed.']))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-              datasets: [create(:dataset, slug: 'dataset_1', name: 'Dataset 1')])
-    create(:dataset, slug: 'dataset_2', name: 'Dataset 2')
-    create(:dataset, slug: 'dataset_3', name: 'Dataset 3')
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      datasets: [create(:dataset, slug: 'dataset-1', name: 'Dataset 1')]
+    )
+    create(:dataset, slug: 'dataset-2', name: 'Dataset 2')
+    create(:dataset, slug: 'dataset-3', name: 'Dataset 3')
 
     result = execute_graphql(
       mutation,
-      variables: { datasetSlugs: ['dataset_2', 'dataset_3'], slug: 'some-name' },
+      variables: { datasetSlugs: ['dataset-2', 'dataset-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseStepDatasets']['useCaseStep'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseStepDatasets']['useCaseStep']).to(eq(nil))
       expect(result['data']['updateUseCaseStepDatasets']['errors'])
-        .to(eq(['Must be admin or content editor to update use case step']))
+        .to(eq(['Editing use case step is not allowed.']))
     end
   end
 end

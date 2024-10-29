@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(resource_topic_names:, slug:)
       resource = Resource.find_by(slug:)
-
-      unless an_admin
+      resource_policy = Pundit.policy(context[:current_user], resource || Resource.new)
+      if resource.nil? || !resource_policy.edit_allowed?
         return {
           resource: nil,
-          errors: ['Must be admin to update a resource']
+          errors: ['Editing resource is not allowed.']
         }
       end
 

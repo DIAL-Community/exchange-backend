@@ -33,9 +33,11 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
                      building_blocks: [create(:building_block, slug: 'bb_1', name: 'BB 1')])
     create(:building_block, slug: 'bb_2', name: 'BB 2')
     create(:building_block, slug: 'bb_3', name: 'BB 3')
-    expect_any_instance_of(Mutations::UpdateProductBuildingBlocks).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { buildingBlockSlugs: ['bb_2', 'bb_3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
@@ -63,7 +65,7 @@ RSpec.describe(Mutations::UpdateProductBuildingBlocks, type: :graphql) do
       expect(result['data']['updateProductBuildingBlocks']['product'])
         .to(eq(nil))
       expect(result['data']['updateProductBuildingBlocks']['errors'])
-        .to(eq(['Must be admin or product owner to update a product']))
+        .to(eq(['Editing product is not allowed.']))
     end
   end
 end

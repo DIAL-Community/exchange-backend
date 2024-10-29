@@ -28,9 +28,11 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     create(:tag, name: 'tag_2')
     create(:tag, name: 'tag_3')
     create(:use_case, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateUseCaseTags).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' }
     )
@@ -38,8 +40,7 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateUseCaseTags']['useCase'])
         .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
-      expect(result['data']['updateUseCaseTags']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateUseCaseTags']['errors']).to(eq([]))
     end
   end
 
@@ -47,9 +48,11 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     create(:tag, name: 'tag_2')
     create(:tag, name: 'tag_3')
     create(:use_case, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateUseCaseTags).to(receive(:a_content_editor).and_return(true))
 
-    result = execute_graphql(
+    editor_user = create(:user, email: 'editor-user@gmail.com', roles: ['content_editor'])
+
+    result = execute_graphql_as_user(
+      editor_user,
       mutation,
       variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' }
     )
@@ -57,15 +60,12 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateUseCaseTags']['useCase'])
         .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
-      expect(result['data']['updateUseCaseTags']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateUseCaseTags']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user has not proper rights' do
     create(:use_case, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateUseCaseTags).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::UpdateUseCaseTags).to(receive(:a_content_editor).and_return(false))
 
     result = execute_graphql(
       mutation,
@@ -73,10 +73,9 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseTags']['useCase'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseTags']['useCase']).to(eq(nil))
       expect(result['data']['updateUseCaseTags']['errors'])
-        .to(eq(['Must be an admin or content editor to update use case']))
+        .to(eq(['Editing use case is not allowed.']))
     end
   end
 
@@ -89,10 +88,9 @@ RSpec.describe(Mutations::UpdateUseCaseTags, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseTags']['useCase'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseTags']['useCase']).to(eq(nil))
       expect(result['data']['updateUseCaseTags']['errors'])
-        .to(eq(['Must be an admin or content editor to update use case']))
+        .to(eq(['Editing use case is not allowed.']))
     end
   end
 end
