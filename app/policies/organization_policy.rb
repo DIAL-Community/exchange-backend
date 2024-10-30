@@ -14,6 +14,9 @@ class OrganizationPolicy < ApplicationPolicy
   def create_allowed?
     return false if user.nil?
 
+    puts "Received record: #{record.inspect}"
+    return true if !record.nil? && record.has_storefront.to_s == 'true'
+
     user.roles.include?(User.user_roles[:admin]) ||
       user.roles.include?(User.user_roles[:content_editor]) ||
       user.roles.include?(User.user_roles[:content_writer])
@@ -22,21 +25,23 @@ class OrganizationPolicy < ApplicationPolicy
   def edit_allowed?
     return false if user.nil?
 
-    if @record.is_a?(Organization) &&
-      user.organization_id == @record.id &&
+    if record.is_a?(Organization) && user.organization_id == record.id &&
       user.roles.include?(User.user_roles[:organization_owner])
       return true
     end
 
-    if @record.is_a?(Organization) &&
-      @record.is_endorser &&
+    if record.is_a?(Organization) && record.is_endorser &&
       user.roles.include?(User.user_roles[:principle])
       return true
     end
 
-    if @record.is_a?(Organization) &&
-      @record.is_mni &&
+    if record.is_a?(Organization) && record.is_mni &&
       user.roles.include?(User.user_roles[:mni])
+      return true
+    end
+
+    email_username, email_host = user.email.split('@')
+    if record.is_a?(Organization) && email_username.nil? && website.to_s.include?(email_host)
       return true
     end
 

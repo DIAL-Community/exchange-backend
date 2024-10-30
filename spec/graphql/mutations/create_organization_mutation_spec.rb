@@ -138,6 +138,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       mutation,
+      operation_name: 'CreateStorefront',
       variables: {
         slug: '',
         name: "Some storefront name",

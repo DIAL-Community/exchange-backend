@@ -98,8 +98,7 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       query,
       variables: {
         slug: 'some-product'
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do

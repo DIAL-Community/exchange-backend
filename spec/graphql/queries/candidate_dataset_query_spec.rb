@@ -21,8 +21,7 @@ RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       query,
-      variables: { search: "Random" },
-      operation_context: VIEWING_CONTEXT
+      variables: { search: "Random" }
     )
 
     aggregate_failures do
@@ -36,8 +35,7 @@ RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
     result = execute_graphql_as_user(
       nil,
       query,
-      variables: { search: "Random" },
-      operation_context: VIEWING_CONTEXT
+      variables: { search: "Random" }
     )
 
     aggregate_failures do
@@ -53,8 +51,7 @@ RSpec.describe(Queries::CandidateDatasetQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       query,
-      variables: { search: "Random" },
-      operation_context: VIEWING_CONTEXT
+      variables: { search: "Random" }
     )
 
     aggregate_failures do

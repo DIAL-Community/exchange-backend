@@ -22,8 +22,7 @@ class ProductPolicy < ApplicationPolicy
   def edit_allowed?
     return false if user.nil?
 
-    if @record.is_a?(Product) &&
-      user.user_products.include?(@record.id) &&
+    if record.is_a?(Product) && user.user_products.include?(record.id) &&
       user.roles.include?(User.user_roles[:product_owner])
       return true
     end

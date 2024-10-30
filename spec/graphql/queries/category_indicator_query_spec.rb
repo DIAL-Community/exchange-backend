@@ -49,8 +49,7 @@ RSpec.describe(Queries::CategoryIndicatorQuery, type: :graphql) do
     result = execute_graphql_as_user(
       admin_user,
       detail_query,
-      variables: { slug: 'some-category_indicator' },
-      operation_context: VIEWING_CONTEXT
+      variables: { slug: 'some-category_indicator' }
     )
 
     aggregate_failures do
@@ -84,8 +83,7 @@ RSpec.describe(Queries::CategoryIndicatorQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       detail_query,
-      variables: { slug: 'some-category_indicator' },
-      operation_context: VIEWING_CONTEXT
+      variables: { slug: 'some-category_indicator' }
     )
 
     aggregate_failures do
@@ -106,8 +104,7 @@ RSpec.describe(Queries::CategoryIndicatorQuery, type: :graphql) do
 
     result = execute_graphql_as_user(
       admin_user,
-      query,
-      operation_context: VIEWING_CONTEXT
+      query
     )
 
     aggregate_failures do
@@ -133,8 +130,7 @@ RSpec.describe(Queries::CategoryIndicatorQuery, type: :graphql) do
 
     result = execute_graphql_as_user(
       user,
-      query,
-      operation_context: VIEWING_CONTEXT
+      query
     )
 
     aggregate_failures do

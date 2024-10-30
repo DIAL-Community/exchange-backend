@@ -20,3 +20,6 @@ VIEWING_CONTEXT = 'viewing'
 EDITING_CONTEXT = 'editing'
 DELETING_CONTEXT = 'deleting'
 CREATING_CONTEXT = 'creating'
+
+# Special case for Organization, as we're sharing the data model with Storefront.
+STOREFRONT_CONTEXT = 'storefront'

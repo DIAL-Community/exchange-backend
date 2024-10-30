@@ -23,8 +23,7 @@ RSpec.describe(Queries::CountryQuery, type: :graphql) do
       country_query,
       variables: {
         slug: "some-country"
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do
@@ -38,8 +37,7 @@ RSpec.describe(Queries::CountryQuery, type: :graphql) do
       country_query,
       variables: {
         slug: "some-country_with_wrong_slug"
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do

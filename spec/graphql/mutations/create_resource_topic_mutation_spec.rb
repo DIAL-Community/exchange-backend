@@ -99,8 +99,7 @@ RSpec.describe(Mutations::CreateResourceTopic, type: :graphql) do
       query,
       variables: {
         slug: 'some-resource'
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do

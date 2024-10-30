@@ -7,7 +7,13 @@ module Queries
 
     def resolve(slug:)
       organization = Organization.find_by(slug:) if valid_slug?(slug)
-      validate_access_to_instance(organization || Organization.new)
+      # Special handling for storefronts section where standard user is allowed to create record without
+      # yet becoming the owner of the storefront record.
+      organization_instance_resolver = Organization.new
+      if context[:operation_name].to_s.downcase.include?(STOREFRONT_CONTEXT)
+        organization_instance_resolver = Organization.new(has_storefront: true)
+      end
+      validate_access_to_instance(organization || organization_instance_resolver)
       organization
     end
   end

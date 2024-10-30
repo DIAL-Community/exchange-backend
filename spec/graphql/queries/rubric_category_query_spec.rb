@@ -34,8 +34,7 @@ RSpec.describe(Queries::RubricCategoryQuery, type: :graphql) do
     result = execute_graphql_as_user(
       admin_user,
       query,
-      variables: { search: 'Some' },
-      operation_context: VIEWING_CONTEXT
+      variables: { search: 'Some' }
     )
 
     aggregate_failures do
@@ -54,8 +53,7 @@ RSpec.describe(Queries::RubricCategoryQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       query,
-      variables: { search: 'Some' },
-      operation_context: VIEWING_CONTEXT
+      variables: { search: 'Some' }
     )
 
     aggregate_failures do
@@ -69,8 +67,7 @@ RSpec.describe(Queries::RubricCategoryQuery, type: :graphql) do
     result = execute_graphql_as_user(
       admin_user,
       detail_query,
-      variables: { slug: 'some-rubric_category' },
-      operation_context: VIEWING_CONTEXT
+      variables: { slug: 'some-rubric_category' }
     )
 
     aggregate_failures do
@@ -89,8 +86,7 @@ RSpec.describe(Queries::RubricCategoryQuery, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       detail_query,
-      variables: { slug: 'some-rubric_category' },
-      operation_context: VIEWING_CONTEXT
+      variables: { slug: 'some-rubric_category' }
     )
 
     aggregate_failures do

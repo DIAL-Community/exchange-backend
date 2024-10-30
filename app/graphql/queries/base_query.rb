@@ -13,7 +13,7 @@ module Queries
     end
 
     def validate_access_to_instance(instance)
-      operation_context = context[:operation_context]
+      operation_context = context[:operation_context] || EDITING_CONTEXT
       current_policy = Pundit.policy(context[:current_user], instance)
 
       puts "Receiving instance: #{instance.class} with context: #{operation_context}."
@@ -55,7 +55,7 @@ module Queries
     end
 
     def validate_access_to_resource(resource)
-      operation_context = context[:operation_context]
+      operation_context = context[:operation_context] || EDITING_CONTEXT
       current_policy = Pundit.policy(context[:current_user], resource)
 
       puts "Receiving resource: #{resource.class} with context: #{operation_context}."

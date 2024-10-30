@@ -159,8 +159,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       sector_query,
       variables: {
         slug: "random-origin"
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do
@@ -194,8 +193,7 @@ RSpec.describe(Mutations::CreateSector, type: :graphql) do
       sector_query,
       variables: {
         slug: "some-name"
-      },
-      operation_context: VIEWING_CONTEXT
+      }
     )
 
     aggregate_failures do

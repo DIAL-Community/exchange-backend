@@ -22,6 +22,7 @@ class GraphqlController < ApplicationController
     variables = prepare_variables(params[:variables])
     context = {
       current_user:,
+      operation_name:,
       operation_context:
     }
     result = RegistrySchema.execute(query, variables:, context:, operation_name:)

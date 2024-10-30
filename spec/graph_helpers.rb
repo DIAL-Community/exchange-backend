@@ -13,7 +13,6 @@ module GraphHelpers
     RegistrySchema.execute(
       query,
       context: {
-        controller:,
         operation_context: kwargs[:operation_context] || VIEWING_CONTEXT
       },
       variables: kwargs[:variables]
@@ -24,8 +23,8 @@ module GraphHelpers
     RegistrySchema.execute(
       query,
       context: {
-        controller:,
         current_user: user,
+        operation_name: kwargs[:operation_name],
         operation_context: kwargs[:operation_context] || VIEWING_CONTEXT
       },
       variables: kwargs[:variables]
