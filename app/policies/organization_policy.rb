@@ -14,7 +14,6 @@ class OrganizationPolicy < ApplicationPolicy
   def create_allowed?
     return false if user.nil?
 
-    puts "Received record: #{record.inspect}"
     return true if !record.nil? && record.has_storefront.to_s == 'true'
 
     user.roles.include?(User.user_roles[:admin]) ||
