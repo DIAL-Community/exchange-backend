@@ -29,13 +29,13 @@ RUN git clone https://github.com/publicgoods/products.git /products
 RUN mkdir /product-evaluation-rubric
 RUN git clone https://gitlab.com/dial/product-evaluation-rubric/product-evaluation-rubric.git /product-evaluation-rubric
 
-COPY cron-sync /etc/cron.d/exchange-cron-daily
+COPY exchange-cron-daily /etc/cron.d/exchange-cron-daily
 RUN crontab /etc/cron.d/exchange-cron-daily
 
-COPY cron-sync /etc/cron.d/exchange-cron-weekly
+COPY exchange-cron-weekly /etc/cron.d/exchange-cron-weekly
 RUN crontab /etc/cron.d/exchange-cron-weekly
 
-COPY cron-sync /etc/cron.d/exchange-cron-monthly
+COPY exchange-cron-monthly /etc/cron.d/exchange-cron-monthly
 RUN crontab /etc/cron.d/exchange-cron-monthly
 
 WORKDIR /tmp

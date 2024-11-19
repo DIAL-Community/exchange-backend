@@ -175,7 +175,7 @@ module Modules
           id: SecureRandom.uuid,
           type: 'default.useCase.heroCard',
           name: 'Use Case Card',
-          title: 'ui.product.header',
+          title: 'ui.useCase.header',
           description: 'useCase.hint.subtitle',
           imageUrl: '/ui/v1/use-case-header.svg',
           external: false,
