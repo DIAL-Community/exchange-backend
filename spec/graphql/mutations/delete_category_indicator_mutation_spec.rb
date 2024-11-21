@@ -20,9 +20,10 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
   it 'is successful - user is logged in as admin' do
     create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some-rc')
     create(:category_indicator, id: 1000, name: 'Some CI', slug: 'some-ci', rubric_category_id: 1000)
-    expect_any_instance_of(Mutations::DeleteCategoryIndicator).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -48,7 +49,7 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
       expect(result['data']['deleteCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['deleteCategoryIndicator']['errors'])
-        .to(eq(["Must be admin to delete a category indicator"]))
+        .to(eq(['Deleting catagory indicator is not allowed.']))
     end
   end
 end

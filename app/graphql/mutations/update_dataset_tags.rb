@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(tag_names:, slug:)
       dataset = Dataset.find_by(slug:)
-
-      unless an_admin
+      dataset_policy = Pundit.policy(context[:current_user], dataset || Dataset.new)
+      if !dataset.nil? || !dataset_policy.edit_allowed?
         return {
           dataset: nil,
-          errors: ['Must be admin to update a dataset']
+          errors: ['Editing dataset is not allowed.']
         }
       end
 

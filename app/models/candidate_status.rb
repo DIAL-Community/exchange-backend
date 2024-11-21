@@ -24,6 +24,7 @@ class CandidateStatus < ApplicationRecord
     through: :previous_candidate_status_relationships,
     source: :current_candidate_status
 
+  # TODO: This should be a record in the settings table.
   scope :name_contains_private, ->() { where("candidate_statuses.name ILIKE '%private%'") }
   scope :name_contains_internal, ->() { where("candidate_statuses.name ILIKE '%internal%'") }
   scope :name_contains_approved, ->() { where("candidate_statuses.name ILIKE '%approved%'") }

@@ -32,7 +32,7 @@ class AboutController < ApplicationController
     current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
     render(json: {
       "hostname": request.referrer.blank? ? 'public' : URI.parse(request.referrer).hostname,
-      'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecure_read,
+      'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecured_read,
       "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name
     })
   end

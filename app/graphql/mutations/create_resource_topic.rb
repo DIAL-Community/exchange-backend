@@ -17,19 +17,27 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:, parent_topic_id: nil, image_file: nil)
-      unless an_admin
-        return {
-          resource_topic: nil,
-          errors: ['Must be an admin to create / edit a resource topic']
-        }
-      end
-
-      # Prevent duplicating resource_topic by the name of the resource_topic.
       resource_topic = ResourceTopic.find_by(slug:)
       if resource_topic.nil?
         resource_topic = ResourceTopic.find_by(name:)
       end
 
+      resource_topic_policy = Pundit.policy(context[:current_user], resource_topic || ResourceTopic.new)
+      if resource_topic.nil? && !resource_topic_policy.create_allowed?
+        return {
+          resource_topic: nil,
+          errors: ['Creating / editing resource topic is not allowed.']
+        }
+      end
+
+      if !resource_topic.nil? && !resource_topic_policy.edit_allowed?
+        return {
+          resource_topic: nil,
+          errors: ['Creating / editing resource topic is not allowed.']
+        }
+      end
+
+      # Prevent duplicating resource_topic by the name of the resource_topic.
       if resource_topic.nil?
         resource_topic = ResourceTopic.new(name:, slug: reslug_em(name))
       end

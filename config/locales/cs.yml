@@ -825,9 +825,8 @@ cs:
         ict4sdg: ICT 4 SDG uživatel
         principle: Hlavní uživatel
         user: Základní uživatel
-        org_user: Uživatel organizace
-        org_product_user: Uživatel organizace a produktu
-        product_user: Uživatel produktu
+        organization_owner: Uživatel organizace
+        product_owner: Uživatel produktu
         mni: MNI Uživatel
       form:
         db-backup: Tento uživatel bude dostávat zálohy DB.

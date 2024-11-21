@@ -20,26 +20,32 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, sector_slug:, maturity:, description:, markdown_url:, image_file:, gov_stack_entity:)
-      unless an_admin || a_content_editor
+      use_case = UseCase.find_by(slug:)
+      use_case_policy = Pundit.policy(context[:current_user], use_case || UseCase.new)
+      if use_case.nil? && !use_case_policy.create_allowed?
         return {
           use_case: nil,
-          errors: ['Must be admin or content editor to create a use case']
+          errors: ['Creating / editing use case is not allowed.']
         }
       end
 
-      use_case = UseCase.find_by(slug:)
+      if !use_case.nil? && !use_case_policy.edit_allowed?
+        return {
+          use_case: nil,
+          errors: ['Creating / editing use case is not allowed.']
+        }
+      end
+
       if use_case.nil?
-        use_case = UseCase.new(name:)
         slug = reslug_em(name)
+        use_case = UseCase.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = UseCase.slug_simple_starts_with(slug)
                                  .order(slug: :desc)
                                  .first
-        if !first_duplicate.nil?
-          use_case.slug = slug + generate_offset(first_duplicate)
-        else
-          use_case.slug = slug
+        unless first_duplicate.nil?
+          use_case.slug += generate_offset(first_duplicate)
         end
       end
 

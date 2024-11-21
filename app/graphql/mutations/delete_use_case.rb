@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      use_case = UseCase.find_by(id:)
+      use_case_policy = Pundit.policy(context[:current_user], use_case || UseCase.new)
+      if use_case.nil? || !use_case_policy.delete_allowed?
         return {
           use_case: nil,
-          errors: ['Must be admin to delete a use case.']
+          errors: ['Deleting use case is not allowed.']
         }
       end
 
-      use_case = UseCase.find_by(id:)
       assign_auditable_user(use_case)
       if use_case.destroy
         # Successful deletion, return the deleted use_case with no errors

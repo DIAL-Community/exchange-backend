@@ -9,14 +9,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(tag_names:, slug:)
-      unless an_admin || a_content_editor
+      use_case = UseCase.find_by(slug:)
+      use_case_policy = Pundit.policy(context[:current_user], use_case || UseCase.new)
+      if use_case.nil? || !use_case_policy.edit_allowed?
         return {
           use_case: nil,
-          errors: ['Must be an admin or content editor to update use case']
+          errors: ['Editing use case is not allowed.']
         }
       end
-
-      use_case = UseCase.find_by(slug:)
 
       use_case.tags = []
       if !tag_names.nil? && !tag_names.empty?

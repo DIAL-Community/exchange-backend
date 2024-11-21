@@ -16,7 +16,7 @@ namespace :tenants do
         ExchangeTenant.create(
           tenant_name: tenant['name'],
           domain: url['url'],
-          allow_unsecure_read: tenant['allow_unsecure_read']
+          allow_unsecured_read: tenant['allow_unsecured_read']
         )
       end
     end

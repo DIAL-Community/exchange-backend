@@ -71,7 +71,7 @@ RSpec.describe(Mutations::DeleteOpportunity, type: :graphql) do
       expect(result['data']['deleteOpportunity']['opportunity'])
         .to(be(nil))
       expect(result['data']['deleteOpportunity']['errors'])
-        .to(eq(["Must be admin to delete an opportunity"]))
+        .to(eq(["Deleting opportunity is not allowed."]))
     end
   end
 end

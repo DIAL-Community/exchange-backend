@@ -43,7 +43,7 @@ RSpec.describe(Mutations::DeleteCountry, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['deleteCountry']['country']).to(be(nil))
-      expect(result['data']['deleteCountry']['errors']).to(eq(["Must be admin to delete a country."]))
+      expect(result['data']['deleteCountry']['errors']).to(eq(["Deleting country is not allowed."]))
     end
   end
 end

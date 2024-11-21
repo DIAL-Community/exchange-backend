@@ -6,9 +6,9 @@ module Queries
     type Types::CandidateStatusType, null: true
 
     def resolve(slug:)
-      return nil unless an_admin
-
-      CandidateStatus.find_by(slug:)
+      candidate_status = CandidateStatus.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_instance(candidate_status || CandidateStatus.new)
+      candidate_status
     end
   end
 
@@ -17,8 +17,7 @@ module Queries
     type [Types::CandidateStatusType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateStatus.new)
       candidate_statuses = CandidateStatus.order(:name)
       candidate_statuses = candidate_statuses.name_contains(search) unless search.blank?
       candidate_statuses
@@ -30,8 +29,7 @@ module Queries
     type [Types::CandidateStatusType], null: false
 
     def resolve(search:)
-      return [] unless an_admin
-
+      validate_access_to_resource(CandidateStatus.new)
       candidate_statuses = CandidateStatus.order(:name).where(initial_status: true)
       candidate_statuses = candidate_statuses.name_contains(search) unless search.blank?
       candidate_statuses

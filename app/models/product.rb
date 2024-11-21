@@ -179,7 +179,10 @@ class Product < ApplicationRecord
     end
   end
 
-  def respond_to_missing?(_method_name, _include_private = false)
+  def respond_to_missing?(method_name, _include_private = false)
+    # TODO: Need to bound this override.
+    # This will blindly allow any method to be called on the model.
+    return false if method_name.to_s == 'policy_class'
     true
   end
 

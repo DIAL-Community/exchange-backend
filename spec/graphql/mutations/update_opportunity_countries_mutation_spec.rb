@@ -78,10 +78,9 @@ RSpec.describe(Mutations::UpdateOpportunityCountries, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateOpportunityCountries']['opportunity'])
-        .to(eq(nil))
+      expect(result['data']['updateOpportunityCountries']['opportunity']).to(eq(nil))
       expect(result['data']['updateOpportunityCountries']['errors'])
-        .to(eq(['Must have proper rights to update an opportunity']))
+        .to(eq(['Editing opportunity is not allowed.']))
     end
   end
 end

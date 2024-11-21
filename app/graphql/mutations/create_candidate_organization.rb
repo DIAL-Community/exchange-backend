@@ -20,14 +20,33 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, organization_name:, create_storefront:, website:, description:, name:, email:, title:, captcha:)
-      unless !context[:current_user].nil?
+      # Find the correct policy
+      candidate_organization = CandidateOrganization.find_by(slug:)
+      if !candidate_organization.nil? && !candidate_organization.rejected.nil?
         return {
           candidate_organization: nil,
-          errors: ['Must be logged in to create / edit a candidate organization']
+          errors: ['Attempting to edit rejected or approved candidate organization.']
         }
       end
 
-      candidate_organization = CandidateOrganization.find_by(slug:)
+      candidate_organization_policy = Pundit.policy(
+        context[:current_user],
+        candidate_organization || CandidateOrganization.new
+      )
+      if candidate_organization.nil? && !candidate_organization_policy.create_allowed?
+        return {
+          candidate_organization: nil,
+          errors: ['Creating / editing candidate organization is not allowed.']
+        }
+      end
+
+      if !candidate_organization.nil? && !candidate_organization_policy.edit_allowed?
+        return {
+          candidate_organization: nil,
+          errors: ['Creating / editing candidate organization is not allowed.']
+        }
+      end
+
       if candidate_organization.nil?
         candidate_params = { name: organization_name, website:, description: }
         candidate_params[:slug] = reslug_em(candidate_params[:name])
@@ -41,11 +60,6 @@ module Mutations
         end
 
         candidate_organization = CandidateOrganization.new(candidate_params)
-      elsif !candidate_organization.nil? && !candidate_organization.rejected.nil?
-        return {
-          candidate_organization: nil,
-          errors: ['Attempting to edit rejected or approved candidate organization.']
-        }
       end
 
       candidate_organization.name = organization_name

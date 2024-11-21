@@ -8,13 +8,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      organization = Organization.find_by(id:)
+      organization_policy = Pundit.policy(context[:current_user], organization || Organization.new)
+      if organization.nil? || !organization_policy.delete_allowed?
         return {
           organization: nil,
-          errors: ['Must be admin to delete an organization']
+          errors: ['Deleting organization is not allowed.']
         }
       end
-      organization = Organization.find_by(id:)
 
       successful_operation = false
       ActiveRecord::Base.transaction do

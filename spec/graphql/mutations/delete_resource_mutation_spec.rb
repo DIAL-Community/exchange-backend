@@ -26,7 +26,6 @@ RSpec.describe(Mutations::DeleteResource, type: :graphql) do
       mutation,
       variables: { id: '1000' }
     )
-    puts "Result: #{result.to_json}"
 
     aggregate_failures do
       expect(result['data']['deleteResource']['resource']).to(eq({ 'id' => '1000' }))
@@ -44,7 +43,7 @@ RSpec.describe(Mutations::DeleteResource, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['deleteResource']['resource']).to(be(nil))
-      expect(result['data']['deleteResource']['errors']).to(eq(["Must be admin to delete a resource."]))
+      expect(result['data']['deleteResource']['errors']).to(eq(["Deleting resource is not allowed."]))
     end
   end
 end

@@ -28,9 +28,11 @@ RSpec.describe(Mutations::UpdateOrganizationCountries, type: :graphql) do
     second = create(:country, slug: 'second_country', name: 'Second Country')
 
     organization = create(:organization, name: 'Graph Organization', slug: 'graph_organization')
-    expect_any_instance_of(Mutations::UpdateOrganizationCountries).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { countrySlugs: [first.slug, second.slug], slug: organization.slug },
     )

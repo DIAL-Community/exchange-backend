@@ -10,11 +10,11 @@ module Mutations
     def resolve(id:)
       product_repository = ProductRepository.find_by(id:)
       product = product_repository.product
-      if product_repository.nil? || product.nil? \
-        || !a_product_owner(product.id) || !an_admin
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product_repository.nil? || !product_policy.delete_allowed?
         return {
           product_repository: nil,
-          errors: ['Unable to delete the product repository object.']
+          errors: ['Deleting product repository is not allowed.']
         }
       end
 

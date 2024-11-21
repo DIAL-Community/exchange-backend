@@ -25,76 +25,105 @@ RSpec.describe(Mutations::UpdateProjectTags, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:tag, name: 'tag_2')
-    create(:tag, name: 'tag_3')
-    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:an_admin).and_return(true))
+    create(:tag, name: 'tag-2')
+    create(:tag, name: 'tag-3')
+    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag-1'])
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' },
+      variables: { tagNames: ['tag-2', 'tag-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateProjectTags']['project'])
-        .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
-      expect(result['data']['updateProjectTags']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "tags" => ["tag-2", "tag-3"] }))
+      expect(result['data']['updateProjectTags']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as product owner' do
-    create(:tag, name: 'tag_2')
-    create(:tag, name: 'tag_3')
-    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:product_owner_check_for_project)
-      .and_return(true))
+    create(:tag, name: 'tag-2')
+    create(:tag, name: 'tag-3')
+    create(
+      :project,
+      name: 'Some Name',
+      slug: 'some-name',
+      tags: ['tag-1'],
+      products: [create(:product, id: 10001)]
+    )
 
-    result = execute_graphql(
+    product_owner = create(
+      :user,
+      email: 'user@gmail.com',
+      roles: ['product_owner'],
+      user_products: [10001]
+    )
+
+    result = execute_graphql_as_user(
+      product_owner,
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' },
+      variables: { tagNames: ['tag-2', 'tag-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateProjectTags']['project'])
-        .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
-      expect(result['data']['updateProjectTags']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "tags" => ["tag-2", "tag-3"] }))
+      expect(result['data']['updateProjectTags']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as organization owner' do
-    create(:tag, name: 'tag_2')
-    create(:tag, name: 'tag_3')
-    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateProjectTags).to(receive(:org_owner_check_for_project).and_return(true))
+    create(:tag, name: 'tag-2')
+    create(:tag, name: 'tag-3')
+    create(
+      :project,
+      name: 'Some Name',
+      slug: 'some-name',
+      organizations: [create(
+        :organization,
+        id: 10001,
+        slug: 'organization-1',
+        name: 'Organization 1',
+        website: 'website.com'
+      )],
+      tags: ['tag-1']
+    )
 
-    result = execute_graphql(
+    organization_owner = create(
+      :user,
+      email: 'user@website.com',
+      roles: ['organization_owner'],
+      organization_id: 10001
+    )
+
+    result = execute_graphql_as_user(
+      organization_owner,
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' },
+      variables: { tagNames: ['tag-2', 'tag-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateProjectTags']['project'])
-        .to(eq({ "slug" => "some-name", "tags" => ["tag_2", "tag_3"] }))
-      expect(result['data']['updateProjectTags']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "tags" => ["tag-2", "tag-3"] }))
+      expect(result['data']['updateProjectTags']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
+    create(:project, name: 'Some Name', slug: 'some-name', tags: ['tag-1'])
 
     result = execute_graphql(
       mutation,
-      variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' },
+      variables: { tagNames: ['tag-2', 'tag-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateProjectTags']['project'])
-        .to(eq(nil))
+      expect(result['data']['updateProjectTags']['project']).to(eq(nil))
       expect(result['data']['updateProjectTags']['errors'])
-        .to(eq(['Must have proper rights to update a project']))
+        .to(eq(['Editing project is not allowed.']))
     end
   end
 end

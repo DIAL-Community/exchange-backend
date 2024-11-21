@@ -8,32 +8,32 @@ module Mutations
 
     argument :name, String, required: true
     argument :slug, String, required: true
-    argument :start_date, GraphQL::Types::ISO8601Date, required: false
-    argument :end_date, GraphQL::Types::ISO8601Date, required: false
-    argument :project_url, String, required: false
+    argument :start_date, GraphQL::Types::ISO8601Date, required: false, default_value: nil
+    argument :end_date, GraphQL::Types::ISO8601Date, required: false, default_value: nil
+    argument :project_url, String, required: false, default_value: nil
     argument :description, String, required: true
-    argument :product_id, Integer, required: false
-    argument :organization_id, Integer, required: false
+    argument :product_id, Integer, required: false, default_value: nil
+    argument :organization_id, Integer, required: false, default_value: nil
     argument :country_slugs, [String], required: true
 
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, start_date: nil, end_date: nil, project_url: nil, description:,
-      product_id: nil, organization_id: nil, country_slugs:)
+    def resolve(name:, slug:, start_date:, end_date:, project_url:, description:, product_id:, organization_id:,
+      country_slugs:)
       project = Project.find_by(slug:)
-      check = false
-      if project.nil?
-        check = an_admin || (a_product_owner(product_id) unless product_id.nil?) ||
-                (an_org_owner(organization_id) unless organization_id.nil?)
-      else
-        check = an_admin || product_owner_check_for_project(project) || org_owner_check_for_project(project)
-      end
-
-      unless check
+      project_policy = Pundit.policy(context[:current_user], project || Project.new)
+      if project.nil? && !project_policy.create_allowed?
         return {
           project: nil,
-          errors: ['Must be admin, product owner or organization owner to create a project']
+          errors: ['Creating / editing project is not allowed.']
+        }
+      end
+
+      if !project.nil? && !project_policy.edit_allowed?
+        return {
+          project: nil,
+          errors: ['Creating / editing project is not allowed.']
         }
       end
 
@@ -46,7 +46,7 @@ module Mutations
           first_duplicate = Project.slug_simple_starts_with(project.slug)
                                    .order(slug: :desc)
                                    .first
-          project.slug = project.slug + generate_offset(first_duplicate)
+          project.slug += generate_offset(first_duplicate)
         end
       end
 

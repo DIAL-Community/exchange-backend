@@ -28,9 +28,11 @@ RSpec.describe(Mutations::UpdateOrganizationSectors, type: :graphql) do
     second = create(:sector, slug: 'second_sector', name: 'Second Sector', is_displayable: true)
 
     organization = create(:organization, name: 'Graph Organization', slug: 'graph_organization')
-    expect_any_instance_of(Mutations::UpdateOrganizationSectors).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { sectorSlugs: [first.slug, second.slug], slug: organization.slug },
     )

@@ -7,15 +7,25 @@ class DeployPolicy < ApplicationPolicy
     super(user, record)
   end
 
-  def mod_allowed?
-    return false if user.nil?
+  def available?
+    false
+  end
 
-    user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:principle]) ||
-      user.roles.include?(User.user_roles[:ict4sdg])
+  def create_allowed?
+    false
+  end
+
+  def edit_allowed?
+    false
+  end
+
+  def delete_allowed?
+    false
   end
 
   def view_allowed?
-    !user.nil? && user.roles.include?(User.user_roles[:user])
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
   end
 end

@@ -94,7 +94,8 @@ RSpec.describe(Mutations::CreateResourceTopic, type: :graphql) do
     )
 
     # Get resource using the above resource topic and ensure the reference is updated.
-    resource_result = execute_graphql(
+    resource_result = execute_graphql_as_user(
+      admin,
       query,
       variables: {
         slug: 'some-resource'

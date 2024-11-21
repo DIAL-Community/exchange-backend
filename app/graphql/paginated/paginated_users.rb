@@ -10,11 +10,8 @@ module Paginated
     type [Types::UserType], null: false
 
     def resolve(search:, roles:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return []
-      end
-
-      return [] unless an_admin || an_adli_admin
+      # Validate access to the current entity type.
+      validate_access_to_resource(User.new)
 
       users = User.order(:email)
       unless search.blank?

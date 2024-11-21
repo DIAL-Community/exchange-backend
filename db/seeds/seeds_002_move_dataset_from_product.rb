@@ -61,7 +61,7 @@ datasets.each do |dataset|
     dataset.organizations_products.each do |organization_product|
       organization_dataset = OrganizationDataset.new
       organization_dataset.organization_id = organization_product.organization.id
-      organization_dataset.organization_type = organization_product.org_type
+      organization_dataset.organization_type = organization_product.organization_type
 
       existing_dataset.organizations_datasets << organization_dataset
     end

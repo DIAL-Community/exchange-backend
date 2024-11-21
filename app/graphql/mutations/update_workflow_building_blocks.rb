@@ -9,14 +9,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(building_block_slugs:, slug:)
-      unless an_admin || a_content_editor
+      workflow = Workflow.find_by(slug:)
+      workflow_policy = Pundit.policy(context[:current_user], workflow || Workflow.new)
+      if workflow.nil? || !workflow_policy.edit_allowed?
         return {
           workflow: nil,
-          errors: ['Must be admin or content editor to update workflow']
+          errors: ['Editing workflow is not allowed.']
         }
       end
-
-      workflow = Workflow.find_by(slug:)
 
       workflow.building_blocks = []
       building_block_slugs&.each do |building_block_slug|

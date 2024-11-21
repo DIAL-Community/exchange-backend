@@ -6,7 +6,9 @@ module Queries
     type Types::SectorType, null: true
 
     def resolve(slug:)
-      Sector.find_by(slug:)
+      sector = Sector.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_instance(sector || Sector.new)
+      sector
     end
   end
 
@@ -16,6 +18,7 @@ module Queries
     type [Types::SectorType], null: false
 
     def resolve(search:, locale:)
+      validate_access_to_resource(Sector.new)
       sectors = Sector.where(is_displayable: true, locale:).order(:name)
       sectors = sectors.name_contains(search) unless search.blank?
       sectors

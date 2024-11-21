@@ -9,7 +9,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, message_type:, visible_only:)
-      return { total_count: 0 } if context[:current_user].nil?
+      # Validate access to the current entity type.
+      validate_access_to_resource(Message.new)
 
       messages = Message.all
       unless search.blank?

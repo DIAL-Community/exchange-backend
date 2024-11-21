@@ -8,13 +8,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      opportunity = Opportunity.find_by(id:)
+      opportunity_policy = OpportunityPolicy.new(context[:current_user], opportunity || Opportunity.new)
+      if opportunity.nil? || !opportunity_policy.delete_allowed?
         return {
           opportunity: nil,
-          errors: ['Must be admin to delete an opportunity']
+          errors: ['Deleting opportunity is not allowed.']
         }
       end
-      opportunity = Opportunity.find_by(id:)
       assign_auditable_user(opportunity)
 
       if opportunity.destroy

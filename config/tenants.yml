@@ -3,12 +3,12 @@ tenants:
     urls: 
       - url: fao.localhost
       - url: fao.dial.community
-    allow_unsecure_read: false
+    allow_unsecured_read: false
     adminPassword: Admin123
   - name: health
     urls: 
       - url: health.localhost
       - url: health.dial.community
       - url: apps.africacdc.org
-    allow_unsecure_read: true
+    allow_unsecured_read: true
     adminPassword: Admin123
