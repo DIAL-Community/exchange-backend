@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(sector_slugs:, slug:)
       product = Product.find_by(slug:)
-
-      unless an_admin || a_product_owner(product.id)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? || !product_policy.edit_allowed?
         return {
           product: nil,
-          errors: ['Must be admin or product owner to update a product']
+          errors: ['Editing product is not allowed.']
         }
       end
 

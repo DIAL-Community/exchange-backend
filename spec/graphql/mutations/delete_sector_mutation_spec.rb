@@ -19,9 +19,10 @@ RSpec.describe(Mutations::DeleteSector, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     create(:sector, id: 1000, name: 'Some Sector', slug: 'some-sector')
-    expect_any_instance_of(Mutations::DeleteSector).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -46,7 +47,7 @@ RSpec.describe(Mutations::DeleteSector, type: :graphql) do
       expect(result['data']['deleteSector']['sector'])
         .to(be(nil))
       expect(result['data']['deleteSector']['errors'])
-        .to(eq(["Must be admin to delete a sector."]))
+        .to(eq(["Deleting sector is not allowed."]))
     end
   end
 end

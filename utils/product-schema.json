@@ -549,7 +549,7 @@
         "type": "object",
         "required": [
           "name",
-          "org_type"
+          "organization_type"
         ],
         "properties": {
           "name": {
@@ -568,7 +568,7 @@
             "type": "string",
             "description": "Email for contact individual in the organization"
           },
-          "org_type": {
+          "organization_type": {
             "type": "string",
             "enum": [
               "owner",

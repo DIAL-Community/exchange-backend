@@ -6,11 +6,9 @@ module Queries
     type Types::SiteSettingType, null: true
 
     def resolve(slug:)
-      return nil unless an_admin
-
-      return SiteSetting.find_by(slug:) unless slug.nil?
-      site_settings = SiteSetting.order(updated_at: :desc)
-      site_settings.find_by(default_setting: true) || site_settings.first
+      site_setting = SiteSetting.find_by(slug:) if valid_slug?(slug)
+      validate_access_to_instance(site_setting || SiteSetting.new)
+      site_setting
     end
   end
 
@@ -18,8 +16,7 @@ module Queries
     type [Types::SiteSettingType], null: true
 
     def resolve
-      return [] unless an_admin
-
+      validate_access_to_resource(SiteSetting.new)
       SiteSetting.all
     end
   end

@@ -6,8 +6,8 @@ module Mutations
   class CreateBuildingBlock < Mutations::BaseMutation
     include Modules::Slugger
 
-    argument :name, String, required: true
     argument :slug, String, required: true
+    argument :name, String, required: true
     argument :description, String, required: true
     argument :maturity, String, required: true
     argument :category, String, required: false
@@ -19,27 +19,46 @@ module Mutations
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
-      unless an_admin || a_content_editor
+    def resolve(slug:, name:, description:, maturity:, category:, spec_url:, image_file:, gov_stack_entity:)
+      # Find the correct policy
+      building_block = BuildingBlock.find_by(slug:)
+      building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
+      if building_block.nil? && !building_block_policy.create_allowed?
         return {
           building_block: nil,
-          errors: ['Must be admin or content editor to create building block']
+          errors: ['Creating / editing building block is not allowed.']
         }
       end
 
-      building_block = BuildingBlock.find_by(slug:)
-      if building_block.nil?
-        building_block = BuildingBlock.new(name:)
-        slug = reslug_em(name)
+      if !building_block.nil? && !building_block_policy.edit_allowed?
+        return {
+          building_block: nil,
+          errors: ['Creating / editing building block is not allowed.']
+        }
+      end
 
-        # Check if we need to add _dup to the slug.
-        first_duplicate = BuildingBlock.slug_simple_starts_with(slug)
+      if building_block.nil?
+        building_block = BuildingBlock.new(name:, slug: reslug_em(name))
+        # Check if we need to add _duplicate to the slug.
+        first_duplicate = BuildingBlock.slug_simple_starts_with(reslug_em(name))
                                        .order(slug: :desc)
                                        .first
-        if !first_duplicate.nil?
-          building_block.slug = slug + generate_offset(first_duplicate)
-        else
-          building_block.slug = slug
+        unless first_duplicate.nil?
+          building_block.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      # Re-slug if the name is updated (not the same with the one in the db).
+      if building_block.name != name
+        building_block.name = name
+        building_block.slug = reslug_em(name)
+
+        # Check if we need to add _duplicate to the slug.
+        first_duplicate = BuildingBlock.slug_simple_starts_with(reslug_em(name))
+                                       .order(slug: :desc)
+                                       .first
+        unless first_duplicate.nil?
+          building_block.slug += generate_offset(first_duplicate)
         end
       end
 

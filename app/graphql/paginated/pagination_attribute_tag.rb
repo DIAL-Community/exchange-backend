@@ -7,9 +7,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:)
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Tag.new)
 
       tags = Tag.order(:name)
       unless search.blank?

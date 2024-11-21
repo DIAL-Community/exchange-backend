@@ -46,10 +46,11 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
   end
 
   it 'creates category indicator - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateCategoryIndicator).to(receive(:an_admin).and_return(true))
     create(:rubric_category, slug: 'test_category', name: 'Test Category')
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         "name": "Test Name",
@@ -81,10 +82,11 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
   end
 
   it 'updates a name without changing slug' do
-    expect_any_instance_of(Mutations::CreateCategoryIndicator).to(receive(:an_admin).and_return(true))
     create(:rubric_category, slug: 'test_category', name: 'Test Category')
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         "name": "Test Name",
@@ -116,10 +118,11 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
   end
 
   it 'fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::CreateCategoryIndicator).to(receive(:an_admin).and_return(false))
     create(:rubric_category, slug: 'test_category', name: 'Test Category')
+    user = create(:user, email: 'user@gmail.com')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
       variables: {
         "name": "Test Name",
@@ -137,14 +140,16 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['createCategoryIndicator']['errors'])
-        .to(eq(['Must be admin to create a category indicator.']))
+        .to(eq(['Creating / editing category indicator is not allowed.']))
     end
   end
 
   it 'fails - user is not logged in' do
     create(:rubric_category, slug: 'test_category', name: 'Test Category')
+    user = create(:user, email: 'user@gmail.com')
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      user,
       mutation,
       variables: {
         "name": "Test Name",
@@ -162,7 +167,7 @@ RSpec.describe(Mutations::CreateCategoryIndicator, type: :graphql) do
       expect(result['data']['createCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['createCategoryIndicator']['errors'])
-        .to(eq(['Must be admin to create a category indicator.']))
+        .to(eq(['Creating / editing category indicator is not allowed.']))
     end
   end
 end

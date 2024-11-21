@@ -17,14 +17,23 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, origin_id:, parent_sector_id:, is_displayable:, locale:)
-      unless an_admin
+      sector = Sector.find_by(slug:)
+      sector_policy = Pundit.policy(context[:current_user], sector || Sector.new)
+
+      if sector.nil? && !sector_policy.create_allowed?
         return {
           sector: nil,
-          errors: ['Must be admin or content editor to create a sector']
+          errors: ['Creating / editing sector is not allowed.']
         }
       end
 
-      sector = Sector.find_by(slug:)
+      if !sector.nil? && !sector_policy.edit_allowed?
+        return {
+          sector: nil,
+          errors: ['Creating / editing sector is not allowed.']
+        }
+      end
+
       if sector.nil?
         sector = Sector.new(name:, slug: reslug_em(name))
 
@@ -33,7 +42,7 @@ module Mutations
                                 .order(slug: :desc)
                                 .first
         unless first_duplicate.nil?
-          sector.slug = sector.slug + generate_offset(first_duplicate)
+          sector.slug += generate_offset(first_duplicate)
         end
       end
 

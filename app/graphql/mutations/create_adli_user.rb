@@ -11,22 +11,19 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(email:, roles:, username:, confirmed:)
-      unless an_admin || an_adli_admin
+      # Find the correct policy
+      user = User.find_by(email:)
+      user_policy = Pundit.policy(context[:current_user], user || User.new)
+      unless user_policy.create_allowed?
         return {
           user: nil,
           errors: ['Must be an admin to create / update user data.']
         }
       end
 
-      user = User.find_by(email:)
       if user.nil?
         password = random_password
-        user = User.new(
-          email:,
-          created_at: Time.now,
-          password:,
-          password_confirmation: password
-        )
+        user = User.new(email:, created_at: Time.now, password:, password_confirmation: password)
       end
       assign_auditable_user(user)
 
@@ -45,8 +42,8 @@ module Mutations
       end
     rescue ActiveRecord::RecordInvalid => e
       GraphQL::ExecutionError.new(
-        "Invalid attributes for #{e.record.class.name}: " \
-        "#{e.record.errors.full_messages.join(', ')}"
+        "Invalid attributes for #{e.record.class.name}.",
+        extensions: { 'code' => UNAUTHORIZED }
       )
     end
 

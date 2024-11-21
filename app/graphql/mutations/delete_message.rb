@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin || an_adli_admin
-        return {
-          message: nil,
-          errors: ['Must be admin to delete a message.']
-        }
-      end
-
       message = Message.find_by(id:)
-      if message.nil?
+      message_policy = MessagePolicy.new(context[:current_user], message || Message.new)
+      if message.nil? || !message_policy.delete_allowed?
         return {
           message: nil,
-          errors: ['Unable to uniquely identify message to delete.']
+          errors: ['Deleting message is not allowed.']
         }
       end
 

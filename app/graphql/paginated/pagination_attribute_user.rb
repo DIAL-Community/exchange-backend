@@ -8,9 +8,8 @@ module Paginated
     type Attributes::PaginationAttributes, null: false
 
     def resolve(search:, roles:)
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return { total_count: 0 }
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(User.new)
 
       return { total_count: 0 } unless an_admin || an_adli_admin
 

@@ -7,11 +7,8 @@ module Paginated
     type [Types::SiteSettingType], null: false
 
     def resolve(search:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return []
-      end
-
-      return [] unless an_admin
+      # Validate access to the current entity type.
+      validate_access_to_resource(SiteSetting.new)
 
       site_settings = SiteSetting.order(:name)
       unless search.blank?

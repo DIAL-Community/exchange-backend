@@ -7,9 +7,10 @@ module Mutations
     field_class Types::BaseField
     object_class Types::BaseObject
 
-    def ready?(**_args)
-      # Called with mutation args.
-      # Use keyword args such as employee_id: or **args to collect them
+    def ready?(**args)
+      unless args[:slug].nil?
+        puts "Processing record: #{args[:slug]}."
+      end
       true
     end
 

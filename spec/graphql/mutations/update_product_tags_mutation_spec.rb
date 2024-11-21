@@ -28,9 +28,11 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
     create(:tag, name: 'tag_2')
     create(:tag, name: 'tag_3')
     create(:product, name: 'Some Name', slug: 'some-name', tags: ['tag_1'])
-    expect_any_instance_of(Mutations::UpdateProductTags).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { tagNames: ['tag_2', 'tag_3'], slug: 'some-name' }
     )
@@ -55,7 +57,7 @@ RSpec.describe(Mutations::UpdateProductTags, type: :graphql) do
       expect(result['data']['updateProductTags']['product'])
         .to(eq(nil))
       expect(result['data']['updateProductTags']['errors'])
-        .to(eq(['Must be admin or product owner to update a product']))
+        .to(eq(['Editing product is not allowed.']))
     end
   end
 end

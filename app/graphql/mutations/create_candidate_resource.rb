@@ -23,19 +23,32 @@ module Mutations
     field :candidate_resource, Types::CandidateResourceType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, description:, published_date:,
-      resource_type:, resource_link:, link_description:,
-      country_slugs:, submitter_email:, captcha:
-    )
-      unless !context[:current_user].nil?
+    def resolve(name:, slug:, description:, published_date:, resource_type:, resource_link:, link_description:,
+      country_slugs:, submitter_email:, captcha:)
+      # Find the correct policy
+      candidate_resource = CandidateResource.find_by(slug:)
+      if !candidate_resource.nil? && !candidate_resource.rejected.nil?
         return {
           candidate_resource: nil,
-          errors: ['Must be logged in to create / edit a candidate resource']
+          errors: ['Attempting to edit rejected or approved candidate resource.']
         }
       end
 
-      candidate_resource = CandidateResource.find_by(slug:)
+      candidate_resource_policy = Pundit.policy(context[:current_user], candidate_resource || CandidateResource.new)
+      if candidate_resource.nil? && !candidate_resource_policy.create_allowed?
+        return {
+          candidate_resource: nil,
+          errors: ['Creating / editing candidate resource is not allowed.']
+        }
+      end
+
+      if !candidate_resource.nil? && !candidate_resource_policy.edit_allowed?
+        return {
+          candidate_resource: nil,
+          errors: ['Creating / editing candidate resource is not allowed.']
+        }
+      end
+
       if candidate_resource.nil?
         slug = reslug_em(name)
         candidate_resource = CandidateResource.new(name:, slug:)
@@ -47,11 +60,6 @@ module Mutations
         unless first_duplicate.nil?
           candidate_resource.slug = slug + generate_offset(first_duplicate)
         end
-      elsif candidate_resource.nil? && candidate_resource.rejected.nil?
-        return {
-          candidate_resource: nil,
-          errors: ['Attempting to edit rejected or approved candidate resource.']
-        }
       end
 
       candidate_resource.name = name

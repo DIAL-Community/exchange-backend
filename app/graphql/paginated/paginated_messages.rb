@@ -10,7 +10,8 @@ module Paginated
     type [Types::MessageType], null: false
 
     def resolve(search:, message_type:, visible_only:, offset_attributes:)
-      return [] if context[:current_user].nil?
+      # Validate access to the current entity type.
+      validate_access_to_resource(Message.new)
 
       messages = Message.order(created_at: :desc)
       unless search.blank?

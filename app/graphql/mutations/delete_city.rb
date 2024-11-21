@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          city: nil,
-          errors: ['Must be admin to delete a city.']
-        }
-      end
-
       city = City.find_by(id:)
-      if city.nil?
+      city_policy = Pundit.policy(context[:current_user], city || City.new)
+      if city.nil? || !city_policy.delete_allowed?
         return {
           city: nil,
-          errors: ['Unable to uniquely identify city to delete.']
+          errors: ['Deleting city is not allowed.']
         }
       end
 

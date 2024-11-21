@@ -14,14 +14,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, description: nil, candidate_status_slug:)
-      unless an_admin
+      candidate_product = CandidateProduct.find_by(slug:)
+      candidate_product_policy = Pundit.policy(context[:current_user], candidate_product || CandidateProduct.new)
+      unless candidate_product_policy.edit_allowed?
         return {
           candidate_product: nil,
-          errors: ['Must be admin to update a candidate product.']
+          errors: ['Editing candidate product is not allowed.']
         }
       end
 
-      candidate_product = CandidateProduct.find_by(slug:)
       unless candidate_product.rejected.nil?
         return {
           candidate_product: nil,
@@ -37,19 +38,31 @@ module Mutations
         }
       end
 
-      current_candidate_status = candidate_status.name
-      previous_candidate_status = candidate_product.candidate_status&.name || 'Candidate Information Received'
+      previous_candidate_status = candidate_product.candidate_status
+
+      status_transition_allowed =
+        previous_candidate_status.nil? ||
+        previous_candidate_status.next_candidate_statuses.include?(candidate_status)
+      unless status_transition_allowed
+        return {
+          candidate_product: nil,
+          errors: ['Invalid status tranisition.']
+        }
+      end
+
+      current_candidate_status_name = candidate_status.name
+      previous_candidate_status_name = previous_candidate_status&.name || 'Candidate Information Received'
 
       status_transition_text = <<-TRANSITION_TEXT
         <div class='flex flex-row gap-2 my-3'>
           <div class='font-semibold'>
-            #{previous_candidate_status}
+            #{previous_candidate_status_name}
           </div>
           <div class='font-semibold'>
             →
           </div>
           <div class='font-semibold'>
-            #{current_candidate_status}
+            #{current_candidate_status_name}
           </div>
         </div>
       TRANSITION_TEXT
@@ -77,14 +90,17 @@ module Mutations
         )
         comment.save!
 
-        if candidate_status.name.include?('Reject')
-          reject_candidate(candidate_product)
-        elsif candidate_status.name.include?('Deny')
-          reject_candidate(candidate_product)
-        elsif candidate_status.name.include?('Denied')
-          reject_candidate(candidate_product)
-        elsif candidate_status.name.include?('Approve')
-          approve_candidate(candidate_product)
+        # TODO: This need to be moved to settings table.
+        if candidate_status.terminal_status
+          if candidate_status.name.include?('Reject')
+            reject_candidate(candidate_product)
+          elsif candidate_status.name.include?('Deny')
+            reject_candidate(candidate_product)
+          elsif candidate_status.name.include?('Denied')
+            reject_candidate(candidate_product)
+          elsif candidate_status.name.include?('Approve')
+            approve_candidate(candidate_product)
+          end
         end
 
         destination_email_addresses = [candidate_product.submitter_email]
@@ -95,8 +111,8 @@ module Mutations
               current_candidate: candidate_product,
               current_user: User.find_by(email: destination_email_address),
               sender_email: 'no-reply@exchange.com',
-              current_status: current_candidate_status,
-              previous_status: previous_candidate_status,
+              current_status: current_candidate_status_name,
+              previous_status: previous_candidate_status_name,
               destination_email: destination_email_address,
               notification_template: candidate_status.notification_template,
             )

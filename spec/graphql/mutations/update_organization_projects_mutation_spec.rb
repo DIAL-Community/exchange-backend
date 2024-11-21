@@ -28,9 +28,11 @@ RSpec.describe(Mutations::UpdateOrganizationProjects, type: :graphql) do
     second = create(:project, slug: 'second_project', name: 'Second Project')
 
     organization = create(:organization, name: 'Graph Organization', slug: 'graph_organization')
-    expect_any_instance_of(Mutations::UpdateOrganizationProjects).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { projectSlugs: [first.slug, second.slug], slug: organization.slug },
     )

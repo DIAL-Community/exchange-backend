@@ -24,9 +24,10 @@ RSpec.describe(Mutations::DeleteRubricCategory, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     create(:rubric_category, id: 1000, name: 'Some RC', slug: 'some-rc')
-    expect_any_instance_of(Mutations::DeleteRubricCategory).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -51,7 +52,7 @@ RSpec.describe(Mutations::DeleteRubricCategory, type: :graphql) do
       expect(result['data']['deleteRubricCategory']['rubricCategory'])
         .to(be(nil))
       expect(result['data']['deleteRubricCategory']['errors'])
-        .to(eq(["Must be admin to delete a rubric category"]))
+        .to(eq(["Deleting rubric category is not allowed."]))
     end
   end
 end

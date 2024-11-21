@@ -39,15 +39,12 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
     )
     create(:product, slug: 'product-2', name: 'Product 2')
     create(:product, slug: 'product-3', name: 'Product 3')
-    expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:an_admin).and_return(true))
 
     result = execute_graphql_as_user(
       user,
       mutation,
       variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
-
-    puts "Result: #{result.inspect}"
 
     aggregate_failures do
       expect(result['data']['updateBuildingBlockProducts']['buildingBlock'])
@@ -66,6 +63,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
   end
 
   it 'is successful - user is logged in as content editor' do
+    content_editor = create(:user, email: 'admin@gmail.com', roles: [:admin, :content_editor])
     create(
       :building_block,
       name: 'Some Name',
@@ -74,9 +72,9 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
     )
     create(:product, slug: 'product-2', name: 'Product 2')
     create(:product, slug: 'product-3', name: 'Product 3')
-    expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:a_content_editor).and_return(true))
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      content_editor,
       mutation,
       variables: { productSlugs: ['product-2', 'product-3'], slug: 'some-name', mappingStatus: 'BETA' },
     )
@@ -98,9 +96,6 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
   end
 
   it 'is fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::UpdateBuildingBlockProducts).to(receive(:a_content_editor).and_return(false))
-
     create(
       :building_block,
       name: 'Some Name',
@@ -118,7 +113,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateBuildingBlockProducts']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockProducts']['errors'])
-        .to(eq(['Must be admin or content editor to update building block']))
+        .to(eq(['Editing building block is not allowed.']))
     end
   end
 
@@ -136,7 +131,7 @@ RSpec.describe(Mutations::UpdateBuildingBlockProducts, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateBuildingBlockProducts']['buildingBlock']).to(eq(nil))
       expect(result['data']['updateBuildingBlockProducts']['errors'])
-        .to(eq(['Must be admin or content editor to update building block']))
+        .to(eq(['Editing building block is not allowed.']))
     end
   end
 end

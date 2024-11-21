@@ -39,9 +39,9 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
-
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some name",
@@ -58,9 +58,10 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
 
   it 'is successful - admin can update tag name and slug remains the same' do
     create(:tag, name: "Some name", slug: "some-name")
-    expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some new name",
@@ -78,9 +79,11 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
   it 'is successful - should update references on other objects' do
     create(:tag, name: "Some Name", slug: "some-name")
     create(:product, name: "Some Product", slug: "some-product", tags: ['Some Name'])
-    expect_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some New Name",
@@ -90,7 +93,8 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
     )
 
     # Get product using the above tag and ensure the reference is updated.
-    product_result = execute_graphql(
+    product_result = execute_graphql_as_user(
+      admin_user,
       query,
       variables: {
         slug: 'some-product'
@@ -113,8 +117,10 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
       description: 'Some description'
     }
 
-    allow_any_instance_of(Mutations::CreateTag).to(receive(:an_admin).and_return(true))
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )
@@ -125,7 +131,8 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
         .to(eq({ "name" => "Some Name", "slug" => "some-name" }))
     end
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )
@@ -136,7 +143,8 @@ RSpec.describe(Mutations::CreateTag, type: :graphql) do
         .to(eq({ "name" => "Some Name", "slug" => "some-name" }))
     end
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: graph_variables,
     )

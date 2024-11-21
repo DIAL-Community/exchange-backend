@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      candidate_status = CandidateStatus.find_by(id:)
+      candidate_status_policy = Pundit.policy(context[:current_user], candidate_status || CandidateStatus.new)
+      if candidate_status.nil? || !candidate_status_policy.delete_allowed?
         return {
           candidate_status: nil,
-          errors: ['Must be admin to delete a candidate status.']
+          errors: ['Deleting candidate status is not allowed.']
         }
       end
 
-      candidate_status = CandidateStatus.find_by(id:)
       assign_auditable_user(candidate_status)
       if candidate_status.destroy
         # Successful deletion, return the deleted candidate_status with no errors

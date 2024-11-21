@@ -19,16 +19,24 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, name:, description:, source:, destination:, synchronized_models:)
-      unless an_admin
-        return {
-          sync: nil,
-          errors: ['Must be an admin to create / edit a sync']
-        }
-      end
-
       # Prevent duplicating sync by the name of the sync.
       sync = TenantSyncConfiguration.find_by(slug:)
       sync = TenantSyncConfiguration.find_by(name:) if sync.nil?
+      sync_policy = Pundit.policy(context[:current_user], SiteSetting.new)
+      if sync.nil? && !sync_policy.create_allowed?
+        return {
+          sync: nil,
+          errors: ['Creating / editing sync is not allowed.']
+        }
+      end
+
+      if !sync.nil? && !sync_policy.edit_allowed?
+        return {
+          sync: nil,
+          errors: ['Creating / editing sync is not allowed.']
+        }
+      end
+
       if sync.nil?
         sync = TenantSyncConfiguration.new(name:, slug: reslug_em(name))
 

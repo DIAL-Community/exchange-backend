@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      project = Project.find_by(id:)
+      project_policy = Pundit.policy(context[:current_user], project || Project.new)
+      if project.nil? || !project_policy.delete_allowed?
         return {
           dataset: nil,
-          errors: ['Must be admin to delete a project.']
+          errors: ['Deleting project is not allowed.']
         }
       end
 
-      project = Project.find_by(id:)
       assign_auditable_user(project)
       if project.destroy
         # Successful deletion, return the deleted dataset with no errors

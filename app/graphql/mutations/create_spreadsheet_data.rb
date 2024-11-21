@@ -14,15 +14,24 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(spreadsheet_data:, spreadsheet_type:, assoc:)
-      unless an_admin
+      slug = reslug_em(spreadsheet_data['name'])
+      record = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
+      record_policy = Pundit.policy(context[:current_user], record || DialSpreadsheetData.new)
+
+      if record.nil? && !record_policy.create_allowed?
         return {
           dial_spreadsheet_data: nil,
-          errors: ['Not allowed to create a spreadsheet data.']
+          errors: ['Creating / editing spreadsheet data is not allowed.']
         }
       end
 
-      slug = reslug_em(spreadsheet_data['name'])
-      record = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
+      if !record.nil? && !record_policy.edit_allowed?
+        return {
+          dial_spreadsheet_data: nil,
+          errors: ['Creating / editing spreadsheet data is not allowed.']
+        }
+      end
+
       if record.nil? && assoc != 'products' && assoc != 'datasets'
         # Trying to update association when we don't have the base spreadsheet record yet.
         return {

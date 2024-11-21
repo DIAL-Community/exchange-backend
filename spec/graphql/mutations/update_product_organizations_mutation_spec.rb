@@ -31,9 +31,11 @@ RSpec.describe(Mutations::UpdateProductOrganizations, type: :graphql) do
                      organizations: [create(:organization, slug: 'org_1', name: 'Org 1')])
     create(:organization, slug: 'org_2', name: 'Org 2')
     create(:organization, slug: 'org_3', name: 'Org 3')
-    expect_any_instance_of(Mutations::UpdateProductOrganizations).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { organizationSlugs: ['org_2', 'org_3'], slug: 'some-name' },
     )
@@ -41,8 +43,7 @@ RSpec.describe(Mutations::UpdateProductOrganizations, type: :graphql) do
     aggregate_failures do
       expect(result['data']['updateProductOrganizations']['product'])
         .to(eq({ "slug" => "some-name", "organizations" => [{ "slug" => "org_2" }, { "slug" => "org_3" }] }))
-      expect(result['data']['updateProductOrganizations']['errors'])
-        .to(eq([]))
+      expect(result['data']['updateProductOrganizations']['errors']).to(eq([]))
     end
   end
 
@@ -58,10 +59,9 @@ RSpec.describe(Mutations::UpdateProductOrganizations, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateProductOrganizations']['product'])
-        .to(eq(nil))
+      expect(result['data']['updateProductOrganizations']['product']).to(eq(nil))
       expect(result['data']['updateProductOrganizations']['errors'])
-        .to(eq(['Must be admin or product owner to update a product']))
+        .to(eq(['Editing product is not allowed.']))
     end
   end
 end

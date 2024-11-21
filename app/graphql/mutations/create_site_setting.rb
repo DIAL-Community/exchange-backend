@@ -19,18 +19,32 @@ module Mutations
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
-      enable_marketplace:, default_setting:
-    )
-      unless an_admin
+    def resolve(slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
+      enable_marketplace:, default_setting:)
+      site_setting = SiteSetting.find_by(slug:)
+      site_setting_policy = Pundit.policy(context[:current_user], site_setting || SiteSetting.new)
+
+      if site_setting.nil? && !site_setting_policy.create_allowed?
         return {
           site_setting: nil,
-          errors: ['Must have proper rights to update a site setting object.']
+          errors: ['Creating / editing site setting is not allowed.']
         }
       end
 
-      site_setting = SiteSetting.find_by(slug:)
+      if !site_setting.nil? && !site_setting_policy.edit_allowed?
+        return {
+          site_setting: nil,
+          errors: ['Creating / editing site setting is not allowed.']
+        }
+      end
+
+      unless an_admin
+        return {
+          site_setting: nil,
+          errors: ['Creating / editing site setting is not allowed.']
+        }
+      end
+
       if site_setting.nil?
         site_setting = SiteSetting.new(name:, slug: reslug_em(name))
 
@@ -39,7 +53,7 @@ module Mutations
                                      .order(slug: :desc)
                                      .first
         unless first_duplicate.nil?
-          site_setting.slug = site_setting.slug + generate_offset(first_duplicate)
+          site_setting.slug += generate_offset(first_duplicate)
         end
       end
 

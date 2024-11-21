@@ -10592,7 +10592,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "name",
+                  "name": "slug",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -10608,7 +10608,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "slug",
+                  "name": "name",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -12281,7 +12281,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -12293,7 +12293,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -13606,7 +13606,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13618,7 +13618,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13630,7 +13630,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13658,7 +13658,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13670,7 +13670,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -14867,7 +14867,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "allowUnsecureRead",
+                  "name": "allowUnsecuredRead",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -16644,6 +16644,22 @@
               "description": null,
               "args": [
                 {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "productSlugs",
                   "description": null,
                   "type": {
@@ -16669,22 +16685,6 @@
                 },
                 {
                   "name": "mappingStatus",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "slug",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -19561,6 +19561,22 @@
               "description": null,
               "args": [
                 {
+                  "name": "rubricCategorySlug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "categoryIndicatorSlugs",
                   "description": null,
                   "type": {
@@ -19578,22 +19594,6 @@
                           "ofType": null
                         }
                       }
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "rubricCategorySlug",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
                     }
                   },
                   "defaultValue": null,
@@ -28143,6 +28143,39 @@
               "deprecationReason": null
             },
             {
+              "name": "origin",
+              "description": null,
+              "args": [
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Origin",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "origins",
               "description": null,
               "args": [
@@ -34322,13 +34355,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "RubricCategory",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "RubricCategory",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -34357,6 +34386,35 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "SustainableDevelopmentGoal",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "sdgTarget",
+              "description": null,
+              "args": [
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SustainableDevelopmentGoalTarget",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -39779,7 +39837,7 @@
           "description": null,
           "fields": [
             {
-              "name": "allowUnsecureRead",
+              "name": "allowUnsecuredRead",
               "description": null,
               "args": [
 

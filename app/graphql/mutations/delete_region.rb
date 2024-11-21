@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          region: nil,
-          errors: ['Must be admin to delete a region.']
-        }
-      end
-
       region = Region.find_by(id:)
-      if region.nil?
+      region_policy = Pundit.policy(context[:current_user], region || Region.new)
+      if region.nil? || !region_policy.delete_allowed?
         return {
           region: nil,
-          errors: ['Unable to uniquely identify region to delete.']
+          errors: ['Deleting region is not allowed.']
         }
       end
 

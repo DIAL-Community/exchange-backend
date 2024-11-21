@@ -13,14 +13,18 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, action:)
-      unless an_admin
+      # Find the correct policy
+      candidate_resource = CandidateResource.find_by(slug:)
+      candidate_resource_policy = Pundit.policy(
+        context[:current_user],
+        candidate_resource || CandidateResource.new
+      )
+      unless candidate_resource_policy.edit_allowed?
         return {
           candidate_resource: nil,
-          errors: ['Must be admin to approve or reject candidate resource']
+          errors: ['Editing candidate resource is not allowed.']
         }
       end
-
-      candidate_resource = CandidateResource.find_by(slug:)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_resource)
