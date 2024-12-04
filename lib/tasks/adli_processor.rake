@@ -31,7 +31,7 @@ namespace :adli_processor do
 
   desc 'Update ADLI password using the first part of their email address'
   task update_adli_password: :environment do
-    workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI Welcome Questions.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -57,7 +57,7 @@ namespace :adli_processor do
 
   desc 'Read ADLI questionaire spredsheet answers and build user & contact records.'
   task parse_adli_file: :environment do
-    workbook = Roo::Spreadsheet.open('./data/ADLI Welcome Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI Welcome Questions.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }

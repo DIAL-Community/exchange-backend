@@ -15,6 +15,8 @@ module Types
       end
     end
 
+    field :extra_attributes, [GraphQL::Types::JSON], null: true
+
     field :description, String, null: true
     field :candidate_status, CandidateStatusType, null: true
 

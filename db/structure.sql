@@ -639,7 +639,8 @@ CREATE TABLE public.candidate_products (
     description character varying,
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
-    maturity_score jsonb DEFAULT '{}'::jsonb
+    maturity_score jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb
 );
 
 
@@ -9536,6 +9537,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241017210146'),
 ('20241017211746'),
 ('20241020121626'),
-('20241024120711');
+('20241024120711'),
+('20241204135707');
 
 

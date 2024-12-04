@@ -13,12 +13,16 @@ module Mutations
     argument :description, String, required: true
     argument :submitter_email, String, required: true
     argument :commercial_product, Boolean, required: false, default_value: false
+    argument :extra_attributes, [Types::ExtraAttributeInputType], required: false
     argument :captcha, String, required: true
 
     field :candidate_product, Types::CandidateProductType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
+    def resolve(
+      slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:,
+      extra_attributes:, captcha:
+    )
       # Find the correct policy
       candidate_product = CandidateProduct.find_by(slug:)
       if !candidate_product.nil? && !candidate_product.rejected.nil?
@@ -56,6 +60,10 @@ module Mutations
         else
           candidate_product.slug = slug
         end
+      end
+
+      extra_attributes&.each do |attr|
+        candidate_product.update_extra_attributes(name: attr[:name], value: attr[:value], type: attr[:type])
       end
 
       candidate_product.name = name

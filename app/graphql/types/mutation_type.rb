@@ -4,6 +4,7 @@ module Types
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
     field :approve_reject_candidate_product, mutation: Mutations::ApproveRejectCandidateProduct
+    field :update_candidate_product_extra_attributes, mutation: Mutations::UpdateCandidateProductExtraAttributes
 
     field :create_candidate_organization, mutation: Mutations::CreateCandidateOrganization
     field :approve_reject_candidate_organization, mutation: Mutations::ApproveRejectCandidateOrganization

@@ -7,6 +7,19 @@ class CandidateProduct < ApplicationRecord
   has_many :candidate_product_category_indicators, dependent: :delete_all
   belongs_to :candidate_status, optional: true
 
+  def update_extra_attributes(name:, value:, type: nil)
+    self.extra_attributes ||= []
+
+    attribute = extra_attributes.find { |attr| attr['name'] == name }
+
+    if attribute
+      attribute['value'] = value
+      attribute['type'] = type if type
+    else
+      self.extra_attributes << { 'name' => name, 'value' => value, 'type' => type }
+    end
+  end
+
   def overall_maturity_score
     return nil if maturity_score.nil?
 
