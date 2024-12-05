@@ -149,7 +149,7 @@ namespace :maturity_sync do
   end
 
   task :sync_legacy, [:path] => :environment do |_, _params|
-    digisquare_maturity = YAML.load_file('config/maturity_digisquare.yml')
+    digisquare_maturity = YAML.load_file('data/yaml/maturity-digisquare.yml')
     digisquare_maturity.each do |digi_category|
       rubric_category = create_category(digi_category['core'])
 
