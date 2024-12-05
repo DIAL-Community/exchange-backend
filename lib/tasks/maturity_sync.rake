@@ -161,7 +161,7 @@ namespace :maturity_sync do
       end
     end
 
-    osc_maturity = YAML.load_file('config/maturity_osc.yml')
+    osc_maturity = YAML.load_file('data/yaml/maturity-osc.yml')
     osc_maturity.each do |osc_category|
       rubric_category = create_category(osc_category['header'])
 
