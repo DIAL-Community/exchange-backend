@@ -90,6 +90,7 @@ module Types
 
     field :candidate_product, resolver: Queries::CandidateProductQuery
     field :candidate_products, resolver: Queries::CandidateProductsQuery
+    field :candidate_product_extra_attributes, resolver: Queries::CandidateProductExtraAttributesQuery
 
     field :candidate_organization, resolver: Queries::CandidateOrganizationQuery
     field :candidate_organizations, resolver: Queries::CandidateOrganizationsQuery

@@ -1768,6 +1768,7 @@ type Query {
   candidateOrganization(slug: String!): CandidateOrganization
   candidateOrganizations(search: String = ""): [CandidateOrganization!]!
   candidateProduct(slug: String!): CandidateProduct
+  candidateProductExtraAttributes: JSON!
   candidateProducts(search: String = ""): [CandidateProduct!]!
   candidateResource(slug: String!): CandidateResource
   candidateResources(search: String = ""): [CandidateResource!]!

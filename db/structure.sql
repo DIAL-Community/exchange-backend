@@ -640,7 +640,7 @@ CREATE TABLE public.candidate_products (
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
     maturity_score jsonb DEFAULT '{}'::jsonb,
-    extra_attributes jsonb DEFAULT '{}'::jsonb
+    extra_attributes jsonb DEFAULT '[]'::jsonb
 );
 
 
