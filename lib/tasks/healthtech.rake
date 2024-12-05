@@ -62,7 +62,7 @@ namespace :health_sync do
         SoftwareFeature.delete_all
         SoftwareCategory.delete_all
       end
-      health_categories = YAML.load_file('config/software_categories.yml')
+      health_categories = YAML.load_file('data/yaml/software-categories.yml')
       health_categories.each do |health_category|
         new_category = SoftwareCategory.where(name: health_category['category']).first || SoftwareCategory.new
         new_category.name = health_category['category']
