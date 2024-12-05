@@ -38,7 +38,7 @@ namespace :health_sync do
         RubricCategoryDescription.delete_all
         RubricCategory.delete_all
       end
-      health_maturity = YAML.load_file('config/maturity_health.yml')
+      health_maturity = YAML.load_file('data/yaml/maturity-health.yml')
       health_maturity.each do |health_category|
         rubric_category = create_category(health_category['category'], health_category['description'])
 

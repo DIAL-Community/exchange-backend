@@ -198,7 +198,7 @@ namespace :maturity_sync do
       puts "Updating score for: #{product.name}."
       tracking_task_log(task_name, "Updating score for: #{product.name}.")
       calculate_maturity_scores(product.id)
-      calculate_product_indicators(product.id, 'config/maturity_health.yml')
+      calculate_product_indicators(product.id, 'data/yaml/maturity-health.yml')
     end
 
     tracking_task_finish(task_name)
