@@ -498,7 +498,7 @@ namespace :data do
   task remap_products: :environment do
     # Now remap products, use cases, and organizations
     # Project remapping will happen in project sync
-    sector_map = File.read('utils/sector_map.json')
+    sector_map = File.read('data/json/sector-map.json')
     sector_json = JSON.parse(sector_map)
 
     Product.all.each do |prod|

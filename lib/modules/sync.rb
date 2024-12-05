@@ -732,7 +732,7 @@ module Modules
     end
 
     def read_sector(sector_name, subsector_names, locale)
-      sector_map = File.read('utils/sector_map.json')
+      sector_map = File.read('data/json/sector-map.json')
       sector_json = JSON.parse(sector_map)
 
       sector_array = []
