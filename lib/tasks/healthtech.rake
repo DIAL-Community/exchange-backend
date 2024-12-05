@@ -89,8 +89,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
 
     Apartment::Tenant.switch(tenant_name) do
-      vetting_sheet = Roo::Spreadsheet.open('utils/HealthVettedSolutions.xlsx')
-      solution_sheet = Roo::Spreadsheet.open('utils/HealthSolutionsData.xlsx')
+      vetting_sheet = Roo::Spreadsheet.open('data/spreadsheet/HealthVettedSolutions.xlsx')
+      solution_sheet = Roo::Spreadsheet.open('data/spreadsheet/HealthSolutionsData.xlsx')
 
       vetting_sheet.each do |vetted_data|
         # Find the solution in the solution data
