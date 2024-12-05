@@ -391,7 +391,7 @@ namespace :sync do
   task :generate_repositories, [:path] => :environment do |_, _params|
     Rails.logger.level = Logger::DEBUG
 
-    product_list = YAML.load_file('config/product_parent_child.yml')
+    product_list = YAML.load_file('data/yaml/product-parent-child.yml')
     product_list.each do |product_entry|
       parent_product_name = product_entry['parent'].first['name']
       parent_product = Product.where(name: parent_product_name).first
