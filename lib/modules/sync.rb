@@ -816,7 +816,7 @@ module Modules
       if !description_entry.blank?
         product_description.description = description_entry
       else
-        yaml_descriptions = YAML.load_file('config/product_description.yml')
+        yaml_descriptions = YAML.load_file('data/yaml/product-description.yml')
         yaml_descriptions['products'].each do |yaml_description|
           if existing_product.slug == yaml_description['slug']
             product_description.description = yaml_description['description']
