@@ -264,7 +264,7 @@ namespace :data do
   end
 
   task sdg_desc: :environment do
-    sdg_data = File.read('utils/sdgs.json')
+    sdg_data = File.read('data/json/sdgs.json')
     json_sdg = JSON.parse(sdg_data)
     json_sdg.each do |sdg|
       update_sdg_desc(sdg['code'], sdg['description'])
