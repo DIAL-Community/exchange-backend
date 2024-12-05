@@ -108,7 +108,7 @@ namespace :sync do
   task :indiastack_products, [] => :environment do
     puts 'Starting pulling data from IndiaStack ...'
 
-    istack_file = File.read('utils/indiastack.json')
+    istack_file = File.read('data/json/india-stack.json')
     istack_data = JSON.parse(istack_file)
     istack_data.each do |product|
       sync_json_product(product, 'indiastack')
