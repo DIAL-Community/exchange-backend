@@ -272,7 +272,7 @@ namespace :data do
   end
 
   task create_principles: :environment do
-    principle_data = File.read('utils/digital_principles.json')
+    principle_data = File.read('data/json/digital-principles.json')
     json_principles = JSON.parse(principle_data)
     json_principles.each do |curr_principle|
       principle = DigitalPrinciple.where(name: curr_principle['name']).first || DigitalPrinciple.new
@@ -442,7 +442,7 @@ namespace :data do
     Sector.all.update_all(is_displayable: false)
 
     dial_origin = Origin.where(slug: 'dial').first
-    sector_list = CSV.parse(File.read('./utils/sectors.csv'), headers: true)
+    sector_list = CSV.parse(File.read('./data/spreadsheet/sectors.csv'), headers: true)
     sector_list.each do |sector|
       if sector['Sub Sector'].nil?
         puts "Parent Sector: #{sector['Parent Sector'].strip}"
@@ -553,7 +553,7 @@ namespace :data do
   end
 
   task map_project_sectors: :environment do
-    project_list = CSV.parse(File.read('./utils/project_sectors.csv'), headers: true)
+    project_list = CSV.parse(File.read('./data/spreadsheet/project-sectors.csv'), headers: true)
     project_list.each do |project|
       curr_project = Project.find_by(name: project['Project Name'])
       next if curr_project.nil?
@@ -570,7 +570,7 @@ namespace :data do
   end
 
   task map_product_sectors: :environment do
-    product_list = CSV.parse(File.read('./utils/product_sectors.csv'), headers: true)
+    product_list = CSV.parse(File.read('./data/spreadsheet/product-sectors.csv'), headers: true)
     product_list.each do |product|
       curr_product = Product.find_by(slug: product['slug'])
       next if curr_product.nil?

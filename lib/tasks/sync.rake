@@ -92,7 +92,7 @@ namespace :sync do
 
     ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
-    osc_file = File.read('utils/digital_global_goods.json')
+    osc_file = File.read('data/json/digital-global-goods.json')
     osc_data = JSON.parse(osc_file)
     osc_data.each do |product|
       next if search_in_ignorelist(product, ignore_list)
