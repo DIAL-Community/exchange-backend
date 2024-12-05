@@ -589,7 +589,7 @@ namespace :data do
   task i18n_sectors: :environment do
     dial_origin = Origin.where(slug: 'dial').first
 
-    sectors = YAML.load_file('utils/sectors.yml')
+    sectors = YAML.load_file('data/yaml/sectors.yml')
     %w[es pt sw].each do |locale|
       new_sectors = YAML.load_file("utils/sectors.#{locale}.yml")
       sectors['sectors'].each_with_index do |sector, i|

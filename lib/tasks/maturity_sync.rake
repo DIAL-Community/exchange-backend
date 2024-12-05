@@ -248,7 +248,7 @@ namespace :maturity_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    lang_file = YAML.load_file('utils/top_25_languages.yml')
+    lang_file = YAML.load_file('data/yaml/top-25-languages.yml')
     config_file = YAML.load_file('data/yaml/indicator-config.yml')
 
     Product.all.each do |product|
