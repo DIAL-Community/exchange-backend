@@ -34,7 +34,7 @@ namespace :sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    ignore_list = YAML.load_file('config/product_ignorelist.yml')
+    ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
     dpg_uri = URI.parse('https://api.digitalpublicgoods.net/dpgs/')
     dpg_response = Net::HTTP.get(dpg_uri)
@@ -70,7 +70,7 @@ namespace :sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    ignore_list = YAML.load_file('config/product_ignorelist.yml')
+    ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
     digisquare_maturity = JSON.parse(File.read('config/digisquare_maturity_data.json'))
     digisquare_products = YAML.load_file('data/yaml/digisquare-global-goods.yml')
@@ -90,7 +90,7 @@ namespace :sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    ignore_list = YAML.load_file('config/product_ignorelist.yml')
+    ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
     osc_file = File.read('utils/digital_global_goods.json')
     osc_data = JSON.parse(osc_file)
