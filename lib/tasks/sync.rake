@@ -72,7 +72,7 @@ namespace :sync do
 
     ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
-    digisquare_maturity = JSON.parse(File.read('config/digisquare_maturity_data.json'))
+    digisquare_maturity = JSON.parse(File.read('data/json/digisquare-maturity-data.json'))
     digisquare_products = YAML.load_file('data/yaml/digisquare-global-goods.yml')
     digisquare_products['products'].each do |digi_product|
       next if search_in_ignorelist(digi_product, ignore_list)
