@@ -678,7 +678,7 @@ namespace :data do
   end
 
   task i18n_products: :environment do
-    de_data = File.read('utils/product_desc.de.json')
+    de_data = File.read('data/json/product-description.de.json')
     de_desc = JSON.parse(de_data)
     Product.all.each do |product|
       eng_desc = ProductDescription.find_by(product_id: product.id, locale: 'en')
