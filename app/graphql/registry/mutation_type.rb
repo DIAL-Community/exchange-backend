@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Types
+module Registry
   class MutationType < Types::BaseObject
     field :create_candidate_product, mutation: Mutations::CreateCandidateProduct
     field :approve_reject_candidate_product, mutation: Mutations::ApproveRejectCandidateProduct

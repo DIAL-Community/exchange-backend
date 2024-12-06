@@ -17,7 +17,7 @@ module Types
       object.created_at
     end
 
-    # Added fields to match frontent library
+    # Added fields to match frontend library
     field :com_id, String, null: false
     field :user_id, String, null: false
     field :full_name, String, null: false

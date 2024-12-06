@@ -13,7 +13,7 @@ module Mutations
     argument :description, String, required: true
     argument :submitter_email, String, required: true
     argument :commercial_product, Boolean, required: false, default_value: false
-    argument :extra_attributes, [Types::ExtraAttributeInputType], required: false
+    argument :extra_attributes, [Attributes::ExtraAttribute], required: false
     argument :captcha, String, required: true
 
     field :candidate_product, Types::CandidateProductType, null: true
@@ -63,7 +63,12 @@ module Mutations
       end
 
       extra_attributes&.each do |attr|
-        candidate_product.update_extra_attributes(name: attr[:name], value: attr[:value], type: attr[:type])
+        candidate_product.update_extra_attributes(
+          name: attr[:name],
+          type: attr[:type],
+          value: attr[:value],
+          index: attr[:index]
+        )
       end
 
       candidate_product.name = name

@@ -3,7 +3,7 @@
 module Mutations
   class UpdateCandidateProductExtraAttributes < Mutations::BaseMutation
     argument :slug, String, required: true
-    argument :extra_attributes, [Types::ExtraAttributeInputType], required: true
+    argument :extra_attributes, [Attributes::ExtraAttribute], required: true
 
     field :candidate_product, Types::CandidateProductType, null: true
     field :errors, [String], null: true

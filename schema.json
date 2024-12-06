@@ -8539,7 +8539,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "ExtraAttributeInput",
+          "name": "ExtraAttribute",
           "description": "An extra attribute for a product",
           "fields": null,
           "inputFields": [
@@ -11135,7 +11135,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "ExtraAttributeInput",
+                        "name": "ExtraAttribute",
                         "ofType": null
                       }
                     }
@@ -13453,7 +13453,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "ExtraAttributeInput",
+                        "name": "ExtraAttribute",
                         "ofType": null
                       }
                     }
@@ -16890,7 +16890,7 @@
                         "name": null,
                         "ofType": {
                           "kind": "INPUT_OBJECT",
-                          "name": "ExtraAttributeInput",
+                          "name": "ExtraAttribute",
                           "ofType": null
                         }
                       }
@@ -18499,7 +18499,7 @@
                         "name": null,
                         "ofType": {
                           "kind": "INPUT_OBJECT",
-                          "name": "ExtraAttributeInput",
+                          "name": "ExtraAttribute",
                           "ofType": null
                         }
                       }

@@ -51,22 +51,18 @@
   description: "License of the product"
   multiple: false
   type: "text"
-  multiline: false
 - name: "technicalDocumentation"
   title: "Technical documentation of the product"
   description: "Technical documentation of the product"
   multiple: false
   type: "url"
-  multiline: false
 - name: "userDocumentation"
   title: "User guide documentation of the product"
   description: "User guide documentation of the product"
   multiple: false
   type: "url"
-  multiline: false
 - name: "repositoryUrl"
   title: "Source code of the product"
   description: "Source code of the product"
   multiple: false
   type: "url"
-  multiline: false

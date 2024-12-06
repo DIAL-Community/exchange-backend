@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module Types
+module Abstract
   module BaseInterface
     include GraphQL::Schema::Interface
 
-    field_class Types::BaseField
+    field_class Abstract::BaseField
   end
 end

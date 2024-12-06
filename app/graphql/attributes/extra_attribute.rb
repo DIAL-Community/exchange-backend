@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-# app/graphql/types/extra_attribute_input_type.rb
-module Types
-  class ExtraAttributeInputType < GraphQL::Schema::InputObject
-    graphql_name 'ExtraAttributeInput'
+
+module Attributes
+  class ExtraAttribute < Abstract::BaseInputObject
+    graphql_name 'ExtraAttribute'
     description 'An extra attribute for a product'
 
     argument :name, String, required: true

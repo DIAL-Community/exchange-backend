@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Types
+module Registry
   class QueryType < Types::BaseObject
     field :handbook, resolver: Queries::HandbookQuery
     field :handbooks, resolver: Queries::HandbooksQuery

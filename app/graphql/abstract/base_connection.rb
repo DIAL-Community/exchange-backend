@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Types
+module Abstract
   class BaseConnection < GraphQL::Types::Relay::BaseConnection
     field :total_count, Integer, null: false
 

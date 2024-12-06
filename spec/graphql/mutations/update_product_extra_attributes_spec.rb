@@ -8,7 +8,7 @@ RSpec.describe(Mutations::UpdateProductExtraAttributes, type: :graphql) do
     <<~GQL
       mutation UpdateProductExtraAttributes (
         $slug: String!
-        $extraAttributes: [ExtraAttributeInput!]!
+        $extraAttributes: [ExtraAttribute!]!
       ) {
         updateProductExtraAttributes (
           slug: $slug

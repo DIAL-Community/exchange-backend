@@ -30,7 +30,11 @@ module Queries
     def resolve
       validate_access_to_resource(CandidateProduct.new)
       extra_attributes = YAML.load_file('data/yaml/candidate-extra-attributes.yml')
-      extra_attributes.each do |extra_attribute|
+      extra_attributes.each_with_index do |extra_attribute, index|
+        # Append index to each extra attribute
+        extra_attribute['index'] = index
+
+        # Sort options if they exist, otherwise update the 'read' attribute
         options = extra_attribute['options']
         next if options.nil?
 
@@ -44,6 +48,8 @@ module Queries
             extra_attribute['options'] = Sector.all.order(:name).pluck(:name)
           when 'read(sustainable-development-goals)'
             extra_attribute['options'] = SustainableDevelopmentGoal.all.order(:number).pluck(:name)
+          when 'read(tags)'
+            extra_attribute['options'] = Tag.all.order(:name).pluck(:name)
           end
         end
       end
