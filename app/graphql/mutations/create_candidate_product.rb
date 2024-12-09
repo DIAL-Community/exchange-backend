@@ -62,12 +62,25 @@ module Mutations
         end
       end
 
+      if candidate_product.name != name
+        candidate_product.slug = reslug_em(name)
+        # Check if we need to add _dup to the slug.
+        first_duplicate = CandidateProduct.slug_simple_starts_with(candidate_product.slug)
+                                          .order(slug: :desc)
+                                          .first
+        unless first_duplicate.nil?
+          candidate_product.slug += generate_offset(first_duplicate)
+        end
+      end
+
       extra_attributes&.each do |attr|
         candidate_product.update_extra_attributes(
           name: attr[:name],
-          type: attr[:type],
           value: attr[:value],
-          index: attr[:index]
+          type: attr[:type],
+          index: attr[:index],
+          title: attr[:title],
+          description: attr[:description]
         )
       end
 

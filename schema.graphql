@@ -975,7 +975,10 @@ type ExportedPdf {
 An extra attribute for a product
 """
 input ExtraAttribute {
+  description: String
+  index: Int
   name: String!
+  title: String
   type: String
   value: JSON!
 }

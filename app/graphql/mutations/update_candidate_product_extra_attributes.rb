@@ -19,7 +19,14 @@ module Mutations
       end
 
       extra_attributes.each do |attr|
-        candidate_product.update_extra_attributes(name: attr[:name], value: attr[:value], type: attr[:type])
+        candidate_product.update_extra_attributes(
+          # Pass the required fields for the extra attribute entry.
+          name: attr[:name],
+          value: attr[:value],
+          # Pass the optional fields for the extra attribute entry.
+          type: attr[:type],
+          index: attr[:index]
+        )
       end
 
       if candidate_product.save
