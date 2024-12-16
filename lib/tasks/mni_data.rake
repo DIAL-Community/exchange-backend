@@ -5,7 +5,7 @@ require 'csv'
 namespace :mni do
   desc 'Import MNI data into database.'
   task import_csv: :environment do
-    mni_table = CSV.parse(File.read('./utils/MNIData.csv'), headers: true)
+    mni_table = CSV.parse(File.read('./data/spreadsheet/MNIData.csv'), headers: true)
     puts "ROWS: #{mni_table.count}"
     aggregators = ['9bitsng', 'Africas Talking', 'BetaSMS', 'Cellulant', 'ClickMobile', 'Comviva', 'engageSpark',
                    'IMImobile', 'InfoBip', 'MTECH', 'SynqAfrica', 'Viamo', 'Vodacom', 'Mobile Accord Inc', 'Axieva']

@@ -621,7 +621,7 @@ module Modules
         rank += 1
       end
 
-      File.open("utils/top_25_languages.yml", "w") do |f|
+      File.open("data/yaml/top-25-languages.yml", "w") do |f|
         f.write(top_25_languages.to_yaml)
       end
 

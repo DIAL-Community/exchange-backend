@@ -26,7 +26,7 @@ module Queries
 
     def resolve
       validate_access_to_resource(ChatbotConversation.new)
-      default_question_answers = YAML.load_file('data/default-chatbot-qa.yml')
+      default_question_answers = YAML.load_file('data/yaml/default-chatbot-qa.yml')
       default_starter_questions = []
       default_question_answers['questions'].each do |default_question_answer|
         default_starter_questions << default_question_answer['question']

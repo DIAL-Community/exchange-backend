@@ -97,14 +97,14 @@ RSpec.configure do |config|
   # Silencing output of the rspec tests. Disabling this as we're changing the output to
   # documentation style.
 
-  config.before(:all, &:supress_puts)
+  config.before(:all, &:suppress_puts)
   config.after(:all,  &:allow_puts)
 end
 
 public
 
 # Redirects stderr and stout to /dev/null.txt
-def supress_puts
+def suppress_puts
   @original_stderr = $stderr
   @original_stdout = $stdout
   $stderr = File.new(File::NULL, 'w')

@@ -13,12 +13,16 @@ module Mutations
     argument :description, String, required: true
     argument :submitter_email, String, required: true
     argument :commercial_product, Boolean, required: false, default_value: false
+    argument :extra_attributes, [Attributes::ExtraAttribute], required: false
     argument :captcha, String, required: true
 
     field :candidate_product, Types::CandidateProductType, null: true
     field :errors, [String], null: true
 
-    def resolve(slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:, captcha:)
+    def resolve(
+      slug:, name:, website:, repository:, description:, submitter_email:, commercial_product:,
+      extra_attributes:, captcha:
+    )
       # Find the correct policy
       candidate_product = CandidateProduct.find_by(slug:)
       if !candidate_product.nil? && !candidate_product.rejected.nil?
@@ -56,6 +60,28 @@ module Mutations
         else
           candidate_product.slug = slug
         end
+      end
+
+      if candidate_product.name != name
+        candidate_product.slug = reslug_em(name)
+        # Check if we need to add _dup to the slug.
+        first_duplicate = CandidateProduct.slug_simple_starts_with(candidate_product.slug)
+                                          .order(slug: :desc)
+                                          .first
+        unless first_duplicate.nil?
+          candidate_product.slug += generate_offset(first_duplicate)
+        end
+      end
+
+      extra_attributes&.each do |attr|
+        candidate_product.update_extra_attributes(
+          name: attr[:name],
+          value: attr[:value],
+          type: attr[:type],
+          index: attr[:index],
+          title: attr[:title],
+          description: attr[:description]
+        )
       end
 
       candidate_product.name = name

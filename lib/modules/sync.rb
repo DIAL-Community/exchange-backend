@@ -732,7 +732,7 @@ module Modules
     end
 
     def read_sector(sector_name, subsector_names, locale)
-      sector_map = File.read('utils/sector_map.json')
+      sector_map = File.read('data/json/sector-map.json')
       sector_json = JSON.parse(sector_map)
 
       sector_array = []
@@ -816,7 +816,7 @@ module Modules
       if !description_entry.blank?
         product_description.description = description_entry
       else
-        yaml_descriptions = YAML.load_file('config/product_description.yml')
+        yaml_descriptions = YAML.load_file('data/yaml/product-description.yml')
         yaml_descriptions['products'].each do |yaml_description|
           if existing_product.slug == yaml_description['slug']
             product_description.description = yaml_description['description']

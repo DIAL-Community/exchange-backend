@@ -20,7 +20,7 @@ module Mutations
     argument :hosting_model, String, required: false, default_value: nil
     argument :gov_stack_entity, Boolean, required: false, default_value: false
     argument :product_stage, String, required: false
-    argument :extra_attributes, [Types::ExtraAttributeInputType], required: false
+    argument :extra_attributes, [Attributes::ExtraAttribute], required: false
     argument :featured, Boolean, required: false, default_value: false
     argument :contact, String, required: false
 
