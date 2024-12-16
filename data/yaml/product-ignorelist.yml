@@ -1,0 +1,211 @@
+  - item: mPowering Frontline Health Worker Initiative
+  - item: Open Source LIS Community of Practice
+  - item: Columbia International eHealth Lab's (CIEL) OpenMRS Concept Dictionary
+  - item: Lorem Ipsum for Digital Health
+  - item: Archive
+  - item: CropPlanning
+  - item: 2019-nCoV Data Repository by Johns Hopkins CSSE
+  - item: 2020PoliceBrutality
+  - item: 5Calls Frontend
+  - item: 5Calls iOS
+  - item: ACCEDA
+  - item: Accessibility-cloud
+  - item: Accessible Kazakhstan
+  - item: ActivityInfo Python
+  - item: Adopt a Drain
+  - item: Alex Atom Linter
+  - item: Alex Sublime Linter
+  - item: Android Guides
+  - item: api.gouv.fr
+  - item: apis
+  - item: Ask
+  - item: Autofocus
+  - item: Bias Correct
+  - item: Blockly
+  - item: Bob Emploi
+  - item: Cactus
+  - item: Carbon Inferno
+  - item: Cboard
+  - item: Census API
+  - item: CGMBLEKit
+  - item: Code For America Brigade Website
+  - item: Common Forms Toolkit
+  - item: Community Health Toolkit
+  - item: Conative Labs
+  - item: Covidbot
+  - item: COVID-19 Emergency Assistance Programs
+  - item: Croquemort
+  - item: cupl NFC sensor platform
+  - item: DataSF
+  - item: Deon
+  - item: Detroit water project
+  - item: Digital Assister for Michigan
+  - item: Dollar Street Pages
+  - item: Ebola Response Platform
+  - item: EduNOSS
+  - item: Energydata.info
+  - item: Energy Web UI
+  - item: Enhanced Traveller Screening
+  - item: Eviction Free NYC
+  - item: Eviction Maps
+  - item: Fedora Linux
+  - item: Feed The Monster
+  - item: Find Training
+  - item: FoodCoops
+  - item: forrmhub
+  - item: GCompris
+  - item: Geolambda
+  - item: Global Power Plant Data-Base
+  - item: Heat Seek WebApp
+  - item: HikmaHealth
+  - item: Inclusion UKR
+  - item: Infagram
+  - item: Intake
+  - item: intern
+  - item: JustFix NYC WebApp
+  - item: Label Maker
+  - item: Landsat Util
+  - item: Leximpact
+  - item: LittleSis Main
+  - item: LittleSis Rails
+  - item: LookingGlass
+  - item: Madison
+  - item: MathShare
+  - item: MeiliSearch
+  - item: Mes Aides - UI
+  - item: Michigan Benefits
+  - item: Mobile Kids Id App
+  - item: Muckrock
+  - item: MusicBlocks
+  - item: New Jersey Career Network
+  - item: Nosdeputes.fr
+  - item: Nova Scotia Self-Assessment Tool
+  - item: OADA Service Docker
+  - item: OED
+  - item: OneBusAway
+  - item: OpenAI Spinning Up
+  - item: Openbudgetoakland
+  - item: Open Demographics
+  - item: OpenFisca France
+  - item: Open Government
+  - item: Open Machine Learning
+  - item: Open ML Python
+  - item: Open MRS Concept Dictionary
+  - item: Open Pantry
+  - item: Operation Code Backend
+  - item: Operation Code Front-End
+  - item: Operation Code Pybot
+  - item: Operation Code Pybot Backend
+  - item: Operation Code Resources
+  - item: Opt-Out
+  - item: Orcanode
+  - item: Otsimo AAC
+  - item: Parliamentary Monitoring Group
+  - item: Participatory Budgeting
+  - item: Pathways Backend
+  - item: PenText
+  - item: Period Dignity Bristol
+  - item: Pixframe
+  - item: PlayTime
+  - item: Power BI React
+  - item: Project Catalog Management Tool
+  - item: Project Sidewalk
+  - item: Quill-NLP-Tools-and-Datasets
+  - item: Rah-e-maa
+  - item: Raster Vision
+  - item: Refuge Restrooms
+  - item: Refuge Restrooms iOS
+  - item: RightOn Application
+  - item: Ripple
+  - item: SAFE Open Source Microfinance Suite
+  - item: Safe Water
+  - item: Sanitation Digital Solutions Platform
+  - item: SleepBus Website
+  - item: Smart KYC
+  - item: Soulmedecine
+  - item: Suzhou Crenator Labs
+  - item: TabPy
+  - item: tagcoding
+  - item: Tenants 2.0 - NYC
+  - item: TypeScript
+  - item: Unpaywall
+  - item: Vessel Classification
+  - item: VoiceApp311
+  - item: Votes for women
+  - item: WattTime Pysio
+  - item: WattTime Python API
+  - item: webpack
+  - item: Wheel Map
+  - item: Wheel Map Frontend
+  - item: Who Owns What - NYC
+  - item: Wikigender
+  - item: World Cleanup Day
+  - item: Zamba
+  - item: ZEPRS
+  # From parent - child relation yml file
+  - name: AskDarcel API
+  - name: Aster - Emergency Scoring
+  - name: Aster - Stream
+  - name: Avni Client  
+  - name: Awareness Website
+  - name: Bot Starter Kit
+  - name: Emergency Relief Package Tracker
+  - name: Heroes Bot
+  - name: Housing Vacancy Bot
+  - name: Internal Dashboard
+  - name: Surveillance Forms
+  - name: Child Growth Monitor Machine Learning
+  - name: CommCare Android
+  - name: CommCare Cloud
+  - name: Enketo Express
+  - name: HospitalRun Frontend
+  - name: HospitalRun Server Routes
+  - name: InteleHealth OpenMRS UI
+  - name: Formpack
+  - name: KoboCat
+  - name: Kobo API
+  - name: LibreHealth Toolkit
+  - name: Mapswipe Backend
+  - name: Mifos Community App
+  - name: Mifos Android
+  - name: Mifos Mobile
+  - name: Mifos Web App
+  - name: Open Foris Collect Mobile
+  - name: Reconcile CVS
+  - name: OpenBCI GUI
+  - name: Export Tool
+  - name: Learn OSM
+  - name: Nominatim
+  - name: Open Street Map iD
+  - name: Open Street Map Website
+  - name: osm2pgsql
+  - name: OSM Analytics
+  - name: ODK Aggregate
+  - name: ODK Briefcase 
+  - name: ODK Build
+  - name: ODK Collect
+  - name: ODK XLS Form Offline
+  - name: ODK-X Survey
+  - name: Open Food Facts iOS 
+  - name: Open Food Facts Server
+  - name: OpenMRS Android Client
+  - name: OpenMRS Core
+  - name: OpenMRS Concept Dictionary
+  - name: Oppia Machine Learning
+  - name: PublicLab Plots2
+  - name: Rainforest Connection Guardian
+  - name: Scratch Blocks
+  - name: Scratch GUI
+  - name: Scratch Junior
+  - name: Scratch VM
+  - name: Scratch Web
+  - name: Spatio-Temporal Asset Catalog Specifications
+  - name: StopCovid iOS
+  - name: Sugarizer
+  - name: Sugar - Turtle Art
+  - name: TideLine
+  - name: TidePool Blip
+  - name: TidePool Chrome Uploader
+  - name: TidePool Data Analytics
+  - name: TidePool Viz
+  - name: Ushahidi Platform Client

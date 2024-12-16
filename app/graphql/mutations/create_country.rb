@@ -36,7 +36,7 @@ module Mutations
       end
 
       # Read our country lookup YAML file. The file will have the 3 alphas country code.
-      country_lookup_data = YAML.load_file('config/country_lookup.yml')
+      country_lookup_data = YAML.load_file('data/yaml/country-lookup.yml')
 
       google_auth_key = Rails.application.secrets.google_api_key
       country_data = JSON.parse(geocode_with_google(name, name, google_auth_key))

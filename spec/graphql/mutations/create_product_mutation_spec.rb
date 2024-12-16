@@ -12,7 +12,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $description: String!,
         $govStackEntity: Boolean,
         $productStage: String,
-        $extraAttributes: [ExtraAttributeInput!],
+        $extraAttributes: [ExtraAttribute!],
         $featured: Boolean,
         $contact: String
       ) {

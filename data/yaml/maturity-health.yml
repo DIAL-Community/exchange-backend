@@ -1,0 +1,77 @@
+- category: Interoperability
+  descriptions: Does the platform allow for integration with other health systems
+  indicators:
+    - name: Data import/export using FHIR
+      type: boolean
+    - name: Integration with national health systems
+      type: boolean
+    - name: Has open API for integration
+      type: boolean
+- category: Software Development Practices
+  description: Is the software secure, adhere to privacy standards, and is it regularly maintained
+  indicators:
+    - name: Has a privacy policy
+      type: boolean
+    - name: PII and PHI are encrypted at storage and in API calls
+      type: boolean
+    - name: Offers scalable deployment mechanisms
+      description: Can be deployed using docker, kubernetes or similar tools
+      type: boolean
+    - name: Active developers
+      type: scale
+      low:
+        - operator: lessThan
+          value: 1
+      medium:
+        - operator: greaterThan
+          value: 0
+        - operator: lessThan
+          value: 4
+      high:
+        - operator: greaterThan
+          value: 3
+    - name: Releases
+      type: scale
+      low:
+        - operator: equalTo
+          value: 0
+      medium:
+        - operator: greaterThan
+          value: 0
+        - operator: lessThan
+          value: 3
+      high:
+        - operator: greaterThan
+          value: 2
+    - name: Audit logging and error reporting
+      description: Has mechanisms for tracking errors and user issues
+      type: boolean
+    - name: Secure authorization mechanisms
+      description: Uses OIDC or similar protocols to control access to the platform
+      type: boolean
+- category: Usability
+  description: Is the software easy to use in different environments and user groups
+  indicators:
+    - name: Offline/low-bandwidth functionality
+      description: The platform is designed to work in offline or low-bandwidth conditions
+      type: boolean
+    - name: Customizable fields and forms
+      description: Offers ability for users/admins to customize and configure forms and data
+      type: boolean
+    - name: Internationalization
+      description: Can display information in multiple languages
+      type: boolean
+    - name: Accessibility
+      description: Score from an accessibility screening tool - ensuring that people with various disabilities can use the platform
+      type: scale
+      low:
+        - operator: lessThan
+          value: 70
+      medium:
+        - operator: greaterThan
+          value: 70
+        - operator: lessThan
+          value: 90
+      high:
+        - operator: greaterThan
+          value: 90

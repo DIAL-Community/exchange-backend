@@ -300,7 +300,7 @@ namespace :resource_sync do
       'Technical Insights'
     ]
 
-    workbook = Roo::Spreadsheet.open('./data/DPI Readings.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/DPI-Readings.xlsx')
     workbook.default_sheet = 'List 2'
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }

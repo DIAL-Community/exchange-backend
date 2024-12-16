@@ -3,7 +3,7 @@
 namespace :tenants do
   desc 'Create a new tenant'
   task :create_tenant, [:path] => :environment do |_, _|
-    tenant_file = YAML.load_file('config/tenants.yml')
+    tenant_file = YAML.load_file('data/yaml/tenants.yml')
     tenant_file['tenants'].each do |tenant|
       # check to see if tenant exists already
       existing_tenant = ExchangeTenant.find_by(tenant_name: tenant['name'])
@@ -23,7 +23,7 @@ namespace :tenants do
   end
 
   task :populate_core_data, [:path] => :environment do |_, _|
-    tenant_file = YAML.load_file('config/tenants.yml')
+    tenant_file = YAML.load_file('data/yaml/tenants.yml')
     tenant_file['tenants'].each do |tenant|
       tenant_name = tenant['name']
 
