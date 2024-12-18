@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/BlockNesting
 # rubocop:disable Style/ClassVars
 
 # TODO: Revisit this module to reduce the if nesting.
@@ -97,15 +96,11 @@ module Modules
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
 
-            unless existing_dataset.id.nil?
-              dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
-                dataset_id: existing_dataset.id,
-                sustainable_development_goal_id: sdg.id
-              )
-              next unless dataset_sdg.nil?
-            end
-
-            dataset_sdg = DatasetSustainableDevelopmentGoal.new
+            dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
+              dataset_id: existing_dataset.id,
+              sustainable_development_goal_id: sdg.id
+            )
+            dataset_sdg = DatasetSustainableDevelopmentGoal.new if dataset_sdg.nil?
             dataset_sdg.sustainable_development_goal_id = sdg.id
             dataset_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
@@ -119,16 +114,13 @@ module Modules
             organization = Organization.find_by(name: organization_entry['name'])
             next if organization.nil?
 
-            unless is_new
-              organization_dataset = OrganizationDataset.find_by(
-                dataset_id: existing_dataset.id,
-                organization_id: organization.id,
-                organization_type: organization_entry['org_type']
-              )
-              next unless organization_dataset.nil?
-            end
+            organization_dataset = OrganizationDataset.find_by(
+              dataset_id: existing_dataset.id,
+              organization_id: organization.id,
+              organization_type: organization_entry['org_type']
+            )
 
-            organization_dataset = OrganizationDataset.new
+            organization_dataset = OrganizationDataset.new if organization_dataset.nil?
             organization_dataset.organization_id = organization.id
             organization_dataset.organization_type = organization_entry['org_type']
 
@@ -221,15 +213,12 @@ module Modules
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
 
-            unless existing_product.id.nil?
-              product_sdg = ProductSustainableDevelopmentGoal.find_by(
-                product_id: existing_product.id,
-                sustainable_development_goal_id: sdg.id
-              )
-              next unless product_sdg.nil?
-            end
+            product_sdg = ProductSustainableDevelopmentGoal.find_by(
+              product_id: existing_product.id,
+              sustainable_development_goal_id: sdg.id
+            )
 
-            product_sdg = ProductSustainableDevelopmentGoal.new
+            product_sdg = ProductSustainableDevelopmentGoal.new if product_sdg.nil?
             product_sdg.sustainable_development_goal_id = sdg.id
             product_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
@@ -556,7 +545,7 @@ module Modules
             organization.save
 
             organization_product = OrganizationProduct.new
-            organization_product.org_type = organization['org_type']
+            organization_product.organization_type = organization['org_type']
             organization_product.organization_id = organization.id
             organization_product.product_id = existing_product.id
             organization_product.save
@@ -570,7 +559,7 @@ module Modules
 
           puts "  Adding organization to product: #{organization.name}."
           organization_product = OrganizationProduct.new
-          organization_product.org_type = organization['org_type']
+          organization_product.organization_type = organization['org_type']
           organization_product.organization_id = organization.id
           organization_product.product_id = existing_product.id
           organization_product.save
@@ -652,7 +641,7 @@ module Modules
 
       if !implementer_organizations.empty? && !existing_project.organizations.include?(implementer_organizations.first)
         project_organization = ProjectOrganization.new
-        project_organization.org_type = 'implementer'
+        project_organization.organization_type = 'implementer'
         project_organization.project_id = existing_project.id
         project_organization.organization_id = implementer_organizations.first.id
         project_organization.save
@@ -743,7 +732,7 @@ module Modules
     end
 
     def read_sector(sector_name, subsector_names, locale)
-      sector_map = File.read('utils/sector_map.json')
+      sector_map = File.read('data/json/sector-map.json')
       sector_json = JSON.parse(sector_map)
 
       sector_array = []
@@ -827,7 +816,7 @@ module Modules
       if !description_entry.blank?
         product_description.description = description_entry
       else
-        yaml_descriptions = YAML.load_file('config/product_description.yml')
+        yaml_descriptions = YAML.load_file('data/yaml/product-description.yml')
         yaml_descriptions['products'].each do |yaml_description|
           if existing_product.slug == yaml_description['slug']
             product_description.description = yaml_description['description']
@@ -912,4 +901,3 @@ module Modules
   end
 end
 # rubocop:enable Style/ClassVars
-# rubocop:enable Metrics/BlockNesting

@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      resource = Resource.find_by(id:)
+      resource_policy = Pundit.policy(context[:current_user], resource || Resource.new)
+      if resource.nil? || !resource_policy.delete_allowed?
         return {
           resource: nil,
-          errors: ['Must be admin to delete a resource.']
+          errors: ['Deleting resource is not allowed.']
         }
       end
 
-      resource = Resource.find_by(id:)
       assign_auditable_user(resource)
       if resource.destroy
         # Successful deletion, return the deleted resource with no errors

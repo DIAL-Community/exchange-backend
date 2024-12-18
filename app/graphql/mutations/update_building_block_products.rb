@@ -2,22 +2,22 @@
 
 module Mutations
   class UpdateBuildingBlockProducts < Mutations::BaseMutation
+    argument :slug, String, required: true
     argument :product_slugs, [String], required: true
     argument :mapping_status, String, required: true
-    argument :slug, String, required: true
 
     field :building_block, Types::BuildingBlockType, null: true
     field :errors, [String], null: true
 
-    def resolve(product_slugs:, slug:, mapping_status:)
-      unless an_admin || a_content_editor
+    def resolve(slug:, product_slugs:, mapping_status:)
+      building_block = BuildingBlock.find_by(slug:) unless slug.blank?
+      building_block_policy = Pundit.policy(context[:current_user], building_block || BuildingBlock.new)
+      unless building_block_policy.edit_allowed?
         return {
           building_block: nil,
-          errors: ['Must be admin or content editor to update building block']
+          errors: ['Editing building block is not allowed.']
         }
       end
-
-      building_block = BuildingBlock.find_by(slug:)
 
       successful_operation = false
       ActiveRecord::Base.transaction do

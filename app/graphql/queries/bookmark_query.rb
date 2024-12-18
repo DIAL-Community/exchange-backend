@@ -8,7 +8,8 @@ module Queries
 
     def resolve(id:)
       current_user = context[:current_user]
-      return current_user if current_user.id.to_i == id.to_i
+      validate_access_to_resource(current_user)
+      current_user if current_user.id.to_i == id.to_i
     end
   end
 end

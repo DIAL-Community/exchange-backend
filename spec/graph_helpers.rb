@@ -12,7 +12,9 @@ module GraphHelpers
   def execute_graphql(query, **kwargs)
     RegistrySchema.execute(
       query,
-      context: { controller: },
+      context: {
+        operation_context: kwargs[:operation_context] || VIEWING_CONTEXT
+      },
       variables: kwargs[:variables]
     )
   end
@@ -20,7 +22,11 @@ module GraphHelpers
   def execute_graphql_as_user(user, query, **kwargs)
     RegistrySchema.execute(
       query,
-      context: { controller:, current_user: user },
+      context: {
+        current_user: user,
+        operation_name: kwargs[:operation_name],
+        operation_context: kwargs[:operation_context] || VIEWING_CONTEXT
+      },
       variables: kwargs[:variables]
     )
   end

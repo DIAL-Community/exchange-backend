@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      workflow = Workflow.find_by(id:)
+      workflow_policy = Pundit.policy(context[:current_user], workflow || Workflow.new)
+      if workflow.nil? || !workflow_policy.delete_allowed?
         return {
           workflow: nil,
-          errors: ['Must be admin to delete a workflow.']
+          errors: ['Deleting workflow is not allowed.']
         }
       end
 
-      workflow = Workflow.find_by(id:)
       assign_auditable_user(workflow)
       if workflow.destroy
         # Successful deletion, return the deleted workflow with no errors

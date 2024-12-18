@@ -84,10 +84,9 @@ RSpec.describe(Mutations::UpdateOpportunityBuildingBlocks, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateOpportunityBuildingBlocks']['opportunity'])
-        .to(eq(nil))
+      expect(result['data']['updateOpportunityBuildingBlocks']['opportunity']).to(eq(nil))
       expect(result['data']['updateOpportunityBuildingBlocks']['errors'])
-        .to(eq(['Must have proper rights to update an opportunity']))
+        .to(eq(['Editing opportunity is not allowed.']))
     end
   end
 end

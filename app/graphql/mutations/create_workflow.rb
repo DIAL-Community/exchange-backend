@@ -15,26 +15,33 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:, image_file: nil)
-      unless an_admin || a_content_editor
+      workflow = Workflow.find_by(slug:)
+      workflow_policy = Pundit.policy(context[:current_user], workflow || Workflow.new)
+
+      if workflow.nil? && !workflow_policy.create_allowed?
         return {
           workflow: nil,
-          errors: ['Must be admin or content editor to create workflow']
+          errors: ['Creating / editing workflow is not allowed.']
         }
       end
 
-      workflow = Workflow.find_by(slug:)
+      if !workflow.nil? && !workflow_policy.edit_allowed?
+        return {
+          workflow: nil,
+          errors: ['Creating / editing workflow is not allowed.']
+        }
+      end
+
       if workflow.nil?
-        workflow = Workflow.new(name:)
         slug = reslug_em(name)
+        workflow = Workflow.new(name:, slug:)
 
         # Check if we need to add _dup to the slug.
         first_duplicate = Workflow.slug_simple_starts_with(slug)
                                   .order(slug: :desc)
                                   .first
-        if !first_duplicate.nil?
-          workflow.slug = slug + generate_offset(first_duplicate)
-        else
-          workflow.slug = slug
+        unless first_duplicate.nil?
+          workflow.slug += generate_offset(first_duplicate)
         end
       end
 

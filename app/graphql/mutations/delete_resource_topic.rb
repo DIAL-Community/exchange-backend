@@ -8,20 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      resource_topic = ResourceTopic.find_by(id:)
+      resource_topic_policy = Pundit.policy(context[:current_user], resource_topic || ResourceTopic.new)
+      if resource_topic.nil? || !resource_topic_policy.delete_allowed?
         return {
           resource_topic: nil,
-          errors: ['Must be admin to delete a resource topic.']
+          errors: ['Deleting resource topic is not allowed.']
         }
       end
 
-      resource_topic = ResourceTopic.find_by(id:)
-      if resource_topic.nil?
-        return {
-          resource_topic: nil,
-          errors: ['Unable to uniquely identify resource topic to delete.']
-        }
-      end
       assign_auditable_user(resource_topic)
 
       successful_operation = false

@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(organization_slugs:, slug:)
       project = Project.find_by(slug:)
-
-      unless an_admin || org_owner_check(organization_slugs) || product_owner_check(project)
+      project_policy = Pundit.policy(context[:current_user], project || Project.new)
+      if project.nil? || !project_policy.edit_allowed?
         return {
           project: nil,
-          errors: ['Must have proper rights to update a project']
+          errors: ['Editing project is not allowed.']
         }
       end
 

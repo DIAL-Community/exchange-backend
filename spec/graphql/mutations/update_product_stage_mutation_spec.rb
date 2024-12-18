@@ -30,9 +30,10 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
 
   context 'when mutation is called' do
     it 'successfully executes the mutation and returns a message' do
-      expect_any_instance_of(Mutations::UpdateProductStage).to(receive(:an_admin).and_return(true))
+      admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-      result = execute_graphql(
+      result = execute_graphql_as_user(
+        admin_user,
         mutation,
         variables: { productStage: 'pilot', slug: product.slug },
       )
@@ -48,9 +49,10 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
     end
 
     it 'returns an error when an invalid product stage is provided' do
-      expect_any_instance_of(Mutations::UpdateProductStage).to(receive(:an_admin).and_return(true))
+      admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-      result = execute_graphql(
+      result = execute_graphql_as_user(
+        admin_user,
         mutation,
         variables: { productStage: 'fsafasf', slug: product.slug },
       )
@@ -59,15 +61,16 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
         expect(result).not_to(be_nil)
         expect(result['data']).not_to(be_nil)
         expect(result['data']['updateProductStage']['product']).to(be_nil)
-        expect(result['data']['updateProductStage']['errors']).to(include('Invalid product stage'))
+        expect(result['data']['updateProductStage']['errors']).to(include('Invalid product stage.'))
         expect(result['data']['updateProductStage']['message']).to(be_nil)
       end
     end
 
     it 'returns an error when the user is not an admin' do
-      expect_any_instance_of(Mutations::UpdateProductStage).to(receive(:an_admin).and_return(false))
+      user = create(:user, email: 'user@gmail.com', roles: ['user'])
 
-      result = execute_graphql(
+      result = execute_graphql_as_user(
+        user,
         mutation,
         variables: { productStage: 'pilot', slug: product.slug },
       )
@@ -76,15 +79,16 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
         expect(result).not_to(be_nil)
         expect(result['data']).not_to(be_nil)
         expect(result['data']['updateProductStage']['product']).to(be_nil)
-        expect(result['data']['updateProductStage']['errors']).to(include('Must be admin to update a product stage.'))
+        expect(result['data']['updateProductStage']['errors']).to(include('Editing product is not allowed.'))
         expect(result['data']['updateProductStage']['message']).to(be_nil)
       end
     end
 
     it 'returns an error when the product is not found' do
-      expect_any_instance_of(Mutations::UpdateProductStage).to(receive(:an_admin).and_return(true))
+      admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-      result = execute_graphql(
+      result = execute_graphql_as_user(
+        admin_user,
         mutation,
         variables: { productStage: 'production', slug: 'non-existent-slug' },
       )
@@ -93,7 +97,7 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
         expect(result).not_to(be_nil)
         expect(result['data']).not_to(be_nil)
         expect(result['data']['updateProductStage']['product']).to(be_nil)
-        expect(result['data']['updateProductStage']['errors']).to(include('Product not found.'))
+        expect(result['data']['updateProductStage']['errors']).to(include('Editing product is not allowed.'))
         expect(result['data']['updateProductStage']['message']).to(be_nil)
       end
     end
@@ -109,7 +113,7 @@ RSpec.describe(Mutations::UpdateProductStage, type: :graphql) do
         expect(result).not_to(be_nil)
         expect(result['data']).not_to(be_nil)
         expect(result['data']['updateProductStage']['product']).to(be_nil)
-        expect(result['data']['updateProductStage']['errors']).to(include('Must be admin to update a product stage.'))
+        expect(result['data']['updateProductStage']['errors']).to(include('Editing product is not allowed.'))
         expect(result['data']['updateProductStage']['message']).to(be_nil)
       end
     end

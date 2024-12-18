@@ -7,9 +7,8 @@ module Paginated
     type [Types::CountryType], null: false
 
     def resolve(search:, offset_attributes:)
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return []
-      end
+      # Validate access to the current entity type.
+      validate_access_to_resource(Country.new)
 
       countries = Country.order(:name)
       unless search.blank?

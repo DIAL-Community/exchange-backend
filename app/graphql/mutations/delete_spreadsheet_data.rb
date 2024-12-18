@@ -16,15 +16,16 @@ module Mutations
     PRICING_FIELDS = ['assoc-name', 'hostingModel', 'pricingModel', 'pricingDetails', 'pricingDatetime', 'pricingUrl']
 
     def resolve(spreadsheet_data:, spreadsheet_type:, assoc:)
-      unless an_admin
-        return {
-          dial_spreadsheet_data: nil,
-          errors: ['Not allowed to create a spreadsheet data.']
-        }
-      end
-
       slug = reslug_em(spreadsheet_data['name'])
       existing_data = DialSpreadsheetData.find_by(slug:, spreadsheet_type:)
+
+      spreadsheet_policy = Pundit.policy(context[:current_user], existing_data || DialSpreadsheetData.new)
+      if existing_data.nil? || !spreadsheet_policy.delete_allowed?
+        return {
+          dial_spreadsheet_data: nil,
+          errors: ['Deleting spreadsheet data is not allowed.']
+        }
+      end
 
       case assoc
       when 'productPricing'

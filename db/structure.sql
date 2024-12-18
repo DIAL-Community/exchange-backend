@@ -110,28 +110,36 @@ CREATE TYPE public.category_type AS ENUM (
 --
 
 CREATE TYPE public.comment_object_type AS ENUM (
-    'PRODUCT',
-    'OPEN_DATA',
-    'PROJECT',
-    'USE_CASE',
     'BUILDING_BLOCK',
-    'PLAYBOOK',
-    'ORGANIZATION',
+    'OPEN_DATA',
+    'PRODUCT',
+    'PROJECT',
     'OPPORTUNITY',
+    'ORGANIZATION',
+    'USE_CASE',
+    'WORKFLOW',
+    'MOVE',
+    'PLAY',
+    'PLAYBOOK',
+    'RUBRIC_CATEGORY',
+    'CATEGORY_INDICATOR',
     'CANDIDATE_OPEN_DATA',
     'CANDIDATE_ORGANIZATION',
     'CANDIDATE_PRODUCT',
+    'CANDIDATE_RESOURCE',
     'CANDIDATE_ROLE',
     'TAG',
     'SECTOR',
-    'COUNTRY',
     'CITY',
+    'COUNTRY',
+    'REGION',
+    'TASK',
+    'USER',
     'CONTACT',
     'RESOURCE',
-    'PLAY',
+    'RESOURCE_TOPIC',
     'SITE_SETTING',
-    'TENANT_SETTING',
-    'CANDIDATE_RESOURCE'
+    'TENANT_SETTING'
 );
 
 
@@ -169,23 +177,6 @@ CREATE TYPE public.entity_status_type AS ENUM (
     'VALIDATED',
     'PUBLISHED',
     'DRAFT'
-);
-
-
---
--- Name: filter_nav; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.filter_nav AS ENUM (
-    'sdgs',
-    'use_cases',
-    'workflows',
-    'building_blocks',
-    'products',
-    'projects',
-    'locations',
-    'sectors',
-    'organizations'
 );
 
 
@@ -256,35 +247,14 @@ CREATE TYPE public.opportunity_type_type AS ENUM (
 
 
 --
--- Name: org_type; Type: TYPE; Schema: public; Owner: -
+-- Name: organization_type; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.org_type AS ENUM (
+CREATE TYPE public.organization_type AS ENUM (
     'owner',
     'maintainer',
     'funder',
     'implementer'
-);
-
-
---
--- Name: org_type_orig; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.org_type_orig AS ENUM (
-    'owner',
-    'maintainer'
-);
-
-
---
--- Name: org_type_save; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.org_type_save AS ENUM (
-    'owner',
-    'maintainer',
-    'funder'
 );
 
 
@@ -300,37 +270,12 @@ CREATE TYPE public.product_type AS ENUM (
 
 
 --
--- Name: product_type_save; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.product_type_save AS ENUM (
-    'product',
-    'dataset'
-);
-
-
---
 -- Name: relationship_type; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.relationship_type AS ENUM (
     'composed',
     'interoperates'
-);
-
-
---
--- Name: top_nav; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.top_nav AS ENUM (
-    'sdgs',
-    'use_cases',
-    'workflows',
-    'building_blocks',
-    'products',
-    'projects',
-    'organizations'
 );
 
 
@@ -343,15 +288,15 @@ CREATE TYPE public.user_role AS ENUM (
     'ict4sdg',
     'principle',
     'user',
-    'org_user',
-    'org_product_user',
-    'product_user',
+    'organization_owner',
+    'product_owner',
     'mni',
     'content_writer',
     'content_editor',
     'dataset_user',
     'adli_admin',
-    'adli_user'
+    'adli_user',
+    'candidate_editor'
 );
 
 
@@ -694,7 +639,8 @@ CREATE TABLE public.candidate_products (
     description character varying,
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
-    maturity_score jsonb DEFAULT '{}'::jsonb
+    maturity_score jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb
 );
 
 
@@ -1615,7 +1561,7 @@ CREATE TABLE public.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecure_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL
 );
 
 
@@ -2118,7 +2064,7 @@ CREATE TABLE public.organization_datasets (
     id bigint NOT NULL,
     organization_id bigint NOT NULL,
     dataset_id bigint NOT NULL,
-    organization_type public.org_type DEFAULT 'owner'::public.org_type NOT NULL,
+    organization_type public.organization_type DEFAULT 'owner'::public.organization_type NOT NULL,
     slug character varying NOT NULL
 );
 
@@ -2184,7 +2130,7 @@ CREATE TABLE public.organization_products (
     product_id bigint NOT NULL,
     id bigint NOT NULL,
     slug character varying NOT NULL,
-    org_type public.org_type DEFAULT 'owner'::public.org_type
+    organization_type public.organization_type DEFAULT 'owner'::public.organization_type
 );
 
 
@@ -2733,76 +2679,6 @@ ALTER SEQUENCE public.plays_products_id_seq OWNED BY public.plays_products.id;
 
 
 --
--- Name: plays_subplays; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.plays_subplays (
-    id bigint NOT NULL,
-    parent_play_id bigint NOT NULL,
-    child_play_id bigint NOT NULL,
-    "order" integer
-);
-
-
---
--- Name: plays_subplays_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.plays_subplays_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: plays_subplays_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.plays_subplays_id_seq OWNED BY public.plays_subplays.id;
-
-
---
--- Name: portal_views; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.portal_views (
-    id bigint NOT NULL,
-    name character varying NOT NULL,
-    slug character varying NOT NULL,
-    description character varying NOT NULL,
-    top_navs character varying[] DEFAULT '{}'::character varying[],
-    filter_navs character varying[] DEFAULT '{}'::character varying[],
-    user_roles character varying[] DEFAULT '{}'::character varying[],
-    product_views character varying[] DEFAULT '{}'::character varying[],
-    organization_views character varying[] DEFAULT '{}'::character varying[],
-    subdomain character varying,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: portal_views_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.portal_views_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: portal_views_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.portal_views_id_seq OWNED BY public.portal_views.id;
-
-
---
 -- Name: principle_descriptions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3142,7 +3018,7 @@ CREATE TABLE public.products (
     aliases character varying[] DEFAULT '{}'::character varying[],
     tags character varying[] DEFAULT '{}'::character varying[],
     maturity_score jsonb,
-    product_type public.product_type_save DEFAULT 'product'::public.product_type_save,
+    product_type public.product_type DEFAULT 'product'::public.product_type,
     manual_update boolean DEFAULT false,
     commercial_product boolean DEFAULT false,
     pricing_model character varying,
@@ -3397,7 +3273,7 @@ ALTER SEQUENCE public.projects_id_seq OWNED BY public.projects.id;
 CREATE TABLE public.projects_organizations (
     project_id bigint NOT NULL,
     organization_id bigint NOT NULL,
-    org_type public.org_type DEFAULT 'owner'::public.org_type,
+    organization_type public.organization_type DEFAULT 'owner'::public.organization_type,
     featured_project boolean DEFAULT false NOT NULL
 );
 
@@ -4094,39 +3970,6 @@ CREATE SEQUENCE public.starred_objects_id_seq
 --
 
 ALTER SEQUENCE public.starred_objects_id_seq OWNED BY public.starred_objects.id;
-
-
---
--- Name: stylesheets; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.stylesheets (
-    id bigint NOT NULL,
-    portal character varying,
-    background_color character varying,
-    about_page character varying DEFAULT ''::character varying NOT NULL,
-    footer_content character varying DEFAULT ''::character varying NOT NULL,
-    header_logo character varying
-);
-
-
---
--- Name: stylesheets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.stylesheets_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: stylesheets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.stylesheets_id_seq OWNED BY public.stylesheets.id;
 
 
 --
@@ -5270,20 +5113,6 @@ ALTER TABLE ONLY public.plays_products ALTER COLUMN id SET DEFAULT nextval('publ
 
 
 --
--- Name: plays_subplays id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.plays_subplays ALTER COLUMN id SET DEFAULT nextval('public.plays_subplays_id_seq'::regclass);
-
-
---
--- Name: portal_views id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.portal_views ALTER COLUMN id SET DEFAULT nextval('public.portal_views_id_seq'::regclass);
-
-
---
 -- Name: principle_descriptions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -5519,13 +5348,6 @@ ALTER TABLE ONLY public.software_features ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.starred_objects ALTER COLUMN id SET DEFAULT nextval('public.starred_objects_id_seq'::regclass);
-
-
---
--- Name: stylesheets id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.stylesheets ALTER COLUMN id SET DEFAULT nextval('public.stylesheets_id_seq'::regclass);
 
 
 --
@@ -6190,22 +6012,6 @@ ALTER TABLE ONLY public.plays_products
 
 
 --
--- Name: plays_subplays plays_subplays_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.plays_subplays
-    ADD CONSTRAINT plays_subplays_pkey PRIMARY KEY (id);
-
-
---
--- Name: portal_views portal_views_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.portal_views
-    ADD CONSTRAINT portal_views_pkey PRIMARY KEY (id);
-
-
---
 -- Name: principle_descriptions principle_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6483,14 +6289,6 @@ ALTER TABLE ONLY public.software_features
 
 ALTER TABLE ONLY public.starred_objects
     ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
-
-
---
--- Name: stylesheets stylesheets_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.stylesheets
-    ADD CONSTRAINT stylesheets_pkey PRIMARY KEY (id);
 
 
 --
@@ -7857,13 +7655,6 @@ CREATE UNIQUE INDEX origins_products_idx ON public.products_origins USING btree 
 
 
 --
--- Name: play_rel_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX play_rel_index ON public.plays_subplays USING btree (parent_play_id, child_play_id);
-
-
---
 -- Name: playbooks_sectors_idx; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -8179,14 +7970,6 @@ ALTER TABLE ONLY public.candidate_status_relationships
 
 ALTER TABLE ONLY public.candidate_status_relationships
     ADD CONSTRAINT candidate_status_relationships_next_candidate_status_fk FOREIGN KEY (next_candidate_status_id) REFERENCES public.candidate_statuses(id);
-
-
---
--- Name: plays_subplays child_play_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.plays_subplays
-    ADD CONSTRAINT child_play_fk FOREIGN KEY (child_play_id) REFERENCES public.plays(id);
 
 
 --
@@ -9158,14 +8941,6 @@ ALTER TABLE ONLY public.organizations_sectors
 
 
 --
--- Name: plays_subplays parent_play_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.plays_subplays
-    ADD CONSTRAINT parent_play_fk FOREIGN KEY (parent_play_id) REFERENCES public.plays(id);
-
-
---
 -- Name: playbooks_sectors playbooks_sectors_playbook_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -9755,6 +9530,14 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241009120008'),
 ('20241009223605'),
 ('20241010210154'),
-('20241013113520');
+('20241013113520'),
+('20241017202436'),
+('20241017203838'),
+('20241017205222'),
+('20241017210146'),
+('20241017211746'),
+('20241020121626'),
+('20241024120711'),
+('20241204135707');
 
 

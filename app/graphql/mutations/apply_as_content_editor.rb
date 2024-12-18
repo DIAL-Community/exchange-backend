@@ -10,7 +10,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve
-      if context[:current_user].nil?
+      # Find the correct policy
+      candidate_role_policy = Pundit.policy(context[:current_user], CandidateRole.new)
+      unless candidate_role_policy.create_allowed?
         return {
           candidate_role: nil,
           errors: ['Must be logged in to apply as content editor.']

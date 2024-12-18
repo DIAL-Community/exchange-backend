@@ -7,19 +7,36 @@ class ContactPolicy < ApplicationPolicy
     super(user, record)
   end
 
-  def mod_allowed?
+  def available?
+    true
+  end
+
+  def create_allowed?
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:principle]) ||
-      user.roles.include?(User.user_roles[:mni])
+      user.roles.include?(User.user_roles[:adli_admin])
+  end
+
+  def edit_allowed?
+    return false if user.nil?
+    return true if user.email == record.email
+
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:adli_admin])
+  end
+
+  def delete_allowed?
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
   end
 
   def view_allowed?
     return false if user.nil?
+    return true if user.email == record.email
 
     user.roles.include?(User.user_roles[:admin]) ||
-      user.roles.include?(User.user_roles[:principle]) ||
-      user.roles.include?(User.user_roles[:mni])
+      user.roles.include?(User.user_roles[:adli_admin])
   end
 end

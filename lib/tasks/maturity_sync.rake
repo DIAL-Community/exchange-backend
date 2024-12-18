@@ -149,7 +149,7 @@ namespace :maturity_sync do
   end
 
   task :sync_legacy, [:path] => :environment do |_, _params|
-    digisquare_maturity = YAML.load_file('config/maturity_digisquare.yml')
+    digisquare_maturity = YAML.load_file('data/yaml/maturity-digisquare.yml')
     digisquare_maturity.each do |digi_category|
       rubric_category = create_category(digi_category['core'])
 
@@ -161,7 +161,7 @@ namespace :maturity_sync do
       end
     end
 
-    osc_maturity = YAML.load_file('config/maturity_osc.yml')
+    osc_maturity = YAML.load_file('data/yaml/maturity-osc.yml')
     osc_maturity.each do |osc_category|
       rubric_category = create_category(osc_category['header'])
 
@@ -183,7 +183,7 @@ namespace :maturity_sync do
       puts "Updating score for: #{product.name}."
       tracking_task_log(task_name, "Updating score for: #{product.name}.")
       calculate_maturity_scores(product.id)
-      calculate_product_indicators(product.id, 'config/indicator_config.yml')
+      calculate_product_indicators(product.id, 'data/yaml/indicator-config.yml')
     end
 
     tracking_task_finish(task_name)
@@ -198,7 +198,7 @@ namespace :maturity_sync do
       puts "Updating score for: #{product.name}."
       tracking_task_log(task_name, "Updating score for: #{product.name}.")
       calculate_maturity_scores(product.id)
-      calculate_product_indicators(product.id, 'config/maturity_health.yml')
+      calculate_product_indicators(product.id, 'data/yaml/maturity-health.yml')
     end
 
     tracking_task_finish(task_name)
@@ -248,8 +248,8 @@ namespace :maturity_sync do
     tracking_task_setup(task_name, 'Preparing task tracker record.')
     tracking_task_start(task_name)
 
-    lang_file = YAML.load_file('utils/top_25_languages.yml')
-    config_file = YAML.load_file('config/indicator_config.yml')
+    lang_file = YAML.load_file('data/yaml/top-25-languages.yml')
+    config_file = YAML.load_file('data/yaml/indicator-config.yml')
 
     Product.all.each do |product|
       tracking_task_log(task_name, "Updating indicator for: #{product.name}.")

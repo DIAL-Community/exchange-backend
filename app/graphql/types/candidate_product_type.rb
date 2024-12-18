@@ -15,6 +15,11 @@ module Types
       end
     end
 
+    field :extra_attributes, [GraphQL::Types::JSON], null: true
+    def extra_attributes
+      object.extra_attributes.sort_by { |extra_attribute| extra_attribute['index'] }
+    end
+
     field :description, String, null: true
     field :candidate_status, CandidateStatusType, null: true
 

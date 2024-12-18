@@ -12,7 +12,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
         $description: String!,
         $govStackEntity: Boolean,
         $productStage: String,
-        $extraAttributes: [ExtraAttributeInput!],
+        $extraAttributes: [ExtraAttribute!],
         $featured: Boolean,
         $contact: String
       ) {
@@ -92,7 +92,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
 
   it 'fails - setting gov stack field as non-admin' do
     created_product = create(:product, name: 'Some Name', slug: 'some-name')
-    owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_user], user_products: [created_product.id])
+    owner_user = create(:user, email: 'owner@gmail.com', roles: [:product_owner], user_products: [created_product.id])
 
     extra_attributes = [
       { "name" => "impact", "type" => "product_scale", "value" => "Very High" },
@@ -145,7 +145,7 @@ RSpec.describe(Mutations::CreateProduct, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['createProduct']['product']).to(be(nil))
-      expect(result['data']['createProduct']['errors']).to(eq(['Must be admin or product owner to create a product']))
+      expect(result['data']['createProduct']['errors']).to(eq(['Creating / editing product is not allowed.']))
     end
   end
 end

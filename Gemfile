@@ -33,9 +33,6 @@ gem 'recaptcha'
 gem 'licensee'
 gem 'rubysl-open3'
 
-# Used for health check the rails app.
-gem 'okcomputer'
-
 gem "net-http"
 gem "net-smtp"
 gem "net-imap"

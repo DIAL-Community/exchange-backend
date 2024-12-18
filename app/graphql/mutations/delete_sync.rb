@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          sync: nil,
-          errors: ['Must be admin to delete a sync.']
-        }
-      end
-
       sync = TenantSyncConfiguration.find_by(id:)
-      if sync.nil?
+      sync_policy = Pundit.policy(context[:current_user], sync || TenantSyncConfiguration.new)
+      if sync.nil? || !sync_policy.delete_allowed?
         return {
           sync: nil,
-          errors: ['Unable to uniquely identify sync to delete.']
+          errors: ['Deleting sync is not allowed.']
         }
       end
 

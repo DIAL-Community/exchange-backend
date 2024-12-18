@@ -13,14 +13,18 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(slug:, action:)
-      unless an_admin
+      # Find the correct policy
+      candidate_dataset = CandidateDataset.find_by(slug:)
+      candidate_dataset_policy = Pundit.policy(
+        context[:current_user],
+        candidate_dataset || CandidateDataset.new
+      )
+      unless candidate_dataset_policy.edit_allowed?
         return {
           candidate_dataset: nil,
-          errors: ['Must be admin to approve or reject candidate dataset']
+          errors: ['Editing candidate dataset is not allowed.']
         }
       end
-
-      candidate_dataset = CandidateDataset.find_by(slug:)
 
       if action == 'APPROVE'
         successful_operation = approve_candidate(candidate_dataset)

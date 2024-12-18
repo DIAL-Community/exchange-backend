@@ -3,7 +3,7 @@
 module Mutations
   class UpdateProductExtraAttributes < Mutations::BaseMutation
     argument :slug, String, required: true
-    argument :extra_attributes, [Types::ExtraAttributeInputType], required: true
+    argument :extra_attributes, [Attributes::ExtraAttribute], required: true
 
     field :product, Types::ProductType, null: true
     field :errors, [String], null: true
@@ -11,18 +11,11 @@ module Mutations
 
     def resolve(slug:, extra_attributes:)
       product = Product.find_by(slug:)
-
-      unless an_admin || a_product_owner(product)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? || !product_policy.edit_allowed?
         return {
           product: nil,
-          errors: ['Must be admin or product owner to update product attributes.']
-        }
-      end
-
-      if product.nil?
-        return {
-          product: nil,
-          errors: ['Product not found.']
+          errors: ['Editing product is not allowed.']
         }
       end
 

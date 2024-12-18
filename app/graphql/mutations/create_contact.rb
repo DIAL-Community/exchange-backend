@@ -19,24 +19,26 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, email:, title:, slug:, source:, biography:, social_networking_services:)
-      if context[:current_user].nil?
+      # Find the correct policy
+      contact = Contact.find_by(slug:)
+      contact = Contact.find_by(email:) if contact.nil?
+      contact_policy = Pundit.policy(context[:current_user], contact || Contact.new)
+
+      if contact.nil? && !contact_policy.create_allowed?
         return {
           contact: nil,
-          errors: ['Must be an logged in to create / edit contact.']
+          errors: ['Creating / editing contact is not allowed.']
         }
       end
 
-      current_user_email = context[:current_user].email
-      if !an_admin && !an_adli_admin && current_user_email != email
+      if !contact.nil? && !contact_policy.edit_allowed?
         return {
           contact: nil,
-          errors: ['User only allowed to edit / create their own contact.']
+          errors: ['Creating / editing contact is not allowed.']
         }
       end
 
       # Prevent duplicating contact by the name of the contact.
-      contact = Contact.find_by(slug:)
-      contact = Contact.find_by(email:) if contact.nil?
       contact = Contact.new(name:, email:, title:, slug: reslug_em("#{name}-#{email}")) if contact.nil?
 
       if contact.name != name

@@ -1549,6 +1549,28 @@
               "deprecationReason": null
             },
             {
+              "name": "extraAttributes",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "JSON",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -8517,7 +8539,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "ExtraAttributeInput",
+          "name": "ExtraAttribute",
           "description": "An extra attribute for a product",
           "fields": null,
           "inputFields": [
@@ -8555,6 +8577,42 @@
             },
             {
               "name": "type",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "index",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "description",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -10592,7 +10650,7 @@
               "description": null,
               "args": [
                 {
-                  "name": "name",
+                  "name": "slug",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -10608,7 +10666,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "slug",
+                  "name": "name",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -11099,6 +11157,26 @@
                     "ofType": null
                   },
                   "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "extraAttributes",
+                  "description": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "ExtraAttribute",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "defaultValue": null,
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -12281,7 +12359,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -12293,7 +12371,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 }
@@ -13411,7 +13489,7 @@
                       "name": null,
                       "ofType": {
                         "kind": "INPUT_OBJECT",
-                        "name": "ExtraAttributeInput",
+                        "name": "ExtraAttribute",
                         "ofType": null
                       }
                     }
@@ -13606,7 +13684,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13618,7 +13696,7 @@
                     "name": "ISO8601Date",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13630,7 +13708,7 @@
                     "name": "String",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13658,7 +13736,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -13670,7 +13748,7 @@
                     "name": "Int",
                     "ofType": null
                   },
-                  "defaultValue": null,
+                  "defaultValue": "null",
                   "isDeprecated": false,
                   "deprecationReason": null
                 },
@@ -14867,7 +14945,7 @@
                   "deprecationReason": null
                 },
                 {
-                  "name": "allowUnsecureRead",
+                  "name": "allowUnsecuredRead",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -16644,6 +16722,22 @@
               "description": null,
               "args": [
                 {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "productSlugs",
                   "description": null,
                   "type": {
@@ -16669,22 +16763,6 @@
                 },
                 {
                   "name": "mappingStatus",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "slug",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -16809,6 +16887,59 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateCandidateProductCategoryIndicatorsPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateCandidateProductExtraAttributes",
+              "description": null,
+              "args": [
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "extraAttributes",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "NON_NULL",
+                        "name": null,
+                        "ofType": {
+                          "kind": "INPUT_OBJECT",
+                          "name": "ExtraAttribute",
+                          "ofType": null
+                        }
+                      }
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateCandidateProductExtraAttributesPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -18404,7 +18535,7 @@
                         "name": null,
                         "ofType": {
                           "kind": "INPUT_OBJECT",
-                          "name": "ExtraAttributeInput",
+                          "name": "ExtraAttribute",
                           "ofType": null
                         }
                       }
@@ -19561,6 +19692,22 @@
               "description": null,
               "args": [
                 {
+                  "name": "rubricCategorySlug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "categoryIndicatorSlugs",
                   "description": null,
                   "type": {
@@ -19578,22 +19725,6 @@
                           "ofType": null
                         }
                       }
-                    }
-                  },
-                  "defaultValue": null,
-                  "isDeprecated": false,
-                  "deprecationReason": null
-                },
-                {
-                  "name": "rubricCategorySlug",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "String",
-                      "ofType": null
                     }
                   },
                   "defaultValue": null,
@@ -26379,6 +26510,24 @@
               "deprecationReason": null
             },
             {
+              "name": "candidateProductExtraAttributes",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "JSON",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "candidateProducts",
               "description": null,
               "args": [
@@ -28137,6 +28286,39 @@
                       "ofType": null
                     }
                   }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "origin",
+              "description": null,
+              "args": [
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Origin",
+                  "ofType": null
                 }
               },
               "isDeprecated": false,
@@ -34322,13 +34504,9 @@
                 }
               ],
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "RubricCategory",
-                  "ofType": null
-                }
+                "kind": "OBJECT",
+                "name": "RubricCategory",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -34357,6 +34535,35 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "SustainableDevelopmentGoal",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "sdgTarget",
+              "description": null,
+              "args": [
+                {
+                  "name": "slug",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SustainableDevelopmentGoalTarget",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -39779,7 +39986,7 @@
           "description": null,
           "fields": [
             {
-              "name": "allowUnsecureRead",
+              "name": "allowUnsecuredRead",
               "description": null,
               "args": [
 
@@ -39986,6 +40193,55 @@
           "kind": "OBJECT",
           "name": "UpdateCandidateProductCategoryIndicatorsPayload",
           "description": "Autogenerated return type of UpdateCandidateProductCategoryIndicators.",
+          "fields": [
+            {
+              "name": "candidateProduct",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CandidateProduct",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "errors",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "UpdateCandidateProductExtraAttributesPayload",
+          "description": "Autogenerated return type of UpdateCandidateProductExtraAttributes.",
           "fields": [
             {
               "name": "candidateProduct",

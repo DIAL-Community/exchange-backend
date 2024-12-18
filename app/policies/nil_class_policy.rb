@@ -1,11 +1,23 @@
 # frozen_string_literal: true
 
 class NilClassPolicy < ApplicationPolicy
-  def view_allowed?
+  def available?
     false
   end
 
-  def index?
+  def create_allowed?
+    false
+  end
+
+  def edit_allowed?
+    false
+  end
+
+  def delete_allowed?
+    false
+  end
+
+  def view_allowed?
     false
   end
 end

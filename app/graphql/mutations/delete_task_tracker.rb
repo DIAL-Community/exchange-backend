@@ -8,20 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      task_tracker = TaskTracker.find_by(id:)
+      task_tracker_policy = Pundit.policy(context[:current_user], task_tracker || TaskTracker.new)
+      if task_tracker.nil? || !task_tracker_policy.delete_allowed?
         return {
           task_tracker: nil,
-          errors: ['Must be admin to delete a task_tracker.']
+          errors: ['Deleting task tracker is not allowed.']
         }
       end
 
-      task_tracker = TaskTracker.find_by(id:)
-      if task_tracker.nil?
-        return {
-          task_tracker: nil,
-          errors: ['Unable to uniquely identify task_tracker to delete.']
-        }
-      end
       assign_auditable_user(task_tracker)
 
       successful_operation = false

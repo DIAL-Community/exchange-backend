@@ -102,8 +102,10 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
   end
 
   it 'is not successful - user is an admin but using random data' do
-    expect_any_instance_of(Mutations::CreateCountry).to(receive(:an_admin).and_return(true))
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Some Name",
@@ -119,9 +121,11 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
   end
 
   it 'is successful - user is an admin and using valid data' do
-    expect_any_instance_of(Mutations::CreateCountry).to(receive(:an_admin).and_return(true))
-    expect_any_instance_of(Mutations::CreateCountry).to(receive(:geocode_with_google).and_return(geocode_data))
-    result = execute_graphql(
+    expect_any_instance_of(Mutations::CreateCountry)
+      .to(receive(:geocode_with_google).and_return(geocode_data))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Kenya"
@@ -135,10 +139,11 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
   end
 
   it 'is successful - user editing data and geocode data is updated.' do
-    expect_any_instance_of(Mutations::CreateCountry).to(receive(:an_admin).and_return(true))
     expect_any_instance_of(Mutations::CreateCountry)
       .to(receive(:geocode_with_google).and_return(updated_geocode_data))
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Kenya",
@@ -154,10 +159,11 @@ RSpec.describe(Mutations::CreateCountry, type: :graphql) do
   end
 
   it 'is not successful - user editing with invalid data.' do
-    expect_any_instance_of(Mutations::CreateCountry).to(receive(:an_admin).and_return(true))
     expect_any_instance_of(Mutations::CreateCountry)
       .to(receive(:geocode_with_google).and_return(invalid_geocode_data))
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'], receive_admin_emails: true)
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: {
         name: "Invalid-Data",

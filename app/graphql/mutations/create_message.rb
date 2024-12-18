@@ -14,20 +14,27 @@ module Mutations
 
     argument :visible, Boolean, required: true, default_value: true
 
-    argument :location, String, required: false
-    argument :location_type, String, required: false
+    argument :location, String, required: false, default_value: nil
+    argument :location_type, String, required: false, default_value: nil
 
     field :message, Types::MessageType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, message_template:, message_type:, message_datetime:,
-      visible:, location: nil, location_type: nil
-    )
-      unless an_admin || an_adli_admin
+    def resolve(name:, message_template:, message_type:, message_datetime:, visible:, location:, location_type:)
+      message = Message.find_by(slug: reslug_em(name))
+      message_policy = Pundit.policy(context[:current_user], message || Message.new)
+
+      if message.nil? && !message_policy.create_allowed?
+        return {
+          message: nil,
+          errors: ['Creating / editing message is not allowed.']
+        }
+      end
+
+      if !message.nil? && !message_policy.edit_allowed?
         return {
           user: nil,
-          errors: ['Must be an admin to create / update message data.']
+          errors: ['Creating / editing message is not allowed.']
         }
       end
 

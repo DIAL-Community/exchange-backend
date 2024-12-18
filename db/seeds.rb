@@ -1,141 +1,172 @@
 # frozen_string_literal: true
 
-if User.count.zero? && User.where(email: Rails.configuration.settings['admin_email']).count.zero?
-  user = User.new(email: Rails.configuration.settings['admin_email'],
-                  password: 'admin-password',
-                  password_confirmation: 'admin-password',
-                  confirmed_at: Time.now.utc,
-                  created_at: Time.now.utc,
-                  updated_at: '1900-01-01',
-                  role: 'admin')
-  user.save(validate: false)
+# Default installation user account.
+default_user = User.find_by(email: Rails.configuration.settings['admin_email'])
+if default_user.nil?
+  default_user = User.new(
+    email: Rails.configuration.settings['admin_email'],
+    username: 'admin',
+    password: 'admin-password',
+    password_confirmation: 'admin-password',
+    created_at: Time.now.utc,
+    updated_at: Time.now.utc,
+    confirmed_at: Time.now.utc
+  )
+end
+if default_user.save!
+  puts 'Default installation user account updated.'
+  default_user.roles << 'admin' unless default_user.roles.include?('admin')
+  default_user.save!
 end
 
-if Setting.where(slug: 'default_organization').count.zero?
-  Setting.create!(name: 'Default Organization',
-                  slug: Rails.configuration.settings['install_org_key'],
-                  description: 'The default installation organization who own the product (must use the slug value).',
-                  value: 'digital_impact_alliance_dial')
+# Default installation organization.
+setting = Setting.find_by(slug: 'default-organization')
+if setting.nil?
+  setting = Setting.new(
+    name: 'Default Organization',
+    slug: Rails.configuration.settings['installation_organization_key']
+  )
+end
+setting.description = <<-SETTING_DESCRIPTION
+  <p>
+    The default organization who will own the products (must use the slug value).
+  </p>
+SETTING_DESCRIPTION
+setting.value = 'digital-impact-alliance-dial'
+if setting.save!
+  puts 'Default installation organization updated.'
 end
 
-if Setting.where(slug: 'default_covid19_tag').count.zero?
-  Setting.create!(name: 'Default COVID-19 Tag',
-                  slug: 'default_covid19_tag',
-                  description: 'The default tag name for COVID-19 related objects.',
-                  value: 'COVID-19')
+# Default tag name to be used to mark COVID-19 related entities.
+setting = Setting.find_by(slug: 'default-covid19-tag')
+if setting.nil?
+  setting = Setting.new(
+    slug: 'default-covid19-tag',
+    name: 'Default COVID-19 Tag'
+  )
+end
+setting.description = <<-SETTING_DESCRIPTION
+  <p>
+    The default tag name for COVID-19 related objects.
+  </p>
+SETTING_DESCRIPTION
+setting.value = 'COVID-19'
+if setting.save!
+  puts 'Default tag name to be used to mark COVID-19 related entities updated.'
 end
 
-if Setting.where(slug: Rails.configuration.settings['default_maturity_rubric_slug']).count.zero?
-  Setting.create!(name: 'Default Maturity Rubric Slug',
-                  slug: Rails.configuration.settings['default_maturity_rubric_slug'],
-                  description: 'The key to the default definition of the maturity rubric.',
-                  value: 'default_maturity_rubric')
+# Default maturity rubric slug to be used to evaluate products.
+setting = Setting.find_by(slug: Rails.configuration.settings['default_maturity_rubric_slug'])
+if setting.nil?
+  setting = Setting.new(
+    name: 'Default Maturity Rubric Slug',
+    slug: Rails.configuration.settings['default_maturity_rubric_slug']
+  )
+end
+setting.description = <<-SETTING_DESCRIPTION
+  <p>
+    The key to the default definition of the maturity rubric.
+  </p>
+SETTING_DESCRIPTION
+setting.value = 'default-maturity-rubric'
+if setting.save!
+  puts 'Default maturity rubric setting updated.'
 end
 
-if Setting.where(slug: 'default_map_center_position').count.zero?
-  Setting.create!(name: 'Default Map Center Position',
-                  slug: 'default_map_center_position',
-                  description: 'The center position for the map view. It will ask for permission ' \
-                               "if you pick 'country'. When empty or filled with non 'country', " \
-                               'will default to world.',
-                  value: 'country')
+setting = Setting.find_by(slug: 'default-map-center-position')
+if setting.nil?
+  setting = Setting.new(
+    name: 'Default Map Center Position',
+    slug: 'default-map-center-position'
+  )
+end
+setting.description = <<-SETTING_DESCRIPTION
+  <p>
+    The center position when opening any map pages. It will ask for permission
+    if you pick 'country'. When empty or filled with non 'country', the pages will
+    default to world as the center point.
+  </p>
+SETTING_DESCRIPTION
+setting.value = 'country'
+if setting.save!
+  puts 'Default center setting when opening map pages updated.'
 end
 
-if Setting.where(slug: 'default_sector_list').count.zero?
-  Setting.create!(name: 'Default Sector List',
-                  slug: 'default_sector_list',
-                  description: 'The list of sectors that will be used for product and project ' \
-                              "assignments. DIAL's sector list is the default.",
-                  value: 'DIAL OSC')
+setting = Setting.find_by(slug: 'default-sector-list')
+if setting.nil?
+  setting = Setting.create!(
+    name: 'Default Sector List',
+    slug: 'default-sector-list',
+  )
+end
+setting.description = <<-SETTING_DESCRIPTION
+  <p>
+    The list of sectors that will be used for product and project assignments.
+    DIAL's sector list is the default.
+  </p>
+SETTING_DESCRIPTION
+setting.value = 'DIAL OSC'
+if setting.save!
+  puts 'Default sector list to be used for product and project assignments updated.'
 end
 
-if Tag.where(slug: 'covid19').count.zero?
-  tag = Tag.create!(name: 'COVID-19',
-                    slug: 'covid19')
-  TagDescription
-    .create!(tag_id: tag.id,
-             locale: 'en',
-             description: {
-               "ops": [
-                 {
-                   'insert': 'Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe ' \
-                             'acute respiratory syndrome coronavirus 2 (SARS-CoV-2). The World Health ' \
-                             'Organization (WHO) declared the 2019–20 coronavirus outbreak a Public Health ' \
-                             'Emergency of International Concern (PHEIC) on 30 January 2020 and a pandemic ' \
-                             'on 11 March 2020.'
-                 }
-               ]
-             })
+# Remove unused settings. They're mainly settings with older style of slug definition.
+Setting
+  .where(slug: [
+    'default_organization',
+    'default_covid19_tag',
+    'default_maturity_rubric_slug',
+    'default_map_center_position',
+    'default_sector_list'
+  ])
+  .destroy_all
+
+tag = Tag.find_by(slug: 'covid19')
+if tag.nil?
+  tag = Tag.new(
+    name: 'COVID-19',
+    slug: 'covid19'
+  )
 end
 
-if PortalView.where(slug: 'default').count.zero?
-  PortalView.create!(name: 'Default',
-                     slug: 'default',
-                     description: 'Default portal view',
-                     top_navs: %w[sdgs use_cases workflows building_blocks products organizations],
-                     filter_navs: %w[sdgs use_cases workflows building_blocks products organizations locations
-                                     sectors],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if PortalView.where(slug: 'projects').count.zero?
-  PortalView.create!(name: 'Projects',
-                     slug: 'projects',
-                     description: 'Projects view',
-                     top_navs: %w[products organizations projects],
-                     filter_navs: %w[products organizations locations projects],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if PortalView.where(slug: 'playbooks').count.zero?
-  PortalView.create!(name: 'Playbooks',
-                     slug: 'playbooks',
-                     description: 'Playbooks view',
-                     top_navs: %w[playbooks plays use_cases products organizations],
-                     filter_navs: %w[playbooks plays use_cases products organizations],
-                     user_roles: %w[admin ict4sdg principle user org_user org_product_user
-                                    product_user mni],
-                     product_views: ['DIAL OSC', 'Digital Square', 'Unicef', 'Digital Health Atlas'],
-                     organization_views: %w[endorser mni product])
-end
-
-if Stylesheet.where(portal: 'default').count.zero?
-  Stylesheet.create!(portal: 'default',
-                     background_color: '#000043')
-end
-
-if Stylesheet.where(portal: 'projects').count.zero?
-  Stylesheet.create!(portal: 'projects',
-                     background_color: '#430000')
-end
-
-if Stylesheet.where(portal: 'playbooks').count.zero?
-  Stylesheet.create!(portal: 'playbooks',
-                     background_color: '#004300')
+if tag.save!
+  puts 'Default COVID-19 tag updated.'
+  tag_description = TagDescription.new(
+    tag_id: tag.id,
+    locale: 'en',
+    description: <<-TAG_DESCRIPTION
+      Coronavirus disease 2019 (COVID-19) is an infectious disease caused by severe
+      acute respiratory syndrome coronavirus 2 (SARS-CoV-2). The World Health
+      Organization (WHO) declared the 2019–20 coronavirus outbreak a Public Health
+      Emergency of International Concern (PHEIC) on 30 January 2020 and a pandemic
+      on 11 March 2020.'
+    TAG_DESCRIPTION
+  )
+  tag_description.save!
 end
 
 if Origin.where(slug: 'manually-entered').count.zero?
-  Origin.create(name: 'Manually Entered', description: 'Project information are manually entered by user.',
-                slug: 'manually-entered')
+  Origin.create!(
+    name: 'Manually Entered',
+    description: 'Project information are manually entered by user.',
+    slug: 'manually-entered'
+  )
 end
 
 if Endorser.where(slug: 'dpga').count.zero?
-  Endorser.create(name: 'Digital Public Goods Alliance',
-                  description: 'This product has been screened as a Digital Public Good by the Digital Public '\
-                               'Goods Alliance.',
-                  slug: 'dpga')
+  Endorser.create(
+    name: 'Digital Public Goods Alliance',
+    description: 'This product has been screened as a Digital Public Good by the Digital Public Goods Alliance.',
+    slug: 'dpga'
+  )
 end
 
 if Endorser.where(slug: 'dsq').count.zero?
-  Endorser.create(name: 'Digital Square',
-                  description: 'This product has been screened as a Global Good by Digital Square.',
-                  slug: 'dsq')
+  Endorser.create(
+    name: 'Digital Square',
+    description: 'This product has been screened as a Global Good by Digital Square.',
+    slug: 'dsq'
+  )
 end
 
 Dir[Rails.root.join('db/seeds/*.rb')].sort.each do |file|

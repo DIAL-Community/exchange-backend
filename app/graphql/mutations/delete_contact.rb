@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          contact: nil,
-          errors: ['Must be admin to delete a contact.']
-        }
-      end
-
       contact = Contact.find_by(id:)
-      if contact.nil?
+      contact_policy = Pundit.policy(context[:current_user], contact || Contact.new)
+      if contact.nil? || !contact_policy.delete_allowed?
         return {
           contact: nil,
-          errors: ['Unable to uniquely identify contact to delete.']
+          errors: ['Deleting contact is not allowed.']
         }
       end
 

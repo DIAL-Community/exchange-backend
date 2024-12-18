@@ -621,7 +621,7 @@ module Modules
         rank += 1
       end
 
-      File.open("utils/top_25_languages.yml", "w") do |f|
+      File.open("data/yaml/top-25-languages.yml", "w") do |f|
         f.write(top_25_languages.to_yaml)
       end
 
@@ -816,6 +816,11 @@ module Modules
     def calculate_indicator_value(config_file, indicator, statistical_value, indicator_scale)
       indicator_category = RubricCategory.find(indicator.rubric_category_id)
       indicator_config = read_indicator_config(config_file, indicator_category.name, indicator.name)
+
+      if indicator_config[:name].nil?
+        puts "Skipping indicator '#{indicator_category.name}->#{indicator.name}'. Missing config in yaml file."
+        return
+      end
 
       indicator_scale_weight = 1
       condition_counter = 0..(indicator_config[indicator_scale].count - 1)

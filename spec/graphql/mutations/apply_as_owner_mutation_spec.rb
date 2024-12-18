@@ -50,7 +50,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
           "email" => "user@gmail.com",
           "organizationId" => nil,
           "productId" => "1001",
-          "roles" => ["product_user"]
+          "roles" => ["product_owner"]
         }))
       expect(result['data']['applyAsOwner']['errors'])
         .to(eq([]))
@@ -79,7 +79,7 @@ RSpec.describe(Mutations::ApplyAsOwner, type: :graphql) do
           "email" => "user@gmail.com",
           "organizationId" => "1001",
           "productId" => nil,
-          "roles" => ["org_user"]
+          "roles" => ["organization_owner"]
         }))
       expect(result['data']['applyAsOwner']['errors'])
         .to(eq([]))

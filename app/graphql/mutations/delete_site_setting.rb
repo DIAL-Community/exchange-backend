@@ -8,18 +8,12 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
-        return {
-          site_setting: nil,
-          errors: ['Must be admin to delete a site setting.']
-        }
-      end
-
       site_setting = SiteSetting.find_by(id:)
-      if site_setting.nil?
+      site_setting_policy = Pundit.policy(context[:current_user], site_setting || SiteSetting.new)
+      if site_setting.nil? || !site_setting_policy.delete_allowed?
         return {
           site_setting: nil,
-          errors: ['Unable to uniquely identify site setting to delete.']
+          errors: ['Deleting site setting is not allowed.']
         }
       end
 

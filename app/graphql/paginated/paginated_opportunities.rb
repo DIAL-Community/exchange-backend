@@ -18,8 +18,7 @@ module Paginated
 
     type [Types::OpportunityType], null: false
 
-    def resolve(
-      search:,
+    def resolve(search:,
       countries:,
       building_blocks:,
       organizations:,
@@ -28,11 +27,10 @@ module Paginated
       tags:,
       show_closed:,
       show_gov_stack_only:,
-      offset_attributes:
-    )
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return []
-      end
+      offset_attributes:)
+
+      # Validate access to the current entity type.
+      validate_access_to_resource(Opportunity.new)
 
       opportunities = Opportunity.order_by_status.order(:closing_date)
       unless search.blank?

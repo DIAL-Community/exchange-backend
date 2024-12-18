@@ -19,10 +19,18 @@ module Mutations
 
     def resolve(slug:, product_slug:, name:, absolute_url:, description:, main_repository:)
       product = Product.find_by(slug: product_slug)
-      if product.nil? || (!a_product_owner(product.id) && !an_admin)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? && !product_policy.create_allowed?
         return {
           product_repository: nil,
-          errors: ['Unable to create product repository object.']
+          errors: ['Creating / editing product repository is not allowed.']
+        }
+      end
+
+      if !product.nil? && !product_policy.edit_allowed?
+        return {
+          product_repository: nil,
+          errors: ['Creating / editing product repository is not allowed.']
         }
       end
 

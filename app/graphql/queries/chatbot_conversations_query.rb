@@ -8,8 +8,7 @@ module Queries
     type [Types::ChatbotConversationType], null: false
 
     def resolve(session_identifier:, current_identifier:)
-      return [] if context[:current_user].nil?
-
+      validate_access_to_resource(ChatbotConversation.new)
       chatbot_conversations = ChatbotConversation.order(:created_at)
       chatbot_conversations = chatbot_conversations.where(session_identifier:)
       chatbot_conversations = chatbot_conversations.where(user: context[:current_user])
@@ -26,7 +25,8 @@ module Queries
     type GraphQL::Types::JSON, null: false
 
     def resolve
-      default_question_answers = YAML.load_file('data/default-chatbot-qa.yml')
+      validate_access_to_resource(ChatbotConversation.new)
+      default_question_answers = YAML.load_file('data/yaml/default-chatbot-qa.yml')
       default_starter_questions = []
       default_question_answers['questions'].each do |default_question_answer|
         default_starter_questions << default_question_answer['question']
