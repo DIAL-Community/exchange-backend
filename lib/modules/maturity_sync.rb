@@ -817,6 +817,11 @@ module Modules
       indicator_category = RubricCategory.find(indicator.rubric_category_id)
       indicator_config = read_indicator_config(config_file, indicator_category.name, indicator.name)
 
+      if indicator_config[:name].nil?
+        puts "Skipping indicator '#{indicator_category.name}->#{indicator.name}'. Missing config in yaml file."
+        return
+      end
+
       indicator_scale_weight = 1
       condition_counter = 0..(indicator_config[indicator_scale].count - 1)
       condition_counter.each do |counter|
