@@ -1,6 +1,6 @@
 docker -v && docker-compose -v && docker-machine -v
 
-export DOTOKEN=0881761c66786419bee57c6438f14265a5391bba02ad531d5ed9aa649376c2d7
+export DOTOKEN=<your digital ocean token>
  
 # set-up: clean up any previous machine failures
 docker-machine stop t4d-jenkins || echo "nothing to stop" && \
