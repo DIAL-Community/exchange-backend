@@ -2,10 +2,10 @@ services:
   exchange-backend:
     # image: localhost:5000/t4d-product-backlog:${T4D_VERSION}
     build:
-      context: .
+      context: ..
       target: build-web
       additional_contexts:
-        gdpir: ../www.dpi.global
+        gdpir: ../../www.dpi.global
     environment:
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_ENV=production
@@ -25,7 +25,7 @@ services:
       - 80:3000
   exchange-frontend:
     build:
-      context: ../exchange-frontend/
+      context: ../../exchange-frontend/
       target: prod
     working_dir: /app
     user: nextjs
@@ -38,7 +38,7 @@ services:
       - exchange-backend
   exchange-chatbot:
     build:
-      context: ../exchange-chatbot/
+      context: ../../exchange-chatbot/
     ports:
       - 8080:8080
     volumes:
@@ -59,7 +59,7 @@ services:
     command: ["/bin/sh", "-c", "while true; do sleep 86400; docker restart exchange-backend-exchange-chatbot-1; done"]
     restart: unless-stopped
   playbooks:
-    build: '../playbooks'
+    build: '../../playbooks'
     entrypoint: '/playbooks/docker-entrypoint.sh'
     tty: true
     stdin_open: true # without this node doesn't start
