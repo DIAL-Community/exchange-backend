@@ -27,7 +27,7 @@ Apartment.configure do |config|
   # - a hash which keys are tenant names, and values custom db config
   # (must contain all key/values required in database.yml)
   #
-  config.tenant_names = lambda { ExchangeTenant.pluck(:tenant_name) }
+  config.tenant_names = lambda { ExchangeTenant.pluck(:tenant_name).uniq }
   # config.tenant_names = ['fao']
   # config.tenant_names = {
   #   'tenant1' => {

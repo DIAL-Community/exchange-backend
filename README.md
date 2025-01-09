@@ -1,8 +1,8 @@
-# DIAL Catalog of Digital Solutions
+# DIAL's Digital Impact Exchange
 
-The Catalog of Digital Solutions is an interactive online resource to support donors,
+The Digital Impact Exchange is an interactive online resource to support donors,
 governments, and procurers in the development and implementation of digital strategies.​
-The catalog aggregates data from a variety of sources (including the Digital Public
+The Exchange aggregates data from a variety of sources (including the Digital Public
 Goods Alliance, WHO, Digital Square and the DIAL Open Source Center) and allows the
 user to identify and evaluate digital tools that may be applicable for their use cases
 or projects.
@@ -11,17 +11,17 @@ The catalog supports the [SDG Digital Investment Framework](https://digitalimpac
 
 ## Repositories
 
-Note that this repository contains the code for the back-end/API for the Catalog. The front-end
-code for the Catalog can be referenced at:
+Note that this repository contains the code for the back-end/API for the Exchange. The front-end
+code for the Exchange can be referenced at:
 https://gitlab.com/dial/digital-impact-exchange/exchange-front/-/tree/development
 
 ## Documentation
 
 Complete documentation is available (including detailed installation and configuration
 instructions) at
-[https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL Online Catalog Documentation")
+[https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL's Digital Impact Exchange Documentation")
 
-Please also reference the [Wiki page for the Catalog](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
+Please also reference the [Wiki page for the Exchange](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
 
 ## Development environment setup
 Development environment can be either semi-containerized using Docker or non-containerized. Containerized environment is faster to set up, hence it is a recommended approach.
@@ -64,10 +64,10 @@ source ./setEnv.sh dev
 **Note:** Running this command will set the environment variables for the current terminal session only. Any time you open a new terminal window (or reboot), you have to run this command again.
 
 ### **Step 4** - Run PostgreSQL and Redis in Docker containers
-In the terminal, with environment variables set, execute the following command:
+In the terminal, with environment variables set, execute the following commands:
 
 ```sh
-docker-compose -f docker-compose-dev.yml up -d
+docker-compose -f deploy/docker-compose-dev.yml up -d
 ```
 
 #### **Troubleshooting**
@@ -146,7 +146,7 @@ Use Ctrl-C to stop
 ### **Further steps** - Starting the development environment
 Once the development environment has been set up and run once, fewer steps are required to start the environment.
 1. Run `source setEnv.sh dev` to set all mandatory environment variables.
-2. Run `docker-compose -f docker-compose-dev.yml up -d` to run PostgreSQL and Redis in Docker containers.
+2. Run `docker-compose -f deploy/docker-compose-dev.yml up -d` to run PostgreSQL and Redis in Docker containers.
 3. Run `rails server` to start Puma server.
 
 ### **Further steps** - Stopping the development environment
@@ -450,7 +450,7 @@ With this configuration, the front-end will receive the following data:
 
 ---
 ## Copyright Information
-Copyright © 2023 Digital Impact Alliance. This program is free software: you can
+Copyright © 2025 Digital Impact Alliance. This program is free software: you can
 redistribute it and/or modify it under the terms of the GNU Affero General
 Public License as published by the Free Software Foundation, either version 3
 of the License, or any later version.
