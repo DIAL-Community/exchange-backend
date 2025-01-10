@@ -16,12 +16,12 @@ services:
       - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PORT=${POSTGRES_PORT}
       - CHATBOT_BASE_URL=http://exchange-chatbot:8080
-    entrypoint: /t4d/docker-entrypoint.sh
+    entrypoint: /t4d/deploy/docker-entrypoint.sh
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     restart: always
     volumes:
-      - .:/t4d
-      - ./prod/logrotate.d/registry:/etc/logrotate.d/registry
+      - ..:/t4d
+      - ../prod/logrotate.d/registry:/etc/logrotate.d/registry
     ports:
       - 80:3000
   exchange-frontend:
@@ -43,8 +43,8 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./prod/chatbot/faiss-index:/faiss-index
-      - ./prod/chatbot/record-manager:/record-manager
+      - ../prod/chatbot/faiss-index:/faiss-index
+      - ../prod/chatbot/record-manager:/record-manager
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - FAISS_INDEX_PATH=/faiss-index
@@ -69,4 +69,4 @@ services:
       - 3001:3001
     depends_on:
       - exchange-backend
-      - exchange-frontend
+      - exchange-frontend  
