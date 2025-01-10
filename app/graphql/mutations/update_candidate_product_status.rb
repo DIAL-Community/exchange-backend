@@ -23,8 +23,6 @@ module Mutations
         }
       end
 
-
-
       unless candidate_product.rejected.nil?
         return {
           candidate_product: nil,
