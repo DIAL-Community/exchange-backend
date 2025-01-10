@@ -12,13 +12,12 @@ class CandidateProductPolicy < ApplicationPolicy
   end
 
   def create_allowed?
-    return false if user.nil?
-
-    true
+    !user.nil?
   end
 
   def edit_allowed?
     return false if user.nil?
+    return true if user.id == record.created_by_id
 
     user.roles.include?(User.user_roles[:admin])
   end
@@ -30,8 +29,6 @@ class CandidateProductPolicy < ApplicationPolicy
   end
 
   def view_allowed?
-    return false if user.nil?
-
-    user.roles.include?(User.user_roles[:admin])
+    !user.nil?
   end
 end

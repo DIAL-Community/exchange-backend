@@ -20,6 +20,12 @@ module Queries
       validate_access_to_resource(CandidateProduct.new)
       candidate_products = CandidateProduct.order(:name)
       candidate_products = candidate_products.name_contains(search) unless search.blank?
+
+      is_admin = context[:current_user].roles.include?(User.user_roles[:admin])
+      unless is_admin
+        candidate_products = candidate_products.where(created_by_id: context[:current_user].id)
+      end
+
       candidate_products
     end
   end
@@ -28,7 +34,9 @@ module Queries
     type GraphQL::Types::JSON, null: false
 
     def resolve
-      validate_access_to_resource(CandidateProduct.new)
+      # Removing the validation for now as it's not needed for this query.
+      # This doesn't contain any data, only list of extra attributes defined in the YAML file.
+      # validate_access_to_resource(CandidateProduct.new)
       extra_attributes = YAML.load_file('data/yaml/candidate-extra-attributes.yml')
       extra_attributes.each_with_index do |extra_attribute, index|
         # Append index to each extra attribute

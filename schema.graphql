@@ -143,6 +143,7 @@ type CandidateProduct {
   candidateStatus: CandidateStatus
   commercialProduct: Boolean!
   createdAt: ISO8601Date
+  createdBy: String
   description: String
   extraAttributes: [JSON!]
   id: ID!

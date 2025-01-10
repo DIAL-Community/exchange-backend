@@ -20,6 +20,16 @@ module Types
       object.extra_attributes.sort_by { |extra_attribute| extra_attribute['index'] }
     end
 
+    field :created_by, String, null: true
+    def created_by
+      return nil if context[:current_user].nil?
+
+      is_admin = context[:current_user]&.roles&.include?('admin')
+      return nil if context[:current_user].id != object.created_by_id && !is_admin
+
+      User.find_by(id: object.created_by_id)&.email
+    end
+
     field :description, String, null: true
     field :candidate_status, CandidateStatusType, null: true
 

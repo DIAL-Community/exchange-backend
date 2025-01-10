@@ -90,6 +90,7 @@ module Mutations
       candidate_product.submitter_email = submitter_email
       candidate_product.description = description
       candidate_product.commercial_product = commercial_product
+      candidate_product.created_by_id = context[:current_user].id
 
       if candidate_product.save && captcha_verification(captcha)
         AdminMailer

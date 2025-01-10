@@ -23,6 +23,8 @@ module Mutations
         }
       end
 
+
+
       unless candidate_product.rejected.nil?
         return {
           candidate_product: nil,
@@ -46,7 +48,7 @@ module Mutations
       unless status_transition_allowed
         return {
           candidate_product: nil,
-          errors: ['Invalid status tranisition.']
+          errors: ['Invalid status transition.']
         }
       end
 
@@ -185,8 +187,8 @@ module Mutations
         product_repository.name = "#{candidate_product.name} Repository"
         product_repository.slug = reslug_em(product_repository.name)
 
-        product_repositorys = ProductRepository.where(slug: product_repository.slug)
-        unless product_repositorys.empty?
+        product_repositories = ProductRepository.where(slug: product_repository.slug)
+        unless product_repositories.empty?
           first_duplicate = ProductRepository.slug_starts_with(product_repository.slug)
                                              .order(slug: :desc).first
           product_repository.slug += generate_offset(first_duplicate)
