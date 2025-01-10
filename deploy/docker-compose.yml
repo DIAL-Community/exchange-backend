@@ -3,6 +3,7 @@ services:
     # image: localhost:5000/t4d-product-backlog:${T4D_VERSION}
     build:
       context: ..
+      dockerfile: ./deploy/Dockerfile
       target: build-web
       additional_contexts:
         gdpir: ../../www.dpi.global
