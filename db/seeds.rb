@@ -94,7 +94,7 @@ end
 
 setting = Setting.find_by(slug: 'default-sector-list')
 if setting.nil?
-  setting = Setting.create!(
+  setting = Setting.new(
     name: 'Default Sector List',
     slug: 'default-sector-list',
   )
@@ -150,6 +150,14 @@ if Origin.where(slug: 'manually-entered').count.zero?
     name: 'Manually Entered',
     description: 'Project information are manually entered by user.',
     slug: 'manually-entered'
+  )
+end
+
+if Origin.where(slug: 'dial').count.zero?
+  Origin.create!(
+    name: 'Digital Impact Alliance',
+    description: 'Information curated by DIAL.',
+    slug: 'dial'
   )
 end
 

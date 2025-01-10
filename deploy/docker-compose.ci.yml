@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+ postgres:
+  environment:
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_DB: ${POSTGRES_DB}
+  image: postgres
+  volumes:
+    - ../postgres-data:/var/lib/postgresql/data
+  ports:
+    - 5432:5432
+ test:
+  build:
+    context: ..
+    dockerfile: ./deploy/Dockerfile
+    target: build-web
+  environment:
+    - RAILS_SERVE_STATIC_FILES=true
+    - RAILS_ENV=test
+    - OPENSSL_CONF=/etc/ssl/
+  entrypoint: /t4d/deploy/docker-compose.ci.sh
+  command: bundle exec rails s -p 3000 -b '0.0.0.0'
+  volumes:
+   - ../config/database.yml.docker:/t4d/config/database.yml
+   - ..:/t4d
+  ports:
+   - 3000:3000
+  depends_on:
+   - postgres
+ exchange-frontend:
+  build:
+    context: ../../exchange-frontend/
+    target: prod
+  working_dir: /app
+  user: nextjs
+  stdin_open: true
+  restart: always
+  ports:
+    - 3002:3002
+  command: yarn test
+
