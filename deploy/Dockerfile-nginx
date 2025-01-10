@@ -29,4 +29,4 @@ RUN mkdir /t4d
 WORKDIR /t4d
 COPY cron-sync-nginx /etc/cron.d/cron-sync
 RUN crontab /etc/cron.d/cron-sync
-ADD docker-entrypoint-nginx.sh .
+ADD docker-entrypoint-nginx.sh deploy/docker-entrypoint-nginx.sh
