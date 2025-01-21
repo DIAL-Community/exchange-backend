@@ -55,6 +55,10 @@ public/assets/playbooks/design_images/*
 public/assets/playbooks/pictures/*
 public/assets/playbooks/*
 
+# Product and organization logos
+public/assets/organizations/*
+public/assets/products/*
+
 # Uploaded assets
 public/uploads
 
