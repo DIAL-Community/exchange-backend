@@ -7,9 +7,6 @@ module Paginated
     type [Types::CandidateProductType], null: false
 
     def resolve(search:, offset_attributes:)
-      # Validate access to the current entity type.
-      validate_access_to_resource(CandidateProduct.new)
-
       candidate_products = CandidateProduct.order(rejected: :desc)
                                            .order(created_at: :desc)
                                            .order(:name)
@@ -20,7 +17,8 @@ module Paginated
       end
 
       is_admin = context[:current_user].roles.include?(User.user_roles[:admin])
-      unless is_admin
+      is_candidate_editor = context[:current_user].roles.include?(User.user_roles[:candidate_editor])
+      unless is_admin || is_candidate_editor
         candidate_products = candidate_products.where(created_by_id: context[:current_user].id)
       end
 

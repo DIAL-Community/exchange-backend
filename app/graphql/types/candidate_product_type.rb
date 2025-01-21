@@ -24,8 +24,10 @@ module Types
     def created_by
       return nil if context[:current_user].nil?
 
-      is_admin = context[:current_user]&.roles&.include?('admin')
-      return nil if context[:current_user].id != object.created_by_id && !is_admin
+      current_user_roles = context[:current_user].roles
+      a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
+      an_admin = current_user_roles.include?(User.user_roles[:admin])
+      return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
 
       User.find_by(id: object.created_by_id)&.email
     end
@@ -51,21 +53,25 @@ module Types
     field :approved_by, String, null: true
 
     def rejected_by
-      an_admin = context[:current_user]&.roles&.include?('admin')
-      if an_admin && !object.rejected_by_id.nil?
-        rejecting_user = User.find_by(id: object.rejected_by_id)
-        rejected_by = rejecting_user&.email
-      end
-      rejected_by
+      return nil if context[:current_user].nil?
+
+      current_user_roles = context[:current_user].roles
+      a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
+      an_admin = current_user_roles.include?(User.user_roles[:admin])
+      return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
+
+      User.find_by(id: object.rejected_by_id)&.email
     end
 
     def approved_by
-      an_admin = context[:current_user]&.roles&.include?('admin')
-      if an_admin && !object.approved_by_id.nil?
-        approving_user = User.find_by(id: object.approved_by_id)
-        approved_by = approving_user&.email
-      end
-      approved_by
+      return nil if context[:current_user].nil?
+
+      current_user_roles = context[:current_user].roles
+      a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
+      an_admin = current_user_roles.include?(User.user_roles[:admin])
+      return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
+
+      User.find_by(id: object.approved_by_id)&.email
     end
   end
 end

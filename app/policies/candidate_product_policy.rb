@@ -16,10 +16,25 @@ class CandidateProductPolicy < ApplicationPolicy
   end
 
   def edit_allowed?
+    # User is not logged in to the system, now allowed to edit.
     return false if user.nil?
+    # User who created the candidate product is allowed to edit.
     return true if user.id == record.created_by_id
+    # User is an admin or a candidate editor, allowed to edit.
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:candidate_editor])
+  end
 
-    user.roles.include?(User.user_roles[:admin])
+  def status_update_allowed?
+    # Adding status update permission only to candidate products (and maybe other candidate objects as well?).
+    # This is to separate the permission to edit the submission and putting the submission in the approval
+    # workflow.
+
+    # User is not logged in to the system, now allowed to edit candidate's status.
+    return false if user.nil?
+    # User is an admin or a candidate editor, allowed to edit candidate's status.
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:candidate_editor])
   end
 
   def delete_allowed?
@@ -29,6 +44,12 @@ class CandidateProductPolicy < ApplicationPolicy
   end
 
   def view_allowed?
-    !user.nil?
+    # User is not logged in to the system, now allowed to view.
+    return false if user.nil?
+    # User who created the candidate product is allowed to view.
+    return true if user.id == record.created_by_id
+    # User is an admin or a candidate editor, allowed to view.
+    user.roles.include?(User.user_roles[:admin]) ||
+      user.roles.include?(User.user_roles[:candidate_editor])
   end
 end

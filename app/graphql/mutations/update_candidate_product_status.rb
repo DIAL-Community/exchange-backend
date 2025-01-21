@@ -16,10 +16,10 @@ module Mutations
     def resolve(slug:, description: nil, candidate_status_slug:)
       candidate_product = CandidateProduct.find_by(slug:)
       candidate_product_policy = Pundit.policy(context[:current_user], candidate_product || CandidateProduct.new)
-      unless candidate_product_policy.edit_allowed?
+      unless candidate_product_policy.status_update_allowed?
         return {
           candidate_product: nil,
-          errors: ['Editing candidate product is not allowed.']
+          errors: ['Updating status is not allowed.']
         }
       end
 
