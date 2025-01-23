@@ -159,6 +159,9 @@ module Mutations
       product.website = candidate_product.website
       product.commercial_product = candidate_product.commercial_product
 
+      # Copy over the extra attributes from the candidate product.
+      product.extra_attributes = candidate_product.extra_attributes
+
       # Check if we need to add _dup to the slug.
       first_duplicate = Product.slug_simple_starts_with(product.slug)
                                .order(slug: :desc).first
