@@ -24,7 +24,7 @@ module Types
     def created_by
       return nil if context[:current_user].nil?
 
-      current_user_roles = context[:current_user].roles
+      current_user_roles = context[:current_user]&.roles
       a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
       an_admin = current_user_roles.include?(User.user_roles[:admin])
       return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
@@ -55,8 +55,8 @@ module Types
     def rejected_by
       return nil if context[:current_user].nil?
 
-      current_user_roles = context[:current_user].roles
-      a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
+      current_user_roles = context[:current_user]&.roles
+      a_candidate_editor = current_user_roles&.include?(User.user_roles[:candidate_editor])
       an_admin = current_user_roles.include?(User.user_roles[:admin])
       return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
 
@@ -66,8 +66,8 @@ module Types
     def approved_by
       return nil if context[:current_user].nil?
 
-      current_user_roles = context[:current_user].roles
-      a_candidate_editor = current_user_roles.include?(User.user_roles[:candidate_editor])
+      current_user_roles = context[:current_user]&.roles
+      a_candidate_editor = current_user_roles&.include?(User.user_roles[:candidate_editor])
       an_admin = current_user_roles.include?(User.user_roles[:admin])
       return nil if context[:current_user].id != object.created_by_id && !an_admin && !a_candidate_editor
 

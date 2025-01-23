@@ -28837,6 +28837,18 @@
               "description": null,
               "args": [
                 {
+                  "name": "currentUserOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "search",
                   "description": null,
                   "type": {
@@ -31706,6 +31718,18 @@
               "name": "paginationAttributeCandidateProduct",
               "description": null,
               "args": [
+                {
+                  "name": "currentUserOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
                 {
                   "name": "search",
                   "description": null,

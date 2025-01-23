@@ -46,6 +46,11 @@ class CandidateProductPolicy < ApplicationPolicy
   def view_allowed?
     # User is not logged in to the system, now allowed to view.
     return false if user.nil?
+    # Logged in user is allowed to view candidate product list, but query must be filtered to only show
+    # candidate products created by the user.
+    puts "User nil: #{user.nil?}"
+    puts "Record new: #{record.new_record?}"
+    return true if !user.nil? && record.new_record?
     # User who created the candidate product is allowed to view.
     return true if user.id == record.created_by_id
     # User is an admin or a candidate editor, allowed to view.
