@@ -2,13 +2,19 @@ tenants:
   - name: fao
     urls: 
       - url: fao.localhost
-      - url: fao.dial.community
+      - url: fao.digitalexchange.dev
     allow_unsecured_read: false
     adminPassword: Admin123
   - name: health
     urls: 
       - url: health.localhost
-      - url: health.dial.community
+      - url: health.digitalexchange.dev
       - url: apps.africacdc.org
+    allow_unsecured_read: true
+    adminPassword: Admin123
+  - name: dsq
+    urls: 
+      - url: dsq.localhost
+      - url: dsq.digitalexchange.dev
     allow_unsecured_read: true
     adminPassword: Admin123
