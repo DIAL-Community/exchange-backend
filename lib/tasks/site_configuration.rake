@@ -17,6 +17,16 @@ namespace :site_configuration do
     end
   end
 
+  desc 'Regenerate default site configurations for a single tenant.'
+  task regenerate_site_config_for_tenant: :environment do
+    unless ENV['tenant'].nil?
+      tenant_name = ENV['tenant']
+      Apartment::Tenant.switch(tenant_name) do
+        create_default_site_configuration
+      end
+    end
+  end
+
   desc 'Regenerate default candidate approval workflow configurations.'
   task regenerate_default_candidate_approval_workflow: :environment do
     create_default_candidate_approval_workflow
