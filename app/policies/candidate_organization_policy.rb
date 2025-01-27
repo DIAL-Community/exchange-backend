@@ -12,9 +12,7 @@ class CandidateOrganizationPolicy < ApplicationPolicy
   end
 
   def create_allowed?
-    return false if user.nil?
-
-    true
+    !user.nil?
   end
 
   def edit_allowed?

@@ -9942,7 +9942,8 @@ CREATE TABLE public.candidate_products (
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
     maturity_score jsonb DEFAULT '{}'::jsonb,
-    extra_attributes jsonb DEFAULT '[]'::jsonb
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    created_by_id bigint
 );
 
 
@@ -22447,6 +22448,13 @@ CREATE INDEX index_candidate_products_on_candidate_status_id ON public.candidate
 
 
 --
+-- Name: index_candidate_products_on_created_by_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_created_by_id ON public.candidate_products USING btree (created_by_id);
+
+
+--
 -- Name: index_candidate_products_on_rejected_by_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -27225,6 +27233,14 @@ ALTER TABLE ONLY public.play_moves
 
 
 --
+-- Name: candidate_products fk_rails_e0cb211c68; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.candidate_products
+    ADD CONSTRAINT fk_rails_e0cb211c68 FOREIGN KEY (created_by_id) REFERENCES public.users(id);
+
+
+--
 -- Name: cities fk_rails_e0ef2914ca; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -27982,6 +27998,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241017211746'),
 ('20241020121626'),
 ('20241024120711'),
-('20241204135707');
+('20241204135707'),
+('20250110153801');
 
 
