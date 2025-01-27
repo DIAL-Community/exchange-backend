@@ -16,10 +16,10 @@ module Mutations
     def resolve(slug:, description: nil, candidate_status_slug:)
       candidate_product = CandidateProduct.find_by(slug:)
       candidate_product_policy = Pundit.policy(context[:current_user], candidate_product || CandidateProduct.new)
-      unless candidate_product_policy.edit_allowed?
+      unless candidate_product_policy.status_update_allowed?
         return {
           candidate_product: nil,
-          errors: ['Editing candidate product is not allowed.']
+          errors: ['Updating status is not allowed.']
         }
       end
 
@@ -46,7 +46,7 @@ module Mutations
       unless status_transition_allowed
         return {
           candidate_product: nil,
-          errors: ['Invalid status tranisition.']
+          errors: ['Invalid status transition.']
         }
       end
 
@@ -159,6 +159,9 @@ module Mutations
       product.website = candidate_product.website
       product.commercial_product = candidate_product.commercial_product
 
+      # Copy over the extra attributes from the candidate product.
+      product.extra_attributes = candidate_product.extra_attributes
+
       # Check if we need to add _dup to the slug.
       first_duplicate = Product.slug_simple_starts_with(product.slug)
                                .order(slug: :desc).first
@@ -185,8 +188,8 @@ module Mutations
         product_repository.name = "#{candidate_product.name} Repository"
         product_repository.slug = reslug_em(product_repository.name)
 
-        product_repositorys = ProductRepository.where(slug: product_repository.slug)
-        unless product_repositorys.empty?
+        product_repositories = ProductRepository.where(slug: product_repository.slug)
+        unless product_repositories.empty?
           first_duplicate = ProductRepository.slug_starts_with(product_repository.slug)
                                              .order(slug: :desc).first
           product_repository.slug += generate_offset(first_duplicate)
