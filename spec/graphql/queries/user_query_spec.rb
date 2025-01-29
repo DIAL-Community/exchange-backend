@@ -21,7 +21,7 @@ RSpec.describe(Queries::UserQuery, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['userRoles'].count).to(eq(11))
+      expect(result['data']['userRoles'].count).to(eq(12))
     end
   end
 

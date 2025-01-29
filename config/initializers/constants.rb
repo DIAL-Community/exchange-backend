@@ -16,6 +16,8 @@ UNAUTHORIZED = 'UNAUTHORIZED'
 
 GRAPH_QUERY_CONTEXT_KEY = 'Xchange-Graph-Query-Context'
 
+APPROVING_CONTEXT = 'approving'
+
 VIEWING_CONTEXT = 'viewing'
 EDITING_CONTEXT = 'editing'
 DELETING_CONTEXT = 'deleting'

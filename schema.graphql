@@ -143,6 +143,7 @@ type CandidateProduct {
   candidateStatus: CandidateStatus
   commercialProduct: Boolean!
   createdAt: ISO8601Date
+  createdBy: String
   description: String
   extraAttributes: [JSON!]
   id: ID!
@@ -1825,7 +1826,7 @@ type Query {
   paginatedBuildingBlocks(categoryTypes: [String!] = [], filterBlocks: [String!] = [], offsetAttributes: OffsetAttributes!, sdgs: [String!] = [], search: String = "", showGovStackOnly: Boolean = false, showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): [BuildingBlock!]!
   paginatedCandidateDatasets(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateDataset!]!
   paginatedCandidateOrganizations(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateOrganization!]!
-  paginatedCandidateProducts(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
+  paginatedCandidateProducts(currentUserOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateProduct!]!
   paginatedCandidateResources(countries: [String!] = [], inReviewOnly: Boolean = false, offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateResource!]!
   paginatedCandidateRoles(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateRole!]!
   paginatedCandidateStatuses(offsetAttributes: OffsetAttributes!, search: String = ""): [CandidateStatus!]!
@@ -1855,7 +1856,7 @@ type Query {
   paginationAttributeBuildingBlock(categoryTypes: [String!] = [], filterBlocks: [String!] = [], sdgs: [String!] = [], search: String = "", showGovStackOnly: Boolean = false, showMature: Boolean = false, useCases: [String!] = [], workflows: [String!] = []): PaginationAttributes!
   paginationAttributeCandidateDataset(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateOrganization(search: String = ""): PaginationAttributes!
-  paginationAttributeCandidateProduct(search: String = ""): PaginationAttributes!
+  paginationAttributeCandidateProduct(currentUserOnly: Boolean = false, search: String = ""): PaginationAttributes!
   paginationAttributeCandidateResource(countries: [String!] = [], inReviewOnly: Boolean = false, search: String = ""): PaginationAttributes!
   paginationAttributeCandidateRole(search: String = ""): PaginationAttributes!
   paginationAttributeCandidateStatus(search: String = ""): PaginationAttributes!
