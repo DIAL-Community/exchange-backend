@@ -16,7 +16,7 @@ module Modules
     @@dataset_list = []
 
     def sync_public_dataset(json_data)
-      unless json_data['categories'].detect { |element| element != 'Open Software' }.nil?
+      unless json_data['category'] == 'Open Software'
         puts "Syncing open data: #{json_data['name']}."
 
         dpga_origin = Origin.find_by(slug: 'dpga')
@@ -49,17 +49,17 @@ module Modules
           @@dataset_list << existing_dataset.name
         end
 
-        website = cleanup_url(json_data['website'])
+        website = cleanup_url(json_data['websiteURL'])
         unless website.empty?
           puts "  Updating website: #{existing_dataset.website} => #{website}."
           existing_dataset.website = website
         end
 
         dataset_type = 'dataset'
-        dataset_type = 'ai_model' unless json_data['categories'].detect { |e| e == 'Open AI Model' }.nil?
-        dataset_type = 'content' unless json_data['categories'].detect { |e| e == 'Open Data' }.nil?
-        dataset_type = 'content' unless json_data['categories'].detect { |e| e == 'Open Content' }.nil?
-        dataset_type = 'standard' unless json_data['categories'].detect { |e| e == 'Open Standard' }.nil?
+        dataset_type = 'ai_model' unless json_data['category'] == 'Open AI Model'
+        dataset_type = 'content' unless json_data['category'] == 'Open Data'
+        dataset_type = 'content' unless json_data['category'] == 'Open Content'
+        dataset_type = 'standard' unless json_data['category'] == 'Open Standard'
         existing_dataset.dataset_type = dataset_type
 
         # Assign what's left in the alias array as aliases.
@@ -88,10 +88,9 @@ module Modules
           end
         end
 
-        if !json_data['sdgs'].nil? && !json_data['sdgs']['sdg'].empty?
-          json_data['sdgs']['sdg'].each do |sdg_entry|
-            sdg_header, _ = sdg_entry.split(':')
-            sdg_number = sdg_header.sub('SDG', '')
+        if !json_data['sdgs'].nil?
+          json_data['sdgs'].each do |sdg_entry|
+            sdg_number = sdg_entry['number'].to_i
 
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
@@ -128,7 +127,7 @@ module Modules
           end
         end
 
-        deployment_countries = json_data['locations']['deploymentCountries']
+        deployment_countries = json_data['deploymentCountries']
         if !deployment_countries.nil? && !deployment_countries.empty?
           deployment_countries.each do |deployment_country|
             country = Country.find_by(name: deployment_country)
@@ -157,7 +156,7 @@ module Modules
     end
 
     def sync_public_product(json_data)
-      unless json_data['categories'].detect { |element| element == 'Open Software' }.nil?
+      if json_data['categories'] == 'Open Software'
         puts "Syncing product: #{json_data['name']}."
 
         dpga_origin = Origin.find_by(slug: 'dpga')
@@ -191,7 +190,7 @@ module Modules
           @@product_list << existing_product.name
         end
 
-        website = cleanup_url(json_data['website'])
+        website = cleanup_url(json_data['websiteURL'])
         unless website.empty?
           puts "  Updating website: #{existing_product.website} => #{website}."
           existing_product.website = website
@@ -205,10 +204,9 @@ module Modules
           existing_product.origins.push(dpga_origin)
         end
 
-        if !json_data['sdgs'].nil? && !json_data['sdgs']['sdg'].empty?
-          json_data['sdgs']['sdg'].each do |sdg_entry|
-            sdg_header, _ = sdg_entry.split(':')
-            sdg_number = sdg_header.sub('SDG', '')
+        if !json_data['sdgs'].nil?
+          json_data['sdgs'].each do |sdg_entry|
+            sdg_number = sdg_entry['number'].to_i
 
             sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
             next if sdg.nil?
