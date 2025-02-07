@@ -88,23 +88,21 @@ module Modules
           end
         end
 
-        if !json_data['sdgs'].nil?
-          json_data['sdgs'].each do |sdg_entry|
-            sdg_number = sdg_entry['number'].to_i
+        json_data['sdgs']&.each do |sdg_entry|
+          sdg_number = sdg_entry['number'].to_i
 
-            sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
-            next if sdg.nil?
+          sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
+          next if sdg.nil?
 
-            dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
-              dataset_id: existing_dataset.id,
-              sustainable_development_goal_id: sdg.id
-            )
-            dataset_sdg = DatasetSustainableDevelopmentGoal.new if dataset_sdg.nil?
-            dataset_sdg.sustainable_development_goal_id = sdg.id
-            dataset_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
+          dataset_sdg = DatasetSustainableDevelopmentGoal.find_by(
+            dataset_id: existing_dataset.id,
+            sustainable_development_goal_id: sdg.id
+          )
+          dataset_sdg = DatasetSustainableDevelopmentGoal.new if dataset_sdg.nil?
+          dataset_sdg.sustainable_development_goal_id = sdg.id
+          dataset_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
-            existing_dataset.dataset_sustainable_development_goals << dataset_sdg
-          end
+          existing_dataset.dataset_sustainable_development_goals << dataset_sdg
         end
 
         organization_entries = json_data['organizations']
@@ -204,24 +202,22 @@ module Modules
           existing_product.origins.push(dpga_origin)
         end
 
-        if !json_data['sdgs'].nil?
-          json_data['sdgs'].each do |sdg_entry|
-            sdg_number = sdg_entry['number'].to_i
+        json_data['sdgs']&.each do |sdg_entry|
+          sdg_number = sdg_entry['number'].to_i
 
-            sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
-            next if sdg.nil?
+          sdg = SustainableDevelopmentGoal.find_by(number: sdg_number)
+          next if sdg.nil?
 
-            product_sdg = ProductSustainableDevelopmentGoal.find_by(
-              product_id: existing_product.id,
-              sustainable_development_goal_id: sdg.id
-            )
+          product_sdg = ProductSustainableDevelopmentGoal.find_by(
+            product_id: existing_product.id,
+            sustainable_development_goal_id: sdg.id
+          )
 
-            product_sdg = ProductSustainableDevelopmentGoal.new if product_sdg.nil?
-            product_sdg.sustainable_development_goal_id = sdg.id
-            product_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
+          product_sdg = ProductSustainableDevelopmentGoal.new if product_sdg.nil?
+          product_sdg.sustainable_development_goal_id = sdg.id
+          product_sdg.mapping_status = DatasetSustainableDevelopmentGoal.mapping_status_types[:VALIDATED]
 
-            existing_product.product_sustainable_development_goals << product_sdg
-          end
+          existing_product.product_sustainable_development_goals << product_sdg
         end
 
         if !json_data['sectors'].nil? && !json_data['sectors'].empty?
