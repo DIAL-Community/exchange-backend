@@ -1535,6 +1535,20 @@
               "deprecationReason": null
             },
             {
+              "name": "createdBy",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "description",
               "description": null,
               "args": [
@@ -28823,6 +28837,18 @@
               "description": null,
               "args": [
                 {
+                  "name": "currentUserOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
                   "name": "search",
                   "description": null,
                   "type": {
@@ -31692,6 +31718,18 @@
               "name": "paginationAttributeCandidateProduct",
               "description": null,
               "args": [
+                {
+                  "name": "currentUserOnly",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": "false",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
                 {
                   "name": "search",
                   "description": null,

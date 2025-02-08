@@ -16,8 +16,8 @@ module Queries
       operation_context = context[:operation_context] || EDITING_CONTEXT
       current_policy = Pundit.policy(context[:current_user], instance)
 
-      puts "Receiving instance: #{instance.class} with context: #{operation_context}."
-      puts "Processing query using policy: #{current_policy.class}."
+      # puts "Receiving instance: #{instance.class} with context: #{operation_context}."
+      # puts "Processing query using policy: #{current_policy.class}."
 
       unless current_policy.available?
         raise GraphQL::ExecutionError.new(
@@ -39,6 +39,8 @@ module Queries
           operation_permitted = !current_policy.delete_allowed?
         when CREATING_CONTEXT
           operation_permitted = !current_policy.create_allowed?
+        when APPROVING_CONTEXT
+          operation_permitted = !current_policy.status_update_allowed?
         end
 
         # Check the next operation if current operation is allowed.

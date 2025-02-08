@@ -19,6 +19,9 @@ module Queries
         tenant_unsecure_read[exchange_tenant.tenant_name] = exchange_tenant.allow_unsecured_read
       end
 
+      # Return nil if we don't have any data with tenant_name.
+      return nil if tenant_domains.empty?
+
       {
         id: tenant_name,
         tenant_name:,

@@ -9,6 +9,7 @@ class User < ApplicationRecord
 
   enum user_role: {
     admin: 'admin',
+    candidate_editor: 'candidate_editor',
 
     mni: 'mni',
     ict4sdg: 'ict4sdg',

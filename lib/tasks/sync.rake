@@ -36,7 +36,7 @@ namespace :sync do
 
     ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
-    dpg_uri = URI.parse('https://api.digitalpublicgoods.net/dpgs/')
+    dpg_uri = URI.parse('https://app.digitalpublicgoods.net/api/v1/dpgs')
     dpg_response = Net::HTTP.get(dpg_uri)
     dpg_data = JSON.parse(dpg_response)
     dpg_data.each do |entry|
@@ -49,18 +49,18 @@ namespace :sync do
       puts "--------"
     end
 
-    dpg_uri = URI.parse('https://api.digitalpublicgoods.net/nominees/')
-    dpg_response = Net::HTTP.get(dpg_uri)
-    dpg_data = JSON.parse(dpg_response)
-    dpg_data.each do |entry|
-      next if search_in_ignorelist(entry, ignore_list)
+    # dpg_uri = URI.parse('https://api.digitalpublicgoods.net/nominees/')
+    # dpg_response = Net::HTTP.get(dpg_uri)
+    # dpg_data = JSON.parse(dpg_response)
+    # dpg_data.each do |entry|
+    #  next if search_in_ignorelist(entry, ignore_list)
 
-      tracking_task_log(task_name, "Processing DPG nominee entry: #{entry['name']}.")
-      sync_public_dataset(entry)
-      sync_public_product(entry)
-      sync_repository_data(entry)
-      puts "--------"
-    end
+    #  tracking_task_log(task_name, "Processing DPG nominee entry: #{entry['name']}.")
+    #  sync_public_dataset(entry)
+    #  sync_public_product(entry)
+    #  sync_repository_data(entry)
+    #  puts "--------"
+    # end
     send_notification
     tracking_task_finish(task_name)
   end
