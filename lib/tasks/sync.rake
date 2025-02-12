@@ -66,23 +66,27 @@ namespace :sync do
   end
 
   task :digi_square_digital_good, [:path] => :environment do
-    task_name = 'Sync DS Data'
-    tracking_task_setup(task_name, 'Preparing task tracker record.')
-    tracking_task_start(task_name)
+    ENV['tenant'].nil? ? tenant_name = 'public' : tenant_name = ENV['tenant']
+    puts "Tenant: #{tenant_name}"
+    Apartment::Tenant.switch(tenant_name) do
+      task_name = 'Sync DS Data'
+      tracking_task_setup(task_name, 'Preparing task tracker record.')
+      tracking_task_start(task_name)
 
-    ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
+      ignore_list = YAML.load_file('data/yaml/product-ignorelist.yml')
 
-    digisquare_maturity = JSON.parse(File.read('data/json/digisquare-maturity-data.json'))
-    digisquare_products = YAML.load_file('data/yaml/digisquare-global-goods.yml')
-    digisquare_products['products'].each do |digi_product|
-      next if search_in_ignorelist(digi_product, ignore_list)
+      digisquare_maturity = JSON.parse(File.read('data/json/digisquare-maturity-data.json'))
+      digisquare_products = YAML.load_file('data/yaml/digisquare-global-goods.yml')
+      digisquare_products['products'].each do |digi_product|
+        next if search_in_ignorelist(digi_product, ignore_list)
 
-      tracking_task_log(task_name, "Processing DS entry: #{digi_product['name']}.")
-      sync_digisquare_product(digi_product, digisquare_maturity)
-      sync_repository_data(digi_product)
+        tracking_task_log(task_name, "Processing DS entry: #{digi_product['name']}.")
+        sync_digisquare_product(digi_product, digisquare_maturity)
+        sync_repository_data(digi_product)
+      end
+      send_notification
+      tracking_task_finish(task_name)
     end
-    send_notification
-    tracking_task_finish(task_name)
   end
 
   task :osc_digital_good_local, [] => :environment do
