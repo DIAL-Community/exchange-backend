@@ -89,6 +89,14 @@ module Types
     end
 
     field :tags, GraphQL::Types::JSON, null: true
-    field :sector, Types::SectorType, null: false
+    field :sector, Types::SectorType, null: true
+    def sector
+      sector_slug = object.sector.slug
+      matching_sector = Sector.find_by(slug: sector_slug, locale: I18n.locale)
+      if matching_sector.nil?
+        matching_sector = Sector.find_by(slug: sector_slug, locale: 'en')
+      end
+      matching_sector
+    end
   end
 end

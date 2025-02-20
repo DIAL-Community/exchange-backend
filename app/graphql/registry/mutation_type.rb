@@ -202,6 +202,8 @@ module Registry
     field :update_site_setting_hero_card_section, mutation: Mutations::UpdateSiteSettingHeroCardSection
     field :update_site_setting_menu_configuration, mutation: Mutations::UpdateSiteSettingMenuConfiguration
     field :update_site_setting_menu_configurations, mutation: Mutations::UpdateSiteSettingMenuConfigurations
+    field :update_site_setting_item_layouts, mutation: Mutations::UpdateSiteSettingItemLayouts
+    field :update_site_setting_item_configurations, mutation: Mutations::UpdateSiteSettingItemConfigurations
 
     field :create_tenant_setting, mutation: Mutations::CreateTenantSetting
     field :delete_tenant_setting, mutation: Mutations::DeleteTenantSetting
