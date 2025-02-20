@@ -1324,47 +1324,11 @@ type Organization {
   whenEndorsed: ISO8601Date
 }
 
-"""
-The connection type for Organization.
-"""
-type OrganizationConnection {
-  """
-  A list of edges.
-  """
-  edges: [OrganizationEdge]
-
-  """
-  A list of nodes.
-  """
-  nodes: [Organization]
-
-  """
-  Information to aid in pagination.
-  """
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type OrganizationDescription {
   description: String!
   id: ID!
   locale: String!
   organizationId: Int
-}
-
-"""
-An edge in a connection.
-"""
-type OrganizationEdge {
-  """
-  A cursor for use in pagination.
-  """
-  cursor: String!
-
-  """
-  The item at the end of the edge.
-  """
-  node: Organization
 }
 
 type Origin {
@@ -1896,35 +1860,7 @@ type Query {
     last: Int
     search: String = ""
   ): PlayMoveConnection!
-  searchOrganizations(
-    """
-    Returns the elements in the list that come after the specified cursor.
-    """
-    after: String
-    aggregatorOnly: Boolean = false
-    aggregators: [String!] = []
-
-    """
-    Returns the elements in the list that come before the specified cursor.
-    """
-    before: String
-    countries: [String!] = []
-    endorserLevel: String = ""
-    endorserOnly: Boolean = false
-
-    """
-    Returns the first _n_ elements from the list.
-    """
-    first: Int
-
-    """
-    Returns the last _n_ elements from the list.
-    """
-    last: Int
-    search: String = ""
-    sectors: [String!] = []
-    years: [Int!] = []
-  ): OrganizationConnection!
+  searchOrganizations(aggregatorOnly: Boolean = false, aggregators: [String!] = [], countries: [String!] = [], search: String = "", sectors: [String!] = [], years: [Int!] = []): [Organization!]!
   searchPlaybookPlays(
     """
     Returns the elements in the list that come after the specified cursor.
