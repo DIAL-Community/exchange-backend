@@ -4,6 +4,7 @@ module EntityStatusType
   extend ActiveSupport::Concern
 
   included do
+    attribute :entity_status_type, :string
     enum entity_status_type: {
       BETA: 'BETA',
       MATURE: 'MATURE',

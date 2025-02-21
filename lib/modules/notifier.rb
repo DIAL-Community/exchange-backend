@@ -26,8 +26,8 @@ module Modules
 
     def get_comment_link(comment)
       # 'PRODUCT','OPEN_DATA','PROJECT','USE_CASE','BUILDING_BLOCK','PLAYBOOK','ORGANIZATION'
-      link_url = Rails.application.secrets.base_url + '/' unless Rails.application.secrets.base_url.nil?
-      link_url = "" if Rails.application.secrets.base_url.nil?
+      link_url = Rails.application.credentials.base_url + '/' unless Rails.application.credentials.base_url.nil?
+      link_url = "" if Rails.application.credentials.base_url.nil?
       case comment.comment_object_type
       when 'PRODUCT'
         comment_object = Product.find(comment.comment_object_id)

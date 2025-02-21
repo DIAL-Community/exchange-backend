@@ -37,7 +37,7 @@ namespace :projects do
 
   def geocode_city(city_name)
     city_data = {}
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
 
     geocode_data = JSON.parse(geocode_with_google(city_name, nil, google_auth_key))
     geocode_results = geocode_data['results']
