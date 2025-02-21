@@ -2,14 +2,13 @@
 
 module Mutations
   class UpdateSiteSettingItemLayouts < Mutations::BaseMutation
-    argument :site_setting_slug, String, required: true
     argument :item_layouts, GraphQL::Types::JSON, required: true, default_value: {}
 
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(site_setting_slug:, item_layouts:)
-      site_setting = SiteSetting.find_by(slug: site_setting_slug)
+    def resolve(item_layouts:)
+      site_setting = SiteSetting.find_by(default_setting: true)
       site_setting_policy = Pundit.policy(context[:current_user], site_setting || SiteSetting.new)
       if site_setting.nil? || !site_setting_policy.edit_allowed?
         return {
