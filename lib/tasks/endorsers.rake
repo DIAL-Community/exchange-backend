@@ -106,7 +106,7 @@ namespace :endorsers do
       existing_country = Country.find_by(name: headquarters_country)
       existing_city = City.find_by(name: headquarters_city)
       if existing_city.nil?
-        google_auth_key = Rails.application.secrets.google_api_key
+        google_auth_key = Rails.application.credentials.google_api_key
         existing_city = find_city(headquarters_city, headquarters_city, existing_country.code, google_auth_key)
       end
 

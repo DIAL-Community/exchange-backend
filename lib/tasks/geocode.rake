@@ -94,7 +94,7 @@ namespace :geocode do
     task_name = 'Migrate Aggregator Country'
     tracking_task_start(task_name)
 
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
     AggregatorCapability.all.each do |aggregator|
       next unless aggregator.country_id.nil?
 
@@ -118,7 +118,7 @@ namespace :geocode do
     task_name = 'Migrate Operator Country'
     tracking_task_start(task_name)
 
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
     OperatorService.all.each do |operator|
       next unless operator.country_id.nil?
 
@@ -149,7 +149,7 @@ namespace :geocode do
     task_name = 'Migrate Project Country'
     tracking_task_start(task_name)
 
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
     Project.all.each do |project|
       puts "Processing #{project.name} ..."
       project.projects_locations.each do |project_location|
@@ -185,7 +185,7 @@ namespace :geocode do
     task_name = 'Migrate Organization Country'
     tracking_task_start(task_name)
 
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
     Organization.all.each do |organization|
       puts "Processing #{organization.name} ..."
       organization.organizations_locations.each do |organization_location|

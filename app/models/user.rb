@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   acts_as_token_authenticatable
 
+  attribute :user_role, :string
   enum user_role: {
     admin: 'admin',
     candidate_editor: 'candidate_editor',

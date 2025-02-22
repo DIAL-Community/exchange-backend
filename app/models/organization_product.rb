@@ -6,6 +6,7 @@ class OrganizationProduct < ApplicationRecord
   belongs_to :organization
   belongs_to :product
 
+  attribute :organization_type, :string
   enum organization_type: { owner: 'owner', maintainer: 'maintainer', funder: 'funder', implementer: 'implementer' }
 
   after_initialize :set_default_type, if: :new_record?

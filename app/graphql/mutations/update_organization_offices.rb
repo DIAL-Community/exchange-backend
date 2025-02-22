@@ -62,7 +62,7 @@ module Mutations
         office['cityName'],
         office['regionName'],
         office['countryCode'],
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       )
 
       province = city.province

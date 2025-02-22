@@ -12,7 +12,7 @@ module Queries
       return [] if context[:current_user].nil?
 
       captcha_validation = Recaptcha.verify_via_api_call(captcha, {
-        secret_key: Rails.application.secrets.captcha_secret_key,
+        secret_key: Rails.application.credentials.captcha_secret_key,
         skip_remote_ip: true
       })
       return [] unless captcha_validation

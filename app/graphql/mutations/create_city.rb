@@ -47,7 +47,7 @@ module Mutations
       province = find_province(
         province_name,
         country.code,
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       ) if province.nil?
 
       return {
@@ -59,7 +59,7 @@ module Mutations
         city_name,
         province.name,
         country.code,
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       ) if city.nil?
 
       successful_operation = !city.nil?

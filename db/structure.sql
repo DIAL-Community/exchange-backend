@@ -1,6 +1,7 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -10,6 +11,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: dsq; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA dsq;
+
+
+--
 -- Name: fao; Type: SCHEMA; Schema: -; Owner: -
 --
 
@@ -17,10 +25,308 @@ CREATE SCHEMA fao;
 
 
 --
+-- Name: government; Type: SCHEMA; Schema: -; Owner: -
+--
+
+CREATE SCHEMA government;
+
+
+--
 -- Name: health; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA health;
+
+
+--
+-- Name: agg_capabilities; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.agg_capabilities AS ENUM (
+    'Transfer to Subscribers',
+    'Transfer to Business',
+    'Balance Check',
+    'Delivery Notification',
+    'Reporting',
+    'SMPP',
+    'HTTP',
+    'HTTPS',
+    'XML-RPC',
+    'FTP',
+    'GUI-Self Service',
+    'Data Integrity',
+    'VPN',
+    'Other API Support',
+    'Content Management',
+    'Subscription Management',
+    'Campaign Management',
+    'Portal Management',
+    'Recommendation Engine',
+    'Advertisement Platform',
+    'Analytics and Reporting',
+    'URL-IP Configuration',
+    'Standard Billing',
+    'Zero Rated',
+    'Reverse Billing',
+    'Private APN Provisioning',
+    'Business to Subscriber',
+    'Subscriber to Business',
+    'Bulk Transfer',
+    'Alarm Support',
+    'Consolidated Reports',
+    'Automated realtime alerts',
+    'Configure & Monitor Message length',
+    'Threshold Monitoring',
+    'Spam Control',
+    'WhatsApp',
+    'Facebook Messenger',
+    'Media Streaming',
+    'Reliability percent',
+    'High Availability',
+    'Redundancy',
+    'Support',
+    'Security Policies',
+    'One Way',
+    'Two Way',
+    'Bulk SMS',
+    'Delivery Reports',
+    'Sender ID Configuration',
+    'Number Masking',
+    'Premium Billing',
+    'Zero Rating',
+    'Dedicated Short Code Provisioning',
+    'Shared Short Code',
+    'Long Code Provisioning',
+    'SMS Spam filter',
+    'Automated regulatory compliance',
+    'Traffic-Capacity-Bandwidth',
+    'Graphical User Interface',
+    'Customized User Creation',
+    'Session Reports',
+    'Hosted Menu',
+    'IVR Inbound',
+    'IVR Outbound',
+    'Leased Lines',
+    'VOIP',
+    'Hosted IVR Menu',
+    'Short Code Provisioning'
+);
+
+
+--
+-- Name: category_indicator_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.category_indicator_type AS ENUM (
+    'boolean',
+    'scale',
+    'numeric'
+);
+
+
+--
+-- Name: category_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.category_type AS ENUM (
+    'DPI',
+    'FUNCTIONAL'
+);
+
+
+--
+-- Name: comment_object_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.comment_object_type AS ENUM (
+    'BUILDING_BLOCK',
+    'OPEN_DATA',
+    'PRODUCT',
+    'PROJECT',
+    'OPPORTUNITY',
+    'ORGANIZATION',
+    'USE_CASE',
+    'WORKFLOW',
+    'MOVE',
+    'PLAY',
+    'PLAYBOOK',
+    'RUBRIC_CATEGORY',
+    'CATEGORY_INDICATOR',
+    'CANDIDATE_OPEN_DATA',
+    'CANDIDATE_ORGANIZATION',
+    'CANDIDATE_PRODUCT',
+    'CANDIDATE_RESOURCE',
+    'CANDIDATE_ROLE',
+    'TAG',
+    'SECTOR',
+    'CITY',
+    'COUNTRY',
+    'REGION',
+    'TASK',
+    'USER',
+    'CONTACT',
+    'RESOURCE',
+    'RESOURCE_TOPIC',
+    'SITE_SETTING',
+    'TENANT_SETTING'
+);
+
+
+--
+-- Name: digisquare_maturity_level; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.digisquare_maturity_level AS ENUM (
+    'low',
+    'medium',
+    'high'
+);
+
+
+--
+-- Name: endorser_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.endorser_type AS ENUM (
+    'none',
+    'bronze',
+    'silver',
+    'gold'
+);
+
+
+--
+-- Name: entity_status_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.entity_status_type AS ENUM (
+    'BETA',
+    'MATURE',
+    'SELF-REPORTED',
+    'VALIDATED',
+    'PUBLISHED',
+    'DRAFT'
+);
+
+
+--
+-- Name: location_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.location_type AS ENUM (
+    'country',
+    'point'
+);
+
+
+--
+-- Name: mapping_status_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.mapping_status_type AS ENUM (
+    'BETA',
+    'MATURE',
+    'SELF-REPORTED',
+    'VALIDATED'
+);
+
+
+--
+-- Name: mobile_services; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.mobile_services AS ENUM (
+    'Airtime',
+    'API',
+    'HS',
+    'Mobile-Internet',
+    'Mobile-Money',
+    'Ops-Maintenance',
+    'OTT',
+    'SLA',
+    'SMS',
+    'User-Interface',
+    'USSD',
+    'Voice'
+);
+
+
+--
+-- Name: opportunity_status_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.opportunity_status_type AS ENUM (
+    'UPCOMING',
+    'OPEN',
+    'CLOSED'
+);
+
+
+--
+-- Name: opportunity_type_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.opportunity_type_type AS ENUM (
+    'BID',
+    'TENDER',
+    'INNOVATION',
+    'BUILDING BLOCK',
+    'OTHER'
+);
+
+
+--
+-- Name: organization_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.organization_type AS ENUM (
+    'owner',
+    'maintainer',
+    'funder',
+    'implementer'
+);
+
+
+--
+-- Name: product_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.product_type AS ENUM (
+    'product',
+    'dataset',
+    'content'
+);
+
+
+--
+-- Name: relationship_type; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.relationship_type AS ENUM (
+    'composed',
+    'interoperates'
+);
+
+
+--
+-- Name: user_role; Type: TYPE; Schema: dsq; Owner: -
+--
+
+CREATE TYPE dsq.user_role AS ENUM (
+    'admin',
+    'ict4sdg',
+    'principle',
+    'user',
+    'organization_owner',
+    'product_owner',
+    'mni',
+    'content_writer',
+    'content_editor',
+    'dataset_user',
+    'adli_admin',
+    'adli_user',
+    'candidate_editor'
+);
 
 
 --
@@ -298,6 +604,297 @@ CREATE TYPE fao.relationship_type AS ENUM (
 --
 
 CREATE TYPE fao.user_role AS ENUM (
+    'admin',
+    'ict4sdg',
+    'principle',
+    'user',
+    'organization_owner',
+    'product_owner',
+    'mni',
+    'content_writer',
+    'content_editor',
+    'dataset_user',
+    'adli_admin',
+    'adli_user',
+    'candidate_editor'
+);
+
+
+--
+-- Name: agg_capabilities; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.agg_capabilities AS ENUM (
+    'Transfer to Subscribers',
+    'Transfer to Business',
+    'Balance Check',
+    'Delivery Notification',
+    'Reporting',
+    'SMPP',
+    'HTTP',
+    'HTTPS',
+    'XML-RPC',
+    'FTP',
+    'GUI-Self Service',
+    'Data Integrity',
+    'VPN',
+    'Other API Support',
+    'Content Management',
+    'Subscription Management',
+    'Campaign Management',
+    'Portal Management',
+    'Recommendation Engine',
+    'Advertisement Platform',
+    'Analytics and Reporting',
+    'URL-IP Configuration',
+    'Standard Billing',
+    'Zero Rated',
+    'Reverse Billing',
+    'Private APN Provisioning',
+    'Business to Subscriber',
+    'Subscriber to Business',
+    'Bulk Transfer',
+    'Alarm Support',
+    'Consolidated Reports',
+    'Automated realtime alerts',
+    'Configure & Monitor Message length',
+    'Threshold Monitoring',
+    'Spam Control',
+    'WhatsApp',
+    'Facebook Messenger',
+    'Media Streaming',
+    'Reliability percent',
+    'High Availability',
+    'Redundancy',
+    'Support',
+    'Security Policies',
+    'One Way',
+    'Two Way',
+    'Bulk SMS',
+    'Delivery Reports',
+    'Sender ID Configuration',
+    'Number Masking',
+    'Premium Billing',
+    'Zero Rating',
+    'Dedicated Short Code Provisioning',
+    'Shared Short Code',
+    'Long Code Provisioning',
+    'SMS Spam filter',
+    'Automated regulatory compliance',
+    'Traffic-Capacity-Bandwidth',
+    'Graphical User Interface',
+    'Customized User Creation',
+    'Session Reports',
+    'Hosted Menu',
+    'IVR Inbound',
+    'IVR Outbound',
+    'Leased Lines',
+    'VOIP',
+    'Hosted IVR Menu',
+    'Short Code Provisioning'
+);
+
+
+--
+-- Name: category_indicator_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.category_indicator_type AS ENUM (
+    'boolean',
+    'scale',
+    'numeric'
+);
+
+
+--
+-- Name: category_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.category_type AS ENUM (
+    'DPI',
+    'FUNCTIONAL'
+);
+
+
+--
+-- Name: comment_object_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.comment_object_type AS ENUM (
+    'BUILDING_BLOCK',
+    'OPEN_DATA',
+    'PRODUCT',
+    'PROJECT',
+    'OPPORTUNITY',
+    'ORGANIZATION',
+    'USE_CASE',
+    'WORKFLOW',
+    'MOVE',
+    'PLAY',
+    'PLAYBOOK',
+    'RUBRIC_CATEGORY',
+    'CATEGORY_INDICATOR',
+    'CANDIDATE_OPEN_DATA',
+    'CANDIDATE_ORGANIZATION',
+    'CANDIDATE_PRODUCT',
+    'CANDIDATE_RESOURCE',
+    'CANDIDATE_ROLE',
+    'TAG',
+    'SECTOR',
+    'CITY',
+    'COUNTRY',
+    'REGION',
+    'TASK',
+    'USER',
+    'CONTACT',
+    'RESOURCE',
+    'RESOURCE_TOPIC',
+    'SITE_SETTING',
+    'TENANT_SETTING'
+);
+
+
+--
+-- Name: digisquare_maturity_level; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.digisquare_maturity_level AS ENUM (
+    'low',
+    'medium',
+    'high'
+);
+
+
+--
+-- Name: endorser_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.endorser_type AS ENUM (
+    'none',
+    'bronze',
+    'silver',
+    'gold'
+);
+
+
+--
+-- Name: entity_status_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.entity_status_type AS ENUM (
+    'BETA',
+    'MATURE',
+    'SELF-REPORTED',
+    'VALIDATED',
+    'PUBLISHED',
+    'DRAFT'
+);
+
+
+--
+-- Name: location_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.location_type AS ENUM (
+    'country',
+    'point'
+);
+
+
+--
+-- Name: mapping_status_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.mapping_status_type AS ENUM (
+    'BETA',
+    'MATURE',
+    'SELF-REPORTED',
+    'VALIDATED'
+);
+
+
+--
+-- Name: mobile_services; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.mobile_services AS ENUM (
+    'Airtime',
+    'API',
+    'HS',
+    'Mobile-Internet',
+    'Mobile-Money',
+    'Ops-Maintenance',
+    'OTT',
+    'SLA',
+    'SMS',
+    'User-Interface',
+    'USSD',
+    'Voice'
+);
+
+
+--
+-- Name: opportunity_status_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.opportunity_status_type AS ENUM (
+    'UPCOMING',
+    'OPEN',
+    'CLOSED'
+);
+
+
+--
+-- Name: opportunity_type_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.opportunity_type_type AS ENUM (
+    'BID',
+    'TENDER',
+    'INNOVATION',
+    'BUILDING BLOCK',
+    'OTHER'
+);
+
+
+--
+-- Name: organization_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.organization_type AS ENUM (
+    'owner',
+    'maintainer',
+    'funder',
+    'implementer'
+);
+
+
+--
+-- Name: product_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.product_type AS ENUM (
+    'product',
+    'dataset',
+    'content'
+);
+
+
+--
+-- Name: relationship_type; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.relationship_type AS ENUM (
+    'composed',
+    'interoperates'
+);
+
+
+--
+-- Name: user_role; Type: TYPE; Schema: government; Owner: -
+--
+
+CREATE TYPE government.user_role AS ENUM (
     'admin',
     'ict4sdg',
     'principle',
@@ -901,6 +1498,4362 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: aggregator_capabilities; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.aggregator_capabilities (
+    id bigint NOT NULL,
+    aggregator_id bigint,
+    operator_services_id bigint,
+    service dsq.mobile_services,
+    capability dsq.agg_capabilities,
+    country_name character varying,
+    country_id bigint
+);
+
+
+--
+-- Name: aggregator_capabilities_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.aggregator_capabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: aggregator_capabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.aggregator_capabilities_id_seq OWNED BY dsq.aggregator_capabilities.id;
+
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: audits; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.audits (
+    id bigint NOT NULL,
+    associated_id character varying,
+    associated_type character varying,
+    user_id integer,
+    user_role character varying,
+    username character varying,
+    action character varying,
+    audit_changes jsonb,
+    version integer DEFAULT 0,
+    comment character varying,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: audits_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.audits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audits_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.audits_id_seq OWNED BY dsq.audits.id;
+
+
+--
+-- Name: authors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.authors (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    email character varying,
+    picture character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.authors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.authors_id_seq OWNED BY dsq.authors.id;
+
+
+--
+-- Name: building_block_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.building_block_descriptions (
+    id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: building_block_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.building_block_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: building_block_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.building_block_descriptions_id_seq OWNED BY dsq.building_block_descriptions.id;
+
+
+--
+-- Name: building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.building_blocks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL,
+    maturity dsq.entity_status_type DEFAULT 'DRAFT'::dsq.entity_status_type NOT NULL,
+    spec_url character varying,
+    category dsq.category_type,
+    display_order integer DEFAULT 0 NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: building_blocks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.building_blocks_id_seq OWNED BY dsq.building_blocks.id;
+
+
+--
+-- Name: candidate_datasets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website character varying NOT NULL,
+    visualization_url character varying,
+    dataset_type character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_datasets_id_seq OWNED BY dsq.candidate_datasets.id;
+
+
+--
+-- Name: candidate_organizations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_organizations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website text,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying,
+    create_storefront boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: candidate_organizations_contacts; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_organizations_contacts (
+    candidate_organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone
+);
+
+
+--
+-- Name: candidate_organizations_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_organizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_organizations_id_seq OWNED BY dsq.candidate_organizations.id;
+
+
+--
+-- Name: candidate_product_category_indicators; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_product_category_indicators (
+    id bigint NOT NULL,
+    candidate_product_id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    indicator_value character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_product_category_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_product_category_indicators_id_seq OWNED BY dsq.candidate_product_category_indicators.id;
+
+
+--
+-- Name: candidate_products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_products (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    website character varying NOT NULL,
+    repository character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying,
+    commercial_product boolean DEFAULT false NOT NULL,
+    candidate_status_id bigint,
+    maturity_score jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    created_by_id bigint
+);
+
+
+--
+-- Name: candidate_products_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_products_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_products_id_seq OWNED BY dsq.candidate_products.id;
+
+
+--
+-- Name: candidate_resources; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_link character varying NOT NULL,
+    link_description character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp(6) without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp(6) without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_resources_countries (
+    id bigint NOT NULL,
+    candidate_resource_id bigint NOT NULL,
+    country_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_resources_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_resources_countries_id_seq OWNED BY dsq.candidate_resources_countries.id;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_resources_id_seq OWNED BY dsq.candidate_resources.id;
+
+
+--
+-- Name: candidate_roles; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_roles (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    roles dsq.user_role[] DEFAULT '{}'::dsq.user_role[],
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    product_id integer,
+    organization_id integer,
+    dataset_id bigint
+);
+
+
+--
+-- Name: candidate_roles_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_roles_id_seq OWNED BY dsq.candidate_roles.id;
+
+
+--
+-- Name: candidate_status_relationships; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_status_relationships (
+    id bigint NOT NULL,
+    current_candidate_status_id bigint NOT NULL,
+    next_candidate_status_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_status_relationships_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_status_relationships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_status_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_status_relationships_id_seq OWNED BY dsq.candidate_status_relationships.id;
+
+
+--
+-- Name: candidate_statuses; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.candidate_statuses (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    initial_status boolean DEFAULT false NOT NULL,
+    terminal_status boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    notification_template character varying DEFAULT '      <p>
+        Hi {{current-user}},
+      </p>
+      <p>
+        Your candidate''s status, ''{{candidate-name}}'', has been updated.
+      </p>
+      <p>
+        The previous status was ''{{previous-status}}'' and the current status is ''{{current-status}}''.
+      </p>
+'::character varying NOT NULL
+);
+
+
+--
+-- Name: candidate_statuses_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.candidate_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.candidate_statuses_id_seq OWNED BY dsq.candidate_statuses.id;
+
+
+--
+-- Name: category_indicator_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.category_indicator_descriptions (
+    id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: category_indicator_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.category_indicator_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_indicator_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.category_indicator_descriptions_id_seq OWNED BY dsq.category_indicator_descriptions.id;
+
+
+--
+-- Name: category_indicators; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.category_indicators (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    indicator_type dsq.category_indicator_type,
+    weight numeric DEFAULT 0 NOT NULL,
+    rubric_category_id bigint,
+    data_source character varying,
+    source_indicator character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    script_name character varying
+);
+
+
+--
+-- Name: category_indicators_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.category_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.category_indicators_id_seq OWNED BY dsq.category_indicators.id;
+
+
+--
+-- Name: chatbot_conversations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.chatbot_conversations (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    session_identifier character varying NOT NULL,
+    chatbot_question character varying NOT NULL,
+    chatbot_answer character varying NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
+);
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.chatbot_conversations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.chatbot_conversations_id_seq OWNED BY dsq.chatbot_conversations.id;
+
+
+--
+-- Name: cities; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.cities (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    province_id bigint,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: cities_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.cities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cities_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.cities_id_seq OWNED BY dsq.cities.id;
+
+
+--
+-- Name: ckeditor_assets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.ckeditor_assets (
+    id bigint NOT NULL,
+    data_file_name character varying NOT NULL,
+    data_content_type character varying,
+    data_file_size integer,
+    type character varying(30),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: ckeditor_assets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.ckeditor_assets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ckeditor_assets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.ckeditor_assets_id_seq OWNED BY dsq.ckeditor_assets.id;
+
+
+--
+-- Name: classifications; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.classifications (
+    id bigint NOT NULL,
+    name character varying,
+    indicator character varying,
+    description character varying,
+    source character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: classifications_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.classifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.classifications_id_seq OWNED BY dsq.classifications.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.comments (
+    id bigint NOT NULL,
+    comment_object_id integer NOT NULL,
+    author jsonb NOT NULL,
+    text character varying NOT NULL,
+    comment_id character varying NOT NULL,
+    parent_comment_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    comment_object_type dsq.comment_object_type NOT NULL
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.comments_id_seq OWNED BY dsq.comments.id;
+
+
+--
+-- Name: contacts; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.contacts (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    email character varying,
+    title character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying DEFAULT 'exchange'::character varying,
+    extended_data jsonb DEFAULT '[]'::jsonb
+);
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.contacts_id_seq OWNED BY dsq.contacts.id;
+
+
+--
+-- Name: countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.countries (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    code character varying NOT NULL,
+    code_longer character varying NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
+);
+
+
+--
+-- Name: countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.countries_id_seq OWNED BY dsq.countries.id;
+
+
+--
+-- Name: dataset_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.dataset_descriptions (
+    id bigint NOT NULL,
+    dataset_id bigint,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.dataset_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.dataset_descriptions_id_seq OWNED BY dsq.dataset_descriptions.id;
+
+
+--
+-- Name: dataset_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.dataset_sectors (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sector_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.dataset_sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.dataset_sectors_id_seq OWNED BY dsq.dataset_sectors.id;
+
+
+--
+-- Name: dataset_sustainable_development_goals; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.dataset_sustainable_development_goals (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sustainable_development_goal_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.dataset_sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.dataset_sustainable_development_goals_id_seq OWNED BY dsq.dataset_sustainable_development_goals.id;
+
+
+--
+-- Name: datasets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    website character varying NOT NULL,
+    visualization_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    dataset_type character varying NOT NULL,
+    geographic_coverage character varying,
+    time_range character varying,
+    manual_update boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    license character varying,
+    languages character varying,
+    data_format character varying
+);
+
+
+--
+-- Name: datasets_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.datasets_countries (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.datasets_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.datasets_countries_id_seq OWNED BY dsq.datasets_countries.id;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.datasets_id_seq OWNED BY dsq.datasets.id;
+
+
+--
+-- Name: datasets_origins; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.datasets_origins (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    origin_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.datasets_origins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.datasets_origins_id_seq OWNED BY dsq.datasets_origins.id;
+
+
+--
+-- Name: deploys; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.deploys (
+    id bigint NOT NULL,
+    user_id bigint,
+    product_id bigint,
+    provider character varying,
+    instance_name character varying,
+    auth_token character varying,
+    status character varying,
+    message character varying,
+    url character varying,
+    suite character varying,
+    job_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: deploys_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.deploys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: deploys_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.deploys_id_seq OWNED BY dsq.deploys.id;
+
+
+--
+-- Name: dial_spreadsheet_data; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.dial_spreadsheet_data (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    spreadsheet_type character varying NOT NULL,
+    spreadsheet_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    deleted boolean DEFAULT false NOT NULL,
+    updated_by bigint,
+    updated_date timestamp without time zone
+);
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.dial_spreadsheet_data_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.dial_spreadsheet_data_id_seq OWNED BY dsq.dial_spreadsheet_data.id;
+
+
+--
+-- Name: digital_principles; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.digital_principles (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    url character varying NOT NULL,
+    phase character varying
+);
+
+
+--
+-- Name: digital_principles_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.digital_principles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: digital_principles_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.digital_principles_id_seq OWNED BY dsq.digital_principles.id;
+
+
+--
+-- Name: districts; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.districts (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    province_id bigint NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: districts_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.districts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: districts_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.districts_id_seq OWNED BY dsq.districts.id;
+
+
+--
+-- Name: endorsers; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.endorsers (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying
+);
+
+
+--
+-- Name: endorsers_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.endorsers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: endorsers_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.endorsers_id_seq OWNED BY dsq.endorsers.id;
+
+
+--
+-- Name: exchange_tenants; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.exchange_tenants (
+    id bigint NOT NULL,
+    tenant_name character varying,
+    domain character varying,
+    postgres_config jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecured_read boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.exchange_tenants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.exchange_tenants_id_seq OWNED BY dsq.exchange_tenants.id;
+
+
+--
+-- Name: froala_images; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.froala_images (
+    id bigint NOT NULL,
+    picture character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: froala_images_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.froala_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: froala_images_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.froala_images_id_seq OWNED BY dsq.froala_images.id;
+
+
+--
+-- Name: glossaries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.glossaries (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: glossaries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.glossaries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: glossaries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.glossaries_id_seq OWNED BY dsq.glossaries.id;
+
+
+--
+-- Name: handbook_answers; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.handbook_answers (
+    id bigint NOT NULL,
+    answer_text character varying NOT NULL,
+    action character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    handbook_question_id bigint
+);
+
+
+--
+-- Name: handbook_answers_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.handbook_answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.handbook_answers_id_seq OWNED BY dsq.handbook_answers.id;
+
+
+--
+-- Name: handbook_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.handbook_descriptions (
+    id bigint NOT NULL,
+    handbook_id bigint,
+    locale character varying NOT NULL,
+    overview character varying DEFAULT ''::character varying NOT NULL,
+    audience character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL,
+    cover character varying
+);
+
+
+--
+-- Name: handbook_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.handbook_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.handbook_descriptions_id_seq OWNED BY dsq.handbook_descriptions.id;
+
+
+--
+-- Name: handbook_pages; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.handbook_pages (
+    id bigint NOT NULL,
+    handbook_id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phase character varying,
+    page_order integer,
+    parent_page_id bigint,
+    handbook_questions_id bigint,
+    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    media_url character varying
+);
+
+
+--
+-- Name: handbook_pages_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.handbook_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.handbook_pages_id_seq OWNED BY dsq.handbook_pages.id;
+
+
+--
+-- Name: handbook_questions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.handbook_questions (
+    id bigint NOT NULL,
+    question_text character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    handbook_page_id bigint
+);
+
+
+--
+-- Name: handbook_questions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.handbook_questions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.handbook_questions_id_seq OWNED BY dsq.handbook_questions.id;
+
+
+--
+-- Name: handbooks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.handbooks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phases jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    maturity character varying DEFAULT 'Beta'::character varying,
+    pdf_url character varying
+);
+
+
+--
+-- Name: handbooks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.handbooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbooks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.handbooks_id_seq OWNED BY dsq.handbooks.id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.messages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    message_type character varying NOT NULL,
+    message_template character varying NOT NULL,
+    message_datetime timestamp(6) without time zone NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    location character varying,
+    location_type character varying,
+    created_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.messages_id_seq OWNED BY dsq.messages.id;
+
+
+--
+-- Name: offices; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.offices (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    city character varying NOT NULL,
+    organization_id bigint NOT NULL,
+    province_id bigint,
+    country_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.offices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.offices_id_seq OWNED BY dsq.offices.id;
+
+
+--
+-- Name: operator_services; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.operator_services (
+    id bigint NOT NULL,
+    name character varying,
+    service dsq.mobile_services,
+    country_id bigint,
+    country_name character varying
+);
+
+
+--
+-- Name: operator_services_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.operator_services_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: operator_services_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.operator_services_id_seq OWNED BY dsq.operator_services.id;
+
+
+--
+-- Name: opportunities; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    contact_name character varying NOT NULL,
+    contact_email character varying NOT NULL,
+    opening_date timestamp without time zone,
+    closing_date timestamp without time zone,
+    opportunity_type dsq.opportunity_type_type DEFAULT 'OTHER'::dsq.opportunity_type_type NOT NULL,
+    opportunity_status dsq.opportunity_status_type DEFAULT 'UPCOMING'::dsq.opportunity_status_type NOT NULL,
+    web_address character varying,
+    requirements character varying,
+    budget numeric(12,2),
+    tags character varying[] DEFAULT '{}'::character varying[],
+    origin_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: opportunities_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities_building_blocks (
+    building_block_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities_countries (
+    country_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.opportunities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.opportunities_id_seq OWNED BY dsq.opportunities.id;
+
+
+--
+-- Name: opportunities_organizations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities_organizations (
+    organization_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities_sectors (
+    sector_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_use_cases; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.opportunities_use_cases (
+    use_case_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: organization_contacts; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organization_contacts (
+    organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    main_contact boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organization_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organization_contacts_id_seq OWNED BY dsq.organization_contacts.id;
+
+
+--
+-- Name: organization_datasets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organization_datasets (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    organization_type dsq.organization_type DEFAULT 'owner'::dsq.organization_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organization_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organization_datasets_id_seq OWNED BY dsq.organization_datasets.id;
+
+
+--
+-- Name: organization_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organization_descriptions (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: organization_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organization_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organization_descriptions_id_seq OWNED BY dsq.organization_descriptions.id;
+
+
+--
+-- Name: organization_products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organization_products (
+    organization_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    organization_type dsq.organization_type DEFAULT 'owner'::dsq.organization_type
+);
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organization_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organization_products_id_seq OWNED BY dsq.organization_products.id;
+
+
+--
+-- Name: organizations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organizations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    when_endorsed timestamp without time zone,
+    website character varying,
+    is_endorser boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_mni boolean DEFAULT false,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    endorser_level dsq.endorser_type DEFAULT 'none'::dsq.endorser_type,
+    has_storefront boolean DEFAULT false NOT NULL,
+    hero_url character varying,
+    specialties jsonb DEFAULT '[]'::jsonb NOT NULL,
+    certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
+    building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
+);
+
+
+--
+-- Name: organizations_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organizations_countries (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: organizations_countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organizations_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organizations_countries_id_seq OWNED BY dsq.organizations_countries.id;
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organizations_id_seq OWNED BY dsq.organizations.id;
+
+
+--
+-- Name: organizations_resources; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organizations_resources (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.organizations_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.organizations_resources_id_seq OWNED BY dsq.organizations_resources.id;
+
+
+--
+-- Name: organizations_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.organizations_sectors (
+    sector_id bigint NOT NULL,
+    organization_id bigint NOT NULL
+);
+
+
+--
+-- Name: origins; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.origins (
+    id bigint NOT NULL,
+    organization_id bigint,
+    name character varying,
+    slug character varying,
+    description character varying,
+    last_synced timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: origins_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.origins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: origins_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.origins_id_seq OWNED BY dsq.origins.id;
+
+
+--
+-- Name: page_contents; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.page_contents (
+    id bigint NOT NULL,
+    handbook_page_id bigint,
+    locale character varying NOT NULL,
+    html character varying NOT NULL,
+    css character varying NOT NULL,
+    components character varying,
+    assets character varying,
+    styles character varying,
+    editor_type character varying
+);
+
+
+--
+-- Name: page_contents_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.page_contents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: page_contents_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.page_contents_id_seq OWNED BY dsq.page_contents.id;
+
+
+--
+-- Name: play_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.play_descriptions (
+    id bigint NOT NULL,
+    play_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL
+);
+
+
+--
+-- Name: play_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.play_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.play_descriptions_id_seq OWNED BY dsq.play_descriptions.id;
+
+
+--
+-- Name: play_move_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.play_move_descriptions (
+    id bigint NOT NULL,
+    play_move_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    prerequisites character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.play_move_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.play_move_descriptions_id_seq OWNED BY dsq.play_move_descriptions.id;
+
+
+--
+-- Name: play_moves; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.play_moves (
+    id bigint NOT NULL,
+    play_id bigint,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    move_order integer DEFAULT 0 NOT NULL,
+    inline_resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.play_moves_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.play_moves_id_seq OWNED BY dsq.play_moves.id;
+
+
+--
+-- Name: play_moves_resources; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.play_moves_resources (
+    id bigint NOT NULL,
+    play_move_id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.play_moves_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.play_moves_resources_id_seq OWNED BY dsq.play_moves_resources.id;
+
+
+--
+-- Name: playbook_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.playbook_descriptions (
+    id bigint NOT NULL,
+    playbook_id bigint,
+    locale character varying NOT NULL,
+    overview character varying NOT NULL,
+    audience character varying NOT NULL,
+    outcomes character varying NOT NULL
+);
+
+
+--
+-- Name: playbook_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.playbook_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbook_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.playbook_descriptions_id_seq OWNED BY dsq.playbook_descriptions.id;
+
+
+--
+-- Name: playbook_plays; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.playbook_plays (
+    id bigint NOT NULL,
+    playbook_id bigint NOT NULL,
+    play_id bigint NOT NULL,
+    phase character varying,
+    play_order integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: playbook_plays_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.playbook_plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbook_plays_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.playbook_plays_id_seq OWNED BY dsq.playbook_plays.id;
+
+
+--
+-- Name: playbooks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.playbooks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phases jsonb DEFAULT '[]'::jsonb NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    draft boolean DEFAULT true NOT NULL,
+    author character varying,
+    owned_by character varying DEFAULT 'public'::character varying
+);
+
+
+--
+-- Name: playbooks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.playbooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbooks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.playbooks_id_seq OWNED BY dsq.playbooks.id;
+
+
+--
+-- Name: playbooks_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.playbooks_sectors (
+    playbook_id bigint NOT NULL,
+    sector_id bigint NOT NULL
+);
+
+
+--
+-- Name: plays; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.plays (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    author character varying,
+    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    version character varying DEFAULT '1.0'::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    owned_by character varying DEFAULT 'public'::character varying,
+    draft boolean DEFAULT false
+);
+
+
+--
+-- Name: plays_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.plays_building_blocks (
+    id bigint NOT NULL,
+    play_id bigint,
+    building_block_id bigint
+);
+
+
+--
+-- Name: plays_building_blocks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.plays_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.plays_building_blocks_id_seq OWNED BY dsq.plays_building_blocks.id;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.plays_id_seq OWNED BY dsq.plays.id;
+
+
+--
+-- Name: plays_products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.plays_products (
+    id bigint NOT NULL,
+    play_id bigint,
+    product_id bigint
+);
+
+
+--
+-- Name: plays_products_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.plays_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_products_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.plays_products_id_seq OWNED BY dsq.plays_products.id;
+
+
+--
+-- Name: principle_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.principle_descriptions (
+    id bigint NOT NULL,
+    digital_principle_id bigint,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: principle_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.principle_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: principle_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.principle_descriptions_id_seq OWNED BY dsq.principle_descriptions.id;
+
+
+--
+-- Name: product_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_building_blocks (
+    building_block_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_building_blocks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_building_blocks_id_seq OWNED BY dsq.product_building_blocks.id;
+
+
+--
+-- Name: product_categories; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_categories (
+    product_id bigint,
+    software_category_id bigint
+);
+
+
+--
+-- Name: product_classifications; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_classifications (
+    id bigint NOT NULL,
+    product_id bigint,
+    classification_id bigint
+);
+
+
+--
+-- Name: product_classifications_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_classifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_classifications_id_seq OWNED BY dsq.product_classifications.id;
+
+
+--
+-- Name: product_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_descriptions (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: product_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_descriptions_id_seq OWNED BY dsq.product_descriptions.id;
+
+
+--
+-- Name: product_features; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_features (
+    product_id bigint,
+    software_feature_id bigint
+);
+
+
+--
+-- Name: product_indicators; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_indicators (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    indicator_value character varying NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: product_indicators_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_indicators_id_seq OWNED BY dsq.product_indicators.id;
+
+
+--
+-- Name: product_product_relationships; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_product_relationships (
+    id bigint NOT NULL,
+    from_product_id bigint NOT NULL,
+    to_product_id bigint NOT NULL,
+    relationship_type dsq.relationship_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_product_relationships_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_product_relationships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_product_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_product_relationships_id_seq OWNED BY dsq.product_product_relationships.id;
+
+
+--
+-- Name: product_repositories; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_repositories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    product_id bigint NOT NULL,
+    absolute_url character varying NOT NULL,
+    description character varying NOT NULL,
+    main_repository boolean DEFAULT false NOT NULL,
+    dpga_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    language_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    statistical_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    license_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    license character varying DEFAULT 'NA'::character varying NOT NULL,
+    code_lines integer,
+    cocomo integer,
+    est_hosting integer,
+    est_invested integer,
+    updated_at timestamp without time zone NOT NULL,
+    updated_by bigint,
+    deleted boolean DEFAULT false NOT NULL,
+    deleted_at timestamp without time zone,
+    deleted_by bigint,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: product_repositories_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_repositories_id_seq OWNED BY dsq.product_repositories.id;
+
+
+--
+-- Name: product_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_sectors (
+    product_id bigint NOT NULL,
+    sector_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_sectors_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_sectors_id_seq OWNED BY dsq.product_sectors.id;
+
+
+--
+-- Name: product_sustainable_development_goals; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.product_sustainable_development_goals (
+    product_id bigint NOT NULL,
+    sustainable_development_goal_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.product_sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.product_sustainable_development_goals_id_seq OWNED BY dsq.product_sustainable_development_goals.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.products (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_launchable boolean DEFAULT false,
+    start_assessment boolean DEFAULT false,
+    default_url character varying DEFAULT 'http://<host_ip>'::character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    tags character varying[] DEFAULT '{}'::character varying[],
+    maturity_score jsonb,
+    product_type dsq.product_type DEFAULT 'product'::dsq.product_type,
+    manual_update boolean DEFAULT false,
+    commercial_product boolean DEFAULT false,
+    pricing_model character varying,
+    pricing_details character varying,
+    hosting_model character varying,
+    pricing_date date,
+    pricing_url character varying,
+    languages jsonb,
+    gov_stack_entity boolean DEFAULT false NOT NULL,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    product_stage character varying,
+    featured boolean DEFAULT false,
+    contact character varying,
+    approval_status_id bigint
+);
+
+
+--
+-- Name: products_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.products_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.products_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.products_countries_id_seq OWNED BY dsq.products_countries.id;
+
+
+--
+-- Name: products_endorsers; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.products_endorsers (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    endorser_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_endorsers_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.products_endorsers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_endorsers_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.products_endorsers_id_seq OWNED BY dsq.products_endorsers.id;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.products_id_seq OWNED BY dsq.products.id;
+
+
+--
+-- Name: products_origins; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.products_origins (
+    product_id bigint NOT NULL,
+    origin_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_resources; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.products_resources (
+    product_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
+-- Name: project_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.project_descriptions (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.project_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.project_descriptions_id_seq OWNED BY dsq.project_descriptions.id;
+
+
+--
+-- Name: projects; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects (
+    id bigint NOT NULL,
+    origin_id bigint,
+    start_date date,
+    end_date date,
+    budget numeric(12,2),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    project_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[]
+);
+
+
+--
+-- Name: projects_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_countries (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_countries_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.projects_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.projects_countries_id_seq OWNED BY dsq.projects_countries.id;
+
+
+--
+-- Name: projects_digital_principles; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_digital_principles (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    digital_principle_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_digital_principles_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.projects_digital_principles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_digital_principles_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.projects_digital_principles_id_seq OWNED BY dsq.projects_digital_principles.id;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.projects_id_seq OWNED BY dsq.projects.id;
+
+
+--
+-- Name: projects_organizations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_organizations (
+    project_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    organization_type dsq.organization_type DEFAULT 'owner'::dsq.organization_type,
+    featured_project boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: projects_products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_products (
+    project_id bigint NOT NULL,
+    product_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_sdgs; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_sdgs (
+    project_id bigint NOT NULL,
+    sdg_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.projects_sectors (
+    project_id bigint NOT NULL,
+    sector_id bigint NOT NULL
+);
+
+
+--
+-- Name: provinces; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.provinces (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    country_id bigint NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.provinces_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.provinces_id_seq OWNED BY dsq.provinces.id;
+
+
+--
+-- Name: regions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.regions (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: regions_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.regions_countries (
+    region_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.regions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.regions_id_seq OWNED BY dsq.regions.id;
+
+
+--
+-- Name: resource_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resource_building_blocks (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    mapping_status dsq.mapping_status_type DEFAULT 'BETA'::dsq.mapping_status_type,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resource_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resource_building_blocks_id_seq OWNED BY dsq.resource_building_blocks.id;
+
+
+--
+-- Name: resource_topic_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resource_topic_descriptions (
+    id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    resource_topic_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resource_topic_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resource_topic_descriptions_id_seq OWNED BY dsq.resource_topic_descriptions.id;
+
+
+--
+-- Name: resource_topics; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resource_topics (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    parent_topic_id bigint
+);
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resource_topics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resource_topics_id_seq OWNED BY dsq.resource_topics.id;
+
+
+--
+-- Name: resource_types; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resource_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resource_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resource_types_id_seq OWNED BY dsq.resource_types.id;
+
+
+--
+-- Name: resources; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phase character varying NOT NULL,
+    image_url character varying,
+    resource_link character varying,
+    description character varying,
+    show_in_wizard boolean DEFAULT false NOT NULL,
+    show_in_exchange boolean DEFAULT false NOT NULL,
+    link_description character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    resource_type character varying,
+    published_date timestamp(6) without time zone,
+    featured boolean DEFAULT false NOT NULL,
+    resource_filename character varying,
+    resource_topics character varying[] DEFAULT '{}'::character varying[],
+    organization_id bigint,
+    submitted_by_id bigint
+);
+
+
+--
+-- Name: resources_authors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resources_authors (
+    resource_id bigint NOT NULL,
+    author_id bigint NOT NULL
+);
+
+
+--
+-- Name: resources_countries; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resources_countries (
+    resource_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: resources_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resources_id_seq OWNED BY dsq.resources.id;
+
+
+--
+-- Name: resources_use_cases; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.resources_use_cases (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.resources_use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.resources_use_cases_id_seq OWNED BY dsq.resources_use_cases.id;
+
+
+--
+-- Name: rubric_categories; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.rubric_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    weight numeric DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rubric_categories_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.rubric_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rubric_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.rubric_categories_id_seq OWNED BY dsq.rubric_categories.id;
+
+
+--
+-- Name: rubric_category_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.rubric_category_descriptions (
+    id bigint NOT NULL,
+    rubric_category_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: rubric_category_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.rubric_category_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rubric_category_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.rubric_category_descriptions_id_seq OWNED BY dsq.rubric_category_descriptions.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.schema_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: sdg_targets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.sdg_targets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    target_number character varying NOT NULL,
+    slug character varying,
+    sdg_number integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sdg_targets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.sdg_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sdg_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.sdg_targets_id_seq OWNED BY dsq.sdg_targets.id;
+
+
+--
+-- Name: sectors; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.sectors (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_displayable boolean,
+    parent_sector_id bigint,
+    origin_id bigint,
+    locale character varying DEFAULT 'en'::character varying
+);
+
+
+--
+-- Name: sectors_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.sectors_id_seq OWNED BY dsq.sectors.id;
+
+
+--
+-- Name: sessions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.sessions (
+    id bigint NOT NULL,
+    session_id character varying NOT NULL,
+    data text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.sessions_id_seq OWNED BY dsq.sessions.id;
+
+
+--
+-- Name: settings; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.settings (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    value text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.settings_id_seq OWNED BY dsq.settings.id;
+
+
+--
+-- Name: site_settings; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.site_settings (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    favicon_url character varying NOT NULL,
+    exchange_logo_url character varying NOT NULL,
+    open_graph_logo_url character varying NOT NULL,
+    menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    default_setting boolean DEFAULT false NOT NULL,
+    enable_marketplace boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.site_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.site_settings_id_seq OWNED BY dsq.site_settings.id;
+
+
+--
+-- Name: software_categories; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.software_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.software_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.software_categories_id_seq OWNED BY dsq.software_categories.id;
+
+
+--
+-- Name: software_features; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.software_features (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    facility_scale integer,
+    software_category_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.software_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.software_features_id_seq OWNED BY dsq.software_features.id;
+
+
+--
+-- Name: starred_objects; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.starred_objects (
+    id bigint NOT NULL,
+    starred_object_type character varying NOT NULL,
+    starred_object_value character varying NOT NULL,
+    source_object_type character varying NOT NULL,
+    source_object_value character varying NOT NULL,
+    starred_by_id bigint,
+    starred_date timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.starred_objects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.starred_objects_id_seq OWNED BY dsq.starred_objects.id;
+
+
+--
+-- Name: sustainable_development_goals; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.sustainable_development_goals (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    long_title character varying NOT NULL,
+    number integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.sustainable_development_goals_id_seq OWNED BY dsq.sustainable_development_goals.id;
+
+
+--
+-- Name: tag_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.tag_descriptions (
+    id bigint NOT NULL,
+    tag_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: tag_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.tag_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tag_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.tag_descriptions_id_seq OWNED BY dsq.tag_descriptions.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.tags (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.tags_id_seq OWNED BY dsq.tags.id;
+
+
+--
+-- Name: task_tracker_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.task_tracker_descriptions (
+    id bigint NOT NULL,
+    task_tracker_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: task_tracker_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.task_tracker_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_tracker_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.task_tracker_descriptions_id_seq OWNED BY dsq.task_tracker_descriptions.id;
+
+
+--
+-- Name: task_trackers; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.task_trackers (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    last_started_date timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    last_received_message character varying NOT NULL,
+    task_completed boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: task_trackers_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.task_trackers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.task_trackers_id_seq OWNED BY dsq.task_trackers.id;
+
+
+--
+-- Name: tenant_sync_configurations; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.tenant_sync_configurations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    tenant_source character varying NOT NULL,
+    tenant_destination character varying NOT NULL,
+    sync_enabled boolean DEFAULT true NOT NULL,
+    sync_configuration json DEFAULT '{}'::json NOT NULL,
+    last_sync_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.tenant_sync_configurations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.tenant_sync_configurations_id_seq OWNED BY dsq.tenant_sync_configurations.id;
+
+
+--
+-- Name: use_case_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_descriptions (
+    id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_descriptions_id_seq OWNED BY dsq.use_case_descriptions.id;
+
+
+--
+-- Name: use_case_headers; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_headers (
+    id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    header character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_headers_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_headers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_headers_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_headers_id_seq OWNED BY dsq.use_case_headers.id;
+
+
+--
+-- Name: use_case_step_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_step_descriptions (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_step_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_step_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_step_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_step_descriptions_id_seq OWNED BY dsq.use_case_step_descriptions.id;
+
+
+--
+-- Name: use_case_steps; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_steps (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    step_number integer NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    example_implementation character varying
+);
+
+
+--
+-- Name: use_case_steps_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_steps_building_blocks (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    building_block_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_steps_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_steps_building_blocks_id_seq OWNED BY dsq.use_case_steps_building_blocks.id;
+
+
+--
+-- Name: use_case_steps_datasets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_steps_datasets (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    dataset_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_steps_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_steps_datasets_id_seq OWNED BY dsq.use_case_steps_datasets.id;
+
+
+--
+-- Name: use_case_steps_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_steps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_steps_id_seq OWNED BY dsq.use_case_steps.id;
+
+
+--
+-- Name: use_case_steps_products; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_steps_products (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    product_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_products_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_case_steps_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_products_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_case_steps_products_id_seq OWNED BY dsq.use_case_steps_products.id;
+
+
+--
+-- Name: use_case_steps_workflows; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_case_steps_workflows (
+    use_case_step_id bigint NOT NULL,
+    workflow_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_cases; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_cases (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    sector_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL,
+    maturity dsq.entity_status_type DEFAULT 'DRAFT'::dsq.entity_status_type NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    markdown_url character varying,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: use_cases_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.use_cases_id_seq OWNED BY dsq.use_cases.id;
+
+
+--
+-- Name: use_cases_sdg_targets; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.use_cases_sdg_targets (
+    use_case_id bigint NOT NULL,
+    sdg_target_id bigint NOT NULL
+);
+
+
+--
+-- Name: user_events; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.user_events (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    email character varying,
+    event_datetime timestamp without time zone NOT NULL,
+    event_type character varying NOT NULL,
+    extended_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_events_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.user_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_events_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.user_events_id_seq OWNED BY dsq.user_events.id;
+
+
+--
+-- Name: user_messages; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.user_messages (
+    id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    received_by_id bigint NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.user_messages_id_seq OWNED BY dsq.user_messages.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.users (
+    id bigint NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    confirmation_token character varying,
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    receive_backup boolean DEFAULT false,
+    organization_id bigint,
+    expired boolean,
+    expired_at timestamp without time zone,
+    saved_products bigint[] DEFAULT '{}'::bigint[],
+    saved_use_cases bigint[] DEFAULT '{}'::bigint[],
+    saved_projects bigint[] DEFAULT '{}'::bigint[],
+    saved_urls character varying[] DEFAULT '{}'::character varying[],
+    roles dsq.user_role[] DEFAULT '{}'::dsq.user_role[],
+    authentication_token text,
+    authentication_token_created_at timestamp without time zone,
+    user_products bigint[] DEFAULT '{}'::bigint[],
+    receive_admin_emails boolean DEFAULT false,
+    username character varying,
+    user_datasets bigint[] DEFAULT '{}'::bigint[],
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.users_id_seq OWNED BY dsq.users.id;
+
+
+--
+-- Name: workflow_descriptions; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.workflow_descriptions (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: workflow_descriptions_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.workflow_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workflow_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.workflow_descriptions_id_seq OWNED BY dsq.workflow_descriptions.id;
+
+
+--
+-- Name: workflows; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.workflows (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: workflows_building_blocks; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.workflows_building_blocks (
+    workflow_id bigint NOT NULL,
+    building_block_id bigint NOT NULL
+);
+
+
+--
+-- Name: workflows_id_seq; Type: SEQUENCE; Schema: dsq; Owner: -
+--
+
+CREATE SEQUENCE dsq.workflows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: dsq; Owner: -
+--
+
+ALTER SEQUENCE dsq.workflows_id_seq OWNED BY dsq.workflows.id;
+
+
+--
+-- Name: workflows_use_cases; Type: TABLE; Schema: dsq; Owner: -
+--
+
+CREATE TABLE dsq.workflows_use_cases (
+    workflow_id bigint NOT NULL,
+    use_case_id bigint NOT NULL
+);
+
+
+--
 -- Name: aggregator_capabilities; Type: TABLE; Schema: fao; Owner: -
 --
 
@@ -1236,7 +6189,8 @@ CREATE TABLE fao.candidate_products (
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
     maturity_score jsonb DEFAULT '{}'::jsonb,
-    extra_attributes jsonb DEFAULT '[]'::jsonb
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    created_by_id bigint
 );
 
 
@@ -4441,7 +9395,9 @@ CREATE TABLE fao.site_settings (
     default_setting boolean DEFAULT false NOT NULL,
     enable_marketplace boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -5254,6 +10210,4362 @@ CREATE TABLE fao.workflows_use_cases (
 
 
 --
+-- Name: aggregator_capabilities; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.aggregator_capabilities (
+    id bigint NOT NULL,
+    aggregator_id bigint,
+    operator_services_id bigint,
+    service government.mobile_services,
+    capability government.agg_capabilities,
+    country_name character varying,
+    country_id bigint
+);
+
+
+--
+-- Name: aggregator_capabilities_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.aggregator_capabilities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: aggregator_capabilities_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.aggregator_capabilities_id_seq OWNED BY government.aggregator_capabilities.id;
+
+
+--
+-- Name: ar_internal_metadata; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: audits; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.audits (
+    id bigint NOT NULL,
+    associated_id character varying,
+    associated_type character varying,
+    user_id integer,
+    user_role character varying,
+    username character varying,
+    action character varying,
+    audit_changes jsonb,
+    version integer DEFAULT 0,
+    comment character varying,
+    created_at timestamp without time zone
+);
+
+
+--
+-- Name: audits_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.audits_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: audits_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.audits_id_seq OWNED BY government.audits.id;
+
+
+--
+-- Name: authors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.authors (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    email character varying,
+    picture character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.authors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.authors_id_seq OWNED BY government.authors.id;
+
+
+--
+-- Name: building_block_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.building_block_descriptions (
+    id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: building_block_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.building_block_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: building_block_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.building_block_descriptions_id_seq OWNED BY government.building_block_descriptions.id;
+
+
+--
+-- Name: building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.building_blocks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL,
+    maturity government.entity_status_type DEFAULT 'DRAFT'::government.entity_status_type NOT NULL,
+    spec_url character varying,
+    category government.category_type,
+    display_order integer DEFAULT 0 NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: building_blocks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.building_blocks_id_seq OWNED BY government.building_blocks.id;
+
+
+--
+-- Name: candidate_datasets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website character varying NOT NULL,
+    visualization_url character varying,
+    dataset_type character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_datasets_id_seq OWNED BY government.candidate_datasets.id;
+
+
+--
+-- Name: candidate_organizations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_organizations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website text,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying,
+    create_storefront boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: candidate_organizations_contacts; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_organizations_contacts (
+    candidate_organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone
+);
+
+
+--
+-- Name: candidate_organizations_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_organizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_organizations_id_seq OWNED BY government.candidate_organizations.id;
+
+
+--
+-- Name: candidate_product_category_indicators; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_product_category_indicators (
+    id bigint NOT NULL,
+    candidate_product_id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    indicator_value character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_product_category_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_product_category_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_product_category_indicators_id_seq OWNED BY government.candidate_product_category_indicators.id;
+
+
+--
+-- Name: candidate_products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_products (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    website character varying NOT NULL,
+    repository character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying,
+    commercial_product boolean DEFAULT false NOT NULL,
+    candidate_status_id bigint,
+    maturity_score jsonb DEFAULT '{}'::jsonb,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    created_by_id bigint
+);
+
+
+--
+-- Name: candidate_products_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_products_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_products_id_seq OWNED BY government.candidate_products.id;
+
+
+--
+-- Name: candidate_resources; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    published_date timestamp(6) without time zone DEFAULT '2024-08-27 00:00:00'::timestamp without time zone NOT NULL,
+    resource_type character varying NOT NULL,
+    resource_link character varying NOT NULL,
+    link_description character varying NOT NULL,
+    submitter_email character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp(6) without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp(6) without time zone,
+    approved_by_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_resources_countries (
+    id bigint NOT NULL,
+    candidate_resource_id bigint NOT NULL,
+    country_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_resources_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_resources_countries_id_seq OWNED BY government.candidate_resources_countries.id;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_resources_id_seq OWNED BY government.candidate_resources.id;
+
+
+--
+-- Name: candidate_roles; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_roles (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    roles government.user_role[] DEFAULT '{}'::government.user_role[],
+    description character varying NOT NULL,
+    rejected boolean,
+    rejected_date timestamp without time zone,
+    rejected_by_id bigint,
+    approved_date timestamp without time zone,
+    approved_by_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    product_id integer,
+    organization_id integer,
+    dataset_id bigint
+);
+
+
+--
+-- Name: candidate_roles_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_roles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_roles_id_seq OWNED BY government.candidate_roles.id;
+
+
+--
+-- Name: candidate_status_relationships; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_status_relationships (
+    id bigint NOT NULL,
+    current_candidate_status_id bigint NOT NULL,
+    next_candidate_status_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: candidate_status_relationships_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_status_relationships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_status_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_status_relationships_id_seq OWNED BY government.candidate_status_relationships.id;
+
+
+--
+-- Name: candidate_statuses; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.candidate_statuses (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    initial_status boolean DEFAULT false NOT NULL,
+    terminal_status boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    notification_template character varying DEFAULT '      <p>
+        Hi {{current-user}},
+      </p>
+      <p>
+        Your candidate''s status, ''{{candidate-name}}'', has been updated.
+      </p>
+      <p>
+        The previous status was ''{{previous-status}}'' and the current status is ''{{current-status}}''.
+      </p>
+'::character varying NOT NULL
+);
+
+
+--
+-- Name: candidate_statuses_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.candidate_statuses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: candidate_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.candidate_statuses_id_seq OWNED BY government.candidate_statuses.id;
+
+
+--
+-- Name: category_indicator_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.category_indicator_descriptions (
+    id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: category_indicator_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.category_indicator_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_indicator_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.category_indicator_descriptions_id_seq OWNED BY government.category_indicator_descriptions.id;
+
+
+--
+-- Name: category_indicators; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.category_indicators (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    indicator_type government.category_indicator_type,
+    weight numeric DEFAULT 0 NOT NULL,
+    rubric_category_id bigint,
+    data_source character varying,
+    source_indicator character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    script_name character varying
+);
+
+
+--
+-- Name: category_indicators_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.category_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.category_indicators_id_seq OWNED BY government.category_indicators.id;
+
+
+--
+-- Name: chatbot_conversations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.chatbot_conversations (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    session_identifier character varying NOT NULL,
+    chatbot_question character varying NOT NULL,
+    chatbot_answer character varying NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    chatbot_response jsonb DEFAULT '{}'::jsonb
+);
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.chatbot_conversations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: chatbot_conversations_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.chatbot_conversations_id_seq OWNED BY government.chatbot_conversations.id;
+
+
+--
+-- Name: cities; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.cities (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    province_id bigint,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: cities_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.cities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cities_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.cities_id_seq OWNED BY government.cities.id;
+
+
+--
+-- Name: ckeditor_assets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.ckeditor_assets (
+    id bigint NOT NULL,
+    data_file_name character varying NOT NULL,
+    data_content_type character varying,
+    data_file_size integer,
+    type character varying(30),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: ckeditor_assets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.ckeditor_assets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ckeditor_assets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.ckeditor_assets_id_seq OWNED BY government.ckeditor_assets.id;
+
+
+--
+-- Name: classifications; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.classifications (
+    id bigint NOT NULL,
+    name character varying,
+    indicator character varying,
+    description character varying,
+    source character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: classifications_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.classifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.classifications_id_seq OWNED BY government.classifications.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.comments (
+    id bigint NOT NULL,
+    comment_object_id integer NOT NULL,
+    author jsonb NOT NULL,
+    text character varying NOT NULL,
+    comment_id character varying NOT NULL,
+    parent_comment_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    comment_object_type government.comment_object_type NOT NULL
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.comments_id_seq OWNED BY government.comments.id;
+
+
+--
+-- Name: contacts; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.contacts (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    email character varying,
+    title character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    biography text,
+    social_networking_services jsonb DEFAULT '[]'::jsonb,
+    source character varying DEFAULT 'exchange'::character varying,
+    extended_data jsonb DEFAULT '[]'::jsonb
+);
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.contacts_id_seq OWNED BY government.contacts.id;
+
+
+--
+-- Name: countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.countries (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    code character varying NOT NULL,
+    code_longer character varying NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description character varying
+);
+
+
+--
+-- Name: countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.countries_id_seq OWNED BY government.countries.id;
+
+
+--
+-- Name: dataset_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.dataset_descriptions (
+    id bigint NOT NULL,
+    dataset_id bigint,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.dataset_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.dataset_descriptions_id_seq OWNED BY government.dataset_descriptions.id;
+
+
+--
+-- Name: dataset_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.dataset_sectors (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sector_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.dataset_sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.dataset_sectors_id_seq OWNED BY government.dataset_sectors.id;
+
+
+--
+-- Name: dataset_sustainable_development_goals; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.dataset_sustainable_development_goals (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    sustainable_development_goal_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.dataset_sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dataset_sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.dataset_sustainable_development_goals_id_seq OWNED BY government.dataset_sustainable_development_goals.id;
+
+
+--
+-- Name: datasets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.datasets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    website character varying NOT NULL,
+    visualization_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    dataset_type character varying NOT NULL,
+    geographic_coverage character varying,
+    time_range character varying,
+    manual_update boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    license character varying,
+    languages character varying,
+    data_format character varying
+);
+
+
+--
+-- Name: datasets_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.datasets_countries (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.datasets_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.datasets_countries_id_seq OWNED BY government.datasets_countries.id;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.datasets_id_seq OWNED BY government.datasets.id;
+
+
+--
+-- Name: datasets_origins; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.datasets_origins (
+    id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    origin_id bigint NOT NULL
+);
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.datasets_origins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: datasets_origins_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.datasets_origins_id_seq OWNED BY government.datasets_origins.id;
+
+
+--
+-- Name: deploys; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.deploys (
+    id bigint NOT NULL,
+    user_id bigint,
+    product_id bigint,
+    provider character varying,
+    instance_name character varying,
+    auth_token character varying,
+    status character varying,
+    message character varying,
+    url character varying,
+    suite character varying,
+    job_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: deploys_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.deploys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: deploys_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.deploys_id_seq OWNED BY government.deploys.id;
+
+
+--
+-- Name: dial_spreadsheet_data; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.dial_spreadsheet_data (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    spreadsheet_type character varying NOT NULL,
+    spreadsheet_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    deleted boolean DEFAULT false NOT NULL,
+    updated_by bigint,
+    updated_date timestamp without time zone
+);
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.dial_spreadsheet_data_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dial_spreadsheet_data_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.dial_spreadsheet_data_id_seq OWNED BY government.dial_spreadsheet_data.id;
+
+
+--
+-- Name: digital_principles; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.digital_principles (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    url character varying NOT NULL,
+    phase character varying
+);
+
+
+--
+-- Name: digital_principles_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.digital_principles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: digital_principles_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.digital_principles_id_seq OWNED BY government.digital_principles.id;
+
+
+--
+-- Name: districts; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.districts (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    province_id bigint NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: districts_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.districts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: districts_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.districts_id_seq OWNED BY government.districts.id;
+
+
+--
+-- Name: endorsers; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.endorsers (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying
+);
+
+
+--
+-- Name: endorsers_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.endorsers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: endorsers_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.endorsers_id_seq OWNED BY government.endorsers.id;
+
+
+--
+-- Name: exchange_tenants; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.exchange_tenants (
+    id bigint NOT NULL,
+    tenant_name character varying,
+    domain character varying,
+    postgres_config jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    allow_unsecured_read boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.exchange_tenants_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: exchange_tenants_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.exchange_tenants_id_seq OWNED BY government.exchange_tenants.id;
+
+
+--
+-- Name: froala_images; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.froala_images (
+    id bigint NOT NULL,
+    picture character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: froala_images_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.froala_images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: froala_images_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.froala_images_id_seq OWNED BY government.froala_images.id;
+
+
+--
+-- Name: glossaries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.glossaries (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: glossaries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.glossaries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: glossaries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.glossaries_id_seq OWNED BY government.glossaries.id;
+
+
+--
+-- Name: handbook_answers; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.handbook_answers (
+    id bigint NOT NULL,
+    answer_text character varying NOT NULL,
+    action character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    handbook_question_id bigint
+);
+
+
+--
+-- Name: handbook_answers_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.handbook_answers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_answers_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.handbook_answers_id_seq OWNED BY government.handbook_answers.id;
+
+
+--
+-- Name: handbook_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.handbook_descriptions (
+    id bigint NOT NULL,
+    handbook_id bigint,
+    locale character varying NOT NULL,
+    overview character varying DEFAULT ''::character varying NOT NULL,
+    audience character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL,
+    cover character varying
+);
+
+
+--
+-- Name: handbook_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.handbook_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.handbook_descriptions_id_seq OWNED BY government.handbook_descriptions.id;
+
+
+--
+-- Name: handbook_pages; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.handbook_pages (
+    id bigint NOT NULL,
+    handbook_id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phase character varying,
+    page_order integer,
+    parent_page_id bigint,
+    handbook_questions_id bigint,
+    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    media_url character varying
+);
+
+
+--
+-- Name: handbook_pages_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.handbook_pages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_pages_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.handbook_pages_id_seq OWNED BY government.handbook_pages.id;
+
+
+--
+-- Name: handbook_questions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.handbook_questions (
+    id bigint NOT NULL,
+    question_text character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    handbook_page_id bigint
+);
+
+
+--
+-- Name: handbook_questions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.handbook_questions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbook_questions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.handbook_questions_id_seq OWNED BY government.handbook_questions.id;
+
+
+--
+-- Name: handbooks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.handbooks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phases jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    maturity character varying DEFAULT 'Beta'::character varying,
+    pdf_url character varying
+);
+
+
+--
+-- Name: handbooks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.handbooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: handbooks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.handbooks_id_seq OWNED BY government.handbooks.id;
+
+
+--
+-- Name: messages; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.messages (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    message_type character varying NOT NULL,
+    message_template character varying NOT NULL,
+    message_datetime timestamp(6) without time zone NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    location character varying,
+    location_type character varying,
+    created_by_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.messages_id_seq OWNED BY government.messages.id;
+
+
+--
+-- Name: offices; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.offices (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    city character varying NOT NULL,
+    organization_id bigint NOT NULL,
+    province_id bigint,
+    country_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.offices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: offices_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.offices_id_seq OWNED BY government.offices.id;
+
+
+--
+-- Name: operator_services; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.operator_services (
+    id bigint NOT NULL,
+    name character varying,
+    service government.mobile_services,
+    country_id bigint,
+    country_name character varying
+);
+
+
+--
+-- Name: operator_services_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.operator_services_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: operator_services_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.operator_services_id_seq OWNED BY government.operator_services.id;
+
+
+--
+-- Name: opportunities; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    contact_name character varying NOT NULL,
+    contact_email character varying NOT NULL,
+    opening_date timestamp without time zone,
+    closing_date timestamp without time zone,
+    opportunity_type government.opportunity_type_type DEFAULT 'OTHER'::government.opportunity_type_type NOT NULL,
+    opportunity_status government.opportunity_status_type DEFAULT 'UPCOMING'::government.opportunity_status_type NOT NULL,
+    web_address character varying,
+    requirements character varying,
+    budget numeric(12,2),
+    tags character varying[] DEFAULT '{}'::character varying[],
+    origin_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: opportunities_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities_building_blocks (
+    building_block_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities_countries (
+    country_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.opportunities_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: opportunities_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.opportunities_id_seq OWNED BY government.opportunities.id;
+
+
+--
+-- Name: opportunities_organizations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities_organizations (
+    organization_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities_sectors (
+    sector_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: opportunities_use_cases; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.opportunities_use_cases (
+    use_case_id bigint,
+    opportunity_id bigint
+);
+
+
+--
+-- Name: organization_contacts; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organization_contacts (
+    organization_id bigint NOT NULL,
+    contact_id bigint NOT NULL,
+    started_at timestamp without time zone,
+    ended_at timestamp without time zone,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    main_contact boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organization_contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organization_contacts_id_seq OWNED BY government.organization_contacts.id;
+
+
+--
+-- Name: organization_datasets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organization_datasets (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    dataset_id bigint NOT NULL,
+    organization_type government.organization_type DEFAULT 'owner'::government.organization_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organization_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organization_datasets_id_seq OWNED BY government.organization_datasets.id;
+
+
+--
+-- Name: organization_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organization_descriptions (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: organization_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organization_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organization_descriptions_id_seq OWNED BY government.organization_descriptions.id;
+
+
+--
+-- Name: organization_products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organization_products (
+    organization_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    organization_type government.organization_type DEFAULT 'owner'::government.organization_type
+);
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organization_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organization_products_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organization_products_id_seq OWNED BY government.organization_products.id;
+
+
+--
+-- Name: organizations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organizations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    when_endorsed timestamp without time zone,
+    website character varying,
+    is_endorser boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_mni boolean DEFAULT false,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    endorser_level government.endorser_type DEFAULT 'none'::government.endorser_type,
+    has_storefront boolean DEFAULT false NOT NULL,
+    hero_url character varying,
+    specialties jsonb DEFAULT '[]'::jsonb NOT NULL,
+    certifications jsonb DEFAULT '[]'::jsonb NOT NULL,
+    building_blocks jsonb DEFAULT '[]'::jsonb NOT NULL
+);
+
+
+--
+-- Name: organizations_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organizations_countries (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: organizations_countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organizations_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organizations_countries_id_seq OWNED BY government.organizations_countries.id;
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organizations_id_seq OWNED BY government.organizations.id;
+
+
+--
+-- Name: organizations_resources; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organizations_resources (
+    id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.organizations_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: organizations_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.organizations_resources_id_seq OWNED BY government.organizations_resources.id;
+
+
+--
+-- Name: organizations_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.organizations_sectors (
+    sector_id bigint NOT NULL,
+    organization_id bigint NOT NULL
+);
+
+
+--
+-- Name: origins; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.origins (
+    id bigint NOT NULL,
+    organization_id bigint,
+    name character varying,
+    slug character varying,
+    description character varying,
+    last_synced timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: origins_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.origins_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: origins_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.origins_id_seq OWNED BY government.origins.id;
+
+
+--
+-- Name: page_contents; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.page_contents (
+    id bigint NOT NULL,
+    handbook_page_id bigint,
+    locale character varying NOT NULL,
+    html character varying NOT NULL,
+    css character varying NOT NULL,
+    components character varying,
+    assets character varying,
+    styles character varying,
+    editor_type character varying
+);
+
+
+--
+-- Name: page_contents_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.page_contents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: page_contents_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.page_contents_id_seq OWNED BY government.page_contents.id;
+
+
+--
+-- Name: play_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.play_descriptions (
+    id bigint NOT NULL,
+    play_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL
+);
+
+
+--
+-- Name: play_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.play_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.play_descriptions_id_seq OWNED BY government.play_descriptions.id;
+
+
+--
+-- Name: play_move_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.play_move_descriptions (
+    id bigint NOT NULL,
+    play_move_id bigint,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    prerequisites character varying DEFAULT ''::character varying NOT NULL,
+    outcomes character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.play_move_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_move_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.play_move_descriptions_id_seq OWNED BY government.play_move_descriptions.id;
+
+
+--
+-- Name: play_moves; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.play_moves (
+    id bigint NOT NULL,
+    play_id bigint,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    move_order integer DEFAULT 0 NOT NULL,
+    inline_resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.play_moves_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.play_moves_id_seq OWNED BY government.play_moves.id;
+
+
+--
+-- Name: play_moves_resources; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.play_moves_resources (
+    id bigint NOT NULL,
+    play_move_id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.play_moves_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: play_moves_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.play_moves_resources_id_seq OWNED BY government.play_moves_resources.id;
+
+
+--
+-- Name: playbook_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.playbook_descriptions (
+    id bigint NOT NULL,
+    playbook_id bigint,
+    locale character varying NOT NULL,
+    overview character varying NOT NULL,
+    audience character varying NOT NULL,
+    outcomes character varying NOT NULL
+);
+
+
+--
+-- Name: playbook_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.playbook_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbook_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.playbook_descriptions_id_seq OWNED BY government.playbook_descriptions.id;
+
+
+--
+-- Name: playbook_plays; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.playbook_plays (
+    id bigint NOT NULL,
+    playbook_id bigint NOT NULL,
+    play_id bigint NOT NULL,
+    phase character varying,
+    play_order integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: playbook_plays_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.playbook_plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbook_plays_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.playbook_plays_id_seq OWNED BY government.playbook_plays.id;
+
+
+--
+-- Name: playbooks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.playbooks (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phases jsonb DEFAULT '[]'::jsonb NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    draft boolean DEFAULT true NOT NULL,
+    author character varying,
+    owned_by character varying DEFAULT 'public'::character varying
+);
+
+
+--
+-- Name: playbooks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.playbooks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: playbooks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.playbooks_id_seq OWNED BY government.playbooks.id;
+
+
+--
+-- Name: playbooks_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.playbooks_sectors (
+    playbook_id bigint NOT NULL,
+    sector_id bigint NOT NULL
+);
+
+
+--
+-- Name: plays; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.plays (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    author character varying,
+    resources jsonb DEFAULT '[]'::jsonb NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    version character varying DEFAULT '1.0'::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    owned_by character varying DEFAULT 'public'::character varying,
+    draft boolean DEFAULT false
+);
+
+
+--
+-- Name: plays_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.plays_building_blocks (
+    id bigint NOT NULL,
+    play_id bigint,
+    building_block_id bigint
+);
+
+
+--
+-- Name: plays_building_blocks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.plays_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.plays_building_blocks_id_seq OWNED BY government.plays_building_blocks.id;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.plays_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.plays_id_seq OWNED BY government.plays.id;
+
+
+--
+-- Name: plays_products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.plays_products (
+    id bigint NOT NULL,
+    play_id bigint,
+    product_id bigint
+);
+
+
+--
+-- Name: plays_products_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.plays_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: plays_products_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.plays_products_id_seq OWNED BY government.plays_products.id;
+
+
+--
+-- Name: principle_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.principle_descriptions (
+    id bigint NOT NULL,
+    digital_principle_id bigint,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: principle_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.principle_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: principle_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.principle_descriptions_id_seq OWNED BY government.principle_descriptions.id;
+
+
+--
+-- Name: product_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_building_blocks (
+    building_block_id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_building_blocks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_building_blocks_id_seq OWNED BY government.product_building_blocks.id;
+
+
+--
+-- Name: product_categories; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_categories (
+    product_id bigint,
+    software_category_id bigint
+);
+
+
+--
+-- Name: product_classifications; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_classifications (
+    id bigint NOT NULL,
+    product_id bigint,
+    classification_id bigint
+);
+
+
+--
+-- Name: product_classifications_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_classifications_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_classifications_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_classifications_id_seq OWNED BY government.product_classifications.id;
+
+
+--
+-- Name: product_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_descriptions (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: product_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_descriptions_id_seq OWNED BY government.product_descriptions.id;
+
+
+--
+-- Name: product_features; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_features (
+    product_id bigint,
+    software_feature_id bigint
+);
+
+
+--
+-- Name: product_indicators; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_indicators (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    category_indicator_id bigint NOT NULL,
+    indicator_value character varying NOT NULL,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: product_indicators_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_indicators_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_indicators_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_indicators_id_seq OWNED BY government.product_indicators.id;
+
+
+--
+-- Name: product_product_relationships; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_product_relationships (
+    id bigint NOT NULL,
+    from_product_id bigint NOT NULL,
+    to_product_id bigint NOT NULL,
+    relationship_type government.relationship_type NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_product_relationships_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_product_relationships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_product_relationships_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_product_relationships_id_seq OWNED BY government.product_product_relationships.id;
+
+
+--
+-- Name: product_repositories; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_repositories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    product_id bigint NOT NULL,
+    absolute_url character varying NOT NULL,
+    description character varying NOT NULL,
+    main_repository boolean DEFAULT false NOT NULL,
+    dpga_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    language_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    statistical_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    license_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    license character varying DEFAULT 'NA'::character varying NOT NULL,
+    code_lines integer,
+    cocomo integer,
+    est_hosting integer,
+    est_invested integer,
+    updated_at timestamp without time zone NOT NULL,
+    updated_by bigint,
+    deleted boolean DEFAULT false NOT NULL,
+    deleted_at timestamp without time zone,
+    deleted_by bigint,
+    created_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: product_repositories_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_repositories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_repositories_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_repositories_id_seq OWNED BY government.product_repositories.id;
+
+
+--
+-- Name: product_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_sectors (
+    product_id bigint NOT NULL,
+    sector_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_sectors_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_sectors_id_seq OWNED BY government.product_sectors.id;
+
+
+--
+-- Name: product_sustainable_development_goals; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.product_sustainable_development_goals (
+    product_id bigint NOT NULL,
+    sustainable_development_goal_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type NOT NULL,
+    id bigint NOT NULL,
+    slug character varying NOT NULL
+);
+
+
+--
+-- Name: product_sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.product_sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: product_sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.product_sustainable_development_goals_id_seq OWNED BY government.product_sustainable_development_goals.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.products (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    website character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_launchable boolean DEFAULT false,
+    start_assessment boolean DEFAULT false,
+    default_url character varying DEFAULT 'http://<host_ip>'::character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    tags character varying[] DEFAULT '{}'::character varying[],
+    maturity_score jsonb,
+    product_type government.product_type DEFAULT 'product'::government.product_type,
+    manual_update boolean DEFAULT false,
+    commercial_product boolean DEFAULT false,
+    pricing_model character varying,
+    pricing_details character varying,
+    hosting_model character varying,
+    pricing_date date,
+    pricing_url character varying,
+    languages jsonb,
+    gov_stack_entity boolean DEFAULT false NOT NULL,
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    product_stage character varying,
+    featured boolean DEFAULT false,
+    contact character varying,
+    approval_status_id bigint
+);
+
+
+--
+-- Name: products_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.products_countries (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.products_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.products_countries_id_seq OWNED BY government.products_countries.id;
+
+
+--
+-- Name: products_endorsers; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.products_endorsers (
+    id bigint NOT NULL,
+    product_id bigint NOT NULL,
+    endorser_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_endorsers_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.products_endorsers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_endorsers_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.products_endorsers_id_seq OWNED BY government.products_endorsers.id;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.products_id_seq OWNED BY government.products.id;
+
+
+--
+-- Name: products_origins; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.products_origins (
+    product_id bigint NOT NULL,
+    origin_id bigint NOT NULL
+);
+
+
+--
+-- Name: products_resources; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.products_resources (
+    product_id bigint NOT NULL,
+    resource_id bigint NOT NULL
+);
+
+
+--
+-- Name: project_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.project_descriptions (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: project_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.project_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: project_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.project_descriptions_id_seq OWNED BY government.project_descriptions.id;
+
+
+--
+-- Name: projects; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects (
+    id bigint NOT NULL,
+    origin_id bigint,
+    start_date date,
+    end_date date,
+    budget numeric(12,2),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    project_url character varying,
+    tags character varying[] DEFAULT '{}'::character varying[]
+);
+
+
+--
+-- Name: projects_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_countries (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_countries_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.projects_countries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.projects_countries_id_seq OWNED BY government.projects_countries.id;
+
+
+--
+-- Name: projects_digital_principles; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_digital_principles (
+    id bigint NOT NULL,
+    project_id bigint NOT NULL,
+    digital_principle_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_digital_principles_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.projects_digital_principles_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_digital_principles_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.projects_digital_principles_id_seq OWNED BY government.projects_digital_principles.id;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.projects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: projects_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.projects_id_seq OWNED BY government.projects.id;
+
+
+--
+-- Name: projects_organizations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_organizations (
+    project_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
+    organization_type government.organization_type DEFAULT 'owner'::government.organization_type,
+    featured_project boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: projects_products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_products (
+    project_id bigint NOT NULL,
+    product_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_sdgs; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_sdgs (
+    project_id bigint NOT NULL,
+    sdg_id bigint NOT NULL
+);
+
+
+--
+-- Name: projects_sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.projects_sectors (
+    project_id bigint NOT NULL,
+    sector_id bigint NOT NULL
+);
+
+
+--
+-- Name: provinces; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.provinces (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    country_id bigint NOT NULL,
+    latitude numeric NOT NULL,
+    longitude numeric NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.provinces_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: provinces_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.provinces_id_seq OWNED BY government.provinces.id;
+
+
+--
+-- Name: regions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.regions (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    aliases character varying[] DEFAULT '{}'::character varying[],
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: regions_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.regions_countries (
+    region_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.regions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: regions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.regions_id_seq OWNED BY government.regions.id;
+
+
+--
+-- Name: resource_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resource_building_blocks (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    building_block_id bigint NOT NULL,
+    mapping_status government.mapping_status_type DEFAULT 'BETA'::government.mapping_status_type,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resource_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resource_building_blocks_id_seq OWNED BY government.resource_building_blocks.id;
+
+
+--
+-- Name: resource_topic_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resource_topic_descriptions (
+    id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying NOT NULL,
+    resource_topic_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resource_topic_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topic_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resource_topic_descriptions_id_seq OWNED BY government.resource_topic_descriptions.id;
+
+
+--
+-- Name: resource_topics; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resource_topics (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    parent_topic_id bigint
+);
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resource_topics_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_topics_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resource_topics_id_seq OWNED BY government.resource_topics.id;
+
+
+--
+-- Name: resource_types; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resource_types (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    locale character varying DEFAULT 'en'::character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resource_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resource_types_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resource_types_id_seq OWNED BY government.resource_types.id;
+
+
+--
+-- Name: resources; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resources (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    phase character varying NOT NULL,
+    image_url character varying,
+    resource_link character varying,
+    description character varying,
+    show_in_wizard boolean DEFAULT false NOT NULL,
+    show_in_exchange boolean DEFAULT false NOT NULL,
+    link_description character varying,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    resource_type character varying,
+    published_date timestamp(6) without time zone,
+    featured boolean DEFAULT false NOT NULL,
+    resource_filename character varying,
+    resource_topics character varying[] DEFAULT '{}'::character varying[],
+    organization_id bigint,
+    submitted_by_id bigint
+);
+
+
+--
+-- Name: resources_authors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resources_authors (
+    resource_id bigint NOT NULL,
+    author_id bigint NOT NULL
+);
+
+
+--
+-- Name: resources_countries; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resources_countries (
+    resource_id bigint NOT NULL,
+    country_id bigint NOT NULL
+);
+
+
+--
+-- Name: resources_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resources_id_seq OWNED BY government.resources.id;
+
+
+--
+-- Name: resources_use_cases; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.resources_use_cases (
+    id bigint NOT NULL,
+    resource_id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.resources_use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: resources_use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.resources_use_cases_id_seq OWNED BY government.resources_use_cases.id;
+
+
+--
+-- Name: rubric_categories; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.rubric_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    weight numeric DEFAULT 0 NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: rubric_categories_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.rubric_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rubric_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.rubric_categories_id_seq OWNED BY government.rubric_categories.id;
+
+
+--
+-- Name: rubric_category_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.rubric_category_descriptions (
+    id bigint NOT NULL,
+    rubric_category_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: rubric_category_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.rubric_category_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rubric_category_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.rubric_category_descriptions_id_seq OWNED BY government.rubric_category_descriptions.id;
+
+
+--
+-- Name: schema_migrations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.schema_migrations (
+    version character varying NOT NULL
+);
+
+
+--
+-- Name: sdg_targets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.sdg_targets (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    target_number character varying NOT NULL,
+    slug character varying,
+    sdg_number integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sdg_targets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.sdg_targets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sdg_targets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.sdg_targets_id_seq OWNED BY government.sdg_targets.id;
+
+
+--
+-- Name: sectors; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.sectors (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    is_displayable boolean,
+    parent_sector_id bigint,
+    origin_id bigint,
+    locale character varying DEFAULT 'en'::character varying
+);
+
+
+--
+-- Name: sectors_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.sectors_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sectors_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.sectors_id_seq OWNED BY government.sectors.id;
+
+
+--
+-- Name: sessions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.sessions (
+    id bigint NOT NULL,
+    session_id character varying NOT NULL,
+    data text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.sessions_id_seq OWNED BY government.sessions.id;
+
+
+--
+-- Name: settings; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.settings (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    value text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.settings_id_seq OWNED BY government.settings.id;
+
+
+--
+-- Name: site_settings; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.site_settings (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    description character varying NOT NULL,
+    favicon_url character varying NOT NULL,
+    exchange_logo_url character varying NOT NULL,
+    open_graph_logo_url character varying NOT NULL,
+    menu_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    carousel_configurations jsonb DEFAULT '"[]"'::jsonb NOT NULL,
+    hero_card_section jsonb DEFAULT '"{}"'::jsonb NOT NULL,
+    default_setting boolean DEFAULT false NOT NULL,
+    enable_marketplace boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.site_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.site_settings_id_seq OWNED BY government.site_settings.id;
+
+
+--
+-- Name: software_categories; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.software_categories (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.software_categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.software_categories_id_seq OWNED BY government.software_categories.id;
+
+
+--
+-- Name: software_features; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.software_features (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    facility_scale integer,
+    software_category_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.software_features_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: software_features_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.software_features_id_seq OWNED BY government.software_features.id;
+
+
+--
+-- Name: starred_objects; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.starred_objects (
+    id bigint NOT NULL,
+    starred_object_type character varying NOT NULL,
+    starred_object_value character varying NOT NULL,
+    source_object_type character varying NOT NULL,
+    source_object_value character varying NOT NULL,
+    starred_by_id bigint,
+    starred_date timestamp(6) without time zone NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.starred_objects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: starred_objects_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.starred_objects_id_seq OWNED BY government.starred_objects.id;
+
+
+--
+-- Name: sustainable_development_goals; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.sustainable_development_goals (
+    id bigint NOT NULL,
+    slug character varying NOT NULL,
+    name character varying NOT NULL,
+    long_title character varying NOT NULL,
+    number integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: sustainable_development_goals_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.sustainable_development_goals_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: sustainable_development_goals_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.sustainable_development_goals_id_seq OWNED BY government.sustainable_development_goals.id;
+
+
+--
+-- Name: tag_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.tag_descriptions (
+    id bigint NOT NULL,
+    tag_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: tag_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.tag_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tag_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.tag_descriptions_id_seq OWNED BY government.tag_descriptions.id;
+
+
+--
+-- Name: tags; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.tags (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.tags_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.tags_id_seq OWNED BY government.tags.id;
+
+
+--
+-- Name: task_tracker_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.task_tracker_descriptions (
+    id bigint NOT NULL,
+    task_tracker_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: task_tracker_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.task_tracker_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_tracker_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.task_tracker_descriptions_id_seq OWNED BY government.task_tracker_descriptions.id;
+
+
+--
+-- Name: task_trackers; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.task_trackers (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    last_started_date timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    last_received_message character varying NOT NULL,
+    task_completed boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: task_trackers_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.task_trackers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: task_trackers_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.task_trackers_id_seq OWNED BY government.task_trackers.id;
+
+
+--
+-- Name: tenant_sync_configurations; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.tenant_sync_configurations (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    description character varying NOT NULL,
+    tenant_source character varying NOT NULL,
+    tenant_destination character varying NOT NULL,
+    sync_enabled boolean DEFAULT true NOT NULL,
+    sync_configuration json DEFAULT '{}'::json NOT NULL,
+    last_sync_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.tenant_sync_configurations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tenant_sync_configurations_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.tenant_sync_configurations_id_seq OWNED BY government.tenant_sync_configurations.id;
+
+
+--
+-- Name: use_case_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_descriptions (
+    id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_descriptions_id_seq OWNED BY government.use_case_descriptions.id;
+
+
+--
+-- Name: use_case_headers; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_headers (
+    id bigint NOT NULL,
+    use_case_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    header character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_headers_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_headers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_headers_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_headers_id_seq OWNED BY government.use_case_headers.id;
+
+
+--
+-- Name: use_case_step_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_step_descriptions (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: use_case_step_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_step_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_step_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_step_descriptions_id_seq OWNED BY government.use_case_step_descriptions.id;
+
+
+--
+-- Name: use_case_steps; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_steps (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    step_number integer NOT NULL,
+    use_case_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    example_implementation character varying
+);
+
+
+--
+-- Name: use_case_steps_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_steps_building_blocks (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    building_block_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_steps_building_blocks_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_building_blocks_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_steps_building_blocks_id_seq OWNED BY government.use_case_steps_building_blocks.id;
+
+
+--
+-- Name: use_case_steps_datasets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_steps_datasets (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    dataset_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_steps_datasets_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_datasets_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_steps_datasets_id_seq OWNED BY government.use_case_steps_datasets.id;
+
+
+--
+-- Name: use_case_steps_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_steps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_steps_id_seq OWNED BY government.use_case_steps.id;
+
+
+--
+-- Name: use_case_steps_products; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_steps_products (
+    id bigint NOT NULL,
+    use_case_step_id bigint NOT NULL,
+    product_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_case_steps_products_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_case_steps_products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_case_steps_products_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_case_steps_products_id_seq OWNED BY government.use_case_steps_products.id;
+
+
+--
+-- Name: use_case_steps_workflows; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_case_steps_workflows (
+    use_case_step_id bigint NOT NULL,
+    workflow_id bigint NOT NULL
+);
+
+
+--
+-- Name: use_cases; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_cases (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    sector_id bigint NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL,
+    maturity government.entity_status_type DEFAULT 'DRAFT'::government.entity_status_type NOT NULL,
+    tags character varying[] DEFAULT '{}'::character varying[],
+    markdown_url character varying,
+    gov_stack_entity boolean DEFAULT false NOT NULL
+);
+
+
+--
+-- Name: use_cases_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.use_cases_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: use_cases_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.use_cases_id_seq OWNED BY government.use_cases.id;
+
+
+--
+-- Name: use_cases_sdg_targets; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.use_cases_sdg_targets (
+    use_case_id bigint NOT NULL,
+    sdg_target_id bigint NOT NULL
+);
+
+
+--
+-- Name: user_events; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.user_events (
+    id bigint NOT NULL,
+    identifier character varying NOT NULL,
+    email character varying,
+    event_datetime timestamp without time zone NOT NULL,
+    event_type character varying NOT NULL,
+    extended_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_events_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.user_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_events_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.user_events_id_seq OWNED BY government.user_events.id;
+
+
+--
+-- Name: user_messages; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.user_messages (
+    id bigint NOT NULL,
+    message_id bigint NOT NULL,
+    received_by_id bigint NOT NULL,
+    read boolean DEFAULT false NOT NULL,
+    visible boolean DEFAULT false NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.user_messages_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.user_messages_id_seq OWNED BY government.user_messages.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.users (
+    id bigint NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    remember_created_at timestamp without time zone,
+    confirmation_token character varying,
+    confirmed_at timestamp without time zone,
+    confirmation_sent_at timestamp without time zone,
+    unconfirmed_email character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    receive_backup boolean DEFAULT false,
+    organization_id bigint,
+    expired boolean,
+    expired_at timestamp without time zone,
+    saved_products bigint[] DEFAULT '{}'::bigint[],
+    saved_use_cases bigint[] DEFAULT '{}'::bigint[],
+    saved_projects bigint[] DEFAULT '{}'::bigint[],
+    saved_urls character varying[] DEFAULT '{}'::character varying[],
+    roles government.user_role[] DEFAULT '{}'::government.user_role[],
+    authentication_token text,
+    authentication_token_created_at timestamp without time zone,
+    user_products bigint[] DEFAULT '{}'::bigint[],
+    receive_admin_emails boolean DEFAULT false,
+    username character varying,
+    user_datasets bigint[] DEFAULT '{}'::bigint[],
+    saved_building_blocks bigint[] DEFAULT '{}'::bigint[] NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.users_id_seq OWNED BY government.users.id;
+
+
+--
+-- Name: workflow_descriptions; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.workflow_descriptions (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    locale character varying NOT NULL,
+    description character varying DEFAULT ''::character varying NOT NULL
+);
+
+
+--
+-- Name: workflow_descriptions_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.workflow_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workflow_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.workflow_descriptions_id_seq OWNED BY government.workflow_descriptions.id;
+
+
+--
+-- Name: workflows; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.workflows (
+    id bigint NOT NULL,
+    name character varying NOT NULL,
+    slug character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    description jsonb DEFAULT '{}'::jsonb NOT NULL
+);
+
+
+--
+-- Name: workflows_building_blocks; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.workflows_building_blocks (
+    workflow_id bigint NOT NULL,
+    building_block_id bigint NOT NULL
+);
+
+
+--
+-- Name: workflows_id_seq; Type: SEQUENCE; Schema: government; Owner: -
+--
+
+CREATE SEQUENCE government.workflows_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: workflows_id_seq; Type: SEQUENCE OWNED BY; Schema: government; Owner: -
+--
+
+ALTER SEQUENCE government.workflows_id_seq OWNED BY government.workflows.id;
+
+
+--
+-- Name: workflows_use_cases; Type: TABLE; Schema: government; Owner: -
+--
+
+CREATE TABLE government.workflows_use_cases (
+    workflow_id bigint NOT NULL,
+    use_case_id bigint NOT NULL
+);
+
+
+--
 -- Name: aggregator_capabilities; Type: TABLE; Schema: health; Owner: -
 --
 
@@ -5589,7 +14901,8 @@ CREATE TABLE health.candidate_products (
     commercial_product boolean DEFAULT false NOT NULL,
     candidate_status_id bigint,
     maturity_score jsonb DEFAULT '{}'::jsonb,
-    extra_attributes jsonb DEFAULT '[]'::jsonb
+    extra_attributes jsonb DEFAULT '[]'::jsonb,
+    created_by_id bigint
 );
 
 
@@ -8794,7 +18107,9 @@ CREATE TABLE health.site_settings (
     default_setting boolean DEFAULT false NOT NULL,
     enable_marketplace boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -13148,7 +22463,9 @@ CREATE TABLE public.site_settings (
     default_setting boolean DEFAULT false NOT NULL,
     enable_marketplace boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -13958,6 +23275,832 @@ CREATE TABLE public.workflows_use_cases (
     workflow_id bigint NOT NULL,
     use_case_id bigint NOT NULL
 );
+
+
+--
+-- Name: aggregator_capabilities id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.aggregator_capabilities ALTER COLUMN id SET DEFAULT nextval('dsq.aggregator_capabilities_id_seq'::regclass);
+
+
+--
+-- Name: audits id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.audits ALTER COLUMN id SET DEFAULT nextval('dsq.audits_id_seq'::regclass);
+
+
+--
+-- Name: authors id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.authors ALTER COLUMN id SET DEFAULT nextval('dsq.authors_id_seq'::regclass);
+
+
+--
+-- Name: building_block_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.building_block_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.building_block_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: building_blocks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.building_blocks ALTER COLUMN id SET DEFAULT nextval('dsq.building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: candidate_datasets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_datasets ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_datasets_id_seq'::regclass);
+
+
+--
+-- Name: candidate_organizations id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_organizations ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_organizations_id_seq'::regclass);
+
+
+--
+-- Name: candidate_product_category_indicators id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_product_category_indicators ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_product_category_indicators_id_seq'::regclass);
+
+
+--
+-- Name: candidate_products id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_products_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_resources_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources_countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_resources_countries_id_seq'::regclass);
+
+
+--
+-- Name: candidate_roles id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_roles_id_seq'::regclass);
+
+
+--
+-- Name: candidate_status_relationships id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_status_relationships ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_status_relationships_id_seq'::regclass);
+
+
+--
+-- Name: candidate_statuses id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_statuses ALTER COLUMN id SET DEFAULT nextval('dsq.candidate_statuses_id_seq'::regclass);
+
+
+--
+-- Name: category_indicator_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicator_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.category_indicator_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: category_indicators id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicators ALTER COLUMN id SET DEFAULT nextval('dsq.category_indicators_id_seq'::regclass);
+
+
+--
+-- Name: chatbot_conversations id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.chatbot_conversations ALTER COLUMN id SET DEFAULT nextval('dsq.chatbot_conversations_id_seq'::regclass);
+
+
+--
+-- Name: cities id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.cities ALTER COLUMN id SET DEFAULT nextval('dsq.cities_id_seq'::regclass);
+
+
+--
+-- Name: ckeditor_assets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.ckeditor_assets ALTER COLUMN id SET DEFAULT nextval('dsq.ckeditor_assets_id_seq'::regclass);
+
+
+--
+-- Name: classifications id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.classifications ALTER COLUMN id SET DEFAULT nextval('dsq.classifications_id_seq'::regclass);
+
+
+--
+-- Name: comments id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.comments ALTER COLUMN id SET DEFAULT nextval('dsq.comments_id_seq'::regclass);
+
+
+--
+-- Name: contacts id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.contacts ALTER COLUMN id SET DEFAULT nextval('dsq.contacts_id_seq'::regclass);
+
+
+--
+-- Name: countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.countries ALTER COLUMN id SET DEFAULT nextval('dsq.countries_id_seq'::regclass);
+
+
+--
+-- Name: dataset_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.dataset_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sectors id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sectors ALTER COLUMN id SET DEFAULT nextval('dsq.dataset_sectors_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sustainable_development_goals id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('dsq.dataset_sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: datasets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets ALTER COLUMN id SET DEFAULT nextval('dsq.datasets_id_seq'::regclass);
+
+
+--
+-- Name: datasets_countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_countries ALTER COLUMN id SET DEFAULT nextval('dsq.datasets_countries_id_seq'::regclass);
+
+
+--
+-- Name: datasets_origins id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_origins ALTER COLUMN id SET DEFAULT nextval('dsq.datasets_origins_id_seq'::regclass);
+
+
+--
+-- Name: deploys id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.deploys ALTER COLUMN id SET DEFAULT nextval('dsq.deploys_id_seq'::regclass);
+
+
+--
+-- Name: dial_spreadsheet_data id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dial_spreadsheet_data ALTER COLUMN id SET DEFAULT nextval('dsq.dial_spreadsheet_data_id_seq'::regclass);
+
+
+--
+-- Name: digital_principles id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.digital_principles ALTER COLUMN id SET DEFAULT nextval('dsq.digital_principles_id_seq'::regclass);
+
+
+--
+-- Name: districts id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.districts ALTER COLUMN id SET DEFAULT nextval('dsq.districts_id_seq'::regclass);
+
+
+--
+-- Name: endorsers id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.endorsers ALTER COLUMN id SET DEFAULT nextval('dsq.endorsers_id_seq'::regclass);
+
+
+--
+-- Name: exchange_tenants id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.exchange_tenants ALTER COLUMN id SET DEFAULT nextval('dsq.exchange_tenants_id_seq'::regclass);
+
+
+--
+-- Name: froala_images id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.froala_images ALTER COLUMN id SET DEFAULT nextval('dsq.froala_images_id_seq'::regclass);
+
+
+--
+-- Name: glossaries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.glossaries ALTER COLUMN id SET DEFAULT nextval('dsq.glossaries_id_seq'::regclass);
+
+
+--
+-- Name: handbook_answers id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_answers ALTER COLUMN id SET DEFAULT nextval('dsq.handbook_answers_id_seq'::regclass);
+
+
+--
+-- Name: handbook_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.handbook_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: handbook_pages id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_pages ALTER COLUMN id SET DEFAULT nextval('dsq.handbook_pages_id_seq'::regclass);
+
+
+--
+-- Name: handbook_questions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_questions ALTER COLUMN id SET DEFAULT nextval('dsq.handbook_questions_id_seq'::regclass);
+
+
+--
+-- Name: handbooks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbooks ALTER COLUMN id SET DEFAULT nextval('dsq.handbooks_id_seq'::regclass);
+
+
+--
+-- Name: messages id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.messages ALTER COLUMN id SET DEFAULT nextval('dsq.messages_id_seq'::regclass);
+
+
+--
+-- Name: offices id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.offices ALTER COLUMN id SET DEFAULT nextval('dsq.offices_id_seq'::regclass);
+
+
+--
+-- Name: operator_services id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.operator_services ALTER COLUMN id SET DEFAULT nextval('dsq.operator_services_id_seq'::regclass);
+
+
+--
+-- Name: opportunities id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities ALTER COLUMN id SET DEFAULT nextval('dsq.opportunities_id_seq'::regclass);
+
+
+--
+-- Name: organization_contacts id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_contacts ALTER COLUMN id SET DEFAULT nextval('dsq.organization_contacts_id_seq'::regclass);
+
+
+--
+-- Name: organization_datasets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_datasets ALTER COLUMN id SET DEFAULT nextval('dsq.organization_datasets_id_seq'::regclass);
+
+
+--
+-- Name: organization_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.organization_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: organization_products id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_products ALTER COLUMN id SET DEFAULT nextval('dsq.organization_products_id_seq'::regclass);
+
+
+--
+-- Name: organizations id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations ALTER COLUMN id SET DEFAULT nextval('dsq.organizations_id_seq'::regclass);
+
+
+--
+-- Name: organizations_countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_countries ALTER COLUMN id SET DEFAULT nextval('dsq.organizations_countries_id_seq'::regclass);
+
+
+--
+-- Name: organizations_resources id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_resources ALTER COLUMN id SET DEFAULT nextval('dsq.organizations_resources_id_seq'::regclass);
+
+
+--
+-- Name: origins id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.origins ALTER COLUMN id SET DEFAULT nextval('dsq.origins_id_seq'::regclass);
+
+
+--
+-- Name: page_contents id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.page_contents ALTER COLUMN id SET DEFAULT nextval('dsq.page_contents_id_seq'::regclass);
+
+
+--
+-- Name: play_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.play_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: play_move_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_move_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.play_move_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: play_moves id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves ALTER COLUMN id SET DEFAULT nextval('dsq.play_moves_id_seq'::regclass);
+
+
+--
+-- Name: play_moves_resources id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves_resources ALTER COLUMN id SET DEFAULT nextval('dsq.play_moves_resources_id_seq'::regclass);
+
+
+--
+-- Name: playbook_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.playbook_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: playbook_plays id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_plays ALTER COLUMN id SET DEFAULT nextval('dsq.playbook_plays_id_seq'::regclass);
+
+
+--
+-- Name: playbooks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbooks ALTER COLUMN id SET DEFAULT nextval('dsq.playbooks_id_seq'::regclass);
+
+
+--
+-- Name: plays id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays ALTER COLUMN id SET DEFAULT nextval('dsq.plays_id_seq'::regclass);
+
+
+--
+-- Name: plays_building_blocks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks ALTER COLUMN id SET DEFAULT nextval('dsq.plays_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: plays_products id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products ALTER COLUMN id SET DEFAULT nextval('dsq.plays_products_id_seq'::regclass);
+
+
+--
+-- Name: principle_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.principle_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.principle_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: product_building_blocks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_building_blocks ALTER COLUMN id SET DEFAULT nextval('dsq.product_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: product_classifications id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications ALTER COLUMN id SET DEFAULT nextval('dsq.product_classifications_id_seq'::regclass);
+
+
+--
+-- Name: product_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.product_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: product_indicators id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_indicators ALTER COLUMN id SET DEFAULT nextval('dsq.product_indicators_id_seq'::regclass);
+
+
+--
+-- Name: product_product_relationships id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_product_relationships ALTER COLUMN id SET DEFAULT nextval('dsq.product_product_relationships_id_seq'::regclass);
+
+
+--
+-- Name: product_repositories id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_repositories ALTER COLUMN id SET DEFAULT nextval('dsq.product_repositories_id_seq'::regclass);
+
+
+--
+-- Name: product_sectors id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sectors ALTER COLUMN id SET DEFAULT nextval('dsq.product_sectors_id_seq'::regclass);
+
+
+--
+-- Name: product_sustainable_development_goals id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('dsq.product_sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: products id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products ALTER COLUMN id SET DEFAULT nextval('dsq.products_id_seq'::regclass);
+
+
+--
+-- Name: products_countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_countries ALTER COLUMN id SET DEFAULT nextval('dsq.products_countries_id_seq'::regclass);
+
+
+--
+-- Name: products_endorsers id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_endorsers ALTER COLUMN id SET DEFAULT nextval('dsq.products_endorsers_id_seq'::regclass);
+
+
+--
+-- Name: project_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.project_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.project_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: projects id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects ALTER COLUMN id SET DEFAULT nextval('dsq.projects_id_seq'::regclass);
+
+
+--
+-- Name: projects_countries id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_countries ALTER COLUMN id SET DEFAULT nextval('dsq.projects_countries_id_seq'::regclass);
+
+
+--
+-- Name: projects_digital_principles id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_digital_principles ALTER COLUMN id SET DEFAULT nextval('dsq.projects_digital_principles_id_seq'::regclass);
+
+
+--
+-- Name: provinces id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.provinces ALTER COLUMN id SET DEFAULT nextval('dsq.provinces_id_seq'::regclass);
+
+
+--
+-- Name: regions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.regions ALTER COLUMN id SET DEFAULT nextval('dsq.regions_id_seq'::regclass);
+
+
+--
+-- Name: resource_building_blocks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_building_blocks ALTER COLUMN id SET DEFAULT nextval('dsq.resource_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topic_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.resource_topic_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topics id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topics ALTER COLUMN id SET DEFAULT nextval('dsq.resource_topics_id_seq'::regclass);
+
+
+--
+-- Name: resource_types id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_types ALTER COLUMN id SET DEFAULT nextval('dsq.resource_types_id_seq'::regclass);
+
+
+--
+-- Name: resources id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources ALTER COLUMN id SET DEFAULT nextval('dsq.resources_id_seq'::regclass);
+
+
+--
+-- Name: resources_use_cases id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources_use_cases ALTER COLUMN id SET DEFAULT nextval('dsq.resources_use_cases_id_seq'::regclass);
+
+
+--
+-- Name: rubric_categories id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.rubric_categories ALTER COLUMN id SET DEFAULT nextval('dsq.rubric_categories_id_seq'::regclass);
+
+
+--
+-- Name: rubric_category_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.rubric_category_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.rubric_category_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: sdg_targets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sdg_targets ALTER COLUMN id SET DEFAULT nextval('dsq.sdg_targets_id_seq'::regclass);
+
+
+--
+-- Name: sectors id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sectors ALTER COLUMN id SET DEFAULT nextval('dsq.sectors_id_seq'::regclass);
+
+
+--
+-- Name: sessions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sessions ALTER COLUMN id SET DEFAULT nextval('dsq.sessions_id_seq'::regclass);
+
+
+--
+-- Name: settings id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.settings ALTER COLUMN id SET DEFAULT nextval('dsq.settings_id_seq'::regclass);
+
+
+--
+-- Name: site_settings id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.site_settings ALTER COLUMN id SET DEFAULT nextval('dsq.site_settings_id_seq'::regclass);
+
+
+--
+-- Name: software_categories id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.software_categories ALTER COLUMN id SET DEFAULT nextval('dsq.software_categories_id_seq'::regclass);
+
+
+--
+-- Name: software_features id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.software_features ALTER COLUMN id SET DEFAULT nextval('dsq.software_features_id_seq'::regclass);
+
+
+--
+-- Name: starred_objects id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.starred_objects ALTER COLUMN id SET DEFAULT nextval('dsq.starred_objects_id_seq'::regclass);
+
+
+--
+-- Name: sustainable_development_goals id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('dsq.sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: tag_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tag_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.tag_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tags ALTER COLUMN id SET DEFAULT nextval('dsq.tags_id_seq'::regclass);
+
+
+--
+-- Name: task_tracker_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.task_tracker_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.task_tracker_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: task_trackers id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.task_trackers ALTER COLUMN id SET DEFAULT nextval('dsq.task_trackers_id_seq'::regclass);
+
+
+--
+-- Name: tenant_sync_configurations id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tenant_sync_configurations ALTER COLUMN id SET DEFAULT nextval('dsq.tenant_sync_configurations_id_seq'::regclass);
+
+
+--
+-- Name: use_case_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: use_case_headers id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_headers ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_headers_id_seq'::regclass);
+
+
+--
+-- Name: use_case_step_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_step_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_step_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_steps_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_building_blocks id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_building_blocks ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_steps_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_datasets id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_datasets ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_steps_datasets_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_products id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_products ALTER COLUMN id SET DEFAULT nextval('dsq.use_case_steps_products_id_seq'::regclass);
+
+
+--
+-- Name: use_cases id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_cases ALTER COLUMN id SET DEFAULT nextval('dsq.use_cases_id_seq'::regclass);
+
+
+--
+-- Name: user_events id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_events ALTER COLUMN id SET DEFAULT nextval('dsq.user_events_id_seq'::regclass);
+
+
+--
+-- Name: user_messages id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_messages ALTER COLUMN id SET DEFAULT nextval('dsq.user_messages_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.users ALTER COLUMN id SET DEFAULT nextval('dsq.users_id_seq'::regclass);
+
+
+--
+-- Name: workflow_descriptions id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflow_descriptions ALTER COLUMN id SET DEFAULT nextval('dsq.workflow_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: workflows id; Type: DEFAULT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflows ALTER COLUMN id SET DEFAULT nextval('dsq.workflows_id_seq'::regclass);
 
 
 --
@@ -14784,6 +24927,832 @@ ALTER TABLE ONLY fao.workflow_descriptions ALTER COLUMN id SET DEFAULT nextval('
 --
 
 ALTER TABLE ONLY fao.workflows ALTER COLUMN id SET DEFAULT nextval('fao.workflows_id_seq'::regclass);
+
+
+--
+-- Name: aggregator_capabilities id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.aggregator_capabilities ALTER COLUMN id SET DEFAULT nextval('government.aggregator_capabilities_id_seq'::regclass);
+
+
+--
+-- Name: audits id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.audits ALTER COLUMN id SET DEFAULT nextval('government.audits_id_seq'::regclass);
+
+
+--
+-- Name: authors id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.authors ALTER COLUMN id SET DEFAULT nextval('government.authors_id_seq'::regclass);
+
+
+--
+-- Name: building_block_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.building_block_descriptions ALTER COLUMN id SET DEFAULT nextval('government.building_block_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: building_blocks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.building_blocks ALTER COLUMN id SET DEFAULT nextval('government.building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: candidate_datasets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_datasets ALTER COLUMN id SET DEFAULT nextval('government.candidate_datasets_id_seq'::regclass);
+
+
+--
+-- Name: candidate_organizations id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_organizations ALTER COLUMN id SET DEFAULT nextval('government.candidate_organizations_id_seq'::regclass);
+
+
+--
+-- Name: candidate_product_category_indicators id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_product_category_indicators ALTER COLUMN id SET DEFAULT nextval('government.candidate_product_category_indicators_id_seq'::regclass);
+
+
+--
+-- Name: candidate_products id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products ALTER COLUMN id SET DEFAULT nextval('government.candidate_products_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources ALTER COLUMN id SET DEFAULT nextval('government.candidate_resources_id_seq'::regclass);
+
+
+--
+-- Name: candidate_resources_countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources_countries ALTER COLUMN id SET DEFAULT nextval('government.candidate_resources_countries_id_seq'::regclass);
+
+
+--
+-- Name: candidate_roles id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles ALTER COLUMN id SET DEFAULT nextval('government.candidate_roles_id_seq'::regclass);
+
+
+--
+-- Name: candidate_status_relationships id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_status_relationships ALTER COLUMN id SET DEFAULT nextval('government.candidate_status_relationships_id_seq'::regclass);
+
+
+--
+-- Name: candidate_statuses id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_statuses ALTER COLUMN id SET DEFAULT nextval('government.candidate_statuses_id_seq'::regclass);
+
+
+--
+-- Name: category_indicator_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicator_descriptions ALTER COLUMN id SET DEFAULT nextval('government.category_indicator_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: category_indicators id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicators ALTER COLUMN id SET DEFAULT nextval('government.category_indicators_id_seq'::regclass);
+
+
+--
+-- Name: chatbot_conversations id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.chatbot_conversations ALTER COLUMN id SET DEFAULT nextval('government.chatbot_conversations_id_seq'::regclass);
+
+
+--
+-- Name: cities id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.cities ALTER COLUMN id SET DEFAULT nextval('government.cities_id_seq'::regclass);
+
+
+--
+-- Name: ckeditor_assets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.ckeditor_assets ALTER COLUMN id SET DEFAULT nextval('government.ckeditor_assets_id_seq'::regclass);
+
+
+--
+-- Name: classifications id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.classifications ALTER COLUMN id SET DEFAULT nextval('government.classifications_id_seq'::regclass);
+
+
+--
+-- Name: comments id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.comments ALTER COLUMN id SET DEFAULT nextval('government.comments_id_seq'::regclass);
+
+
+--
+-- Name: contacts id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.contacts ALTER COLUMN id SET DEFAULT nextval('government.contacts_id_seq'::regclass);
+
+
+--
+-- Name: countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.countries ALTER COLUMN id SET DEFAULT nextval('government.countries_id_seq'::regclass);
+
+
+--
+-- Name: dataset_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_descriptions ALTER COLUMN id SET DEFAULT nextval('government.dataset_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sectors id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sectors ALTER COLUMN id SET DEFAULT nextval('government.dataset_sectors_id_seq'::regclass);
+
+
+--
+-- Name: dataset_sustainable_development_goals id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('government.dataset_sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: datasets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets ALTER COLUMN id SET DEFAULT nextval('government.datasets_id_seq'::regclass);
+
+
+--
+-- Name: datasets_countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_countries ALTER COLUMN id SET DEFAULT nextval('government.datasets_countries_id_seq'::regclass);
+
+
+--
+-- Name: datasets_origins id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_origins ALTER COLUMN id SET DEFAULT nextval('government.datasets_origins_id_seq'::regclass);
+
+
+--
+-- Name: deploys id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.deploys ALTER COLUMN id SET DEFAULT nextval('government.deploys_id_seq'::regclass);
+
+
+--
+-- Name: dial_spreadsheet_data id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dial_spreadsheet_data ALTER COLUMN id SET DEFAULT nextval('government.dial_spreadsheet_data_id_seq'::regclass);
+
+
+--
+-- Name: digital_principles id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.digital_principles ALTER COLUMN id SET DEFAULT nextval('government.digital_principles_id_seq'::regclass);
+
+
+--
+-- Name: districts id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.districts ALTER COLUMN id SET DEFAULT nextval('government.districts_id_seq'::regclass);
+
+
+--
+-- Name: endorsers id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.endorsers ALTER COLUMN id SET DEFAULT nextval('government.endorsers_id_seq'::regclass);
+
+
+--
+-- Name: exchange_tenants id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.exchange_tenants ALTER COLUMN id SET DEFAULT nextval('government.exchange_tenants_id_seq'::regclass);
+
+
+--
+-- Name: froala_images id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.froala_images ALTER COLUMN id SET DEFAULT nextval('government.froala_images_id_seq'::regclass);
+
+
+--
+-- Name: glossaries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.glossaries ALTER COLUMN id SET DEFAULT nextval('government.glossaries_id_seq'::regclass);
+
+
+--
+-- Name: handbook_answers id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_answers ALTER COLUMN id SET DEFAULT nextval('government.handbook_answers_id_seq'::regclass);
+
+
+--
+-- Name: handbook_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_descriptions ALTER COLUMN id SET DEFAULT nextval('government.handbook_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: handbook_pages id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_pages ALTER COLUMN id SET DEFAULT nextval('government.handbook_pages_id_seq'::regclass);
+
+
+--
+-- Name: handbook_questions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_questions ALTER COLUMN id SET DEFAULT nextval('government.handbook_questions_id_seq'::regclass);
+
+
+--
+-- Name: handbooks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbooks ALTER COLUMN id SET DEFAULT nextval('government.handbooks_id_seq'::regclass);
+
+
+--
+-- Name: messages id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.messages ALTER COLUMN id SET DEFAULT nextval('government.messages_id_seq'::regclass);
+
+
+--
+-- Name: offices id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.offices ALTER COLUMN id SET DEFAULT nextval('government.offices_id_seq'::regclass);
+
+
+--
+-- Name: operator_services id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.operator_services ALTER COLUMN id SET DEFAULT nextval('government.operator_services_id_seq'::regclass);
+
+
+--
+-- Name: opportunities id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities ALTER COLUMN id SET DEFAULT nextval('government.opportunities_id_seq'::regclass);
+
+
+--
+-- Name: organization_contacts id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_contacts ALTER COLUMN id SET DEFAULT nextval('government.organization_contacts_id_seq'::regclass);
+
+
+--
+-- Name: organization_datasets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_datasets ALTER COLUMN id SET DEFAULT nextval('government.organization_datasets_id_seq'::regclass);
+
+
+--
+-- Name: organization_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_descriptions ALTER COLUMN id SET DEFAULT nextval('government.organization_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: organization_products id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_products ALTER COLUMN id SET DEFAULT nextval('government.organization_products_id_seq'::regclass);
+
+
+--
+-- Name: organizations id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations ALTER COLUMN id SET DEFAULT nextval('government.organizations_id_seq'::regclass);
+
+
+--
+-- Name: organizations_countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_countries ALTER COLUMN id SET DEFAULT nextval('government.organizations_countries_id_seq'::regclass);
+
+
+--
+-- Name: organizations_resources id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_resources ALTER COLUMN id SET DEFAULT nextval('government.organizations_resources_id_seq'::regclass);
+
+
+--
+-- Name: origins id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.origins ALTER COLUMN id SET DEFAULT nextval('government.origins_id_seq'::regclass);
+
+
+--
+-- Name: page_contents id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.page_contents ALTER COLUMN id SET DEFAULT nextval('government.page_contents_id_seq'::regclass);
+
+
+--
+-- Name: play_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_descriptions ALTER COLUMN id SET DEFAULT nextval('government.play_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: play_move_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_move_descriptions ALTER COLUMN id SET DEFAULT nextval('government.play_move_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: play_moves id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves ALTER COLUMN id SET DEFAULT nextval('government.play_moves_id_seq'::regclass);
+
+
+--
+-- Name: play_moves_resources id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves_resources ALTER COLUMN id SET DEFAULT nextval('government.play_moves_resources_id_seq'::regclass);
+
+
+--
+-- Name: playbook_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_descriptions ALTER COLUMN id SET DEFAULT nextval('government.playbook_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: playbook_plays id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_plays ALTER COLUMN id SET DEFAULT nextval('government.playbook_plays_id_seq'::regclass);
+
+
+--
+-- Name: playbooks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbooks ALTER COLUMN id SET DEFAULT nextval('government.playbooks_id_seq'::regclass);
+
+
+--
+-- Name: plays id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays ALTER COLUMN id SET DEFAULT nextval('government.plays_id_seq'::regclass);
+
+
+--
+-- Name: plays_building_blocks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks ALTER COLUMN id SET DEFAULT nextval('government.plays_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: plays_products id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products ALTER COLUMN id SET DEFAULT nextval('government.plays_products_id_seq'::regclass);
+
+
+--
+-- Name: principle_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.principle_descriptions ALTER COLUMN id SET DEFAULT nextval('government.principle_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: product_building_blocks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_building_blocks ALTER COLUMN id SET DEFAULT nextval('government.product_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: product_classifications id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications ALTER COLUMN id SET DEFAULT nextval('government.product_classifications_id_seq'::regclass);
+
+
+--
+-- Name: product_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_descriptions ALTER COLUMN id SET DEFAULT nextval('government.product_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: product_indicators id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_indicators ALTER COLUMN id SET DEFAULT nextval('government.product_indicators_id_seq'::regclass);
+
+
+--
+-- Name: product_product_relationships id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_product_relationships ALTER COLUMN id SET DEFAULT nextval('government.product_product_relationships_id_seq'::regclass);
+
+
+--
+-- Name: product_repositories id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_repositories ALTER COLUMN id SET DEFAULT nextval('government.product_repositories_id_seq'::regclass);
+
+
+--
+-- Name: product_sectors id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sectors ALTER COLUMN id SET DEFAULT nextval('government.product_sectors_id_seq'::regclass);
+
+
+--
+-- Name: product_sustainable_development_goals id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('government.product_sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: products id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products ALTER COLUMN id SET DEFAULT nextval('government.products_id_seq'::regclass);
+
+
+--
+-- Name: products_countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_countries ALTER COLUMN id SET DEFAULT nextval('government.products_countries_id_seq'::regclass);
+
+
+--
+-- Name: products_endorsers id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_endorsers ALTER COLUMN id SET DEFAULT nextval('government.products_endorsers_id_seq'::regclass);
+
+
+--
+-- Name: project_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.project_descriptions ALTER COLUMN id SET DEFAULT nextval('government.project_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: projects id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects ALTER COLUMN id SET DEFAULT nextval('government.projects_id_seq'::regclass);
+
+
+--
+-- Name: projects_countries id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_countries ALTER COLUMN id SET DEFAULT nextval('government.projects_countries_id_seq'::regclass);
+
+
+--
+-- Name: projects_digital_principles id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_digital_principles ALTER COLUMN id SET DEFAULT nextval('government.projects_digital_principles_id_seq'::regclass);
+
+
+--
+-- Name: provinces id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.provinces ALTER COLUMN id SET DEFAULT nextval('government.provinces_id_seq'::regclass);
+
+
+--
+-- Name: regions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.regions ALTER COLUMN id SET DEFAULT nextval('government.regions_id_seq'::regclass);
+
+
+--
+-- Name: resource_building_blocks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_building_blocks ALTER COLUMN id SET DEFAULT nextval('government.resource_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: resource_topic_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topic_descriptions ALTER COLUMN id SET DEFAULT nextval('government.resource_topic_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: resource_topics id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topics ALTER COLUMN id SET DEFAULT nextval('government.resource_topics_id_seq'::regclass);
+
+
+--
+-- Name: resource_types id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_types ALTER COLUMN id SET DEFAULT nextval('government.resource_types_id_seq'::regclass);
+
+
+--
+-- Name: resources id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources ALTER COLUMN id SET DEFAULT nextval('government.resources_id_seq'::regclass);
+
+
+--
+-- Name: resources_use_cases id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources_use_cases ALTER COLUMN id SET DEFAULT nextval('government.resources_use_cases_id_seq'::regclass);
+
+
+--
+-- Name: rubric_categories id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.rubric_categories ALTER COLUMN id SET DEFAULT nextval('government.rubric_categories_id_seq'::regclass);
+
+
+--
+-- Name: rubric_category_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.rubric_category_descriptions ALTER COLUMN id SET DEFAULT nextval('government.rubric_category_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: sdg_targets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sdg_targets ALTER COLUMN id SET DEFAULT nextval('government.sdg_targets_id_seq'::regclass);
+
+
+--
+-- Name: sectors id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sectors ALTER COLUMN id SET DEFAULT nextval('government.sectors_id_seq'::regclass);
+
+
+--
+-- Name: sessions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sessions ALTER COLUMN id SET DEFAULT nextval('government.sessions_id_seq'::regclass);
+
+
+--
+-- Name: settings id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.settings ALTER COLUMN id SET DEFAULT nextval('government.settings_id_seq'::regclass);
+
+
+--
+-- Name: site_settings id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.site_settings ALTER COLUMN id SET DEFAULT nextval('government.site_settings_id_seq'::regclass);
+
+
+--
+-- Name: software_categories id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.software_categories ALTER COLUMN id SET DEFAULT nextval('government.software_categories_id_seq'::regclass);
+
+
+--
+-- Name: software_features id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.software_features ALTER COLUMN id SET DEFAULT nextval('government.software_features_id_seq'::regclass);
+
+
+--
+-- Name: starred_objects id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.starred_objects ALTER COLUMN id SET DEFAULT nextval('government.starred_objects_id_seq'::regclass);
+
+
+--
+-- Name: sustainable_development_goals id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sustainable_development_goals ALTER COLUMN id SET DEFAULT nextval('government.sustainable_development_goals_id_seq'::regclass);
+
+
+--
+-- Name: tag_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tag_descriptions ALTER COLUMN id SET DEFAULT nextval('government.tag_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: tags id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tags ALTER COLUMN id SET DEFAULT nextval('government.tags_id_seq'::regclass);
+
+
+--
+-- Name: task_tracker_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.task_tracker_descriptions ALTER COLUMN id SET DEFAULT nextval('government.task_tracker_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: task_trackers id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.task_trackers ALTER COLUMN id SET DEFAULT nextval('government.task_trackers_id_seq'::regclass);
+
+
+--
+-- Name: tenant_sync_configurations id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tenant_sync_configurations ALTER COLUMN id SET DEFAULT nextval('government.tenant_sync_configurations_id_seq'::regclass);
+
+
+--
+-- Name: use_case_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_descriptions ALTER COLUMN id SET DEFAULT nextval('government.use_case_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: use_case_headers id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_headers ALTER COLUMN id SET DEFAULT nextval('government.use_case_headers_id_seq'::regclass);
+
+
+--
+-- Name: use_case_step_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_step_descriptions ALTER COLUMN id SET DEFAULT nextval('government.use_case_step_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps ALTER COLUMN id SET DEFAULT nextval('government.use_case_steps_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_building_blocks id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_building_blocks ALTER COLUMN id SET DEFAULT nextval('government.use_case_steps_building_blocks_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_datasets id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_datasets ALTER COLUMN id SET DEFAULT nextval('government.use_case_steps_datasets_id_seq'::regclass);
+
+
+--
+-- Name: use_case_steps_products id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_products ALTER COLUMN id SET DEFAULT nextval('government.use_case_steps_products_id_seq'::regclass);
+
+
+--
+-- Name: use_cases id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_cases ALTER COLUMN id SET DEFAULT nextval('government.use_cases_id_seq'::regclass);
+
+
+--
+-- Name: user_events id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_events ALTER COLUMN id SET DEFAULT nextval('government.user_events_id_seq'::regclass);
+
+
+--
+-- Name: user_messages id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_messages ALTER COLUMN id SET DEFAULT nextval('government.user_messages_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.users ALTER COLUMN id SET DEFAULT nextval('government.users_id_seq'::regclass);
+
+
+--
+-- Name: workflow_descriptions id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflow_descriptions ALTER COLUMN id SET DEFAULT nextval('government.workflow_descriptions_id_seq'::regclass);
+
+
+--
+-- Name: workflows id; Type: DEFAULT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflows ALTER COLUMN id SET DEFAULT nextval('government.workflows_id_seq'::regclass);
 
 
 --
@@ -16439,6 +27408,966 @@ ALTER TABLE ONLY public.workflows ALTER COLUMN id SET DEFAULT nextval('public.wo
 
 
 --
+-- Name: aggregator_capabilities aggregator_capabilities_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.aggregator_capabilities
+    ADD CONSTRAINT aggregator_capabilities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: audits audits_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.audits
+    ADD CONSTRAINT audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authors authors_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.authors
+    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: building_block_descriptions building_block_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.building_block_descriptions
+    ADD CONSTRAINT building_block_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: building_blocks building_blocks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.building_blocks
+    ADD CONSTRAINT building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_datasets candidate_datasets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_datasets
+    ADD CONSTRAINT candidate_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_organizations candidate_organizations_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_organizations
+    ADD CONSTRAINT candidate_organizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_product_category_indicators_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_product_category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_products candidate_products_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products
+    ADD CONSTRAINT candidate_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources
+    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_roles candidate_roles_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT candidate_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_statuses candidate_statuses_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_statuses
+    ADD CONSTRAINT candidate_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_indicator_descriptions category_indicator_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicator_descriptions
+    ADD CONSTRAINT category_indicator_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_indicators category_indicators_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicators
+    ADD CONSTRAINT category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chatbot_conversations chatbot_conversations_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.chatbot_conversations
+    ADD CONSTRAINT chatbot_conversations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cities cities_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.cities
+    ADD CONSTRAINT cities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ckeditor_assets ckeditor_assets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.ckeditor_assets
+    ADD CONSTRAINT ckeditor_assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: classifications classifications_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.classifications
+    ADD CONSTRAINT classifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: countries countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.countries
+    ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_descriptions dataset_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_descriptions
+    ADD CONSTRAINT dataset_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sectors dataset_sectors_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sectors
+    ADD CONSTRAINT dataset_sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sustainable_development_goals dataset_sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sustainable_development_goals
+    ADD CONSTRAINT dataset_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_countries datasets_countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_countries
+    ADD CONSTRAINT datasets_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_origins datasets_origins_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_origins
+    ADD CONSTRAINT datasets_origins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets datasets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets
+    ADD CONSTRAINT datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: deploys deploys_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.deploys
+    ADD CONSTRAINT deploys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dial_spreadsheet_data dial_spreadsheet_data_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dial_spreadsheet_data
+    ADD CONSTRAINT dial_spreadsheet_data_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: digital_principles digital_principles_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.digital_principles
+    ADD CONSTRAINT digital_principles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: districts districts_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.districts
+    ADD CONSTRAINT districts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: endorsers endorsers_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.endorsers
+    ADD CONSTRAINT endorsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exchange_tenants exchange_tenants_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.exchange_tenants
+    ADD CONSTRAINT exchange_tenants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: froala_images froala_images_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.froala_images
+    ADD CONSTRAINT froala_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: glossaries glossaries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.glossaries
+    ADD CONSTRAINT glossaries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_answers handbook_answers_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_answers
+    ADD CONSTRAINT handbook_answers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_descriptions handbook_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_descriptions
+    ADD CONSTRAINT handbook_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_pages handbook_pages_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_pages
+    ADD CONSTRAINT handbook_pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_questions handbook_questions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_questions
+    ADD CONSTRAINT handbook_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbooks handbooks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbooks
+    ADD CONSTRAINT handbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: offices offices_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.offices
+    ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: operator_services operator_services_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.operator_services
+    ADD CONSTRAINT operator_services_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: opportunities opportunities_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities
+    ADD CONSTRAINT opportunities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_contacts organization_contacts_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_contacts
+    ADD CONSTRAINT organization_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_datasets organization_datasets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_datasets
+    ADD CONSTRAINT organization_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_descriptions organization_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_descriptions
+    ADD CONSTRAINT organization_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_products organization_products_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_products
+    ADD CONSTRAINT organization_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_countries organizations_countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_countries
+    ADD CONSTRAINT organizations_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations
+    ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_resources organizations_resources_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_resources
+    ADD CONSTRAINT organizations_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: origins origins_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.origins
+    ADD CONSTRAINT origins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_contents page_contents_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.page_contents
+    ADD CONSTRAINT page_contents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_descriptions play_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_descriptions
+    ADD CONSTRAINT play_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_move_descriptions play_move_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_move_descriptions
+    ADD CONSTRAINT play_move_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves play_moves_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves
+    ADD CONSTRAINT play_moves_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves_resources play_moves_resources_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves_resources
+    ADD CONSTRAINT play_moves_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbook_descriptions playbook_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_descriptions
+    ADD CONSTRAINT playbook_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbook_plays playbook_plays_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_plays
+    ADD CONSTRAINT playbook_plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbooks playbooks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbooks
+    ADD CONSTRAINT playbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_building_blocks plays_building_blocks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks
+    ADD CONSTRAINT plays_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays plays_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays
+    ADD CONSTRAINT plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_products plays_products_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products
+    ADD CONSTRAINT plays_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: principle_descriptions principle_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.principle_descriptions
+    ADD CONSTRAINT principle_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_building_blocks product_building_blocks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_building_blocks
+    ADD CONSTRAINT product_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_classifications product_classifications_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications
+    ADD CONSTRAINT product_classifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_descriptions product_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_descriptions
+    ADD CONSTRAINT product_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_indicators product_indicators_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_indicators
+    ADD CONSTRAINT product_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_product_relationships product_product_relationships_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_product_relationships
+    ADD CONSTRAINT product_product_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_repositories product_repositories_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_repositories
+    ADD CONSTRAINT product_repositories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_sectors product_sectors_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sectors
+    ADD CONSTRAINT product_sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_sustainable_development_goals product_sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sustainable_development_goals
+    ADD CONSTRAINT product_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_countries products_countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_countries
+    ADD CONSTRAINT products_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_endorsers products_endorsers_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_endorsers
+    ADD CONSTRAINT products_endorsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_descriptions project_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.project_descriptions
+    ADD CONSTRAINT project_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_countries projects_countries_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_countries
+    ADD CONSTRAINT projects_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_digital_principles projects_digital_principles_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_digital_principles
+    ADD CONSTRAINT projects_digital_principles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: provinces provinces_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.provinces
+    ADD CONSTRAINT provinces_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: regions regions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.regions
+    ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_building_blocks resource_building_blocks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_building_blocks
+    ADD CONSTRAINT resource_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topic_descriptions
+    ADD CONSTRAINT resource_topic_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topics resource_topics_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topics
+    ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_types
+    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources resources_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources
+    ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_use_cases resources_use_cases_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources_use_cases
+    ADD CONSTRAINT resources_use_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rubric_categories rubric_categories_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.rubric_categories
+    ADD CONSTRAINT rubric_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rubric_category_descriptions rubric_category_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.rubric_category_descriptions
+    ADD CONSTRAINT rubric_category_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: sdg_targets sdg_targets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sdg_targets
+    ADD CONSTRAINT sdg_targets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sectors sectors_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sectors
+    ADD CONSTRAINT sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.software_categories
+    ADD CONSTRAINT software_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_features software_features_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.software_features
+    ADD CONSTRAINT software_features_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.starred_objects
+    ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sustainable_development_goals sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sustainable_development_goals
+    ADD CONSTRAINT sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tag_descriptions tag_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tag_descriptions
+    ADD CONSTRAINT tag_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_tracker_descriptions task_tracker_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.task_tracker_descriptions
+    ADD CONSTRAINT task_tracker_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_trackers task_trackers_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.task_trackers
+    ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_sync_configurations tenant_sync_configurations_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tenant_sync_configurations
+    ADD CONSTRAINT tenant_sync_configurations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_descriptions use_case_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_descriptions
+    ADD CONSTRAINT use_case_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_headers use_case_headers_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_headers
+    ADD CONSTRAINT use_case_headers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_step_descriptions use_case_step_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_step_descriptions
+    ADD CONSTRAINT use_case_step_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps use_case_steps_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps
+    ADD CONSTRAINT use_case_steps_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_cases use_cases_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_cases
+    ADD CONSTRAINT use_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_events user_events_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_events
+    ADD CONSTRAINT user_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_messages user_messages_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_messages
+    ADD CONSTRAINT user_messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workflow_descriptions workflow_descriptions_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflow_descriptions
+    ADD CONSTRAINT workflow_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workflows workflows_pkey; Type: CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflows
+    ADD CONSTRAINT workflows_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: aggregator_capabilities aggregator_capabilities_pkey; Type: CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -17395,6 +29324,966 @@ ALTER TABLE ONLY fao.workflow_descriptions
 --
 
 ALTER TABLE ONLY fao.workflows
+    ADD CONSTRAINT workflows_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: aggregator_capabilities aggregator_capabilities_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.aggregator_capabilities
+    ADD CONSTRAINT aggregator_capabilities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: audits audits_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.audits
+    ADD CONSTRAINT audits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: authors authors_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.authors
+    ADD CONSTRAINT authors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: building_block_descriptions building_block_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.building_block_descriptions
+    ADD CONSTRAINT building_block_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: building_blocks building_blocks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.building_blocks
+    ADD CONSTRAINT building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_datasets candidate_datasets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_datasets
+    ADD CONSTRAINT candidate_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_organizations candidate_organizations_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_organizations
+    ADD CONSTRAINT candidate_organizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_product_category_indicators_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_product_category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_products candidate_products_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products
+    ADD CONSTRAINT candidate_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_resources candidate_resources_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources
+    ADD CONSTRAINT candidate_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_roles candidate_roles_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT candidate_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: candidate_statuses candidate_statuses_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_statuses
+    ADD CONSTRAINT candidate_statuses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_indicator_descriptions category_indicator_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicator_descriptions
+    ADD CONSTRAINT category_indicator_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_indicators category_indicators_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicators
+    ADD CONSTRAINT category_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: chatbot_conversations chatbot_conversations_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.chatbot_conversations
+    ADD CONSTRAINT chatbot_conversations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cities cities_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.cities
+    ADD CONSTRAINT cities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ckeditor_assets ckeditor_assets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.ckeditor_assets
+    ADD CONSTRAINT ckeditor_assets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: classifications classifications_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.classifications
+    ADD CONSTRAINT classifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: countries countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.countries
+    ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_descriptions dataset_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_descriptions
+    ADD CONSTRAINT dataset_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sectors dataset_sectors_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sectors
+    ADD CONSTRAINT dataset_sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dataset_sustainable_development_goals dataset_sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sustainable_development_goals
+    ADD CONSTRAINT dataset_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_countries datasets_countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_countries
+    ADD CONSTRAINT datasets_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets_origins datasets_origins_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_origins
+    ADD CONSTRAINT datasets_origins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: datasets datasets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets
+    ADD CONSTRAINT datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: deploys deploys_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.deploys
+    ADD CONSTRAINT deploys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dial_spreadsheet_data dial_spreadsheet_data_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dial_spreadsheet_data
+    ADD CONSTRAINT dial_spreadsheet_data_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: digital_principles digital_principles_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.digital_principles
+    ADD CONSTRAINT digital_principles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: districts districts_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.districts
+    ADD CONSTRAINT districts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: endorsers endorsers_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.endorsers
+    ADD CONSTRAINT endorsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: exchange_tenants exchange_tenants_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.exchange_tenants
+    ADD CONSTRAINT exchange_tenants_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: froala_images froala_images_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.froala_images
+    ADD CONSTRAINT froala_images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: glossaries glossaries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.glossaries
+    ADD CONSTRAINT glossaries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_answers handbook_answers_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_answers
+    ADD CONSTRAINT handbook_answers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_descriptions handbook_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_descriptions
+    ADD CONSTRAINT handbook_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_pages handbook_pages_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_pages
+    ADD CONSTRAINT handbook_pages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbook_questions handbook_questions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_questions
+    ADD CONSTRAINT handbook_questions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: handbooks handbooks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbooks
+    ADD CONSTRAINT handbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.messages
+    ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: offices offices_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.offices
+    ADD CONSTRAINT offices_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: operator_services operator_services_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.operator_services
+    ADD CONSTRAINT operator_services_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: opportunities opportunities_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities
+    ADD CONSTRAINT opportunities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_contacts organization_contacts_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_contacts
+    ADD CONSTRAINT organization_contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_datasets organization_datasets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_datasets
+    ADD CONSTRAINT organization_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_descriptions organization_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_descriptions
+    ADD CONSTRAINT organization_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_products organization_products_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_products
+    ADD CONSTRAINT organization_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_countries organizations_countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_countries
+    ADD CONSTRAINT organizations_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations
+    ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations_resources organizations_resources_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_resources
+    ADD CONSTRAINT organizations_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: origins origins_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.origins
+    ADD CONSTRAINT origins_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_contents page_contents_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.page_contents
+    ADD CONSTRAINT page_contents_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_descriptions play_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_descriptions
+    ADD CONSTRAINT play_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_move_descriptions play_move_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_move_descriptions
+    ADD CONSTRAINT play_move_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves play_moves_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves
+    ADD CONSTRAINT play_moves_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: play_moves_resources play_moves_resources_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves_resources
+    ADD CONSTRAINT play_moves_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbook_descriptions playbook_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_descriptions
+    ADD CONSTRAINT playbook_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbook_plays playbook_plays_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_plays
+    ADD CONSTRAINT playbook_plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: playbooks playbooks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbooks
+    ADD CONSTRAINT playbooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_building_blocks plays_building_blocks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks
+    ADD CONSTRAINT plays_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays plays_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays
+    ADD CONSTRAINT plays_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: plays_products plays_products_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products
+    ADD CONSTRAINT plays_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: principle_descriptions principle_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.principle_descriptions
+    ADD CONSTRAINT principle_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_building_blocks product_building_blocks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_building_blocks
+    ADD CONSTRAINT product_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_classifications product_classifications_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications
+    ADD CONSTRAINT product_classifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_descriptions product_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_descriptions
+    ADD CONSTRAINT product_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_indicators product_indicators_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_indicators
+    ADD CONSTRAINT product_indicators_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_product_relationships product_product_relationships_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_product_relationships
+    ADD CONSTRAINT product_product_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_repositories product_repositories_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_repositories
+    ADD CONSTRAINT product_repositories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_sectors product_sectors_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sectors
+    ADD CONSTRAINT product_sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_sustainable_development_goals product_sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sustainable_development_goals
+    ADD CONSTRAINT product_sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_countries products_countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_countries
+    ADD CONSTRAINT products_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products_endorsers products_endorsers_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_endorsers
+    ADD CONSTRAINT products_endorsers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: project_descriptions project_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.project_descriptions
+    ADD CONSTRAINT project_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_countries projects_countries_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_countries
+    ADD CONSTRAINT projects_countries_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects_digital_principles projects_digital_principles_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_digital_principles
+    ADD CONSTRAINT projects_digital_principles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: projects projects_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects
+    ADD CONSTRAINT projects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: provinces provinces_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.provinces
+    ADD CONSTRAINT provinces_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: regions regions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.regions
+    ADD CONSTRAINT regions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_building_blocks resource_building_blocks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_building_blocks
+    ADD CONSTRAINT resource_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topic_descriptions resource_topic_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topic_descriptions
+    ADD CONSTRAINT resource_topic_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_topics resource_topics_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topics
+    ADD CONSTRAINT resource_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resource_types resource_types_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_types
+    ADD CONSTRAINT resource_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources resources_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources
+    ADD CONSTRAINT resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: resources_use_cases resources_use_cases_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources_use_cases
+    ADD CONSTRAINT resources_use_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rubric_categories rubric_categories_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.rubric_categories
+    ADD CONSTRAINT rubric_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rubric_category_descriptions rubric_category_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.rubric_category_descriptions
+    ADD CONSTRAINT rubric_category_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: sdg_targets sdg_targets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sdg_targets
+    ADD CONSTRAINT sdg_targets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sectors sectors_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sectors
+    ADD CONSTRAINT sectors_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: settings settings_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.settings
+    ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_settings site_settings_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.site_settings
+    ADD CONSTRAINT site_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_categories software_categories_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.software_categories
+    ADD CONSTRAINT software_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: software_features software_features_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.software_features
+    ADD CONSTRAINT software_features_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: starred_objects starred_objects_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.starred_objects
+    ADD CONSTRAINT starred_objects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sustainable_development_goals sustainable_development_goals_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sustainable_development_goals
+    ADD CONSTRAINT sustainable_development_goals_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tag_descriptions tag_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tag_descriptions
+    ADD CONSTRAINT tag_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tags
+    ADD CONSTRAINT tags_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_tracker_descriptions task_tracker_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.task_tracker_descriptions
+    ADD CONSTRAINT task_tracker_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: task_trackers task_trackers_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.task_trackers
+    ADD CONSTRAINT task_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tenant_sync_configurations tenant_sync_configurations_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tenant_sync_configurations
+    ADD CONSTRAINT tenant_sync_configurations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_descriptions use_case_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_descriptions
+    ADD CONSTRAINT use_case_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_headers use_case_headers_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_headers
+    ADD CONSTRAINT use_case_headers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_step_descriptions use_case_step_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_step_descriptions
+    ADD CONSTRAINT use_case_step_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps use_case_steps_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps
+    ADD CONSTRAINT use_case_steps_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: use_cases use_cases_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_cases
+    ADD CONSTRAINT use_cases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_events user_events_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_events
+    ADD CONSTRAINT user_events_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_messages user_messages_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_messages
+    ADD CONSTRAINT user_messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workflow_descriptions workflow_descriptions_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflow_descriptions
+    ADD CONSTRAINT workflow_descriptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: workflows workflows_pkey; Type: CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflows
     ADD CONSTRAINT workflows_pkey PRIMARY KEY (id);
 
 
@@ -19319,6 +32208,1462 @@ ALTER TABLE ONLY public.workflows
 
 
 --
+-- Name: agg_cap_operator_capability_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX agg_cap_operator_capability_index ON dsq.aggregator_capabilities USING btree (aggregator_id, operator_services_id, capability);
+
+
+--
+-- Name: associated_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX associated_index ON dsq.audits USING btree (associated_type, associated_id);
+
+
+--
+-- Name: auditable_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX auditable_index ON dsq.audits USING btree (action, id, version);
+
+
+--
+-- Name: authors_unique_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX authors_unique_slug ON dsq.authors USING btree (slug);
+
+
+--
+-- Name: bbs_plays_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX bbs_plays_idx ON dsq.plays_building_blocks USING btree (building_block_id, play_id);
+
+
+--
+-- Name: bbs_workflows; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX bbs_workflows ON dsq.workflows_building_blocks USING btree (building_block_id, workflow_id);
+
+
+--
+-- Name: block_prods; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX block_prods ON dsq.product_building_blocks USING btree (building_block_id, product_id);
+
+
+--
+-- Name: building_blocks_use_case_steps_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON dsq.use_case_steps_building_blocks USING btree (building_block_id, use_case_step_id);
+
+
+--
+-- Name: candidate_product_category_indicator_main_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_product_category_indicator_main_index ON dsq.candidate_product_category_indicators USING btree (candidate_product_id, category_indicator_id);
+
+
+--
+-- Name: candidate_product_category_indicator_reverse_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_product_category_indicator_reverse_index ON dsq.candidate_product_category_indicators USING btree (category_indicator_id, candidate_product_id);
+
+
+--
+-- Name: candidate_resources_countries_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_resources_countries_idx ON dsq.candidate_resources_countries USING btree (candidate_resource_id, country_id);
+
+
+--
+-- Name: candidate_roles_unique_fields; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_roles_unique_fields ON dsq.candidate_roles USING btree (email, roles, organization_id, product_id);
+
+
+--
+-- Name: candidate_status_relationships_main_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_status_relationships_main_index ON dsq.candidate_status_relationships USING btree (current_candidate_status_id, next_candidate_status_id);
+
+
+--
+-- Name: candidate_status_relationships_reverse_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_status_relationships_reverse_index ON dsq.candidate_status_relationships USING btree (next_candidate_status_id, current_candidate_status_id);
+
+
+--
+-- Name: classifications_products_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX classifications_products_idx ON dsq.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_candidate_resources_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_candidate_resources_idx ON dsq.candidate_resources_countries USING btree (country_id, candidate_resource_id);
+
+
+--
+-- Name: countries_product_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_product_idx ON dsq.products_countries USING btree (country_id, product_id);
+
+
+--
+-- Name: dataset_sdg_index_on_sdg_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX dataset_sdg_index_on_sdg_id ON dsq.dataset_sustainable_development_goals USING btree (sustainable_development_goal_id);
+
+
+--
+-- Name: datasets_use_case_steps_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX datasets_use_case_steps_idx ON dsq.use_case_steps_datasets USING btree (dataset_id, use_case_step_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_aggregator_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_aggregator_id ON dsq.aggregator_capabilities USING btree (aggregator_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_country_id ON dsq.aggregator_capabilities USING btree (country_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_operator_services_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_operator_services_id ON dsq.aggregator_capabilities USING btree (operator_services_id);
+
+
+--
+-- Name: index_audits_on_created_at; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_audits_on_created_at ON dsq.audits USING btree (created_at);
+
+
+--
+-- Name: index_building_block_descriptions_on_building_block_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_building_block_descriptions_on_building_block_id ON dsq.building_block_descriptions USING btree (building_block_id);
+
+
+--
+-- Name: index_building_blocks_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_building_blocks_on_slug ON dsq.building_blocks USING btree (slug);
+
+
+--
+-- Name: index_candidate_contacts_on_candidate_id_and_contact_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_contacts_on_candidate_id_and_contact_id ON dsq.candidate_organizations_contacts USING btree (candidate_organization_id, contact_id);
+
+
+--
+-- Name: index_candidate_contacts_on_contact_id_and_candidate_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_contacts_on_contact_id_and_candidate_id ON dsq.candidate_organizations_contacts USING btree (contact_id, candidate_organization_id);
+
+
+--
+-- Name: index_candidate_datasets_on_approved_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_approved_by_id ON dsq.candidate_datasets USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_datasets_on_rejected_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_rejected_by_id ON dsq.candidate_datasets USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_organizations_on_approved_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_organizations_on_approved_by_id ON dsq.candidate_organizations USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_organizations_on_rejected_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_organizations_on_rejected_by_id ON dsq.candidate_organizations USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_products_on_approved_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_approved_by_id ON dsq.candidate_products USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_products_on_candidate_status_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_candidate_status_id ON dsq.candidate_products USING btree (candidate_status_id);
+
+
+--
+-- Name: index_candidate_products_on_created_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_created_by_id ON dsq.candidate_products USING btree (created_by_id);
+
+
+--
+-- Name: index_candidate_products_on_rejected_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_rejected_by_id ON dsq.candidate_products USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_approved_by_id ON dsq.candidate_resources USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_rejected_by_id ON dsq.candidate_resources USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_roles_on_approved_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_approved_by_id ON dsq.candidate_roles USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_roles_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_dataset_id ON dsq.candidate_roles USING btree (dataset_id);
+
+
+--
+-- Name: index_candidate_roles_on_rejected_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_rejected_by_id ON dsq.candidate_roles USING btree (rejected_by_id);
+
+
+--
+-- Name: index_category_indicator_descriptions_on_category_indicator_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_category_indicator_descriptions_on_category_indicator_id ON dsq.category_indicator_descriptions USING btree (category_indicator_id);
+
+
+--
+-- Name: index_category_indicators_on_rubric_category_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_category_indicators_on_rubric_category_id ON dsq.category_indicators USING btree (rubric_category_id);
+
+
+--
+-- Name: index_chatbot_conversations_on_user_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_chatbot_conversations_on_user_id ON dsq.chatbot_conversations USING btree (user_id);
+
+
+--
+-- Name: index_cities_on_province_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_cities_on_province_id ON dsq.cities USING btree (province_id);
+
+
+--
+-- Name: index_ckeditor_assets_on_type; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_ckeditor_assets_on_type ON dsq.ckeditor_assets USING btree (type);
+
+
+--
+-- Name: index_contacts_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contacts_on_slug ON dsq.contacts USING btree (slug);
+
+
+--
+-- Name: index_dataset_descriptions_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_dataset_descriptions_on_dataset_id ON dsq.dataset_descriptions USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_dataset_id ON dsq.dataset_sectors USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_sector_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_sector_id ON dsq.dataset_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_dataset_sustainable_development_goals_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_dataset_sustainable_development_goals_on_dataset_id ON dsq.dataset_sustainable_development_goals USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_countries_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_country_id ON dsq.datasets_countries USING btree (country_id);
+
+
+--
+-- Name: index_datasets_countries_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_dataset_id ON dsq.datasets_countries USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_dataset_id ON dsq.datasets_origins USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_origin_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_origin_id ON dsq.datasets_origins USING btree (origin_id);
+
+
+--
+-- Name: index_deploys_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_deploys_on_product_id ON dsq.deploys USING btree (product_id);
+
+
+--
+-- Name: index_deploys_on_user_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_deploys_on_user_id ON dsq.deploys USING btree (user_id);
+
+
+--
+-- Name: index_districts_on_province_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_districts_on_province_id ON dsq.districts USING btree (province_id);
+
+
+--
+-- Name: index_handbook_answers_on_handbook_question_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_answers_on_handbook_question_id ON dsq.handbook_answers USING btree (handbook_question_id);
+
+
+--
+-- Name: index_handbook_descriptions_on_handbook_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_descriptions_on_handbook_id ON dsq.handbook_descriptions USING btree (handbook_id);
+
+
+--
+-- Name: index_handbook_pages_on_handbook_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_handbook_id ON dsq.handbook_pages USING btree (handbook_id);
+
+
+--
+-- Name: index_handbook_pages_on_handbook_questions_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_handbook_questions_id ON dsq.handbook_pages USING btree (handbook_questions_id);
+
+
+--
+-- Name: index_handbook_pages_on_parent_page_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_parent_page_id ON dsq.handbook_pages USING btree (parent_page_id);
+
+
+--
+-- Name: index_handbook_questions_on_handbook_page_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_handbook_questions_on_handbook_page_id ON dsq.handbook_questions USING btree (handbook_page_id);
+
+
+--
+-- Name: index_messages_on_created_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_messages_on_created_by_id ON dsq.messages USING btree (created_by_id);
+
+
+--
+-- Name: index_offices_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_offices_on_country_id ON dsq.offices USING btree (country_id);
+
+
+--
+-- Name: index_offices_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_offices_on_organization_id ON dsq.offices USING btree (organization_id);
+
+
+--
+-- Name: index_offices_on_province_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_offices_on_province_id ON dsq.offices USING btree (province_id);
+
+
+--
+-- Name: index_operator_services_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_operator_services_on_country_id ON dsq.operator_services USING btree (country_id);
+
+
+--
+-- Name: index_opportunities_building_blocks_on_building_block_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_building_block_id ON dsq.opportunities_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_opportunities_building_blocks_on_opportunity_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_opportunity_id ON dsq.opportunities_building_blocks USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_countries_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_country_id ON dsq.opportunities_countries USING btree (country_id);
+
+
+--
+-- Name: index_opportunities_countries_on_opportunity_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_opportunity_id ON dsq.opportunities_countries USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_on_origin_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_on_origin_id ON dsq.opportunities USING btree (origin_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_opportunity_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_opportunity_id ON dsq.opportunities_organizations USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_organization_id ON dsq.opportunities_organizations USING btree (organization_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_opportunity_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_opportunity_id ON dsq.opportunities_sectors USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_sector_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_sector_id ON dsq.opportunities_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_opportunity_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_opportunity_id ON dsq.opportunities_use_cases USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_use_case_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_use_case_id ON dsq.opportunities_use_cases USING btree (use_case_id);
+
+
+--
+-- Name: index_organization_datasets_on_dataset_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_dataset_id ON dsq.organization_datasets USING btree (dataset_id);
+
+
+--
+-- Name: index_organization_datasets_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_organization_id ON dsq.organization_datasets USING btree (organization_id);
+
+
+--
+-- Name: index_organization_descriptions_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_organization_descriptions_on_organization_id ON dsq.organization_descriptions USING btree (organization_id);
+
+
+--
+-- Name: index_organization_products_on_organization_id_and_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_organization_id_and_product_id ON dsq.organization_products USING btree (organization_id, product_id);
+
+
+--
+-- Name: index_organization_products_on_product_id_and_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_product_id_and_organization_id ON dsq.organization_products USING btree (product_id, organization_id);
+
+
+--
+-- Name: index_organizations_countries_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_organizations_countries_on_country_id ON dsq.organizations_countries USING btree (country_id);
+
+
+--
+-- Name: index_organizations_countries_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_organizations_countries_on_organization_id ON dsq.organizations_countries USING btree (organization_id);
+
+
+--
+-- Name: index_organizations_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organizations_on_slug ON dsq.organizations USING btree (slug);
+
+
+--
+-- Name: index_origins_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_origins_on_organization_id ON dsq.origins USING btree (organization_id);
+
+
+--
+-- Name: index_page_contents_on_handbook_page_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_page_contents_on_handbook_page_id ON dsq.page_contents USING btree (handbook_page_id);
+
+
+--
+-- Name: index_play_descriptions_on_play_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_play_descriptions_on_play_id ON dsq.play_descriptions USING btree (play_id);
+
+
+--
+-- Name: index_play_move_descriptions_on_play_move_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_play_move_descriptions_on_play_move_id ON dsq.play_move_descriptions USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_on_play_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_play_moves_on_play_id ON dsq.play_moves USING btree (play_id);
+
+
+--
+-- Name: index_play_moves_resources; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON dsq.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
+-- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_play_move_id ON dsq.play_moves_resources USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_resources_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_resource_id ON dsq.play_moves_resources USING btree (resource_id);
+
+
+--
+-- Name: index_playbook_descriptions_on_playbook_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_playbook_descriptions_on_playbook_id ON dsq.playbook_descriptions USING btree (playbook_id);
+
+
+--
+-- Name: index_playbook_plays_on_play_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_playbook_plays_on_play_id ON dsq.playbook_plays USING btree (play_id);
+
+
+--
+-- Name: index_playbook_plays_on_playbook_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_playbook_plays_on_playbook_id ON dsq.playbook_plays USING btree (playbook_id);
+
+
+--
+-- Name: index_plays_building_blocks_on_building_block_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_plays_building_blocks_on_building_block_id ON dsq.plays_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_plays_building_blocks_on_play_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_plays_building_blocks_on_play_id ON dsq.plays_building_blocks USING btree (play_id);
+
+
+--
+-- Name: index_plays_products_on_play_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_plays_products_on_play_id ON dsq.plays_products USING btree (play_id);
+
+
+--
+-- Name: index_plays_products_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_plays_products_on_product_id ON dsq.plays_products USING btree (product_id);
+
+
+--
+-- Name: index_principle_descriptions_on_digital_principle_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_principle_descriptions_on_digital_principle_id ON dsq.principle_descriptions USING btree (digital_principle_id);
+
+
+--
+-- Name: index_product_categories_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_product_id ON dsq.product_categories USING btree (product_id);
+
+
+--
+-- Name: index_product_categories_on_software_category_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_software_category_id ON dsq.product_categories USING btree (software_category_id);
+
+
+--
+-- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_classifications_on_classification_id ON dsq.product_classifications USING btree (classification_id);
+
+
+--
+-- Name: index_product_classifications_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_classifications_on_product_id ON dsq.product_classifications USING btree (product_id);
+
+
+--
+-- Name: index_product_descriptions_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_descriptions_on_product_id ON dsq.product_descriptions USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_features_on_product_id ON dsq.product_features USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_software_feature_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_features_on_software_feature_id ON dsq.product_features USING btree (software_feature_id);
+
+
+--
+-- Name: index_product_indicators_on_category_indicator_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_indicators_on_category_indicator_id ON dsq.product_indicators USING btree (category_indicator_id);
+
+
+--
+-- Name: index_product_indicators_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_indicators_on_product_id ON dsq.product_indicators USING btree (product_id);
+
+
+--
+-- Name: index_product_repositories_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_repositories_on_product_id ON dsq.product_repositories USING btree (product_id);
+
+
+--
+-- Name: index_product_sectors_on_product_id_and_sector_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_sectors_on_product_id_and_sector_id ON dsq.product_sectors USING btree (product_id, sector_id);
+
+
+--
+-- Name: index_product_sectors_on_sector_id_and_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_product_sectors_on_sector_id_and_product_id ON dsq.product_sectors USING btree (sector_id, product_id);
+
+
+--
+-- Name: index_products_endorsers_on_endorser_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_products_endorsers_on_endorser_id ON dsq.products_endorsers USING btree (endorser_id);
+
+
+--
+-- Name: index_products_endorsers_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_products_endorsers_on_product_id ON dsq.products_endorsers USING btree (product_id);
+
+
+--
+-- Name: index_products_on_approval_status_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_products_on_approval_status_id ON dsq.products USING btree (approval_status_id);
+
+
+--
+-- Name: index_products_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_products_on_slug ON dsq.products USING btree (slug);
+
+
+--
+-- Name: index_products_resources_on_product_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_product_id ON dsq.products_resources USING btree (product_id);
+
+
+--
+-- Name: index_products_resources_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_resource_id ON dsq.products_resources USING btree (resource_id);
+
+
+--
+-- Name: index_project_descriptions_on_project_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_project_descriptions_on_project_id ON dsq.project_descriptions USING btree (project_id);
+
+
+--
+-- Name: index_projects_countries_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_projects_countries_on_country_id ON dsq.projects_countries USING btree (country_id);
+
+
+--
+-- Name: index_projects_countries_on_project_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_projects_countries_on_project_id ON dsq.projects_countries USING btree (project_id);
+
+
+--
+-- Name: index_projects_digital_principles_on_digital_principle_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_projects_digital_principles_on_digital_principle_id ON dsq.projects_digital_principles USING btree (digital_principle_id);
+
+
+--
+-- Name: index_projects_digital_principles_on_project_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_projects_digital_principles_on_project_id ON dsq.projects_digital_principles USING btree (project_id);
+
+
+--
+-- Name: index_projects_on_origin_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_projects_on_origin_id ON dsq.projects USING btree (origin_id);
+
+
+--
+-- Name: index_provinces_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_provinces_on_country_id ON dsq.provinces USING btree (country_id);
+
+
+--
+-- Name: index_regions_countries; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_countries ON dsq.regions_countries USING btree (region_id, country_id);
+
+
+--
+-- Name: index_regions_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_on_slug ON dsq.regions USING btree (slug);
+
+
+--
+-- Name: index_resource_building_blocks; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_building_blocks ON dsq.resource_building_blocks USING btree (resource_id, building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_building_block_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_building_block_id ON dsq.resource_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_resource_id ON dsq.resource_building_blocks USING btree (resource_id);
+
+
+--
+-- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resource_topic_descriptions_on_resource_topic_id ON dsq.resource_topic_descriptions USING btree (resource_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_parent_topic_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resource_topics_on_parent_topic_id ON dsq.resource_topics USING btree (parent_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_topics_on_slug ON dsq.resource_topics USING btree (slug);
+
+
+--
+-- Name: index_resources_authors_on_author_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_author_id ON dsq.resources_authors USING btree (author_id);
+
+
+--
+-- Name: index_resources_authors_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_resource_id ON dsq.resources_authors USING btree (resource_id);
+
+
+--
+-- Name: index_resources_countries_on_country_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_country_id ON dsq.resources_countries USING btree (country_id);
+
+
+--
+-- Name: index_resources_countries_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_resource_id ON dsq.resources_countries USING btree (resource_id);
+
+
+--
+-- Name: index_resources_on_organization_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_on_organization_id ON dsq.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON dsq.resources USING btree (submitted_by_id);
+
+
+--
+-- Name: index_resources_use_cases; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resources_use_cases ON dsq.resources_use_cases USING btree (resource_id, use_case_id);
+
+
+--
+-- Name: index_resources_use_cases_on_resource_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_resource_id ON dsq.resources_use_cases USING btree (resource_id);
+
+
+--
+-- Name: index_resources_use_cases_on_use_case_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_use_case_id ON dsq.resources_use_cases USING btree (use_case_id);
+
+
+--
+-- Name: index_rubric_category_descriptions_on_rubric_category_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_rubric_category_descriptions_on_rubric_category_id ON dsq.rubric_category_descriptions USING btree (rubric_category_id);
+
+
+--
+-- Name: index_sdgs_on_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sdgs_on_slug ON dsq.sustainable_development_goals USING btree (slug);
+
+
+--
+-- Name: index_sector_slug_unique; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sector_slug_unique ON dsq.sectors USING btree (slug, origin_id, parent_sector_id, locale);
+
+
+--
+-- Name: index_sectors_on_origin_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_sectors_on_origin_id ON dsq.sectors USING btree (origin_id);
+
+
+--
+-- Name: index_sectors_on_parent_sector_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_sectors_on_parent_sector_id ON dsq.sectors USING btree (parent_sector_id);
+
+
+--
+-- Name: index_sessions_on_session_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sessions_on_session_id ON dsq.sessions USING btree (session_id);
+
+
+--
+-- Name: index_sessions_on_updated_at; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_sessions_on_updated_at ON dsq.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_software_features_on_software_category_id ON dsq.software_features USING btree (software_category_id);
+
+
+--
+-- Name: index_starred_object_record; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_starred_object_record ON dsq.starred_objects USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
+
+
+--
+-- Name: index_starred_objects_on_starred_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_starred_objects_on_starred_by_id ON dsq.starred_objects USING btree (starred_by_id);
+
+
+--
+-- Name: index_tag_descriptions_on_tag_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_tag_descriptions_on_tag_id ON dsq.tag_descriptions USING btree (tag_id);
+
+
+--
+-- Name: index_task_tracker_descriptions_on_task_tracker_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_task_tracker_descriptions_on_task_tracker_id ON dsq.task_tracker_descriptions USING btree (task_tracker_id);
+
+
+--
+-- Name: index_use_case_descriptions_on_use_case_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_use_case_descriptions_on_use_case_id ON dsq.use_case_descriptions USING btree (use_case_id);
+
+
+--
+-- Name: index_use_case_headers_on_use_case_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_use_case_headers_on_use_case_id ON dsq.use_case_headers USING btree (use_case_id);
+
+
+--
+-- Name: index_use_case_step_descriptions_on_use_case_step_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_use_case_step_descriptions_on_use_case_step_id ON dsq.use_case_step_descriptions USING btree (use_case_step_id);
+
+
+--
+-- Name: index_use_case_steps_on_use_case_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_use_case_steps_on_use_case_id ON dsq.use_case_steps USING btree (use_case_id);
+
+
+--
+-- Name: index_use_cases_on_sector_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_use_cases_on_sector_id ON dsq.use_cases USING btree (sector_id);
+
+
+--
+-- Name: index_user_messages_on_message_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_message_id ON dsq.user_messages USING btree (message_id);
+
+
+--
+-- Name: index_user_messages_on_received_by_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_received_by_id ON dsq.user_messages USING btree (received_by_id);
+
+
+--
+-- Name: index_users_on_authentication_token; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_authentication_token ON dsq.users USING btree (authentication_token);
+
+
+--
+-- Name: index_users_on_confirmation_token; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_confirmation_token ON dsq.users USING btree (confirmation_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON dsq.users USING btree (email);
+
+
+--
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON dsq.users USING btree (reset_password_token);
+
+
+--
+-- Name: index_workflow_descriptions_on_workflow_id; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX index_workflow_descriptions_on_workflow_id ON dsq.workflow_descriptions USING btree (workflow_id);
+
+
+--
+-- Name: opportunities_unique_slug; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX opportunities_unique_slug ON dsq.opportunities USING btree (slug);
+
+
+--
+-- Name: org_sectors; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX org_sectors ON dsq.organizations_sectors USING btree (organization_id, sector_id);
+
+
+--
+-- Name: organizations_projects_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX organizations_projects_idx ON dsq.projects_organizations USING btree (organization_id, project_id);
+
+
+--
+-- Name: organizations_resources_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX organizations_resources_idx ON dsq.organizations_resources USING btree (organization_id, resource_id);
+
+
+--
+-- Name: origins_products_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX origins_products_idx ON dsq.products_origins USING btree (origin_id, product_id);
+
+
+--
+-- Name: playbooks_sectors_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX playbooks_sectors_idx ON dsq.playbooks_sectors USING btree (playbook_id, sector_id);
+
+
+--
+-- Name: plays_bbs_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX plays_bbs_idx ON dsq.plays_building_blocks USING btree (play_id, building_block_id);
+
+
+--
+-- Name: plays_products_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX plays_products_idx ON dsq.plays_products USING btree (play_id, product_id);
+
+
+--
+-- Name: prod_blocks; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX prod_blocks ON dsq.product_building_blocks USING btree (product_id, building_block_id);
+
+
+--
+-- Name: prod_sdgs; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX prod_sdgs ON dsq.product_sustainable_development_goals USING btree (product_id, sustainable_development_goal_id);
+
+
+--
+-- Name: product_countries_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX product_countries_idx ON dsq.products_countries USING btree (product_id, country_id);
+
+
+--
+-- Name: product_rel_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX product_rel_index ON dsq.product_product_relationships USING btree (from_product_id, to_product_id);
+
+
+--
+-- Name: products_classifications_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX products_classifications_idx ON dsq.product_classifications USING btree (product_id, classification_id);
+
+
+--
+-- Name: products_origins_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX products_origins_idx ON dsq.products_origins USING btree (product_id, origin_id);
+
+
+--
+-- Name: products_plays_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX products_plays_idx ON dsq.plays_products USING btree (product_id, play_id);
+
+
+--
+-- Name: products_projects_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX products_projects_idx ON dsq.projects_products USING btree (product_id, project_id);
+
+
+--
+-- Name: products_use_case_steps_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX products_use_case_steps_idx ON dsq.use_case_steps_products USING btree (product_id, use_case_step_id);
+
+
+--
+-- Name: projects_organizations_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_organizations_idx ON dsq.projects_organizations USING btree (project_id, organization_id);
+
+
+--
+-- Name: projects_products_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_products_idx ON dsq.projects_products USING btree (project_id, product_id);
+
+
+--
+-- Name: projects_sdgs_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_sdgs_idx ON dsq.projects_sdgs USING btree (project_id, sdg_id);
+
+
+--
+-- Name: projects_sectors_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_sectors_idx ON dsq.projects_sectors USING btree (project_id, sector_id);
+
+
+--
+-- Name: resources_organizations_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX resources_organizations_idx ON dsq.organizations_resources USING btree (resource_id, organization_id);
+
+
+--
+-- Name: sdgs_prods; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_prods ON dsq.product_sustainable_development_goals USING btree (sustainable_development_goal_id, product_id);
+
+
+--
+-- Name: sdgs_projects_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_projects_idx ON dsq.projects_sdgs USING btree (sdg_id, project_id);
+
+
+--
+-- Name: sdgs_usecases; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_usecases ON dsq.use_cases_sdg_targets USING btree (sdg_target_id, use_case_id);
+
+
+--
+-- Name: sector_orcs; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sector_orcs ON dsq.organizations_sectors USING btree (sector_id, organization_id);
+
+
+--
+-- Name: sectors_playbooks_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sectors_playbooks_idx ON dsq.playbooks_sectors USING btree (sector_id, playbook_id);
+
+
+--
+-- Name: sectors_projects_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX sectors_projects_idx ON dsq.projects_sectors USING btree (sector_id, project_id);
+
+
+--
+-- Name: unique_on_resource_topic_id_and_locale; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_on_resource_topic_id_and_locale ON dsq.resource_topic_descriptions USING btree (resource_topic_id, locale);
+
+
+--
+-- Name: use_case_steps_building_blocks_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_building_blocks_idx ON dsq.use_case_steps_building_blocks USING btree (use_case_step_id, building_block_id);
+
+
+--
+-- Name: use_case_steps_datasets_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_datasets_idx ON dsq.use_case_steps_datasets USING btree (use_case_step_id, dataset_id);
+
+
+--
+-- Name: use_case_steps_products_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_products_idx ON dsq.use_case_steps_products USING btree (use_case_step_id, product_id);
+
+
+--
+-- Name: use_case_steps_workflows_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_workflows_idx ON dsq.use_case_steps_workflows USING btree (use_case_step_id, workflow_id);
+
+
+--
+-- Name: usecases_sdgs; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX usecases_sdgs ON dsq.use_cases_sdg_targets USING btree (use_case_id, sdg_target_id);
+
+
+--
+-- Name: usecases_workflows; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX usecases_workflows ON dsq.workflows_use_cases USING btree (use_case_id, workflow_id);
+
+
+--
+-- Name: user_index; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE INDEX user_index ON dsq.audits USING btree (user_id, user_role);
+
+
+--
+-- Name: workflows_bbs; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_bbs ON dsq.workflows_building_blocks USING btree (workflow_id, building_block_id);
+
+
+--
+-- Name: workflows_use_case_steps_idx; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_use_case_steps_idx ON dsq.use_case_steps_workflows USING btree (workflow_id, use_case_step_id);
+
+
+--
+-- Name: workflows_usecases; Type: INDEX; Schema: dsq; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_usecases ON dsq.workflows_use_cases USING btree (workflow_id, use_case_id);
+
+
+--
 -- Name: agg_cap_operator_capability_index; Type: INDEX; Schema: fao; Owner: -
 --
 
@@ -19547,6 +33892,13 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON fao.candidate_product
 --
 
 CREATE INDEX index_candidate_products_on_candidate_status_id ON fao.candidate_products USING btree (candidate_status_id);
+
+
+--
+-- Name: index_candidate_products_on_created_by_id; Type: INDEX; Schema: fao; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_created_by_id ON fao.candidate_products USING btree (created_by_id);
 
 
 --
@@ -20768,6 +35120,1462 @@ CREATE UNIQUE INDEX workflows_usecases ON fao.workflows_use_cases USING btree (w
 
 
 --
+-- Name: agg_cap_operator_capability_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX agg_cap_operator_capability_index ON government.aggregator_capabilities USING btree (aggregator_id, operator_services_id, capability);
+
+
+--
+-- Name: associated_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX associated_index ON government.audits USING btree (associated_type, associated_id);
+
+
+--
+-- Name: auditable_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX auditable_index ON government.audits USING btree (action, id, version);
+
+
+--
+-- Name: authors_unique_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX authors_unique_slug ON government.authors USING btree (slug);
+
+
+--
+-- Name: bbs_plays_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX bbs_plays_idx ON government.plays_building_blocks USING btree (building_block_id, play_id);
+
+
+--
+-- Name: bbs_workflows; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX bbs_workflows ON government.workflows_building_blocks USING btree (building_block_id, workflow_id);
+
+
+--
+-- Name: block_prods; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX block_prods ON government.product_building_blocks USING btree (building_block_id, product_id);
+
+
+--
+-- Name: building_blocks_use_case_steps_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX building_blocks_use_case_steps_idx ON government.use_case_steps_building_blocks USING btree (building_block_id, use_case_step_id);
+
+
+--
+-- Name: candidate_product_category_indicator_main_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_product_category_indicator_main_index ON government.candidate_product_category_indicators USING btree (candidate_product_id, category_indicator_id);
+
+
+--
+-- Name: candidate_product_category_indicator_reverse_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_product_category_indicator_reverse_index ON government.candidate_product_category_indicators USING btree (category_indicator_id, candidate_product_id);
+
+
+--
+-- Name: candidate_resources_countries_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_resources_countries_idx ON government.candidate_resources_countries USING btree (candidate_resource_id, country_id);
+
+
+--
+-- Name: candidate_roles_unique_fields; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_roles_unique_fields ON government.candidate_roles USING btree (email, roles, organization_id, product_id);
+
+
+--
+-- Name: candidate_status_relationships_main_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_status_relationships_main_index ON government.candidate_status_relationships USING btree (current_candidate_status_id, next_candidate_status_id);
+
+
+--
+-- Name: candidate_status_relationships_reverse_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX candidate_status_relationships_reverse_index ON government.candidate_status_relationships USING btree (next_candidate_status_id, current_candidate_status_id);
+
+
+--
+-- Name: classifications_products_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX classifications_products_idx ON government.product_classifications USING btree (classification_id, product_id);
+
+
+--
+-- Name: countries_candidate_resources_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_candidate_resources_idx ON government.candidate_resources_countries USING btree (country_id, candidate_resource_id);
+
+
+--
+-- Name: countries_product_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX countries_product_idx ON government.products_countries USING btree (country_id, product_id);
+
+
+--
+-- Name: dataset_sdg_index_on_sdg_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX dataset_sdg_index_on_sdg_id ON government.dataset_sustainable_development_goals USING btree (sustainable_development_goal_id);
+
+
+--
+-- Name: datasets_use_case_steps_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX datasets_use_case_steps_idx ON government.use_case_steps_datasets USING btree (dataset_id, use_case_step_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_aggregator_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_aggregator_id ON government.aggregator_capabilities USING btree (aggregator_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_country_id ON government.aggregator_capabilities USING btree (country_id);
+
+
+--
+-- Name: index_aggregator_capabilities_on_operator_services_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_aggregator_capabilities_on_operator_services_id ON government.aggregator_capabilities USING btree (operator_services_id);
+
+
+--
+-- Name: index_audits_on_created_at; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_audits_on_created_at ON government.audits USING btree (created_at);
+
+
+--
+-- Name: index_building_block_descriptions_on_building_block_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_building_block_descriptions_on_building_block_id ON government.building_block_descriptions USING btree (building_block_id);
+
+
+--
+-- Name: index_building_blocks_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_building_blocks_on_slug ON government.building_blocks USING btree (slug);
+
+
+--
+-- Name: index_candidate_contacts_on_candidate_id_and_contact_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_contacts_on_candidate_id_and_contact_id ON government.candidate_organizations_contacts USING btree (candidate_organization_id, contact_id);
+
+
+--
+-- Name: index_candidate_contacts_on_contact_id_and_candidate_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_contacts_on_contact_id_and_candidate_id ON government.candidate_organizations_contacts USING btree (contact_id, candidate_organization_id);
+
+
+--
+-- Name: index_candidate_datasets_on_approved_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_approved_by_id ON government.candidate_datasets USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_datasets_on_rejected_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_datasets_on_rejected_by_id ON government.candidate_datasets USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_organizations_on_approved_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_organizations_on_approved_by_id ON government.candidate_organizations USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_organizations_on_rejected_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_organizations_on_rejected_by_id ON government.candidate_organizations USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_products_on_approved_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_approved_by_id ON government.candidate_products USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_products_on_candidate_status_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_candidate_status_id ON government.candidate_products USING btree (candidate_status_id);
+
+
+--
+-- Name: index_candidate_products_on_created_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_created_by_id ON government.candidate_products USING btree (created_by_id);
+
+
+--
+-- Name: index_candidate_products_on_rejected_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_rejected_by_id ON government.candidate_products USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_approved_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_approved_by_id ON government.candidate_resources USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_resources_on_rejected_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_resources_on_rejected_by_id ON government.candidate_resources USING btree (rejected_by_id);
+
+
+--
+-- Name: index_candidate_roles_on_approved_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_approved_by_id ON government.candidate_roles USING btree (approved_by_id);
+
+
+--
+-- Name: index_candidate_roles_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_dataset_id ON government.candidate_roles USING btree (dataset_id);
+
+
+--
+-- Name: index_candidate_roles_on_rejected_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_candidate_roles_on_rejected_by_id ON government.candidate_roles USING btree (rejected_by_id);
+
+
+--
+-- Name: index_category_indicator_descriptions_on_category_indicator_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_category_indicator_descriptions_on_category_indicator_id ON government.category_indicator_descriptions USING btree (category_indicator_id);
+
+
+--
+-- Name: index_category_indicators_on_rubric_category_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_category_indicators_on_rubric_category_id ON government.category_indicators USING btree (rubric_category_id);
+
+
+--
+-- Name: index_chatbot_conversations_on_user_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_chatbot_conversations_on_user_id ON government.chatbot_conversations USING btree (user_id);
+
+
+--
+-- Name: index_cities_on_province_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_cities_on_province_id ON government.cities USING btree (province_id);
+
+
+--
+-- Name: index_ckeditor_assets_on_type; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_ckeditor_assets_on_type ON government.ckeditor_assets USING btree (type);
+
+
+--
+-- Name: index_contacts_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_contacts_on_slug ON government.contacts USING btree (slug);
+
+
+--
+-- Name: index_dataset_descriptions_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_dataset_descriptions_on_dataset_id ON government.dataset_descriptions USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_dataset_id ON government.dataset_sectors USING btree (dataset_id);
+
+
+--
+-- Name: index_dataset_sectors_on_sector_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_dataset_sectors_on_sector_id ON government.dataset_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_dataset_sustainable_development_goals_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_dataset_sustainable_development_goals_on_dataset_id ON government.dataset_sustainable_development_goals USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_countries_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_country_id ON government.datasets_countries USING btree (country_id);
+
+
+--
+-- Name: index_datasets_countries_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_datasets_countries_on_dataset_id ON government.datasets_countries USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_dataset_id ON government.datasets_origins USING btree (dataset_id);
+
+
+--
+-- Name: index_datasets_origins_on_origin_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_datasets_origins_on_origin_id ON government.datasets_origins USING btree (origin_id);
+
+
+--
+-- Name: index_deploys_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_deploys_on_product_id ON government.deploys USING btree (product_id);
+
+
+--
+-- Name: index_deploys_on_user_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_deploys_on_user_id ON government.deploys USING btree (user_id);
+
+
+--
+-- Name: index_districts_on_province_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_districts_on_province_id ON government.districts USING btree (province_id);
+
+
+--
+-- Name: index_handbook_answers_on_handbook_question_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_answers_on_handbook_question_id ON government.handbook_answers USING btree (handbook_question_id);
+
+
+--
+-- Name: index_handbook_descriptions_on_handbook_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_descriptions_on_handbook_id ON government.handbook_descriptions USING btree (handbook_id);
+
+
+--
+-- Name: index_handbook_pages_on_handbook_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_handbook_id ON government.handbook_pages USING btree (handbook_id);
+
+
+--
+-- Name: index_handbook_pages_on_handbook_questions_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_handbook_questions_id ON government.handbook_pages USING btree (handbook_questions_id);
+
+
+--
+-- Name: index_handbook_pages_on_parent_page_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_pages_on_parent_page_id ON government.handbook_pages USING btree (parent_page_id);
+
+
+--
+-- Name: index_handbook_questions_on_handbook_page_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_handbook_questions_on_handbook_page_id ON government.handbook_questions USING btree (handbook_page_id);
+
+
+--
+-- Name: index_messages_on_created_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_messages_on_created_by_id ON government.messages USING btree (created_by_id);
+
+
+--
+-- Name: index_offices_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_offices_on_country_id ON government.offices USING btree (country_id);
+
+
+--
+-- Name: index_offices_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_offices_on_organization_id ON government.offices USING btree (organization_id);
+
+
+--
+-- Name: index_offices_on_province_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_offices_on_province_id ON government.offices USING btree (province_id);
+
+
+--
+-- Name: index_operator_services_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_operator_services_on_country_id ON government.operator_services USING btree (country_id);
+
+
+--
+-- Name: index_opportunities_building_blocks_on_building_block_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_building_block_id ON government.opportunities_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_opportunities_building_blocks_on_opportunity_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_building_blocks_on_opportunity_id ON government.opportunities_building_blocks USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_countries_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_country_id ON government.opportunities_countries USING btree (country_id);
+
+
+--
+-- Name: index_opportunities_countries_on_opportunity_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_countries_on_opportunity_id ON government.opportunities_countries USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_on_origin_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_on_origin_id ON government.opportunities USING btree (origin_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_opportunity_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_opportunity_id ON government.opportunities_organizations USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_organizations_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_organizations_on_organization_id ON government.opportunities_organizations USING btree (organization_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_opportunity_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_opportunity_id ON government.opportunities_sectors USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_sectors_on_sector_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_sectors_on_sector_id ON government.opportunities_sectors USING btree (sector_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_opportunity_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_opportunity_id ON government.opportunities_use_cases USING btree (opportunity_id);
+
+
+--
+-- Name: index_opportunities_use_cases_on_use_case_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_opportunities_use_cases_on_use_case_id ON government.opportunities_use_cases USING btree (use_case_id);
+
+
+--
+-- Name: index_organization_datasets_on_dataset_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_dataset_id ON government.organization_datasets USING btree (dataset_id);
+
+
+--
+-- Name: index_organization_datasets_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_organization_datasets_on_organization_id ON government.organization_datasets USING btree (organization_id);
+
+
+--
+-- Name: index_organization_descriptions_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_organization_descriptions_on_organization_id ON government.organization_descriptions USING btree (organization_id);
+
+
+--
+-- Name: index_organization_products_on_organization_id_and_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_organization_id_and_product_id ON government.organization_products USING btree (organization_id, product_id);
+
+
+--
+-- Name: index_organization_products_on_product_id_and_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organization_products_on_product_id_and_organization_id ON government.organization_products USING btree (product_id, organization_id);
+
+
+--
+-- Name: index_organizations_countries_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_organizations_countries_on_country_id ON government.organizations_countries USING btree (country_id);
+
+
+--
+-- Name: index_organizations_countries_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_organizations_countries_on_organization_id ON government.organizations_countries USING btree (organization_id);
+
+
+--
+-- Name: index_organizations_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_organizations_on_slug ON government.organizations USING btree (slug);
+
+
+--
+-- Name: index_origins_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_origins_on_organization_id ON government.origins USING btree (organization_id);
+
+
+--
+-- Name: index_page_contents_on_handbook_page_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_page_contents_on_handbook_page_id ON government.page_contents USING btree (handbook_page_id);
+
+
+--
+-- Name: index_play_descriptions_on_play_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_play_descriptions_on_play_id ON government.play_descriptions USING btree (play_id);
+
+
+--
+-- Name: index_play_move_descriptions_on_play_move_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_play_move_descriptions_on_play_move_id ON government.play_move_descriptions USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_on_play_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_play_moves_on_play_id ON government.play_moves USING btree (play_id);
+
+
+--
+-- Name: index_play_moves_resources; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_play_moves_resources ON government.play_moves_resources USING btree (play_move_id, resource_id);
+
+
+--
+-- Name: index_play_moves_resources_on_play_move_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_play_move_id ON government.play_moves_resources USING btree (play_move_id);
+
+
+--
+-- Name: index_play_moves_resources_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_play_moves_resources_on_resource_id ON government.play_moves_resources USING btree (resource_id);
+
+
+--
+-- Name: index_playbook_descriptions_on_playbook_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_playbook_descriptions_on_playbook_id ON government.playbook_descriptions USING btree (playbook_id);
+
+
+--
+-- Name: index_playbook_plays_on_play_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_playbook_plays_on_play_id ON government.playbook_plays USING btree (play_id);
+
+
+--
+-- Name: index_playbook_plays_on_playbook_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_playbook_plays_on_playbook_id ON government.playbook_plays USING btree (playbook_id);
+
+
+--
+-- Name: index_plays_building_blocks_on_building_block_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_plays_building_blocks_on_building_block_id ON government.plays_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_plays_building_blocks_on_play_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_plays_building_blocks_on_play_id ON government.plays_building_blocks USING btree (play_id);
+
+
+--
+-- Name: index_plays_products_on_play_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_plays_products_on_play_id ON government.plays_products USING btree (play_id);
+
+
+--
+-- Name: index_plays_products_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_plays_products_on_product_id ON government.plays_products USING btree (product_id);
+
+
+--
+-- Name: index_principle_descriptions_on_digital_principle_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_principle_descriptions_on_digital_principle_id ON government.principle_descriptions USING btree (digital_principle_id);
+
+
+--
+-- Name: index_product_categories_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_product_id ON government.product_categories USING btree (product_id);
+
+
+--
+-- Name: index_product_categories_on_software_category_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_categories_on_software_category_id ON government.product_categories USING btree (software_category_id);
+
+
+--
+-- Name: index_product_classifications_on_classification_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_classifications_on_classification_id ON government.product_classifications USING btree (classification_id);
+
+
+--
+-- Name: index_product_classifications_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_classifications_on_product_id ON government.product_classifications USING btree (product_id);
+
+
+--
+-- Name: index_product_descriptions_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_descriptions_on_product_id ON government.product_descriptions USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_features_on_product_id ON government.product_features USING btree (product_id);
+
+
+--
+-- Name: index_product_features_on_software_feature_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_features_on_software_feature_id ON government.product_features USING btree (software_feature_id);
+
+
+--
+-- Name: index_product_indicators_on_category_indicator_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_indicators_on_category_indicator_id ON government.product_indicators USING btree (category_indicator_id);
+
+
+--
+-- Name: index_product_indicators_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_indicators_on_product_id ON government.product_indicators USING btree (product_id);
+
+
+--
+-- Name: index_product_repositories_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_repositories_on_product_id ON government.product_repositories USING btree (product_id);
+
+
+--
+-- Name: index_product_sectors_on_product_id_and_sector_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_sectors_on_product_id_and_sector_id ON government.product_sectors USING btree (product_id, sector_id);
+
+
+--
+-- Name: index_product_sectors_on_sector_id_and_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_product_sectors_on_sector_id_and_product_id ON government.product_sectors USING btree (sector_id, product_id);
+
+
+--
+-- Name: index_products_endorsers_on_endorser_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_products_endorsers_on_endorser_id ON government.products_endorsers USING btree (endorser_id);
+
+
+--
+-- Name: index_products_endorsers_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_products_endorsers_on_product_id ON government.products_endorsers USING btree (product_id);
+
+
+--
+-- Name: index_products_on_approval_status_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_products_on_approval_status_id ON government.products USING btree (approval_status_id);
+
+
+--
+-- Name: index_products_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_products_on_slug ON government.products USING btree (slug);
+
+
+--
+-- Name: index_products_resources_on_product_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_product_id ON government.products_resources USING btree (product_id);
+
+
+--
+-- Name: index_products_resources_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_products_resources_on_resource_id ON government.products_resources USING btree (resource_id);
+
+
+--
+-- Name: index_project_descriptions_on_project_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_project_descriptions_on_project_id ON government.project_descriptions USING btree (project_id);
+
+
+--
+-- Name: index_projects_countries_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_projects_countries_on_country_id ON government.projects_countries USING btree (country_id);
+
+
+--
+-- Name: index_projects_countries_on_project_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_projects_countries_on_project_id ON government.projects_countries USING btree (project_id);
+
+
+--
+-- Name: index_projects_digital_principles_on_digital_principle_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_projects_digital_principles_on_digital_principle_id ON government.projects_digital_principles USING btree (digital_principle_id);
+
+
+--
+-- Name: index_projects_digital_principles_on_project_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_projects_digital_principles_on_project_id ON government.projects_digital_principles USING btree (project_id);
+
+
+--
+-- Name: index_projects_on_origin_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_projects_on_origin_id ON government.projects USING btree (origin_id);
+
+
+--
+-- Name: index_provinces_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_provinces_on_country_id ON government.provinces USING btree (country_id);
+
+
+--
+-- Name: index_regions_countries; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_countries ON government.regions_countries USING btree (region_id, country_id);
+
+
+--
+-- Name: index_regions_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_regions_on_slug ON government.regions USING btree (slug);
+
+
+--
+-- Name: index_resource_building_blocks; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_building_blocks ON government.resource_building_blocks USING btree (resource_id, building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_building_block_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_building_block_id ON government.resource_building_blocks USING btree (building_block_id);
+
+
+--
+-- Name: index_resource_building_blocks_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resource_building_blocks_on_resource_id ON government.resource_building_blocks USING btree (resource_id);
+
+
+--
+-- Name: index_resource_topic_descriptions_on_resource_topic_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resource_topic_descriptions_on_resource_topic_id ON government.resource_topic_descriptions USING btree (resource_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_parent_topic_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resource_topics_on_parent_topic_id ON government.resource_topics USING btree (parent_topic_id);
+
+
+--
+-- Name: index_resource_topics_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resource_topics_on_slug ON government.resource_topics USING btree (slug);
+
+
+--
+-- Name: index_resources_authors_on_author_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_author_id ON government.resources_authors USING btree (author_id);
+
+
+--
+-- Name: index_resources_authors_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_authors_on_resource_id ON government.resources_authors USING btree (resource_id);
+
+
+--
+-- Name: index_resources_countries_on_country_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_country_id ON government.resources_countries USING btree (country_id);
+
+
+--
+-- Name: index_resources_countries_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_countries_on_resource_id ON government.resources_countries USING btree (resource_id);
+
+
+--
+-- Name: index_resources_on_organization_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_on_organization_id ON government.resources USING btree (organization_id);
+
+
+--
+-- Name: index_resources_on_submitted_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_on_submitted_by_id ON government.resources USING btree (submitted_by_id);
+
+
+--
+-- Name: index_resources_use_cases; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_resources_use_cases ON government.resources_use_cases USING btree (resource_id, use_case_id);
+
+
+--
+-- Name: index_resources_use_cases_on_resource_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_resource_id ON government.resources_use_cases USING btree (resource_id);
+
+
+--
+-- Name: index_resources_use_cases_on_use_case_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_resources_use_cases_on_use_case_id ON government.resources_use_cases USING btree (use_case_id);
+
+
+--
+-- Name: index_rubric_category_descriptions_on_rubric_category_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_rubric_category_descriptions_on_rubric_category_id ON government.rubric_category_descriptions USING btree (rubric_category_id);
+
+
+--
+-- Name: index_sdgs_on_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sdgs_on_slug ON government.sustainable_development_goals USING btree (slug);
+
+
+--
+-- Name: index_sector_slug_unique; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sector_slug_unique ON government.sectors USING btree (slug, origin_id, parent_sector_id, locale);
+
+
+--
+-- Name: index_sectors_on_origin_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_sectors_on_origin_id ON government.sectors USING btree (origin_id);
+
+
+--
+-- Name: index_sectors_on_parent_sector_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_sectors_on_parent_sector_id ON government.sectors USING btree (parent_sector_id);
+
+
+--
+-- Name: index_sessions_on_session_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_sessions_on_session_id ON government.sessions USING btree (session_id);
+
+
+--
+-- Name: index_sessions_on_updated_at; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_sessions_on_updated_at ON government.sessions USING btree (updated_at);
+
+
+--
+-- Name: index_software_features_on_software_category_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_software_features_on_software_category_id ON government.software_features USING btree (software_category_id);
+
+
+--
+-- Name: index_starred_object_record; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_starred_object_record ON government.starred_objects USING btree (starred_object_type, starred_object_value, source_object_type, source_object_value);
+
+
+--
+-- Name: index_starred_objects_on_starred_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_starred_objects_on_starred_by_id ON government.starred_objects USING btree (starred_by_id);
+
+
+--
+-- Name: index_tag_descriptions_on_tag_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_tag_descriptions_on_tag_id ON government.tag_descriptions USING btree (tag_id);
+
+
+--
+-- Name: index_task_tracker_descriptions_on_task_tracker_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_task_tracker_descriptions_on_task_tracker_id ON government.task_tracker_descriptions USING btree (task_tracker_id);
+
+
+--
+-- Name: index_use_case_descriptions_on_use_case_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_use_case_descriptions_on_use_case_id ON government.use_case_descriptions USING btree (use_case_id);
+
+
+--
+-- Name: index_use_case_headers_on_use_case_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_use_case_headers_on_use_case_id ON government.use_case_headers USING btree (use_case_id);
+
+
+--
+-- Name: index_use_case_step_descriptions_on_use_case_step_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_use_case_step_descriptions_on_use_case_step_id ON government.use_case_step_descriptions USING btree (use_case_step_id);
+
+
+--
+-- Name: index_use_case_steps_on_use_case_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_use_case_steps_on_use_case_id ON government.use_case_steps USING btree (use_case_id);
+
+
+--
+-- Name: index_use_cases_on_sector_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_use_cases_on_sector_id ON government.use_cases USING btree (sector_id);
+
+
+--
+-- Name: index_user_messages_on_message_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_message_id ON government.user_messages USING btree (message_id);
+
+
+--
+-- Name: index_user_messages_on_received_by_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_user_messages_on_received_by_id ON government.user_messages USING btree (received_by_id);
+
+
+--
+-- Name: index_users_on_authentication_token; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_authentication_token ON government.users USING btree (authentication_token);
+
+
+--
+-- Name: index_users_on_confirmation_token; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_confirmation_token ON government.users USING btree (confirmation_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON government.users USING btree (email);
+
+
+--
+-- Name: index_users_on_reset_password_token; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX index_users_on_reset_password_token ON government.users USING btree (reset_password_token);
+
+
+--
+-- Name: index_workflow_descriptions_on_workflow_id; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX index_workflow_descriptions_on_workflow_id ON government.workflow_descriptions USING btree (workflow_id);
+
+
+--
+-- Name: opportunities_unique_slug; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX opportunities_unique_slug ON government.opportunities USING btree (slug);
+
+
+--
+-- Name: org_sectors; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX org_sectors ON government.organizations_sectors USING btree (organization_id, sector_id);
+
+
+--
+-- Name: organizations_projects_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX organizations_projects_idx ON government.projects_organizations USING btree (organization_id, project_id);
+
+
+--
+-- Name: organizations_resources_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX organizations_resources_idx ON government.organizations_resources USING btree (organization_id, resource_id);
+
+
+--
+-- Name: origins_products_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX origins_products_idx ON government.products_origins USING btree (origin_id, product_id);
+
+
+--
+-- Name: playbooks_sectors_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX playbooks_sectors_idx ON government.playbooks_sectors USING btree (playbook_id, sector_id);
+
+
+--
+-- Name: plays_bbs_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX plays_bbs_idx ON government.plays_building_blocks USING btree (play_id, building_block_id);
+
+
+--
+-- Name: plays_products_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX plays_products_idx ON government.plays_products USING btree (play_id, product_id);
+
+
+--
+-- Name: prod_blocks; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX prod_blocks ON government.product_building_blocks USING btree (product_id, building_block_id);
+
+
+--
+-- Name: prod_sdgs; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX prod_sdgs ON government.product_sustainable_development_goals USING btree (product_id, sustainable_development_goal_id);
+
+
+--
+-- Name: product_countries_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX product_countries_idx ON government.products_countries USING btree (product_id, country_id);
+
+
+--
+-- Name: product_rel_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX product_rel_index ON government.product_product_relationships USING btree (from_product_id, to_product_id);
+
+
+--
+-- Name: products_classifications_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX products_classifications_idx ON government.product_classifications USING btree (product_id, classification_id);
+
+
+--
+-- Name: products_origins_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX products_origins_idx ON government.products_origins USING btree (product_id, origin_id);
+
+
+--
+-- Name: products_plays_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX products_plays_idx ON government.plays_products USING btree (product_id, play_id);
+
+
+--
+-- Name: products_projects_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX products_projects_idx ON government.projects_products USING btree (product_id, project_id);
+
+
+--
+-- Name: products_use_case_steps_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX products_use_case_steps_idx ON government.use_case_steps_products USING btree (product_id, use_case_step_id);
+
+
+--
+-- Name: projects_organizations_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_organizations_idx ON government.projects_organizations USING btree (project_id, organization_id);
+
+
+--
+-- Name: projects_products_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_products_idx ON government.projects_products USING btree (project_id, product_id);
+
+
+--
+-- Name: projects_sdgs_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_sdgs_idx ON government.projects_sdgs USING btree (project_id, sdg_id);
+
+
+--
+-- Name: projects_sectors_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX projects_sectors_idx ON government.projects_sectors USING btree (project_id, sector_id);
+
+
+--
+-- Name: resources_organizations_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX resources_organizations_idx ON government.organizations_resources USING btree (resource_id, organization_id);
+
+
+--
+-- Name: sdgs_prods; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_prods ON government.product_sustainable_development_goals USING btree (sustainable_development_goal_id, product_id);
+
+
+--
+-- Name: sdgs_projects_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_projects_idx ON government.projects_sdgs USING btree (sdg_id, project_id);
+
+
+--
+-- Name: sdgs_usecases; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sdgs_usecases ON government.use_cases_sdg_targets USING btree (sdg_target_id, use_case_id);
+
+
+--
+-- Name: sector_orcs; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sector_orcs ON government.organizations_sectors USING btree (sector_id, organization_id);
+
+
+--
+-- Name: sectors_playbooks_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sectors_playbooks_idx ON government.playbooks_sectors USING btree (sector_id, playbook_id);
+
+
+--
+-- Name: sectors_projects_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX sectors_projects_idx ON government.projects_sectors USING btree (sector_id, project_id);
+
+
+--
+-- Name: unique_on_resource_topic_id_and_locale; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_on_resource_topic_id_and_locale ON government.resource_topic_descriptions USING btree (resource_topic_id, locale);
+
+
+--
+-- Name: use_case_steps_building_blocks_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_building_blocks_idx ON government.use_case_steps_building_blocks USING btree (use_case_step_id, building_block_id);
+
+
+--
+-- Name: use_case_steps_datasets_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_datasets_idx ON government.use_case_steps_datasets USING btree (use_case_step_id, dataset_id);
+
+
+--
+-- Name: use_case_steps_products_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_products_idx ON government.use_case_steps_products USING btree (use_case_step_id, product_id);
+
+
+--
+-- Name: use_case_steps_workflows_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX use_case_steps_workflows_idx ON government.use_case_steps_workflows USING btree (use_case_step_id, workflow_id);
+
+
+--
+-- Name: usecases_sdgs; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX usecases_sdgs ON government.use_cases_sdg_targets USING btree (use_case_id, sdg_target_id);
+
+
+--
+-- Name: usecases_workflows; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX usecases_workflows ON government.workflows_use_cases USING btree (use_case_id, workflow_id);
+
+
+--
+-- Name: user_index; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE INDEX user_index ON government.audits USING btree (user_id, user_role);
+
+
+--
+-- Name: workflows_bbs; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_bbs ON government.workflows_building_blocks USING btree (workflow_id, building_block_id);
+
+
+--
+-- Name: workflows_use_case_steps_idx; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_use_case_steps_idx ON government.use_case_steps_workflows USING btree (workflow_id, use_case_step_id);
+
+
+--
+-- Name: workflows_usecases; Type: INDEX; Schema: government; Owner: -
+--
+
+CREATE UNIQUE INDEX workflows_usecases ON government.workflows_use_cases USING btree (workflow_id, use_case_id);
+
+
+--
 -- Name: agg_cap_operator_capability_index; Type: INDEX; Schema: health; Owner: -
 --
 
@@ -20996,6 +36804,13 @@ CREATE INDEX index_candidate_products_on_approved_by_id ON health.candidate_prod
 --
 
 CREATE INDEX index_candidate_products_on_candidate_status_id ON health.candidate_products USING btree (candidate_status_id);
+
+
+--
+-- Name: index_candidate_products_on_created_by_id; Type: INDEX; Schema: health; Owner: -
+--
+
+CREATE INDEX index_candidate_products_on_created_by_id ON health.candidate_products USING btree (created_by_id);
 
 
 --
@@ -23673,6 +39488,1350 @@ CREATE UNIQUE INDEX workflows_usecases ON public.workflows_use_cases USING btree
 
 
 --
+-- Name: plays_building_blocks bbs_plays_bb_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks
+    ADD CONSTRAINT bbs_plays_bb_fk FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: plays_building_blocks bbs_plays_play_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks
+    ADD CONSTRAINT bbs_plays_play_fk FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_products_category_indicators_candidate_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_products_category_indicators_candidate_product_fk FOREIGN KEY (candidate_product_id) REFERENCES dsq.candidate_products(id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_products_category_indicators_category_indicator_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_products_category_indicators_category_indicator_fk FOREIGN KEY (category_indicator_id) REFERENCES dsq.category_indicators(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources
+    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES dsq.candidate_resources(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_resources
+    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_current_candidate_status_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_current_candidate_status_fk FOREIGN KEY (current_candidate_status_id) REFERENCES dsq.candidate_statuses(id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_next_candidate_status_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_next_candidate_status_fk FOREIGN KEY (next_candidate_status_id) REFERENCES dsq.candidate_statuses(id);
+
+
+--
+-- Name: districts fk_rails_002fc30497; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.districts
+    ADD CONSTRAINT fk_rails_002fc30497 FOREIGN KEY (province_id) REFERENCES dsq.provinces(id);
+
+
+--
+-- Name: offices fk_rails_0722c0e4f7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.offices
+    ADD CONSTRAINT fk_rails_0722c0e4f7 FOREIGN KEY (province_id) REFERENCES dsq.provinces(id);
+
+
+--
+-- Name: handbook_descriptions fk_rails_08320ee34e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_descriptions
+    ADD CONSTRAINT fk_rails_08320ee34e FOREIGN KEY (handbook_id) REFERENCES dsq.handbooks(id);
+
+
+--
+-- Name: playbook_descriptions fk_rails_08320ee34e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_descriptions
+    ADD CONSTRAINT fk_rails_08320ee34e FOREIGN KEY (playbook_id) REFERENCES dsq.playbooks(id);
+
+
+--
+-- Name: offices fk_rails_08e10b87a1; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.offices
+    ADD CONSTRAINT fk_rails_08e10b87a1 FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: sectors fk_rails_0c5b9fc834; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sectors
+    ADD CONSTRAINT fk_rails_0c5b9fc834 FOREIGN KEY (origin_id) REFERENCES dsq.origins(id);
+
+
+--
+-- Name: handbook_pages fk_rails_0d854afcc1; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_pages
+    ADD CONSTRAINT fk_rails_0d854afcc1 FOREIGN KEY (handbook_id) REFERENCES dsq.handbooks(id);
+
+
+--
+-- Name: datasets_origins fk_rails_1000d63cee; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_origins
+    ADD CONSTRAINT fk_rails_1000d63cee FOREIGN KEY (origin_id) REFERENCES dsq.origins(id);
+
+
+--
+-- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_categories
+    ADD CONSTRAINT fk_rails_156a781ad6 FOREIGN KEY (software_category_id) REFERENCES dsq.software_categories(id);
+
+
+--
+-- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications
+    ADD CONSTRAINT fk_rails_16035b6309 FOREIGN KEY (classification_id) REFERENCES dsq.classifications(id);
+
+
+--
+-- Name: products fk_rails_178d05e423; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products
+    ADD CONSTRAINT fk_rails_178d05e423 FOREIGN KEY (approval_status_id) REFERENCES dsq.candidate_statuses(id) ON DELETE SET NULL;
+
+
+--
+-- Name: chatbot_conversations fk_rails_17f52fc61f; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.chatbot_conversations
+    ADD CONSTRAINT fk_rails_17f52fc61f FOREIGN KEY (user_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: use_case_steps fk_rails_1ab85a3bb6; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps
+    ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.software_features
+    ADD CONSTRAINT fk_rails_1aba49ed7b FOREIGN KEY (software_category_id) REFERENCES dsq.software_categories(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_1ba13f968c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves_resources
+    ADD CONSTRAINT fk_rails_1ba13f968c FOREIGN KEY (resource_id) REFERENCES dsq.resources(id);
+
+
+--
+-- Name: candidate_roles fk_rails_1c91ae1dbd; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT fk_rails_1c91ae1dbd FOREIGN KEY (approved_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: opportunities_organizations fk_rails_1e1b217e25; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_organizations
+    ADD CONSTRAINT fk_rails_1e1b217e25 FOREIGN KEY (opportunity_id) REFERENCES dsq.opportunities(id);
+
+
+--
+-- Name: building_block_descriptions fk_rails_1e30d5f2cb; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.building_block_descriptions
+    ADD CONSTRAINT fk_rails_1e30d5f2cb FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: candidate_products fk_rails_1f7a4bef04; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products
+    ADD CONSTRAINT fk_rails_1f7a4bef04 FOREIGN KEY (approved_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: deploys fk_rails_1ffce4bab2; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.deploys
+    ADD CONSTRAINT fk_rails_1ffce4bab2 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: opportunities_building_blocks fk_rails_215b65662e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_215b65662e FOREIGN KEY (opportunity_id) REFERENCES dsq.opportunities(id);
+
+
+--
+-- Name: candidate_organizations fk_rails_246998b230; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_organizations
+    ADD CONSTRAINT fk_rails_246998b230 FOREIGN KEY (rejected_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: candidate_products fk_rails_266c90eecf; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products
+    ADD CONSTRAINT fk_rails_266c90eecf FOREIGN KEY (candidate_status_id) REFERENCES dsq.candidate_statuses(id) ON DELETE SET NULL;
+
+
+--
+-- Name: play_descriptions fk_rails_26dd7253a6; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_descriptions
+    ADD CONSTRAINT fk_rails_26dd7253a6 FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: projects_digital_principles fk_rails_28bb8bf3f7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_digital_principles
+    ADD CONSTRAINT fk_rails_28bb8bf3f7 FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: product_indicators fk_rails_2c154e19b9; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_indicators
+    ADD CONSTRAINT fk_rails_2c154e19b9 FOREIGN KEY (category_indicator_id) REFERENCES dsq.category_indicators(id);
+
+
+--
+-- Name: sectors fk_rails_2fafddb8c8; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.sectors
+    ADD CONSTRAINT fk_rails_2fafddb8c8 FOREIGN KEY (parent_sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: candidate_roles fk_rails_31a769978d; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT fk_rails_31a769978d FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: organization_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_datasets
+    ADD CONSTRAINT fk_rails_37920930c1 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_393a906ad8; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_datasets
+    ADD CONSTRAINT fk_rails_393a906ad8 FOREIGN KEY (rejected_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: candidate_roles fk_rails_3a1d782b99; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT fk_rails_3a1d782b99 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: organization_descriptions fk_rails_3a6b8edce9; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_descriptions
+    ADD CONSTRAINT fk_rails_3a6b8edce9 FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: projects_digital_principles fk_rails_3eb4109c7d; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_digital_principles
+    ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES dsq.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: projects fk_rails_45a5b9baa8; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects
+    ADD CONSTRAINT fk_rails_45a5b9baa8 FOREIGN KEY (origin_id) REFERENCES dsq.origins(id);
+
+
+--
+-- Name: tag_descriptions fk_rails_46e6dc893e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.tag_descriptions
+    ADD CONSTRAINT fk_rails_46e6dc893e FOREIGN KEY (tag_id) REFERENCES dsq.tags(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_48f1a17adf; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves_resources
+    ADD CONSTRAINT fk_rails_48f1a17adf FOREIGN KEY (play_move_id) REFERENCES dsq.play_moves(id);
+
+
+--
+-- Name: opportunities_countries fk_rails_49a664b2f7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_countries
+    ADD CONSTRAINT fk_rails_49a664b2f7 FOREIGN KEY (opportunity_id) REFERENCES dsq.opportunities(id);
+
+
+--
+-- Name: candidate_roles fk_rails_4aa113bd52; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT fk_rails_4aa113bd52 FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: plays_building_blocks fk_rails_4d36dad6d0; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks
+    ADD CONSTRAINT fk_rails_4d36dad6d0 FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: dataset_sectors fk_rails_4d5afa2af0; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sectors
+    ADD CONSTRAINT fk_rails_4d5afa2af0 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: opportunities_sectors fk_rails_572c40b423; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_sectors
+    ADD CONSTRAINT fk_rails_572c40b423 FOREIGN KEY (opportunity_id) REFERENCES dsq.opportunities(id);
+
+
+--
+-- Name: operator_services fk_rails_5c31270ff7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.operator_services
+    ADD CONSTRAINT fk_rails_5c31270ff7 FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: opportunities fk_rails_5f8d9a4134; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities
+    ADD CONSTRAINT fk_rails_5f8d9a4134 FOREIGN KEY (origin_id) REFERENCES dsq.origins(id);
+
+
+--
+-- Name: user_messages fk_rails_60e38b1531; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_messages
+    ADD CONSTRAINT fk_rails_60e38b1531 FOREIGN KEY (received_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: organizations_countries fk_rails_61354fe2dd; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_countries
+    ADD CONSTRAINT fk_rails_61354fe2dd FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: dataset_descriptions fk_rails_6233152996; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_descriptions
+    ADD CONSTRAINT fk_rails_6233152996 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: offices fk_rails_63e101f453; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.offices
+    ADD CONSTRAINT fk_rails_63e101f453 FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: handbook_pages fk_rails_6441d33616; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_pages
+    ADD CONSTRAINT fk_rails_6441d33616 FOREIGN KEY (handbook_questions_id) REFERENCES dsq.handbook_questions(id);
+
+
+--
+-- Name: task_tracker_descriptions fk_rails_64d4c2c34c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.task_tracker_descriptions
+    ADD CONSTRAINT fk_rails_64d4c2c34c FOREIGN KEY (task_tracker_id) REFERENCES dsq.task_trackers(id);
+
+
+--
+-- Name: category_indicator_descriptions fk_rails_664858eff1; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicator_descriptions
+    ADD CONSTRAINT fk_rails_664858eff1 FOREIGN KEY (category_indicator_id) REFERENCES dsq.category_indicators(id);
+
+
+--
+-- Name: workflow_descriptions fk_rails_69d7772842; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflow_descriptions
+    ADD CONSTRAINT fk_rails_69d7772842 FOREIGN KEY (workflow_id) REFERENCES dsq.workflows(id);
+
+
+--
+-- Name: playbook_plays fk_rails_6b205fb457; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_plays
+    ADD CONSTRAINT fk_rails_6b205fb457 FOREIGN KEY (playbook_id) REFERENCES dsq.playbooks(id);
+
+
+--
+-- Name: datasets_countries fk_rails_6c45cff588; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_countries
+    ADD CONSTRAINT fk_rails_6c45cff588 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: product_indicators fk_rails_721e0e4ba1; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_indicators
+    ADD CONSTRAINT fk_rails_721e0e4ba1 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: category_indicators fk_rails_72ff36837c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.category_indicators
+    ADD CONSTRAINT fk_rails_72ff36837c FOREIGN KEY (rubric_category_id) REFERENCES dsq.rubric_categories(id);
+
+
+--
+-- Name: opportunities_use_cases fk_rails_74085c04cd; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_74085c04cd FOREIGN KEY (opportunity_id) REFERENCES dsq.opportunities(id);
+
+
+--
+-- Name: product_repositories fk_rails_76210df50f; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_repositories
+    ADD CONSTRAINT fk_rails_76210df50f FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: projects_countries fk_rails_7940afe1fe; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_countries
+    ADD CONSTRAINT fk_rails_7940afe1fe FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: deploys fk_rails_7995634207; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.deploys
+    ADD CONSTRAINT fk_rails_7995634207 FOREIGN KEY (user_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: use_case_step_descriptions fk_rails_7c6b0affba; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_step_descriptions
+    ADD CONSTRAINT fk_rails_7c6b0affba FOREIGN KEY (use_case_step_id) REFERENCES dsq.use_case_steps(id);
+
+
+--
+-- Name: rubric_category_descriptions fk_rails_7f79ec6842; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.rubric_category_descriptions
+    ADD CONSTRAINT fk_rails_7f79ec6842 FOREIGN KEY (rubric_category_id) REFERENCES dsq.rubric_categories(id);
+
+
+--
+-- Name: candidate_roles fk_rails_80a7b4e918; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_roles
+    ADD CONSTRAINT fk_rails_80a7b4e918 FOREIGN KEY (rejected_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: opportunities_use_cases fk_rails_8350c2b67e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_8350c2b67e FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: dataset_sectors fk_rails_8398ea4f75; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.dataset_sectors
+    ADD CONSTRAINT fk_rails_8398ea4f75 FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: projects_countries fk_rails_8fcd9cd60b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_countries
+    ADD CONSTRAINT fk_rails_8fcd9cd60b FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_features
+    ADD CONSTRAINT fk_rails_9019f50ede FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.project_descriptions
+    ADD CONSTRAINT fk_rails_94cabf0709 FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: use_case_descriptions fk_rails_94ea5f52ff; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_descriptions
+    ADD CONSTRAINT fk_rails_94ea5f52ff FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: opportunities_sectors fk_rails_973eb5ee0a; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_sectors
+    ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_categories
+    ADD CONSTRAINT fk_rails_98a9a32a41 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: product_features fk_rails_9cbbc9970e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_features
+    ADD CONSTRAINT fk_rails_9cbbc9970e FOREIGN KEY (software_feature_id) REFERENCES dsq.software_features(id);
+
+
+--
+-- Name: playbook_plays fk_rails_9d1a7ebfec; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbook_plays
+    ADD CONSTRAINT fk_rails_9d1a7ebfec FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: products_endorsers fk_rails_9ebc436657; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_endorsers
+    ADD CONSTRAINT fk_rails_9ebc436657 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: play_move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_move_descriptions
+    ADD CONSTRAINT fk_rails_9f26d2af9a FOREIGN KEY (play_move_id) REFERENCES dsq.play_moves(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_9fcd7b6d41; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_9fcd7b6d41 FOREIGN KEY (aggregator_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: organizations_countries fk_rails_a044fbacef; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_countries
+    ADD CONSTRAINT fk_rails_a044fbacef FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: plays_products fk_rails_a0c000bc7e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products
+    ADD CONSTRAINT fk_rails_a0c000bc7e FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: opportunities_organizations fk_rails_a699f03037; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_organizations
+    ADD CONSTRAINT fk_rails_a699f03037 FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: products_endorsers fk_rails_a70896ae9e; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_endorsers
+    ADD CONSTRAINT fk_rails_a70896ae9e FOREIGN KEY (endorser_id) REFERENCES dsq.endorsers(id);
+
+
+--
+-- Name: plays_products fk_rails_a91dfa5414; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products
+    ADD CONSTRAINT fk_rails_a91dfa5414 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_aa5b2f5e59; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_aa5b2f5e59 FOREIGN KEY (operator_services_id) REFERENCES dsq.operator_services(id);
+
+
+--
+-- Name: resource_topic_descriptions fk_rails_ae0fcdfa4b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topic_descriptions
+    ADD CONSTRAINT fk_rails_ae0fcdfa4b FOREIGN KEY (resource_topic_id) REFERENCES dsq.resource_topics(id);
+
+
+--
+-- Name: resource_topics fk_rails_af05504d30; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_topics
+    ADD CONSTRAINT fk_rails_af05504d30 FOREIGN KEY (parent_topic_id) REFERENCES dsq.resource_topics(id) ON DELETE SET NULL;
+
+
+--
+-- Name: resources_use_cases fk_rails_b312c98a0b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources_use_cases
+    ADD CONSTRAINT fk_rails_b312c98a0b FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: resources fk_rails_b7c74d1aaf; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources
+    ADD CONSTRAINT fk_rails_b7c74d1aaf FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id) ON DELETE SET NULL;
+
+
+--
+-- Name: opportunities_building_blocks fk_rails_bd7e32857c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_bd7e32857c FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: product_descriptions fk_rails_c0bc9f9c8a; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_descriptions
+    ADD CONSTRAINT fk_rails_c0bc9f9c8a FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: opportunities_countries fk_rails_c231d14160; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.opportunities_countries
+    ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: resources_use_cases fk_rails_c51465b571; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resources_use_cases
+    ADD CONSTRAINT fk_rails_c51465b571 FOREIGN KEY (resource_id) REFERENCES dsq.resources(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_c60c9cd0cf; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_building_blocks
+    ADD CONSTRAINT fk_rails_c60c9cd0cf FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: organization_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_datasets
+    ADD CONSTRAINT fk_rails_c82c326076 FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: datasets_countries fk_rails_c8d14ec1b4; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_countries
+    ADD CONSTRAINT fk_rails_c8d14ec1b4 FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: messages fk_rails_cd133c6420; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.messages
+    ADD CONSTRAINT fk_rails_cd133c6420 FOREIGN KEY (created_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_organizations
+    ADD CONSTRAINT fk_rails_d0cf117a92 FOREIGN KEY (approved_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: use_cases fk_rails_d2fed50240; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_cases
+    ADD CONSTRAINT fk_rails_d2fed50240 FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: product_classifications fk_rails_d5306b6dc7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications
+    ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_d574f6d18b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.resource_building_blocks
+    ADD CONSTRAINT fk_rails_d574f6d18b FOREIGN KEY (resource_id) REFERENCES dsq.resources(id);
+
+
+--
+-- Name: datasets_origins fk_rails_d604ea34b3; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.datasets_origins
+    ADD CONSTRAINT fk_rails_d604ea34b3 FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: use_case_headers fk_rails_de4b7a8ac2; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_headers
+    ADD CONSTRAINT fk_rails_de4b7a8ac2 FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: play_moves fk_rails_e067d6a17d; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.play_moves
+    ADD CONSTRAINT fk_rails_e067d6a17d FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: candidate_products fk_rails_e0cb211c68; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products
+    ADD CONSTRAINT fk_rails_e0cb211c68 FOREIGN KEY (created_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: cities fk_rails_e0ef2914ca; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.cities
+    ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES dsq.provinces(id);
+
+
+--
+-- Name: user_messages fk_rails_e3535a825c; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.user_messages
+    ADD CONSTRAINT fk_rails_e3535a825c FOREIGN KEY (message_id) REFERENCES dsq.messages(id);
+
+
+--
+-- Name: handbook_pages fk_rails_edc977f5e7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.handbook_pages
+    ADD CONSTRAINT fk_rails_edc977f5e7 FOREIGN KEY (parent_page_id) REFERENCES dsq.handbook_pages(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_ee0ee7b8e7; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_ee0ee7b8e7 FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: candidate_products fk_rails_eed5af50b9; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_products
+    ADD CONSTRAINT fk_rails_eed5af50b9 FOREIGN KEY (rejected_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: page_contents fk_rails_efc85b8fb4; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.page_contents
+    ADD CONSTRAINT fk_rails_efc85b8fb4 FOREIGN KEY (handbook_page_id) REFERENCES dsq.handbook_pages(id);
+
+
+--
+-- Name: principle_descriptions fk_rails_f1497d5d96; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.principle_descriptions
+    ADD CONSTRAINT fk_rails_f1497d5d96 FOREIGN KEY (digital_principle_id) REFERENCES dsq.digital_principles(id);
+
+
+--
+-- Name: starred_objects fk_rails_f18f95cc1b; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.starred_objects
+    ADD CONSTRAINT fk_rails_f18f95cc1b FOREIGN KEY (starred_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: provinces fk_rails_f2ba72ccee; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.provinces
+    ADD CONSTRAINT fk_rails_f2ba72ccee FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_f460267737; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.candidate_datasets
+    ADD CONSTRAINT fk_rails_f460267737 FOREIGN KEY (approved_by_id) REFERENCES dsq.users(id);
+
+
+--
+-- Name: plays_building_blocks fk_rails_f47938caa0; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_building_blocks
+    ADD CONSTRAINT fk_rails_f47938caa0 FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: product_product_relationships from_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_product_relationships
+    ADD CONSTRAINT from_product_fk FOREIGN KEY (from_product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: organization_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_contacts
+    ADD CONSTRAINT organizations_contacts_contact_fk FOREIGN KEY (contact_id) REFERENCES dsq.contacts(id);
+
+
+--
+-- Name: organization_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_contacts
+    ADD CONSTRAINT organizations_contacts_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: organization_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_products
+    ADD CONSTRAINT organizations_products_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: organization_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organization_products
+    ADD CONSTRAINT organizations_products_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: organizations_resources organizations_resources_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_resources
+    ADD CONSTRAINT organizations_resources_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: organizations_resources organizations_resources_resource_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_resources
+    ADD CONSTRAINT organizations_resources_resource_fk FOREIGN KEY (resource_id) REFERENCES dsq.resources(id);
+
+
+--
+-- Name: organizations_sectors organizations_sectors_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_sectors
+    ADD CONSTRAINT organizations_sectors_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: organizations_sectors organizations_sectors_sector_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.organizations_sectors
+    ADD CONSTRAINT organizations_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: playbooks_sectors playbooks_sectors_playbook_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbooks_sectors
+    ADD CONSTRAINT playbooks_sectors_playbook_fk FOREIGN KEY (playbook_id) REFERENCES dsq.playbooks(id);
+
+
+--
+-- Name: playbooks_sectors playbooks_sectors_sector_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.playbooks_sectors
+    ADD CONSTRAINT playbooks_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: product_classifications product_classifications_classification_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications
+    ADD CONSTRAINT product_classifications_classification_fk FOREIGN KEY (classification_id) REFERENCES dsq.classifications(id);
+
+
+--
+-- Name: product_classifications product_classifications_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_classifications
+    ADD CONSTRAINT product_classifications_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: products_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_countries
+    ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES dsq.countries(id);
+
+
+--
+-- Name: products_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_countries
+    ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: product_building_blocks products_building_blocks_building_block_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_building_blocks
+    ADD CONSTRAINT products_building_blocks_building_block_fk FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: product_building_blocks products_building_blocks_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_building_blocks
+    ADD CONSTRAINT products_building_blocks_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: products_origins products_origins_origin_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_origins
+    ADD CONSTRAINT products_origins_origin_fk FOREIGN KEY (origin_id) REFERENCES dsq.origins(id);
+
+
+--
+-- Name: products_origins products_origins_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.products_origins
+    ADD CONSTRAINT products_origins_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: plays_products products_plays_play_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products
+    ADD CONSTRAINT products_plays_play_fk FOREIGN KEY (play_id) REFERENCES dsq.plays(id);
+
+
+--
+-- Name: plays_products products_plays_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.plays_products
+    ADD CONSTRAINT products_plays_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: product_sustainable_development_goals products_sdgs_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sustainable_development_goals
+    ADD CONSTRAINT products_sdgs_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: product_sustainable_development_goals products_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_sustainable_development_goals
+    ADD CONSTRAINT products_sdgs_sdg_fk FOREIGN KEY (sustainable_development_goal_id) REFERENCES dsq.sustainable_development_goals(id);
+
+
+--
+-- Name: projects_organizations projects_organizations_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_organizations
+    ADD CONSTRAINT projects_organizations_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: projects_organizations projects_organizations_project_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_organizations
+    ADD CONSTRAINT projects_organizations_project_fk FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: projects_products projects_products_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_products
+    ADD CONSTRAINT projects_products_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: projects_products projects_products_project_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_products
+    ADD CONSTRAINT projects_products_project_fk FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: projects_sdgs projects_sdgs_project_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_sdgs
+    ADD CONSTRAINT projects_sdgs_project_fk FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: projects_sdgs projects_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_sdgs
+    ADD CONSTRAINT projects_sdgs_sdg_fk FOREIGN KEY (sdg_id) REFERENCES dsq.sustainable_development_goals(id);
+
+
+--
+-- Name: projects_sectors projects_sectors_project_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_sectors
+    ADD CONSTRAINT projects_sectors_project_fk FOREIGN KEY (project_id) REFERENCES dsq.projects(id);
+
+
+--
+-- Name: projects_sectors projects_sectors_sector_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.projects_sectors
+    ADD CONSTRAINT projects_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES dsq.sectors(id);
+
+
+--
+-- Name: product_product_relationships to_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.product_product_relationships
+    ADD CONSTRAINT to_product_fk FOREIGN KEY (to_product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_block_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_block_fk FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_step_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_step_fk FOREIGN KEY (use_case_step_id) REFERENCES dsq.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_dataset_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_dataset_fk FOREIGN KEY (dataset_id) REFERENCES dsq.datasets(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_step_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_step_fk FOREIGN KEY (use_case_step_id) REFERENCES dsq.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_product_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_product_fk FOREIGN KEY (product_id) REFERENCES dsq.products(id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_step_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_step_fk FOREIGN KEY (use_case_step_id) REFERENCES dsq.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_workflows use_case_steps_workflows_step_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_workflows
+    ADD CONSTRAINT use_case_steps_workflows_step_fk FOREIGN KEY (use_case_step_id) REFERENCES dsq.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_workflows use_case_steps_workflows_workflow_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_case_steps_workflows
+    ADD CONSTRAINT use_case_steps_workflows_workflow_fk FOREIGN KEY (workflow_id) REFERENCES dsq.workflows(id);
+
+
+--
+-- Name: use_cases_sdg_targets usecases_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_cases_sdg_targets
+    ADD CONSTRAINT usecases_sdgs_sdg_fk FOREIGN KEY (sdg_target_id) REFERENCES dsq.sdg_targets(id);
+
+
+--
+-- Name: use_cases_sdg_targets usecases_sdgs_usecase_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.use_cases_sdg_targets
+    ADD CONSTRAINT usecases_sdgs_usecase_fk FOREIGN KEY (use_case_id) REFERENCES dsq.use_cases(id);
+
+
+--
+-- Name: users user_organization_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.users
+    ADD CONSTRAINT user_organization_fk FOREIGN KEY (organization_id) REFERENCES dsq.organizations(id);
+
+
+--
+-- Name: workflows_building_blocks workflows_bbs_bb_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflows_building_blocks
+    ADD CONSTRAINT workflows_bbs_bb_fk FOREIGN KEY (building_block_id) REFERENCES dsq.building_blocks(id);
+
+
+--
+-- Name: workflows_building_blocks workflows_bbs_workflow_fk; Type: FK CONSTRAINT; Schema: dsq; Owner: -
+--
+
+ALTER TABLE ONLY dsq.workflows_building_blocks
+    ADD CONSTRAINT workflows_bbs_workflow_fk FOREIGN KEY (workflow_id) REFERENCES dsq.workflows(id);
+
+
+--
 -- Name: plays_building_blocks bbs_plays_bb_fk; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -24561,6 +41720,14 @@ ALTER TABLE ONLY fao.play_moves
 
 
 --
+-- Name: candidate_products fk_rails_e0cb211c68; Type: FK CONSTRAINT; Schema: fao; Owner: -
+--
+
+ALTER TABLE ONLY fao.candidate_products
+    ADD CONSTRAINT fk_rails_e0cb211c68 FOREIGN KEY (created_by_id) REFERENCES fao.users(id);
+
+
+--
 -- Name: cities fk_rails_e0ef2914ca; Type: FK CONSTRAINT; Schema: fao; Owner: -
 --
 
@@ -25006,6 +42173,1350 @@ ALTER TABLE ONLY fao.workflows_building_blocks
 
 ALTER TABLE ONLY fao.workflows_building_blocks
     ADD CONSTRAINT workflows_bbs_workflow_fk FOREIGN KEY (workflow_id) REFERENCES fao.workflows(id);
+
+
+--
+-- Name: plays_building_blocks bbs_plays_bb_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks
+    ADD CONSTRAINT bbs_plays_bb_fk FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: plays_building_blocks bbs_plays_play_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks
+    ADD CONSTRAINT bbs_plays_play_fk FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_products_category_indicators_candidate_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_products_category_indicators_candidate_product_fk FOREIGN KEY (candidate_product_id) REFERENCES government.candidate_products(id);
+
+
+--
+-- Name: candidate_product_category_indicators candidate_products_category_indicators_category_indicator_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_product_category_indicators
+    ADD CONSTRAINT candidate_products_category_indicators_category_indicator_fk FOREIGN KEY (category_indicator_id) REFERENCES government.category_indicators(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_approved_by_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources
+    ADD CONSTRAINT candidate_resources_approved_by_fk FOREIGN KEY (approved_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_candidate_resources_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_candidate_resources_fk FOREIGN KEY (candidate_resource_id) REFERENCES government.candidate_resources(id);
+
+
+--
+-- Name: candidate_resources_countries candidate_resources_countries_countries_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources_countries
+    ADD CONSTRAINT candidate_resources_countries_countries_fk FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: candidate_resources candidate_resources_rejected_by_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_resources
+    ADD CONSTRAINT candidate_resources_rejected_by_fk FOREIGN KEY (rejected_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_current_candidate_status_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_current_candidate_status_fk FOREIGN KEY (current_candidate_status_id) REFERENCES government.candidate_statuses(id);
+
+
+--
+-- Name: candidate_status_relationships candidate_status_relationships_next_candidate_status_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_status_relationships
+    ADD CONSTRAINT candidate_status_relationships_next_candidate_status_fk FOREIGN KEY (next_candidate_status_id) REFERENCES government.candidate_statuses(id);
+
+
+--
+-- Name: districts fk_rails_002fc30497; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.districts
+    ADD CONSTRAINT fk_rails_002fc30497 FOREIGN KEY (province_id) REFERENCES government.provinces(id);
+
+
+--
+-- Name: offices fk_rails_0722c0e4f7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.offices
+    ADD CONSTRAINT fk_rails_0722c0e4f7 FOREIGN KEY (province_id) REFERENCES government.provinces(id);
+
+
+--
+-- Name: handbook_descriptions fk_rails_08320ee34e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_descriptions
+    ADD CONSTRAINT fk_rails_08320ee34e FOREIGN KEY (handbook_id) REFERENCES government.handbooks(id);
+
+
+--
+-- Name: playbook_descriptions fk_rails_08320ee34e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_descriptions
+    ADD CONSTRAINT fk_rails_08320ee34e FOREIGN KEY (playbook_id) REFERENCES government.playbooks(id);
+
+
+--
+-- Name: offices fk_rails_08e10b87a1; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.offices
+    ADD CONSTRAINT fk_rails_08e10b87a1 FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: sectors fk_rails_0c5b9fc834; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sectors
+    ADD CONSTRAINT fk_rails_0c5b9fc834 FOREIGN KEY (origin_id) REFERENCES government.origins(id);
+
+
+--
+-- Name: handbook_pages fk_rails_0d854afcc1; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_pages
+    ADD CONSTRAINT fk_rails_0d854afcc1 FOREIGN KEY (handbook_id) REFERENCES government.handbooks(id);
+
+
+--
+-- Name: datasets_origins fk_rails_1000d63cee; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_origins
+    ADD CONSTRAINT fk_rails_1000d63cee FOREIGN KEY (origin_id) REFERENCES government.origins(id);
+
+
+--
+-- Name: product_categories fk_rails_156a781ad6; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_categories
+    ADD CONSTRAINT fk_rails_156a781ad6 FOREIGN KEY (software_category_id) REFERENCES government.software_categories(id);
+
+
+--
+-- Name: product_classifications fk_rails_16035b6309; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications
+    ADD CONSTRAINT fk_rails_16035b6309 FOREIGN KEY (classification_id) REFERENCES government.classifications(id);
+
+
+--
+-- Name: products fk_rails_178d05e423; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products
+    ADD CONSTRAINT fk_rails_178d05e423 FOREIGN KEY (approval_status_id) REFERENCES government.candidate_statuses(id) ON DELETE SET NULL;
+
+
+--
+-- Name: chatbot_conversations fk_rails_17f52fc61f; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.chatbot_conversations
+    ADD CONSTRAINT fk_rails_17f52fc61f FOREIGN KEY (user_id) REFERENCES government.users(id);
+
+
+--
+-- Name: use_case_steps fk_rails_1ab85a3bb6; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps
+    ADD CONSTRAINT fk_rails_1ab85a3bb6 FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: software_features fk_rails_1aba49ed7b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.software_features
+    ADD CONSTRAINT fk_rails_1aba49ed7b FOREIGN KEY (software_category_id) REFERENCES government.software_categories(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_1ba13f968c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves_resources
+    ADD CONSTRAINT fk_rails_1ba13f968c FOREIGN KEY (resource_id) REFERENCES government.resources(id);
+
+
+--
+-- Name: candidate_roles fk_rails_1c91ae1dbd; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT fk_rails_1c91ae1dbd FOREIGN KEY (approved_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: opportunities_organizations fk_rails_1e1b217e25; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_organizations
+    ADD CONSTRAINT fk_rails_1e1b217e25 FOREIGN KEY (opportunity_id) REFERENCES government.opportunities(id);
+
+
+--
+-- Name: building_block_descriptions fk_rails_1e30d5f2cb; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.building_block_descriptions
+    ADD CONSTRAINT fk_rails_1e30d5f2cb FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: candidate_products fk_rails_1f7a4bef04; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products
+    ADD CONSTRAINT fk_rails_1f7a4bef04 FOREIGN KEY (approved_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: deploys fk_rails_1ffce4bab2; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.deploys
+    ADD CONSTRAINT fk_rails_1ffce4bab2 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: opportunities_building_blocks fk_rails_215b65662e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_215b65662e FOREIGN KEY (opportunity_id) REFERENCES government.opportunities(id);
+
+
+--
+-- Name: candidate_organizations fk_rails_246998b230; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_organizations
+    ADD CONSTRAINT fk_rails_246998b230 FOREIGN KEY (rejected_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: candidate_products fk_rails_266c90eecf; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products
+    ADD CONSTRAINT fk_rails_266c90eecf FOREIGN KEY (candidate_status_id) REFERENCES government.candidate_statuses(id) ON DELETE SET NULL;
+
+
+--
+-- Name: play_descriptions fk_rails_26dd7253a6; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_descriptions
+    ADD CONSTRAINT fk_rails_26dd7253a6 FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: projects_digital_principles fk_rails_28bb8bf3f7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_digital_principles
+    ADD CONSTRAINT fk_rails_28bb8bf3f7 FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: product_indicators fk_rails_2c154e19b9; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_indicators
+    ADD CONSTRAINT fk_rails_2c154e19b9 FOREIGN KEY (category_indicator_id) REFERENCES government.category_indicators(id);
+
+
+--
+-- Name: sectors fk_rails_2fafddb8c8; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.sectors
+    ADD CONSTRAINT fk_rails_2fafddb8c8 FOREIGN KEY (parent_sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: candidate_roles fk_rails_31a769978d; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT fk_rails_31a769978d FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: organization_datasets fk_rails_37920930c1; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_datasets
+    ADD CONSTRAINT fk_rails_37920930c1 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_393a906ad8; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_datasets
+    ADD CONSTRAINT fk_rails_393a906ad8 FOREIGN KEY (rejected_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: candidate_roles fk_rails_3a1d782b99; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT fk_rails_3a1d782b99 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: organization_descriptions fk_rails_3a6b8edce9; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_descriptions
+    ADD CONSTRAINT fk_rails_3a6b8edce9 FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: projects_digital_principles fk_rails_3eb4109c7d; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_digital_principles
+    ADD CONSTRAINT fk_rails_3eb4109c7d FOREIGN KEY (digital_principle_id) REFERENCES government.digital_principles(id);
+
+
+--
+-- Name: resources fk_rails_41c2c1001c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources
+    ADD CONSTRAINT fk_rails_41c2c1001c FOREIGN KEY (submitted_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: projects fk_rails_45a5b9baa8; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects
+    ADD CONSTRAINT fk_rails_45a5b9baa8 FOREIGN KEY (origin_id) REFERENCES government.origins(id);
+
+
+--
+-- Name: tag_descriptions fk_rails_46e6dc893e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.tag_descriptions
+    ADD CONSTRAINT fk_rails_46e6dc893e FOREIGN KEY (tag_id) REFERENCES government.tags(id);
+
+
+--
+-- Name: play_moves_resources fk_rails_48f1a17adf; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves_resources
+    ADD CONSTRAINT fk_rails_48f1a17adf FOREIGN KEY (play_move_id) REFERENCES government.play_moves(id);
+
+
+--
+-- Name: opportunities_countries fk_rails_49a664b2f7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_countries
+    ADD CONSTRAINT fk_rails_49a664b2f7 FOREIGN KEY (opportunity_id) REFERENCES government.opportunities(id);
+
+
+--
+-- Name: candidate_roles fk_rails_4aa113bd52; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT fk_rails_4aa113bd52 FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: plays_building_blocks fk_rails_4d36dad6d0; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks
+    ADD CONSTRAINT fk_rails_4d36dad6d0 FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: dataset_sectors fk_rails_4d5afa2af0; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sectors
+    ADD CONSTRAINT fk_rails_4d5afa2af0 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: opportunities_sectors fk_rails_572c40b423; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_sectors
+    ADD CONSTRAINT fk_rails_572c40b423 FOREIGN KEY (opportunity_id) REFERENCES government.opportunities(id);
+
+
+--
+-- Name: operator_services fk_rails_5c31270ff7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.operator_services
+    ADD CONSTRAINT fk_rails_5c31270ff7 FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: opportunities fk_rails_5f8d9a4134; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities
+    ADD CONSTRAINT fk_rails_5f8d9a4134 FOREIGN KEY (origin_id) REFERENCES government.origins(id);
+
+
+--
+-- Name: user_messages fk_rails_60e38b1531; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_messages
+    ADD CONSTRAINT fk_rails_60e38b1531 FOREIGN KEY (received_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: organizations_countries fk_rails_61354fe2dd; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_countries
+    ADD CONSTRAINT fk_rails_61354fe2dd FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: dataset_descriptions fk_rails_6233152996; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_descriptions
+    ADD CONSTRAINT fk_rails_6233152996 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: offices fk_rails_63e101f453; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.offices
+    ADD CONSTRAINT fk_rails_63e101f453 FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: handbook_pages fk_rails_6441d33616; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_pages
+    ADD CONSTRAINT fk_rails_6441d33616 FOREIGN KEY (handbook_questions_id) REFERENCES government.handbook_questions(id);
+
+
+--
+-- Name: task_tracker_descriptions fk_rails_64d4c2c34c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.task_tracker_descriptions
+    ADD CONSTRAINT fk_rails_64d4c2c34c FOREIGN KEY (task_tracker_id) REFERENCES government.task_trackers(id);
+
+
+--
+-- Name: category_indicator_descriptions fk_rails_664858eff1; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicator_descriptions
+    ADD CONSTRAINT fk_rails_664858eff1 FOREIGN KEY (category_indicator_id) REFERENCES government.category_indicators(id);
+
+
+--
+-- Name: workflow_descriptions fk_rails_69d7772842; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflow_descriptions
+    ADD CONSTRAINT fk_rails_69d7772842 FOREIGN KEY (workflow_id) REFERENCES government.workflows(id);
+
+
+--
+-- Name: playbook_plays fk_rails_6b205fb457; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_plays
+    ADD CONSTRAINT fk_rails_6b205fb457 FOREIGN KEY (playbook_id) REFERENCES government.playbooks(id);
+
+
+--
+-- Name: datasets_countries fk_rails_6c45cff588; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_countries
+    ADD CONSTRAINT fk_rails_6c45cff588 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: product_indicators fk_rails_721e0e4ba1; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_indicators
+    ADD CONSTRAINT fk_rails_721e0e4ba1 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: category_indicators fk_rails_72ff36837c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.category_indicators
+    ADD CONSTRAINT fk_rails_72ff36837c FOREIGN KEY (rubric_category_id) REFERENCES government.rubric_categories(id);
+
+
+--
+-- Name: opportunities_use_cases fk_rails_74085c04cd; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_74085c04cd FOREIGN KEY (opportunity_id) REFERENCES government.opportunities(id);
+
+
+--
+-- Name: product_repositories fk_rails_76210df50f; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_repositories
+    ADD CONSTRAINT fk_rails_76210df50f FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: projects_countries fk_rails_7940afe1fe; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_countries
+    ADD CONSTRAINT fk_rails_7940afe1fe FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: deploys fk_rails_7995634207; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.deploys
+    ADD CONSTRAINT fk_rails_7995634207 FOREIGN KEY (user_id) REFERENCES government.users(id);
+
+
+--
+-- Name: use_case_step_descriptions fk_rails_7c6b0affba; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_step_descriptions
+    ADD CONSTRAINT fk_rails_7c6b0affba FOREIGN KEY (use_case_step_id) REFERENCES government.use_case_steps(id);
+
+
+--
+-- Name: rubric_category_descriptions fk_rails_7f79ec6842; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.rubric_category_descriptions
+    ADD CONSTRAINT fk_rails_7f79ec6842 FOREIGN KEY (rubric_category_id) REFERENCES government.rubric_categories(id);
+
+
+--
+-- Name: candidate_roles fk_rails_80a7b4e918; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_roles
+    ADD CONSTRAINT fk_rails_80a7b4e918 FOREIGN KEY (rejected_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: opportunities_use_cases fk_rails_8350c2b67e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_use_cases
+    ADD CONSTRAINT fk_rails_8350c2b67e FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: dataset_sectors fk_rails_8398ea4f75; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.dataset_sectors
+    ADD CONSTRAINT fk_rails_8398ea4f75 FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: projects_countries fk_rails_8fcd9cd60b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_countries
+    ADD CONSTRAINT fk_rails_8fcd9cd60b FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: product_features fk_rails_9019f50ede; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_features
+    ADD CONSTRAINT fk_rails_9019f50ede FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: project_descriptions fk_rails_94cabf0709; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.project_descriptions
+    ADD CONSTRAINT fk_rails_94cabf0709 FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: use_case_descriptions fk_rails_94ea5f52ff; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_descriptions
+    ADD CONSTRAINT fk_rails_94ea5f52ff FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: opportunities_sectors fk_rails_973eb5ee0a; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_sectors
+    ADD CONSTRAINT fk_rails_973eb5ee0a FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: product_categories fk_rails_98a9a32a41; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_categories
+    ADD CONSTRAINT fk_rails_98a9a32a41 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: product_features fk_rails_9cbbc9970e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_features
+    ADD CONSTRAINT fk_rails_9cbbc9970e FOREIGN KEY (software_feature_id) REFERENCES government.software_features(id);
+
+
+--
+-- Name: playbook_plays fk_rails_9d1a7ebfec; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbook_plays
+    ADD CONSTRAINT fk_rails_9d1a7ebfec FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: products_endorsers fk_rails_9ebc436657; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_endorsers
+    ADD CONSTRAINT fk_rails_9ebc436657 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: play_move_descriptions fk_rails_9f26d2af9a; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_move_descriptions
+    ADD CONSTRAINT fk_rails_9f26d2af9a FOREIGN KEY (play_move_id) REFERENCES government.play_moves(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_9fcd7b6d41; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_9fcd7b6d41 FOREIGN KEY (aggregator_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: organizations_countries fk_rails_a044fbacef; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_countries
+    ADD CONSTRAINT fk_rails_a044fbacef FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: plays_products fk_rails_a0c000bc7e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products
+    ADD CONSTRAINT fk_rails_a0c000bc7e FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: opportunities_organizations fk_rails_a699f03037; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_organizations
+    ADD CONSTRAINT fk_rails_a699f03037 FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: products_endorsers fk_rails_a70896ae9e; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_endorsers
+    ADD CONSTRAINT fk_rails_a70896ae9e FOREIGN KEY (endorser_id) REFERENCES government.endorsers(id);
+
+
+--
+-- Name: plays_products fk_rails_a91dfa5414; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products
+    ADD CONSTRAINT fk_rails_a91dfa5414 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_aa5b2f5e59; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_aa5b2f5e59 FOREIGN KEY (operator_services_id) REFERENCES government.operator_services(id);
+
+
+--
+-- Name: resource_topic_descriptions fk_rails_ae0fcdfa4b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topic_descriptions
+    ADD CONSTRAINT fk_rails_ae0fcdfa4b FOREIGN KEY (resource_topic_id) REFERENCES government.resource_topics(id);
+
+
+--
+-- Name: resource_topics fk_rails_af05504d30; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_topics
+    ADD CONSTRAINT fk_rails_af05504d30 FOREIGN KEY (parent_topic_id) REFERENCES government.resource_topics(id) ON DELETE SET NULL;
+
+
+--
+-- Name: resources_use_cases fk_rails_b312c98a0b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources_use_cases
+    ADD CONSTRAINT fk_rails_b312c98a0b FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: resources fk_rails_b7c74d1aaf; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources
+    ADD CONSTRAINT fk_rails_b7c74d1aaf FOREIGN KEY (organization_id) REFERENCES government.organizations(id) ON DELETE SET NULL;
+
+
+--
+-- Name: opportunities_building_blocks fk_rails_bd7e32857c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_building_blocks
+    ADD CONSTRAINT fk_rails_bd7e32857c FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: product_descriptions fk_rails_c0bc9f9c8a; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_descriptions
+    ADD CONSTRAINT fk_rails_c0bc9f9c8a FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: opportunities_countries fk_rails_c231d14160; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.opportunities_countries
+    ADD CONSTRAINT fk_rails_c231d14160 FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: resources_use_cases fk_rails_c51465b571; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resources_use_cases
+    ADD CONSTRAINT fk_rails_c51465b571 FOREIGN KEY (resource_id) REFERENCES government.resources(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_c60c9cd0cf; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_building_blocks
+    ADD CONSTRAINT fk_rails_c60c9cd0cf FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: organization_datasets fk_rails_c82c326076; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_datasets
+    ADD CONSTRAINT fk_rails_c82c326076 FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: datasets_countries fk_rails_c8d14ec1b4; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_countries
+    ADD CONSTRAINT fk_rails_c8d14ec1b4 FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: messages fk_rails_cd133c6420; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.messages
+    ADD CONSTRAINT fk_rails_cd133c6420 FOREIGN KEY (created_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: candidate_organizations fk_rails_d0cf117a92; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_organizations
+    ADD CONSTRAINT fk_rails_d0cf117a92 FOREIGN KEY (approved_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: use_cases fk_rails_d2fed50240; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_cases
+    ADD CONSTRAINT fk_rails_d2fed50240 FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: product_classifications fk_rails_d5306b6dc7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications
+    ADD CONSTRAINT fk_rails_d5306b6dc7 FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: resource_building_blocks fk_rails_d574f6d18b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.resource_building_blocks
+    ADD CONSTRAINT fk_rails_d574f6d18b FOREIGN KEY (resource_id) REFERENCES government.resources(id);
+
+
+--
+-- Name: datasets_origins fk_rails_d604ea34b3; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.datasets_origins
+    ADD CONSTRAINT fk_rails_d604ea34b3 FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: use_case_headers fk_rails_de4b7a8ac2; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_headers
+    ADD CONSTRAINT fk_rails_de4b7a8ac2 FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: play_moves fk_rails_e067d6a17d; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.play_moves
+    ADD CONSTRAINT fk_rails_e067d6a17d FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: candidate_products fk_rails_e0cb211c68; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products
+    ADD CONSTRAINT fk_rails_e0cb211c68 FOREIGN KEY (created_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: cities fk_rails_e0ef2914ca; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.cities
+    ADD CONSTRAINT fk_rails_e0ef2914ca FOREIGN KEY (province_id) REFERENCES government.provinces(id);
+
+
+--
+-- Name: user_messages fk_rails_e3535a825c; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.user_messages
+    ADD CONSTRAINT fk_rails_e3535a825c FOREIGN KEY (message_id) REFERENCES government.messages(id);
+
+
+--
+-- Name: handbook_pages fk_rails_edc977f5e7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.handbook_pages
+    ADD CONSTRAINT fk_rails_edc977f5e7 FOREIGN KEY (parent_page_id) REFERENCES government.handbook_pages(id);
+
+
+--
+-- Name: aggregator_capabilities fk_rails_ee0ee7b8e7; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.aggregator_capabilities
+    ADD CONSTRAINT fk_rails_ee0ee7b8e7 FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: candidate_products fk_rails_eed5af50b9; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_products
+    ADD CONSTRAINT fk_rails_eed5af50b9 FOREIGN KEY (rejected_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: page_contents fk_rails_efc85b8fb4; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.page_contents
+    ADD CONSTRAINT fk_rails_efc85b8fb4 FOREIGN KEY (handbook_page_id) REFERENCES government.handbook_pages(id);
+
+
+--
+-- Name: principle_descriptions fk_rails_f1497d5d96; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.principle_descriptions
+    ADD CONSTRAINT fk_rails_f1497d5d96 FOREIGN KEY (digital_principle_id) REFERENCES government.digital_principles(id);
+
+
+--
+-- Name: starred_objects fk_rails_f18f95cc1b; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.starred_objects
+    ADD CONSTRAINT fk_rails_f18f95cc1b FOREIGN KEY (starred_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: provinces fk_rails_f2ba72ccee; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.provinces
+    ADD CONSTRAINT fk_rails_f2ba72ccee FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: candidate_datasets fk_rails_f460267737; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.candidate_datasets
+    ADD CONSTRAINT fk_rails_f460267737 FOREIGN KEY (approved_by_id) REFERENCES government.users(id);
+
+
+--
+-- Name: plays_building_blocks fk_rails_f47938caa0; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_building_blocks
+    ADD CONSTRAINT fk_rails_f47938caa0 FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: product_product_relationships from_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_product_relationships
+    ADD CONSTRAINT from_product_fk FOREIGN KEY (from_product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: organization_contacts organizations_contacts_contact_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_contacts
+    ADD CONSTRAINT organizations_contacts_contact_fk FOREIGN KEY (contact_id) REFERENCES government.contacts(id);
+
+
+--
+-- Name: organization_contacts organizations_contacts_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_contacts
+    ADD CONSTRAINT organizations_contacts_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: organization_products organizations_products_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_products
+    ADD CONSTRAINT organizations_products_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: organization_products organizations_products_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organization_products
+    ADD CONSTRAINT organizations_products_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: organizations_resources organizations_resources_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_resources
+    ADD CONSTRAINT organizations_resources_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: organizations_resources organizations_resources_resource_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_resources
+    ADD CONSTRAINT organizations_resources_resource_fk FOREIGN KEY (resource_id) REFERENCES government.resources(id);
+
+
+--
+-- Name: organizations_sectors organizations_sectors_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_sectors
+    ADD CONSTRAINT organizations_sectors_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: organizations_sectors organizations_sectors_sector_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.organizations_sectors
+    ADD CONSTRAINT organizations_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: playbooks_sectors playbooks_sectors_playbook_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbooks_sectors
+    ADD CONSTRAINT playbooks_sectors_playbook_fk FOREIGN KEY (playbook_id) REFERENCES government.playbooks(id);
+
+
+--
+-- Name: playbooks_sectors playbooks_sectors_sector_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.playbooks_sectors
+    ADD CONSTRAINT playbooks_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: product_classifications product_classifications_classification_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications
+    ADD CONSTRAINT product_classifications_classification_fk FOREIGN KEY (classification_id) REFERENCES government.classifications(id);
+
+
+--
+-- Name: product_classifications product_classifications_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_classifications
+    ADD CONSTRAINT product_classifications_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: products_countries product_countries_country_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_countries
+    ADD CONSTRAINT product_countries_country_fk FOREIGN KEY (country_id) REFERENCES government.countries(id);
+
+
+--
+-- Name: products_countries product_countries_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_countries
+    ADD CONSTRAINT product_countries_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: product_building_blocks products_building_blocks_building_block_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_building_blocks
+    ADD CONSTRAINT products_building_blocks_building_block_fk FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: product_building_blocks products_building_blocks_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_building_blocks
+    ADD CONSTRAINT products_building_blocks_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: products_origins products_origins_origin_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_origins
+    ADD CONSTRAINT products_origins_origin_fk FOREIGN KEY (origin_id) REFERENCES government.origins(id);
+
+
+--
+-- Name: products_origins products_origins_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.products_origins
+    ADD CONSTRAINT products_origins_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: plays_products products_plays_play_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products
+    ADD CONSTRAINT products_plays_play_fk FOREIGN KEY (play_id) REFERENCES government.plays(id);
+
+
+--
+-- Name: plays_products products_plays_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.plays_products
+    ADD CONSTRAINT products_plays_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: product_sustainable_development_goals products_sdgs_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sustainable_development_goals
+    ADD CONSTRAINT products_sdgs_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: product_sustainable_development_goals products_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_sustainable_development_goals
+    ADD CONSTRAINT products_sdgs_sdg_fk FOREIGN KEY (sustainable_development_goal_id) REFERENCES government.sustainable_development_goals(id);
+
+
+--
+-- Name: projects_organizations projects_organizations_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_organizations
+    ADD CONSTRAINT projects_organizations_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: projects_organizations projects_organizations_project_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_organizations
+    ADD CONSTRAINT projects_organizations_project_fk FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: projects_products projects_products_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_products
+    ADD CONSTRAINT projects_products_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: projects_products projects_products_project_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_products
+    ADD CONSTRAINT projects_products_project_fk FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: projects_sdgs projects_sdgs_project_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_sdgs
+    ADD CONSTRAINT projects_sdgs_project_fk FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: projects_sdgs projects_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_sdgs
+    ADD CONSTRAINT projects_sdgs_sdg_fk FOREIGN KEY (sdg_id) REFERENCES government.sustainable_development_goals(id);
+
+
+--
+-- Name: projects_sectors projects_sectors_project_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_sectors
+    ADD CONSTRAINT projects_sectors_project_fk FOREIGN KEY (project_id) REFERENCES government.projects(id);
+
+
+--
+-- Name: projects_sectors projects_sectors_sector_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.projects_sectors
+    ADD CONSTRAINT projects_sectors_sector_fk FOREIGN KEY (sector_id) REFERENCES government.sectors(id);
+
+
+--
+-- Name: product_product_relationships to_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.product_product_relationships
+    ADD CONSTRAINT to_product_fk FOREIGN KEY (to_product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_block_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_block_fk FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: use_case_steps_building_blocks use_case_steps_building_blocks_step_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_building_blocks
+    ADD CONSTRAINT use_case_steps_building_blocks_step_fk FOREIGN KEY (use_case_step_id) REFERENCES government.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_dataset_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_dataset_fk FOREIGN KEY (dataset_id) REFERENCES government.datasets(id);
+
+
+--
+-- Name: use_case_steps_datasets use_case_steps_datasets_step_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_datasets
+    ADD CONSTRAINT use_case_steps_datasets_step_fk FOREIGN KEY (use_case_step_id) REFERENCES government.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_product_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_product_fk FOREIGN KEY (product_id) REFERENCES government.products(id);
+
+
+--
+-- Name: use_case_steps_products use_case_steps_products_step_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_products
+    ADD CONSTRAINT use_case_steps_products_step_fk FOREIGN KEY (use_case_step_id) REFERENCES government.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_workflows use_case_steps_workflows_step_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_workflows
+    ADD CONSTRAINT use_case_steps_workflows_step_fk FOREIGN KEY (use_case_step_id) REFERENCES government.use_case_steps(id);
+
+
+--
+-- Name: use_case_steps_workflows use_case_steps_workflows_workflow_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_case_steps_workflows
+    ADD CONSTRAINT use_case_steps_workflows_workflow_fk FOREIGN KEY (workflow_id) REFERENCES government.workflows(id);
+
+
+--
+-- Name: use_cases_sdg_targets usecases_sdgs_sdg_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_cases_sdg_targets
+    ADD CONSTRAINT usecases_sdgs_sdg_fk FOREIGN KEY (sdg_target_id) REFERENCES government.sdg_targets(id);
+
+
+--
+-- Name: use_cases_sdg_targets usecases_sdgs_usecase_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.use_cases_sdg_targets
+    ADD CONSTRAINT usecases_sdgs_usecase_fk FOREIGN KEY (use_case_id) REFERENCES government.use_cases(id);
+
+
+--
+-- Name: users user_organization_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.users
+    ADD CONSTRAINT user_organization_fk FOREIGN KEY (organization_id) REFERENCES government.organizations(id);
+
+
+--
+-- Name: workflows_building_blocks workflows_bbs_bb_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflows_building_blocks
+    ADD CONSTRAINT workflows_bbs_bb_fk FOREIGN KEY (building_block_id) REFERENCES government.building_blocks(id);
+
+
+--
+-- Name: workflows_building_blocks workflows_bbs_workflow_fk; Type: FK CONSTRAINT; Schema: government; Owner: -
+--
+
+ALTER TABLE ONLY government.workflows_building_blocks
+    ADD CONSTRAINT workflows_bbs_workflow_fk FOREIGN KEY (workflow_id) REFERENCES government.workflows(id);
 
 
 --
@@ -25894,6 +44405,14 @@ ALTER TABLE ONLY health.use_case_headers
 
 ALTER TABLE ONLY health.play_moves
     ADD CONSTRAINT fk_rails_e067d6a17d FOREIGN KEY (play_id) REFERENCES health.plays(id);
+
+
+--
+-- Name: candidate_products fk_rails_e0cb211c68; Type: FK CONSTRAINT; Schema: health; Owner: -
+--
+
+ALTER TABLE ONLY health.candidate_products
+    ADD CONSTRAINT fk_rails_e0cb211c68 FOREIGN KEY (created_by_id) REFERENCES health.users(id);
 
 
 --
@@ -27695,310 +46214,310 @@ ALTER TABLE ONLY public.workflows_building_blocks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20181113155844'),
-('20181116184335'),
-('20190122191834'),
-('20190122193631'),
-('20190128214040'),
-('20190329164159'),
-('20190405161615'),
-('20190408152727'),
-('20190410153048'),
-('20190413143731'),
-('20190413162159'),
-('20190515140930'),
-('20190521161155'),
-('20190521173413'),
-('20190531134352'),
-('20190531152352'),
-('20190531152718'),
-('20190531152933'),
-('20190619211133'),
-('20190621203306'),
-('20190628163911'),
-('20190709135659'),
-('20190717173408'),
-('20190718180634'),
-('20190723183059'),
-('20190724230850'),
-('20190725134908'),
-('20190725134957'),
-('20190729131806'),
-('20190730143658'),
-('20190730154937'),
-('20190730155346'),
-('20190731195112'),
-('20190801194208'),
-('20190801200432'),
-('20190805145805'),
-('20190805161659'),
-('20190909152506'),
-('20190909191546'),
-('20190909195732'),
-('20190911150425'),
-('20190911194639'),
-('20190913164128'),
-('20190916175633'),
-('20191022134914'),
-('20191028211046'),
-('20191030125538'),
-('20191030153507'),
-('20191104191625'),
-('20191111123008'),
-('20191114192918'),
-('20191206145611'),
-('20191206150613'),
-('20191210210550'),
-('20200105125805'),
-('20200107135217'),
-('20200110151548'),
-('20200128154358'),
-('20200128204056'),
-('20200130220904'),
-('20200130221126'),
-('20200205210606'),
-('20200218150006'),
-('20200220202959'),
-('20200220203026'),
-('20200224225410'),
-('20200224225415'),
-('20200303191546'),
-('20200318153113'),
-('20200403183400'),
-('20200408151430'),
-('20200409175231'),
-('20200410181908'),
-('20200413175913'),
-('20200413181640'),
-('20200415182207'),
-('20200415182431'),
-('20200416142235'),
-('20200428155300'),
-('20200428234311'),
-('20200429220626'),
-('20200501143924'),
-('20200503141314'),
-('20200506174132'),
-('20200506174133'),
-('20200506175410'),
-('20200506193433'),
-('20200506193935'),
-('20200506194951'),
-('20200506195001'),
-('20200515185037'),
-('20200515191241'),
-('20200515191251'),
-('20200520192948'),
-('20200521210943'),
-('20200522192632'),
-('20200522194438'),
-('20200526195946'),
-('20200526203504'),
-('20200603140902'),
-('20200608194733'),
-('20200609130507'),
-('20200617174313'),
-('20200617174358'),
-('20200617174412'),
-('20200619171341'),
-('20200619172658'),
-('20200619172716'),
-('20200623203503'),
-('20200624170721'),
-('20200624212546'),
-('20200624212630'),
-('20200707130426'),
-('20200707130945'),
-('20200708180807'),
-('20200708181616'),
-('20200710205315'),
-('20200710205316'),
-('20200710210144'),
-('20200727155410'),
-('20200729150759'),
-('20200729202732'),
-('20200730195836'),
-('20200804184953'),
-('20200811135839'),
-('20200811142114'),
-('20200811143421'),
-('20200811150942'),
-('20200811181245'),
-('20200812012621'),
-('20200812012757'),
-('20200812014644'),
-('20200812014739'),
-('20200812015747'),
-('20200812155025'),
-('20200814184009'),
-('20200818153517'),
-('20200818202930'),
-('20200818203509'),
-('20200819002149'),
-('20200819201841'),
-('20200824180728'),
-('20200824180910'),
-('20200825202250'),
-('20200825202909'),
-('20200826134558'),
-('20200826134741'),
-('20200826134916'),
-('20200826205015'),
-('20200831211606'),
-('20200904163226'),
-('20200916213058'),
-('20200922195357'),
-('20200924233939'),
-('20201006172734'),
-('20201021202217'),
-('20201103202113'),
-('20201123194715'),
-('20201125162851'),
-('20201211182046'),
-('20201214204504'),
-('20201221140408'),
-('20210119164809'),
-('20210119164830'),
-('20210212145950'),
-('20210302210015'),
-('20210303151833'),
-('20210420200744'),
-('20210520172450'),
-('20210716133929'),
-('20210716134544'),
-('20210716203940'),
-('20210719194336'),
-('20210901203528'),
-('20210915210109'),
-('20211025214450'),
-('20211112153426'),
-('20211116173721'),
-('20211130142532'),
-('20211203023930'),
-('20211203193339'),
-('20220114212158'),
-('20220309190707'),
-('20220316170226'),
-('20220404230635'),
-('20220427215908'),
-('20220428193227'),
-('20220519205858'),
-('20220624201750'),
-('20220629054904'),
-('20220712054023'),
-('20220722063623'),
-('20220803183512'),
-('20220817061256'),
-('20220817062227'),
-('20220825102332'),
-('20220902075138'),
-('20220909073617'),
-('20220909100954'),
-('20220909101028'),
-('20220916115012'),
-('20220923161216'),
-('20220930090351'),
-('20221018015421'),
-('20221018202451'),
-('20221018203042'),
-('20221102104046'),
-('20221208074203'),
-('20221216075319'),
-('20221220085731'),
-('20221227105319'),
-('20221227105322'),
-('20230123155236'),
-('20230308023907'),
-('20230308024946'),
-('20230314191751'),
-('20230321132329'),
-('20230321142940'),
-('20230322141250'),
-('20230327224648'),
-('20230403213850'),
-('20230403213927'),
-('20230420032636'),
-('20230424122850'),
-('20230508150944'),
-('20230508150945'),
-('20230508150946'),
-('20230511202225'),
-('20230530143937'),
-('20230530144123'),
-('20230605183013'),
-('20230605202219'),
-('20230605203819'),
-('20230605203844'),
-('20230612203109'),
-('20230613201202'),
-('20230710193223'),
-('20230811182920'),
-('20230814213722'),
-('20230815093725'),
-('20230816123325'),
-('20230822215103'),
-('20230912211315'),
-('20230928214508'),
-('20230928215346'),
-('20230929140735'),
-('20231004184941'),
-('20231030214704'),
-('20231103194201'),
-('20231128225429'),
-('20231201214658'),
-('20231207212017'),
-('20231209110335'),
-('20231211144224'),
-('20240104215749'),
-('20240109024648'),
-('20240118161746'),
-('20240121042516'),
-('20240123162741'),
-('20240202213701'),
-('20240203165039'),
-('20240203165141'),
-('20240203190751'),
-('20240213054529'),
-('20240306182144'),
-('20240404132644'),
-('20240509183558'),
-('20240509191953'),
-('20240524211025'),
-('20240530150308'),
-('20240530154604'),
-('20240605130949'),
-('20240605184914'),
-('20240606205817'),
-('20240609191249'),
-('20240624192517'),
-('20240624193953'),
-('20240624203205'),
-('20240625122716'),
-('20240703124148'),
-('20240712135449'),
-('20240721194811'),
-('20240806130712'),
-('20240814120047'),
-('20240827181759'),
-('20240827184119'),
-('20240830132609'),
-('20240919205513'),
-('20240927093418'),
-('20240927122349'),
-('20241004205517'),
-('20241009040932'),
-('20241009120008'),
-('20241009223605'),
-('20241010210154'),
-('20241013113520'),
-('20241017202436'),
-('20241017203838'),
-('20241017205222'),
-('20241017210146'),
-('20241017211746'),
-('20241020121626'),
-('20241024120711'),
+('20250220151010'),
+('20250110153801'),
 ('20241204135707'),
-('20250110153801');
-
+('20241024120711'),
+('20241020121626'),
+('20241017211746'),
+('20241017210146'),
+('20241017205222'),
+('20241017203838'),
+('20241017202436'),
+('20241013113520'),
+('20241010210154'),
+('20241009223605'),
+('20241009120008'),
+('20241009040932'),
+('20241004205517'),
+('20240927122349'),
+('20240927093418'),
+('20240919205513'),
+('20240830132609'),
+('20240827184119'),
+('20240827181759'),
+('20240814120047'),
+('20240806130712'),
+('20240721194811'),
+('20240712135449'),
+('20240703124148'),
+('20240625122716'),
+('20240624203205'),
+('20240624193953'),
+('20240624192517'),
+('20240609191249'),
+('20240606205817'),
+('20240605184914'),
+('20240605130949'),
+('20240530154604'),
+('20240530150308'),
+('20240524211025'),
+('20240509191953'),
+('20240509183558'),
+('20240404132644'),
+('20240306182144'),
+('20240213054529'),
+('20240203190751'),
+('20240203165141'),
+('20240203165039'),
+('20240202213701'),
+('20240123162741'),
+('20240121042516'),
+('20240118161746'),
+('20240109024648'),
+('20240104215749'),
+('20231211144224'),
+('20231209110335'),
+('20231207212017'),
+('20231201214658'),
+('20231128225429'),
+('20231103194201'),
+('20231030214704'),
+('20231004184941'),
+('20230929140735'),
+('20230928215346'),
+('20230928214508'),
+('20230912211315'),
+('20230822215103'),
+('20230816123325'),
+('20230815093725'),
+('20230814213722'),
+('20230811182920'),
+('20230710193223'),
+('20230613201202'),
+('20230612203109'),
+('20230605203844'),
+('20230605203819'),
+('20230605202219'),
+('20230605183013'),
+('20230530144123'),
+('20230530143937'),
+('20230511202225'),
+('20230508150946'),
+('20230508150945'),
+('20230508150944'),
+('20230424122850'),
+('20230420032636'),
+('20230403213927'),
+('20230403213850'),
+('20230327224648'),
+('20230322141250'),
+('20230321142940'),
+('20230321132329'),
+('20230314191751'),
+('20230308024946'),
+('20230308023907'),
+('20230123155236'),
+('20221227105322'),
+('20221227105319'),
+('20221220085731'),
+('20221216075319'),
+('20221208074203'),
+('20221102104046'),
+('20221018203042'),
+('20221018202451'),
+('20221018015421'),
+('20220930090351'),
+('20220923161216'),
+('20220916115012'),
+('20220909101028'),
+('20220909100954'),
+('20220909073617'),
+('20220902075138'),
+('20220825102332'),
+('20220817062227'),
+('20220817061256'),
+('20220803183512'),
+('20220722063623'),
+('20220712054023'),
+('20220629054904'),
+('20220624201750'),
+('20220519205858'),
+('20220428193227'),
+('20220427215908'),
+('20220404230635'),
+('20220316170226'),
+('20220309190707'),
+('20220114212158'),
+('20211203193339'),
+('20211203023930'),
+('20211130142532'),
+('20211116173721'),
+('20211112153426'),
+('20211025214450'),
+('20210915210109'),
+('20210901203528'),
+('20210719194336'),
+('20210716203940'),
+('20210716134544'),
+('20210716133929'),
+('20210520172450'),
+('20210420200744'),
+('20210303151833'),
+('20210302210015'),
+('20210212145950'),
+('20210119164830'),
+('20210119164809'),
+('20201221140408'),
+('20201214204504'),
+('20201211182046'),
+('20201125162851'),
+('20201123194715'),
+('20201103202113'),
+('20201021202217'),
+('20201006172734'),
+('20200924233939'),
+('20200922195357'),
+('20200916213058'),
+('20200904163226'),
+('20200831211606'),
+('20200826205015'),
+('20200826134916'),
+('20200826134741'),
+('20200826134558'),
+('20200825202909'),
+('20200825202250'),
+('20200824180910'),
+('20200824180728'),
+('20200819201841'),
+('20200819002149'),
+('20200818203509'),
+('20200818202930'),
+('20200818153517'),
+('20200814184009'),
+('20200812155025'),
+('20200812015747'),
+('20200812014739'),
+('20200812014644'),
+('20200812012757'),
+('20200812012621'),
+('20200811181245'),
+('20200811150942'),
+('20200811143421'),
+('20200811142114'),
+('20200811135839'),
+('20200804184953'),
+('20200730195836'),
+('20200729202732'),
+('20200729150759'),
+('20200727155410'),
+('20200710210144'),
+('20200710205316'),
+('20200710205315'),
+('20200708181616'),
+('20200708180807'),
+('20200707130945'),
+('20200707130426'),
+('20200624212630'),
+('20200624212546'),
+('20200624170721'),
+('20200623203503'),
+('20200619172716'),
+('20200619172658'),
+('20200619171341'),
+('20200617174412'),
+('20200617174358'),
+('20200617174313'),
+('20200609130507'),
+('20200608194733'),
+('20200603140902'),
+('20200526203504'),
+('20200526195946'),
+('20200522194438'),
+('20200522192632'),
+('20200521210943'),
+('20200520192948'),
+('20200515191251'),
+('20200515191241'),
+('20200515185037'),
+('20200506195001'),
+('20200506194951'),
+('20200506193935'),
+('20200506193433'),
+('20200506175410'),
+('20200506174133'),
+('20200506174132'),
+('20200503141314'),
+('20200501143924'),
+('20200429220626'),
+('20200428234311'),
+('20200428155300'),
+('20200416142235'),
+('20200415182431'),
+('20200415182207'),
+('20200413181640'),
+('20200413175913'),
+('20200410181908'),
+('20200409175231'),
+('20200408151430'),
+('20200403183400'),
+('20200318153113'),
+('20200303191546'),
+('20200224225415'),
+('20200224225410'),
+('20200220203026'),
+('20200220202959'),
+('20200218150006'),
+('20200205210606'),
+('20200130221126'),
+('20200130220904'),
+('20200128204056'),
+('20200128154358'),
+('20200110151548'),
+('20200107135217'),
+('20200105125805'),
+('20191210210550'),
+('20191206150613'),
+('20191206145611'),
+('20191114192918'),
+('20191111123008'),
+('20191104191625'),
+('20191030153507'),
+('20191030125538'),
+('20191028211046'),
+('20191022134914'),
+('20190916175633'),
+('20190913164128'),
+('20190911194639'),
+('20190911150425'),
+('20190909195732'),
+('20190909191546'),
+('20190909152506'),
+('20190805161659'),
+('20190805145805'),
+('20190801200432'),
+('20190801194208'),
+('20190731195112'),
+('20190730155346'),
+('20190730154937'),
+('20190730143658'),
+('20190729131806'),
+('20190725134957'),
+('20190725134908'),
+('20190724230850'),
+('20190723183059'),
+('20190718180634'),
+('20190717173408'),
+('20190709135659'),
+('20190628163911'),
+('20190621203306'),
+('20190619211133'),
+('20190531152933'),
+('20190531152718'),
+('20190531152352'),
+('20190531134352'),
+('20190521173413'),
+('20190521161155'),
+('20190515140930'),
+('20190413162159'),
+('20190413143731'),
+('20190410153048'),
+('20190408152727'),
+('20190405161615'),
+('20190329164159'),
+('20190128214040'),
+('20190122193631'),
+('20190122191834'),
+('20181116184335'),
+('20181113155844');
 
