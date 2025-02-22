@@ -38,20 +38,16 @@ module Queries
     argument :years, [Int], required: false, default_value: []
     argument :sectors, [String], required: false, default_value: []
     argument :countries, [String], required: false, default_value: []
-    argument :endorser_only, Boolean, required: false, default_value: false
-    argument :endorser_level, String, required: false, default_value: ''
     argument :aggregators, [String], required: false, default_value: []
     argument :aggregator_only, Boolean, required: false, default_value: false
 
-    type Types::OrganizationType.connection_type, null: false
+    type [Types::OrganizationType], null: false
 
-    def resolve(search:, years:, sectors:, countries:, endorser_only:, endorser_level:, aggregators:, aggregator_only:)
+    def resolve(search:, years:, sectors:, countries:, aggregators:, aggregator_only:)
       validate_access_to_resource(Organization.new)
       organizations = Organization.order(:name)
 
       organizations = organizations.where(is_mni: true) if aggregator_only
-      organizations = organizations.where(is_endorser: true) if endorser_only
-      organizations = organizations.where(endorser_level:) unless endorser_level.empty?
 
       filtered_aggregators = aggregators.reject { |x| x.nil? || x.empty? }
       organizations = organizations.where(id: filtered_aggregators) unless filtered_aggregators.empty?

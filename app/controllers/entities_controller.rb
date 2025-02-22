@@ -26,7 +26,7 @@ class EntitiesController < ApplicationController
     captcha = params[:captcha]
     captcha_verified = Recaptcha.verify_via_api_call(captcha,
                                                      {
-                                                       secret_key: Rails.application.secrets.captcha_secret_key,
+                                                       secret_key: Rails.application.credentials.captcha_secret_key,
                                                        skip_remote_ip: true
                                                      })
 

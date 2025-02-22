@@ -3,12 +3,14 @@
 class Opportunity < ApplicationRecord
   include Auditable
 
+  attribute :opportunity_status_type, :string
   enum opportunity_status_type: {
     CLOSED: 'CLOSED',
     OPEN: 'OPEN',
     UPCOMING: 'UPCOMING'
   }
 
+  attribute :opportunity_type_type, :string
   enum opportunity_type_type: {
     BID: 'BID',
     TENDER: 'TENDER',
