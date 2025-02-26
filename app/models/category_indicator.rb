@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CategoryIndicator < ApplicationRecord
+  attribute :category_indicator_type, :string
   enum category_indicator_type: { boolean: 'boolean', numeric: 'numeric', scale: 'scale' }
 
   attr_accessor :ci_desc

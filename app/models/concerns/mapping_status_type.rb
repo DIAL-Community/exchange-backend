@@ -4,6 +4,7 @@ module MappingStatusType
   extend ActiveSupport::Concern
 
   included do
+    attribute :mapping_status_type, :string
     enum mapping_status_type: {
       BETA: 'BETA',
       MATURE: 'MATURE',

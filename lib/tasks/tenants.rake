@@ -61,8 +61,8 @@ namespace :tenants do
 
         # Create default admin user
         admin_email = "admin@#{tenant_name}.org"
-        admin_user = User.new({ email: admin_email, username: 'admin', password: tenant_file['adminPassword'],
-                                password_confirmation: tenant_file['adminPassword'] })
+        admin_user = User.new({ email: admin_email, username: 'admin', password: tenant['adminPassword'],
+                                password_confirmation: tenant['adminPassword'] })
         admin_user.confirm
         admin_user.save
         admin_user.roles = ['admin']
