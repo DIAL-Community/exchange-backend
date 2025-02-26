@@ -18,10 +18,13 @@ tenants:
       - url: dsq.digitalexchange.dev
     allow_unsecured_read: true
     adminPassword: Admin123
+    editableLanding: true
   - name: government
     urls: 
       - url: gov.localhost
       - url: gov.digitalexchange.dev
     allow_unsecured_read: true
     adminPassword: Admin123
+    editableLanding: true
+    country: Ethiopia
     

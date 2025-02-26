@@ -34,7 +34,14 @@ class AboutController < ApplicationController
     render(json: {
       "hostname": request.referrer.blank? ? 'public' : URI.parse(request.referrer).hostname,
       'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecured_read,
-      "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name
+      "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name,
+      "editable": current_tenant.nil? ? false : current_tenant.editable_landing,
+      "country": if current_tenant.nil?
+                   ''
+                 else
+                   Country.find_by(name: current_tenant.tenant_country)
+                         .as_json(only: %i[name latitude longitude])
+                 end
     })
   end
 

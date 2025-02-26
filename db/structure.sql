@@ -20179,7 +20179,9 @@ CREATE TABLE public.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL,
+    editable_landing boolean DEFAULT false,
+    tenant_country character varying
 );
 
 
@@ -46214,6 +46216,7 @@ ALTER TABLE ONLY public.workflows_building_blocks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250226213111'),
 ('20250220151010'),
 ('20250110153801'),
 ('20241204135707'),
