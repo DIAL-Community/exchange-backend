@@ -39,6 +39,7 @@ class AuthenticationController < Devise::SessionsController
       end
     end
 
+    user.auditable_current_user(user)
     sign_in(user, store: true)
 
     return_status = :ok
