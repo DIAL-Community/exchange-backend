@@ -18,8 +18,28 @@ module Mutations
         }
       end
 
+      # Cleaning up list of items to avoid unused items in the database. Layout is the source of truth.
+      #
+      # We're doing the same cleanup in the frontend, but adding it in the backend as well.
+      sanitized_item_configurations = []
+      item_configurations.map do |item_configuration|
+        item_id = item_configuration['id']
+
+        found = false
+        item_layouts.map do |_key, current_item_layout|
+          current_item_layout.map do |item_layout|
+            if item_layout['i'] == item_id
+              sanitized_item_configurations << item_configuration
+              found = true
+            end
+            break if found
+          end
+          break if found
+        end
+      end
+
       site_setting.item_layouts = { layouts: item_layouts }
-      site_setting.item_configurations = { items: item_configurations }
+      site_setting.item_configurations = { items: sanitized_item_configurations }
       if site_setting.save
         # Successful creation, return the created object with no errors
         {
