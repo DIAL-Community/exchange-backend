@@ -16,7 +16,9 @@ namespace :tenants do
         ExchangeTenant.create(
           tenant_name: tenant['name'],
           domain: url['url'],
-          allow_unsecured_read: tenant['allow_unsecured_read']
+          allow_unsecured_read: tenant['allow_unsecured_read'],
+          tenant_country: tenant['country'],
+          editable_landing: tenant['editable_landing']
         )
       end
     end
