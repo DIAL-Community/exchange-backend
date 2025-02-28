@@ -27,83 +27,96 @@ RSpec.describe(Mutations::UpdateUseCaseStepWorkflows, type: :graphql) do
   end
 
   it 'is successful - user is logged in as admin' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                      workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
-    expect_any_instance_of(Mutations::UpdateUseCaseStepWorkflows).to(receive(:an_admin).and_return(true))
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')]
+    )
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
-        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "wf_2" }, { "slug" => "wf_3" }] }))
-      expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "workflow-2" }, { "slug" => "workflow-3" }] }))
+      expect(result['data']['updateUseCaseStepWorkflows']['errors']).to(eq([]))
     end
   end
 
   it 'is successful - user is logged in as content editor' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                      workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
-    expect_any_instance_of(Mutations::UpdateUseCaseStepWorkflows).to(receive(:a_content_editor).and_return(true))
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')]
+    )
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
-    result = execute_graphql(
+    editor_user = create(:user, email: 'editor-user@gmail.com', roles: ['content_editor'])
+
+    result = execute_graphql_as_user(
+      editor_user,
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
       expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
-        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "wf_2" }, { "slug" => "wf_3" }] }))
-      expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq([]))
+        .to(eq({ "slug" => "some-name", "workflows" => [{ "slug" => "workflow-2" }, { "slug" => "workflow-3" }] }))
+      expect(result['data']['updateUseCaseStepWorkflows']['errors']).to(eq([]))
     end
   end
 
   it 'is fails - user has not proper rights' do
-    expect_any_instance_of(Mutations::UpdateUseCaseStepWorkflows).to(receive(:an_admin).and_return(false))
-    expect_any_instance_of(Mutations::UpdateUseCaseStepWorkflows).to(receive(:a_content_editor).and_return(false))
-
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                     workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')]
+    )
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql(
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep']).to(eq(nil))
       expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq(['Must be admin or content editor to update a use case step']))
+        .to(eq(['Editing use case step is not allowed.']))
     end
   end
 
   it 'is fails - user is not logged in' do
-    create(:use_case_step, name: 'Some Name', slug: 'some-name',
-                     workflows: [create(:workflow, slug: 'wf_1', name: 'Wf 1')])
-    create(:workflow, slug: 'wf_2', name: 'Wf 2')
-    create(:workflow, slug: 'wf_3', name: 'Wf 3')
+    create(
+      :use_case_step,
+      name: 'Some Name',
+      slug: 'some-name',
+      workflows: [create(:workflow, slug: 'workflow-1', name: 'Workflow 1')]
+    )
+    create(:workflow, slug: 'workflow-2', name: 'Workflow 2')
+    create(:workflow, slug: 'workflow-3', name: 'Workflow 3')
 
     result = execute_graphql(
       mutation,
-      variables: { workflowSlugs: ['wf_2', 'wf_3'], slug: 'some-name' },
+      variables: { workflowSlugs: ['workflow-2', 'workflow-3'], slug: 'some-name' },
     )
 
     aggregate_failures do
-      expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep'])
-        .to(eq(nil))
+      expect(result['data']['updateUseCaseStepWorkflows']['useCaseStep']).to(eq(nil))
       expect(result['data']['updateUseCaseStepWorkflows']['errors'])
-        .to(eq(['Must be admin or content editor to update a use case step']))
+        .to(eq(['Editing use case step is not allowed.']))
     end
   end
 end

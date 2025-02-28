@@ -21,8 +21,8 @@ RSpec.describe(Mutations::UpdateOpportunitySectors, type: :graphql) do
   end
 
   it 'is successful' do
-    first = create(:sector, slug: 'first_sector', name: 'First Sector', is_displayable: true)
-    second = create(:sector, slug: 'second_sector', name: 'Second Sector', is_displayable: true)
+    first = create(:sector, slug: 'first-sector', name: 'First Sector', is_displayable: true)
+    second = create(:sector, slug: 'second-sector', name: 'Second Sector', is_displayable: true)
     opportunity = create(
       :opportunity,
       id: '1000',
@@ -65,8 +65,8 @@ RSpec.describe(Mutations::UpdateOpportunitySectors, type: :graphql) do
       contact_name: 'Fake Name',
       contact_email: 'fake@email.com'
     )
-    first_sector = create(:sector, slug: 'first_sector', name: 'First Sector')
-    second_sector = create(:sector, slug: 'second_sector', name: 'Second Sector')
+    first_sector = create(:sector, slug: 'first-sector', name: 'First Sector')
+    second_sector = create(:sector, slug: 'second-sector', name: 'Second Sector')
     standard_user = create(:user, email: 'user@gmail.com', roles: [:user])
 
     result = execute_graphql_as_user(
@@ -79,10 +79,9 @@ RSpec.describe(Mutations::UpdateOpportunitySectors, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateOpportunitySectors']['opportunity'])
-        .to(eq(nil))
+      expect(result['data']['updateOpportunitySectors']['opportunity']).to(eq(nil))
       expect(result['data']['updateOpportunitySectors']['errors'])
-        .to(eq(['Must have proper rights to update an opportunity']))
+        .to(eq(['Editing opportunity is not allowed.']))
     end
   end
 end

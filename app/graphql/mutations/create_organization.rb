@@ -23,11 +23,8 @@ module Mutations
     field :organization, Types::OrganizationType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, aliases:, website: nil,
-      is_endorser: nil, when_endorsed: nil, endorser_level: nil, is_mni: nil,
-      has_storefront: nil, description:, image_file: nil, hero_file: nil
-    )
+    def resolve(name:, slug:, aliases:, website: nil, is_endorser: nil, when_endorsed: nil, endorser_level: nil,
+      is_mni: nil, has_storefront: nil, description:, image_file: nil, hero_file: nil)
       # Allowed to create record:
       # - Admin user
       # - Non admin user where email host is part of the organization's website
@@ -37,45 +34,24 @@ module Mutations
       # - Organization owner
 
       # Case: non user must not be allowed to create / edit storefront.
-      current_user = context[:current_user]
-      if current_user.nil?
+      organization = Organization.first_duplicate(name, slug)
+      organization_resolver = Organization.new
+      if context[:operation_name].to_s.downcase.include?(STOREFRONT_CONTEXT)
+        organization_resolver = Organization.new(has_storefront:)
+      end
+      organization_policy = Pundit.policy(context[:current_user], organization || organization_resolver)
+      if organization.nil? && !organization_policy.create_allowed?
         return {
           organization: nil,
-          errors: ['Must be logged in create / edit an organization.']
+          errors: ['Creating organization is not allowed.']
         }
       end
 
-      # Case: temporary special case for storefronts - want to allow any logged in user to create one
-      # Look for an existing org before creating a new one
-      if has_storefront
-        organization = Organization.first_duplicate(name, slug)
-      else
-        organization = Organization.find_by(slug:)
-        unless an_admin || an_org_owner(organization&.id)
-          return {
-            organization: nil,
-            errors: ['Must be admin or owner to create / edit an organization.']
-          }
-        end
-      end
-
-      creating_record = organization.nil?
-      # Case: non admin and non owner user are only allowed creating new storefront, not editing it
-      if has_storefront && !an_admin && !an_org_owner(organization&.id)
-        unless creating_record
-          return {
-            organization: nil,
-            errors: ["User are not allowed to edit existing organization record."]
-          }
-        end
-
-        _email_user, email_host = current_user.email.split('@')
-        unless website.include?(email_host)
-          return {
-            organization: nil,
-            errors: ["User must have matching email host with organization's website."]
-          }
-        end
+      if !organization.nil? && !organization_policy.edit_allowed?
+        return {
+          organization: nil,
+          errors: ['Editing organization is not allowed.']
+        }
       end
 
       if organization.nil?
@@ -104,9 +80,10 @@ module Mutations
         organization.when_endorsed = timestamp
       end
 
+      creating_record = organization.new_record?
+
       organization.is_mni = is_mni unless is_mni.nil?
       organization.endorser_level = endorser_level unless endorser_level.nil?
-
       organization.has_storefront = has_storefront unless has_storefront.nil?
 
       successful_operation = false
@@ -118,7 +95,7 @@ module Mutations
         # Only assigning ownership when the user is creating organization and not yet owning organization
         if creating_record && has_storefront && !an_admin && !an_org_owner(organization&.id)
           current_user.organization_id = organization.id
-          current_user.roles << User.user_roles[:org_user]
+          current_user.roles << User.user_roles[:organization_owner]
           if current_user.save!
             puts "Assigning '#{organization.name}' ownership to: '#{current_user.email}'."
           end

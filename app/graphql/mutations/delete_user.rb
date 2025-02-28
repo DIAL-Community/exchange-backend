@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      user = User.find_by(id:)
+      user_policy = Pundit.policy(context[:current_user], user || User.new)
+      if user.nil? || !user_policy.delete_allowed?
         return {
           user: nil,
-          errors: ['Must be admin to delete a user.']
+          errors: ['Deleting user is not allowed.']
         }
       end
 
-      user = User.find_by(id:)
       if user.destroy
         # Successful deletion, return the deleted user with no errors
         {

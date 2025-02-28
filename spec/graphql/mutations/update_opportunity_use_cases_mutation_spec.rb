@@ -37,8 +37,8 @@ RSpec.describe(Mutations::UpdateOpportunityUseCases, type: :graphql) do
       contact_name: 'Fake Name',
       contact_email: 'fake@email.com'
     )
-    first_use_case = create(:use_case, slug: 'first_use_case', name: 'First UseCase')
-    second_use_case = create(:use_case, slug: 'second_use_case', name: 'Second UseCase')
+    first_use_case = create(:use_case, slug: 'first-use-case', name: 'First Use Case')
+    second_use_case = create(:use_case, slug: 'second-use-case', name: 'Second Use Case')
     admin_user = create(:user, email: 'user@gmail.com', roles: [:admin])
 
     result = execute_graphql_as_user(
@@ -75,8 +75,8 @@ RSpec.describe(Mutations::UpdateOpportunityUseCases, type: :graphql) do
       contact_name: 'Fake Name',
       contact_email: 'fake@email.com'
     )
-    first_use_case = create(:use_case, slug: 'first_use_case', name: 'First UseCase')
-    second_use_case = create(:use_case, slug: 'second_use_case', name: 'Second UseCase')
+    first_use_case = create(:use_case, slug: 'first-use-case', name: 'First Use Case')
+    second_use_case = create(:use_case, slug: 'second-use-case', name: 'Second Use Case')
     standard_user = create(:user, email: 'user@gmail.com', roles: [:user])
 
     result = execute_graphql_as_user(
@@ -92,7 +92,7 @@ RSpec.describe(Mutations::UpdateOpportunityUseCases, type: :graphql) do
       expect(result['data']['updateOpportunityUseCases']['opportunity'])
         .to(eq(nil))
       expect(result['data']['updateOpportunityUseCases']['errors'])
-        .to(eq(['Must have proper rights to update an opportunity']))
+        .to(eq(['Editing opportunity is not allowed.']))
     end
   end
 end

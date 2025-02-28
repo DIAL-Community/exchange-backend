@@ -13,14 +13,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(indicators_data:, slug:)
-      unless an_admin
+      product = Product.find_by(slug:)
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? || !product_policy.edit_allowed?
         return {
           product: nil,
-          errors: ['Must be admin to update a product']
+          errors: ['Editing product is not allowed.']
         }
       end
-
-      product = Product.find_by(slug:)
 
       indicators_data.each do |indicator_data|
         category_indicator = CategoryIndicator.find_by(slug: indicator_data['category_indicator_slug'])

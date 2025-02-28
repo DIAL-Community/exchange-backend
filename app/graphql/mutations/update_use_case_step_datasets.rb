@@ -9,14 +9,14 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(dataset_slugs:, slug:)
-      unless an_admin || a_content_editor
+      use_case_step = UseCaseStep.find_by(slug:)
+      use_case_step_policy = Pundit.policy(context[:current_user], use_case_step || UseCaseStep.new)
+      if use_case_step.nil? || !use_case_step_policy.edit_allowed?
         return {
           use_case_step: nil,
-          errors: ['Must be admin or content editor to update use case step']
+          errors: ['Editing use case step is not allowed.']
         }
       end
-
-      use_case_step = UseCaseStep.find_by(slug:)
 
       use_case_step.datasets = []
       if !dataset_slugs.nil? && !dataset_slugs.empty?

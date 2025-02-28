@@ -7,13 +7,21 @@ class CandidateOrganizationPolicy < ApplicationPolicy
     super(user, record)
   end
 
-  def create_allowed?
-    return false if user.nil?
-
+  def available?
     true
   end
 
-  def mod_allowed?
+  def create_allowed?
+    !user.nil?
+  end
+
+  def edit_allowed?
+    return false if user.nil?
+
+    user.roles.include?(User.user_roles[:admin])
+  end
+
+  def delete_allowed?
     return false if user.nil?
 
     user.roles.include?(User.user_roles[:admin])
@@ -22,6 +30,6 @@ class CandidateOrganizationPolicy < ApplicationPolicy
   def view_allowed?
     return false if user.nil?
 
-    true
+    user.roles.include?(User.user_roles[:admin])
   end
 end

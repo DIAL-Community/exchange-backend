@@ -16,21 +16,29 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug: nil, description: nil)
-      unless an_admin
+      # Find the correct policy
+      country = Country.find_by(name:)
+      country = Country.find_by(slug:) if country.nil? && !slug.nil?
+      country_policy = Pundit.policy(context[:current_user], country || Contact.new)
+
+      if country.nil? && !country_policy.create_allowed?
         return {
           country: nil,
-          errors: ['Must be admin to create a country.']
+          errors: ['Creating / editing country is not allowed.']
         }
       end
 
-      # Find existing country record.
-      country = Country.find_by(name:)
-      country = Country.find_by(slug:) if country.nil? && !slug.nil?
+      if !country.nil? && !country_policy.edit_allowed?
+        return {
+          country: nil,
+          errors: ['Creating / editing country is not allowed.']
+        }
+      end
 
       # Read our country lookup YAML file. The file will have the 3 alphas country code.
-      country_lookup_data = YAML.load_file('config/country_lookup.yml')
+      country_lookup_data = YAML.load_file('data/yaml/country-lookup.yml')
 
-      google_auth_key = Rails.application.secrets.google_api_key
+      google_auth_key = Rails.application.credentials.google_api_key
       country_data = JSON.parse(geocode_with_google(name, name, google_auth_key))
 
       # After all the reverse geocode, we still can't find country?

@@ -47,7 +47,7 @@ RSpec.describe(Mutations::DeleteResourceTopic, type: :graphql) do
       expect(result['data']['deleteResourceTopic']['resourceTopic'])
         .to(be(nil))
       expect(result['data']['deleteResourceTopic']['errors'])
-        .to(eq(["Must be admin to delete a resource topic."]))
+        .to(eq(["Deleting resource topic is not allowed."]))
     end
   end
 end

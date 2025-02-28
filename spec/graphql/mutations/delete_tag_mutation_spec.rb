@@ -19,9 +19,10 @@ RSpec.describe(Mutations::DeleteTag, type: :graphql) do
 
   it 'is successful - user is logged in as admin' do
     create(:tag, id: 1000, name: 'Some Tag', slug: 'some-tag')
-    expect_any_instance_of(Mutations::DeleteTag).to(receive(:an_admin).and_return(true))
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
 
-    result = execute_graphql(
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { id: '1000' },
     )
@@ -46,7 +47,7 @@ RSpec.describe(Mutations::DeleteTag, type: :graphql) do
       expect(result['data']['deleteTag']['tag'])
         .to(be(nil))
       expect(result['data']['deleteTag']['errors'])
-        .to(eq(["Must be admin to delete a tag."]))
+        .to(eq(["Deleting tag is not allowed."]))
     end
   end
 end

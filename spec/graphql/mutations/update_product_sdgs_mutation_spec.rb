@@ -33,9 +33,11 @@ RSpec.describe(Mutations::UpdateProductSdgs, type: :graphql) do
                       sustainable_development_goals: [])
     create(:sustainable_development_goal, slug: 'sdg_2', name: 'SDG 2')
     create(:sustainable_development_goal, slug: 'sdg_3', name: 'SDG 3')
-    expect_any_instance_of(Mutations::UpdateProductSdgs).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { sdgSlugs: ['sdg_2', 'sdg_3'], slug: 'some-name', mappingStatus: 'VALIDATED' },
     )
@@ -61,10 +63,9 @@ RSpec.describe(Mutations::UpdateProductSdgs, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateProductSdgs']['product'])
-        .to(eq(nil))
+      expect(result['data']['updateProductSdgs']['product']).to(eq(nil))
       expect(result['data']['updateProductSdgs']['errors'])
-        .to(eq(['Must be admin or product owner to update a product']))
+        .to(eq(['Editing product is not allowed.']))
     end
   end
 end

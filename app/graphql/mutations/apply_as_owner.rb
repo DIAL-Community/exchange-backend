@@ -13,7 +13,9 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(entity:, entity_id:)
-      if context[:current_user].nil?
+      # Find the correct policy
+      candidate_role_policy = Pundit.policy(context[:current_user], CandidateRole.new)
+      if !candidate_role_policy.create_allowed?
         return {
           candidate_role: nil,
           errors: ['Must be logged in to apply as owner']
@@ -36,7 +38,7 @@ module Mutations
       end
 
       if entity == 'PRODUCT'
-        role = 'product_user'
+        role = 'product_owner'
         candidate_role = CandidateRole.find_by(
           email: context[:current_user].email,
           roles: [role],
@@ -44,7 +46,7 @@ module Mutations
           rejected: nil
         )
       elsif entity == 'ORGANIZATION'
-        role = 'org_user'
+        role = 'organization_owner'
         candidate_role = CandidateRole.find_by(
           email: context[:current_user].email,
           roles: [role],

@@ -6,7 +6,8 @@ class OrganizationProduct < ApplicationRecord
   belongs_to :organization
   belongs_to :product
 
-  enum org_type: { owner: 'owner', maintainer: 'maintainer', funder: 'funder', implementer: 'implementer' }
+  attribute :organization_type, :string
+  enum organization_type: { owner: 'owner', maintainer: 'maintainer', funder: 'funder', implementer: 'implementer' }
 
   after_initialize :set_default_type, if: :new_record?
   after_initialize :default_association_source, if: :auditable_association_object
@@ -21,7 +22,7 @@ class OrganizationProduct < ApplicationRecord
   end
 
   def set_default_type
-    self.org_type ||= :owner
+    self.organization_type ||= :owner
   end
 
   def audit_id_value

@@ -14,6 +14,7 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(name:, slug:, description:)
+      category = SoftwareCategory.find_by(slug:)
       unless an_admin
         return {
           category: nil,
@@ -21,7 +22,6 @@ module Mutations
         }
       end
 
-      category = SoftwareCategory.find_by(slug:)
       if category.nil?
         category = SoftwareCategory.new(name:, slug: reslug_em(name))
 

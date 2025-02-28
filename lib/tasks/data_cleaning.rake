@@ -202,12 +202,12 @@ namespace :data do
   end
 
   task associate_with_organization: :environment do
-    organization_setting = Setting.find_by(slug: Rails.configuration.settings['install_org_key'])
+    organization_setting = Setting.find_by(slug: Rails.configuration.settings['installation_organization_key'])
     if organization_setting
       installation_organization = Organization.find_by(slug: organization_setting.value)
       return if installation_organization.nil?
 
-      unassociated_users = User.where('role NOT IN (?)', %w[org_user org_product_user product_user])
+      unassociated_users = User.where('role NOT IN (?)', %w[organization_owner product_owner])
       unassociated_users.each do |user|
         # Update the organization and skip the validation.
         user.organization_id = installation_organization.id
@@ -217,19 +217,19 @@ namespace :data do
   end
 
   task update_desc: :environment do
-    bb_data = File.read('utils/building_blocks.json')
+    bb_data = File.read('data/json/building-blocks.json')
     json_bb = JSON.parse(bb_data)
     json_bb.each do |bb|
       update_bb_desc(bb['slug'], bb['description'])
     end
 
-    workflow_data = File.read('utils/workflows.json')
+    workflow_data = File.read('data/json/workflows.json')
     json_workflow = JSON.parse(workflow_data)
     json_workflow.each do |workflow|
       update_workflow_desc(workflow['slug'], workflow['description'])
     end
 
-    use_case_data = File.read('utils/use_case.json')
+    use_case_data = File.read('data/json/use-cases.json')
     json_use_case = JSON.parse(use_case_data)
     json_use_case.each do |use_case|
       update_use_case_desc(use_case['slug'], use_case['description'])
@@ -264,7 +264,7 @@ namespace :data do
   end
 
   task sdg_desc: :environment do
-    sdg_data = File.read('utils/sdgs.json')
+    sdg_data = File.read('data/json/sdgs.json')
     json_sdg = JSON.parse(sdg_data)
     json_sdg.each do |sdg|
       update_sdg_desc(sdg['code'], sdg['description'])
@@ -272,7 +272,7 @@ namespace :data do
   end
 
   task create_principles: :environment do
-    principle_data = File.read('utils/digital_principles.json')
+    principle_data = File.read('data/json/digital-principles.json')
     json_principles = JSON.parse(principle_data)
     json_principles.each do |curr_principle|
       principle = DigitalPrinciple.where(name: curr_principle['name']).first || DigitalPrinciple.new
@@ -442,7 +442,7 @@ namespace :data do
     Sector.all.update_all(is_displayable: false)
 
     dial_origin = Origin.where(slug: 'dial').first
-    sector_list = CSV.parse(File.read('./utils/sectors.csv'), headers: true)
+    sector_list = CSV.parse(File.read('./data/spreadsheet/sectors.csv'), headers: true)
     sector_list.each do |sector|
       if sector['Sub Sector'].nil?
         puts "Parent Sector: #{sector['Parent Sector'].strip}"
@@ -498,7 +498,7 @@ namespace :data do
   task remap_products: :environment do
     # Now remap products, use cases, and organizations
     # Project remapping will happen in project sync
-    sector_map = File.read('utils/sector_map.json')
+    sector_map = File.read('data/json/sector-map.json')
     sector_json = JSON.parse(sector_map)
 
     Product.all.each do |prod|
@@ -553,7 +553,7 @@ namespace :data do
   end
 
   task map_project_sectors: :environment do
-    project_list = CSV.parse(File.read('./utils/project_sectors.csv'), headers: true)
+    project_list = CSV.parse(File.read('./data/spreadsheet/project-sectors.csv'), headers: true)
     project_list.each do |project|
       curr_project = Project.find_by(name: project['Project Name'])
       next if curr_project.nil?
@@ -570,7 +570,7 @@ namespace :data do
   end
 
   task map_product_sectors: :environment do
-    product_list = CSV.parse(File.read('./utils/product_sectors.csv'), headers: true)
+    product_list = CSV.parse(File.read('./data/spreadsheet/product-sectors.csv'), headers: true)
     product_list.each do |product|
       curr_product = Product.find_by(slug: product['slug'])
       next if curr_product.nil?
@@ -589,7 +589,7 @@ namespace :data do
   task i18n_sectors: :environment do
     dial_origin = Origin.where(slug: 'dial').first
 
-    sectors = YAML.load_file('utils/sectors.yml')
+    sectors = YAML.load_file('data/yaml/sectors.yml')
     %w[es pt sw].each do |locale|
       new_sectors = YAML.load_file("utils/sectors.#{locale}.yml")
       sectors['sectors'].each_with_index do |sector, i|
@@ -678,7 +678,7 @@ namespace :data do
   end
 
   task i18n_products: :environment do
-    de_data = File.read('utils/product_desc.de.json')
+    de_data = File.read('data/json/product-description.de.json')
     de_desc = JSON.parse(de_data)
     Product.all.each do |product|
       eng_desc = ProductDescription.find_by(product_id: product.id, locale: 'en')

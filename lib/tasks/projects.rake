@@ -37,7 +37,7 @@ namespace :projects do
 
   def geocode_city(city_name)
     city_data = {}
-    google_auth_key = Rails.application.secrets.google_api_key
+    google_auth_key = Rails.application.credentials.google_api_key
 
     geocode_data = JSON.parse(geocode_with_google(city_name, nil, google_auth_key))
     geocode_results = geocode_data['results']
@@ -237,7 +237,7 @@ namespace :projects do
         next if existing_project.organizations.include?(owner_org)
 
         project_owner = ProjectOrganization.new
-        project_owner.org_type = 'owner'
+        project_owner.organization_type = 'owner'
         project_owner.project_id = existing_project.id
         project_owner.organization_id = owner_org.id
         puts 'Owning organization saved!' if project_owner.save!
@@ -251,7 +251,7 @@ namespace :projects do
         next if existing_project.organizations.include?(partner_org)
 
         project_partner = ProjectOrganization.new
-        project_partner.org_type = 'implementer'
+        project_partner.organization_type = 'implementer'
         project_partner.project_id = existing_project.id
         project_partner.organization_id = partner_org.id
         puts 'Partner organization saved!' if project_partner.save!
@@ -325,7 +325,7 @@ namespace :projects do
             proj_org = ProjectOrganization.new
             proj_org.project = curr_proj
             proj_org.organization = funder_org
-            proj_org.org_type = 'funder'
+            proj_org.organization_type = 'funder'
             proj_org.save
           end
         end
@@ -340,7 +340,7 @@ namespace :projects do
         proj_org = ProjectOrganization.new
         proj_org.project = curr_proj
         proj_org.organization = impl_org
-        proj_org.org_type = 'implementer'
+        proj_org.organization_type = 'implementer'
         proj_org.save
       end
       %w[en de fr].each do |locale|

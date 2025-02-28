@@ -17,10 +17,22 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(city_name:, province_name:, country_name:, slug:)
-      unless an_admin
+      # Find the correct policy
+      city = City.find_by(slug:)
+      city = City.find_by(name: city_name) if city.nil?
+      city_policy = Pundit.policy(context[:current_user], city || City.new)
+
+      if city.nil? && !city_policy.create_allowed?
         return {
           city: nil,
-          errors: ['Must be an admin to create / edit a city']
+          errors: ['Creating / editing city is not allowed.']
+        }
+      end
+
+      if !city.nil? && !city_policy.edit_allowed?
+        return {
+          city: nil,
+          errors: ['Creating / editing city is not allowed.']
         }
       end
 
@@ -35,7 +47,7 @@ module Mutations
       province = find_province(
         province_name,
         country.code,
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       ) if province.nil?
 
       return {
@@ -43,13 +55,11 @@ module Mutations
         errors: ['Unable to resolve province name.']
       } if province.nil?
 
-      city = City.find_by(slug:)
-      city = City.find_by(name: city_name) if city.nil?
       city = find_city(
         city_name,
         province.name,
         country.code,
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       ) if city.nil?
 
       successful_operation = !city.nil?

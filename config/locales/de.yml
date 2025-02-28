@@ -957,9 +957,8 @@ de:
         ict4sdg: ICT 4 SDG-Nutzer
         principle: Hauptnutzer
         user: Einfacher Nutzer
-        org_user: Unternehmensnutzer
-        org_product_user: Unternehmens- &amp; Produktnutzer
-        product_user: Produktnutzer
+        organization_owner: Unternehmensnutzer
+        product_owner: Produktnutzer
         mni: MNI-Nutzer
       form:
         db-backup: Dieser Nutzer wird DB-Backups erhalten.

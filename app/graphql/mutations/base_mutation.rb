@@ -4,12 +4,13 @@ module Mutations
   class BaseMutation < GraphQL::Schema::Mutation
     null true
 
-    field_class Types::BaseField
+    field_class Abstract::BaseField
     object_class Types::BaseObject
 
-    def ready?(**_args)
-      # Called with mutation args.
-      # Use keyword args such as employee_id: or **args to collect them
+    def ready?(**args)
+      unless args[:slug].nil?
+        puts "Processing record: #{args[:slug]}."
+      end
       true
     end
 

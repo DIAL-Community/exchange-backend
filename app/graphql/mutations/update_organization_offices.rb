@@ -16,11 +16,11 @@ module Mutations
 
     def resolve(offices:, slug:)
       organization = Organization.find_by(slug:)
-
-      unless an_admin || an_org_owner(organization.id)
+      organization_policy = Pundit.policy(context[:current_user], organization || Organization.new)
+      if organization.nil? || !organization_policy.edit_allowed?
         return {
           organization: nil,
-          errors: ['Must be admin or organization owner to update an organization']
+          errors: ['Editing organization is not allowed.']
         }
       end
 
@@ -62,7 +62,7 @@ module Mutations
         office['cityName'],
         office['regionName'],
         office['countryCode'],
-        Rails.application.secrets.google_api_key
+        Rails.application.credentials.google_api_key
       )
 
       province = city.province

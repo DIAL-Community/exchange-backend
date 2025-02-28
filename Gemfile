@@ -33,15 +33,12 @@ gem 'recaptcha'
 gem 'licensee'
 gem 'rubysl-open3'
 
-# Used for health check the rails app.
-gem 'okcomputer'
-
 gem "net-http"
 gem "net-smtp"
 gem "net-imap"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 7.1.5'
 
 gem 'pg'
 # Use Puma as the app server

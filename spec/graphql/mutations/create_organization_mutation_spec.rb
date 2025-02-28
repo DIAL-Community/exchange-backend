@@ -79,7 +79,12 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
 
   it 'is successful - organization owner can update organization and slug stay the same' do
     org = create(:organization, name: "Some name", slug: "some-name", website: "some.website.com")
-    owner = create(:user, email: 'user@some.website.com', roles: ['user', 'org_user'], organization_id: org.id)
+    owner = create(
+      :user,
+      email: 'user@some.website.com',
+      roles: ['user', 'organization_owner'],
+      organization_id: org.id
+    )
 
     result = execute_graphql_as_user(
       owner,
@@ -133,6 +138,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
     result = execute_graphql_as_user(
       user,
       mutation,
+      operation_name: 'CreateStorefront',
       variables: {
         slug: '',
         name: "Some storefront name",
@@ -153,7 +159,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
           "hasStorefront" => true
         }))
       expect(user.organization_id).not_to(eq(nil))
-      expect(user.roles).to(eq(['user', 'org_user']))
+      expect(user.roles).to(eq(['user', 'organization_owner']))
     end
 
     # User is now an organization owner, editing owned organization is allowed
@@ -180,7 +186,7 @@ RSpec.describe(Mutations::CreateOrganization, type: :graphql) do
           "hasStorefront" => true
         }))
       expect(user.organization_id).not_to(eq(nil))
-      expect(user.roles).to(eq(['user', 'org_user']))
+      expect(user.roles).to(eq(['user', 'organization_owner']))
     end
   end
 

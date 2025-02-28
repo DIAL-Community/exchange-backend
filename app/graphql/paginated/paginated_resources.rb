@@ -17,13 +17,10 @@ module Paginated
 
     type [Types::ResourceType], null: false
 
-    def resolve(
-      search:, show_in_wizard:, show_in_exchange:, offset_attributes:,
-      resource_types:, resource_topics:, tags:, countries:
-    )
-      if !unsecure_read_allowed && context[:current_user].nil?
-        return []
-      end
+    def resolve(search:, show_in_wizard:, show_in_exchange:, offset_attributes:, resource_types:,
+      resource_topics:, tags:, countries:)
+      # Validate access to the current entity type.
+      validate_access_to_resource(Resource.new)
 
       resources = Resource
                   .order(featured: :desc)

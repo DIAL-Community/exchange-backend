@@ -31,7 +31,7 @@ module Types
     field :use_case_description, Types::UseCaseDescriptionType, null: false,
       method: :use_case_description_localized
 
-    # First paragraph of the building block description
+    # Description without HTML tags
     field :parsed_description, String, null: true
     def parsed_description
       return if object.use_case_description_localized.nil?
@@ -40,6 +40,7 @@ module Types
       strip_links(object_description)
     end
 
+    # Description without the initial table tag at the top
     field :sanitized_description, String, null: false
     def sanitized_description
       use_case_description = object.use_case_description_localized
@@ -88,6 +89,14 @@ module Types
     end
 
     field :tags, GraphQL::Types::JSON, null: true
-    field :sector, Types::SectorType, null: false
+    field :sector, Types::SectorType, null: true
+    def sector
+      sector_slug = object.sector.slug
+      matching_sector = Sector.find_by(slug: sector_slug, locale: I18n.locale)
+      if matching_sector.nil?
+        matching_sector = Sector.find_by(slug: sector_slug, locale: 'en')
+      end
+      matching_sector
+    end
   end
 end

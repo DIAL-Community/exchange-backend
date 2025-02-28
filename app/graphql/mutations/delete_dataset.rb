@@ -8,14 +8,15 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(id:)
-      unless an_admin
+      dataset = Dataset.find_by(id:)
+      dataset_policy = DatasetPolicy.new(context[:current_user], dataset || Dataset.new)
+      if dataset.nil? || !dataset_policy.delete_allowed?
         return {
           dataset: nil,
-          errors: ['Must be admin to delete a dataset.']
+          errors: ['Deleting dataset is not allowed.']
         }
       end
 
-      dataset = Dataset.find_by(id:)
       assign_auditable_user(dataset)
       if dataset.destroy
         # Successful deletion, return the deleted dataset with no errors

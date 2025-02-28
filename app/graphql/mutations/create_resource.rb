@@ -38,16 +38,24 @@ module Mutations
     field :resource, Types::ResourceType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
+    def resolve(name:, slug:, phase:, image_url:, image_file: nil, description:, published_date:,
       show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
       resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:,
-      source_name:, source_website:, source_logo_file: nil
-    )
-      unless an_admin || a_content_editor || an_adli_admin
+      source_name:, source_website:, source_logo_file: nil)
+
+      resource = Resource.find_by(slug:)
+      resource_policy = Pundit.policy(context[:current_user], resource || Resource.new)
+      if resource.nil? && !resource_policy.create_allowed?
         return {
           resource: nil,
-          errors: ['Must be admin or content editor to create a resource.']
+          errors: ['Creating / editing resource is not allowed.']
+        }
+      end
+
+      if !resource.nil? && !resource_policy.edit_allowed?
+        return {
+          resource: nil,
+          errors: ['Creating / editing resource is not allowed.']
         }
       end
 
@@ -59,7 +67,6 @@ module Mutations
         }
       end
 
-      resource = Resource.find_by(slug:)
       if resource.nil?
         resource = Resource.new(name:, slug: reslug_em(name))
 

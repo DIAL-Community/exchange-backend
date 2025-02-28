@@ -90,7 +90,7 @@ class ProductsController < ApplicationController
     verified_captcha = Recaptcha.verify_via_api_call(
       params[:captcha],
       {
-        secret_key: Rails.application.secrets.captcha_secret_key,
+        secret_key: Rails.application.credentials.captcha_secret_key,
         skip_remote_ip: true
       }
     )

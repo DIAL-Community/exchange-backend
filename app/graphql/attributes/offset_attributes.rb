@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Attributes
-  class OffsetAttributes < Types::BaseInputObject
+  class OffsetAttributes < Abstract::BaseInputObject
     description "Input attributes for pagination"
 
     argument :limit, Integer, required: false

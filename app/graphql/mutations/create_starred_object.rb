@@ -11,10 +11,11 @@ module Mutations
     field :errors, [String], null: true
 
     def resolve(starred_object_type:, starred_object_value:, source_object_type:, source_object_value:)
-      if context[:current_user].nil?
+      starred_object_policy = Pundit.policy(context[:current_user], StarredObject.new)
+      unless starred_object_policy.create_allowed?
         return {
           starred_object: nil,
-          errors: ['Must be logged in to create starred object.']
+          errors: ['Creating starred object is not allowed.']
         }
       end
 

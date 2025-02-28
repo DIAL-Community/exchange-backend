@@ -38,7 +38,7 @@ namespace :health_sync do
         RubricCategoryDescription.delete_all
         RubricCategory.delete_all
       end
-      health_maturity = YAML.load_file('config/maturity_health.yml')
+      health_maturity = YAML.load_file('data/yaml/maturity-health.yml')
       health_maturity.each do |health_category|
         rubric_category = create_category(health_category['category'], health_category['description'])
 
@@ -62,7 +62,7 @@ namespace :health_sync do
         SoftwareFeature.delete_all
         SoftwareCategory.delete_all
       end
-      health_categories = YAML.load_file('config/software_categories.yml')
+      health_categories = YAML.load_file('data/yaml/software-categories.yml')
       health_categories.each do |health_category|
         new_category = SoftwareCategory.where(name: health_category['category']).first || SoftwareCategory.new
         new_category.name = health_category['category']
@@ -89,8 +89,8 @@ software_category_id: new_category.id).first || SoftwareFeature.new
     ENV['tenant'].nil? ? tenant_name = 'health' : tenant_name = ENV['tenant']
 
     Apartment::Tenant.switch(tenant_name) do
-      vetting_sheet = Roo::Spreadsheet.open('utils/HealthVettedSolutions.xlsx')
-      solution_sheet = Roo::Spreadsheet.open('utils/HealthSolutionsData.xlsx')
+      vetting_sheet = Roo::Spreadsheet.open('data/spreadsheet/HealthVettedSolutions.xlsx')
+      solution_sheet = Roo::Spreadsheet.open('data/spreadsheet/HealthSolutionsData.xlsx')
 
       vetting_sheet.each do |vetted_data|
         # Find the solution in the solution data

@@ -11,18 +11,11 @@ module Mutations
 
     def resolve(slug:, product_stage:)
       product = Product.find_by(slug:)
-
-      unless an_admin
+      product_policy = Pundit.policy(context[:current_user], product || Product.new)
+      if product.nil? || !product_policy.edit_allowed?
         return {
           product: nil,
-          errors: ['Must be admin to update a product stage.']
-        }
-      end
-
-      if product.nil?
-        return {
-          product: nil,
-          errors: ['Product not found.']
+          errors: ['Editing product is not allowed.']
         }
       end
 
@@ -31,7 +24,7 @@ module Mutations
       else
         return {
           product: nil,
-          errors: ['Invalid product stage']
+          errors: ['Invalid product stage.']
         }
       end
 

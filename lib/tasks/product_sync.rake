@@ -6,7 +6,7 @@ namespace :product_sync do
   desc 'Sync Digital Square implementation countries.'
   task digital_square_implementation: :environment do
     # Data pulled from: https://digitalsquare.org/global-goods-map
-    # Saved under data/digital-square-implementations.csv
+    # Saved under data/spreadsheet/digital-square-implementations.csv
 
     country = Country.find_by(name: 'United States')
     country&.update(name: 'United States of America')
@@ -59,7 +59,10 @@ namespace :product_sync do
       'Bolivia' => 'BO'
     }
 
-    implementation_entries = CSV.parse(File.read('./data/digital-square-implementations.csv'), headers: true)
+    implementation_entries = CSV.parse(
+      File.read('./data/spreadsheet/digital-square-implementations.csv'),
+      headers: true
+    )
     implementation_entries.each do |implementation_entry|
       # Countries of Implementation -> Country name
       country_name = implementation_entry[0]

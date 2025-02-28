@@ -118,7 +118,7 @@ RSpec.describe(Mutations::CreateCandidateDataset, type: :graphql) do
       expect(result['data']['createCandidateDataset']['candidateDataset'])
         .to(be(nil))
       expect(result['data']['createCandidateDataset']['errors'])
-        .to(eq(['Must be logged in to create / edit a candidate dataset']))
+        .to(eq(['Creating / editing candidate dataset is not allowed.']))
     end
   end
 end

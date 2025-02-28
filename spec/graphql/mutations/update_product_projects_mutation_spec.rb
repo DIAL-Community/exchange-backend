@@ -31,9 +31,11 @@ RSpec.describe(Mutations::UpdateProductProjects, type: :graphql) do
                      projects: [create(:project, slug: 'project_1', name: 'Project 1')])
     create(:project, slug: 'project_2', name: 'Project 2')
     create(:project, slug: 'project_3', name: 'Project 3')
-    expect_any_instance_of(Mutations::UpdateProductProjects).to(receive(:an_admin).and_return(true))
 
-    result = execute_graphql(
+    admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
+
+    result = execute_graphql_as_user(
+      admin_user,
       mutation,
       variables: { projectSlugs: ['project_2', 'project_3'], slug: 'some-name' },
     )
@@ -58,10 +60,9 @@ RSpec.describe(Mutations::UpdateProductProjects, type: :graphql) do
     )
 
     aggregate_failures do
-      expect(result['data']['updateProductProjects']['product'])
-        .to(eq(nil))
+      expect(result['data']['updateProductProjects']['product']).to(eq(nil))
       expect(result['data']['updateProductProjects']['errors'])
-        .to(eq(['Must be admin or product owner to update a product']))
+        .to(eq(['Editing product is not allowed.']))
     end
   end
 end

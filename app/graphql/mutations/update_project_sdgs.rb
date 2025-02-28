@@ -10,11 +10,11 @@ module Mutations
 
     def resolve(sdg_slugs:, slug:)
       project = Project.find_by(slug:)
-
-      unless an_admin
+      project_policy = Pundit.policy(context[:current_user], project || Project.new)
+      if project.nil? || !project_policy.edit_allowed?
         return {
           project: nil,
-          errors: ['Must be admin to update a project']
+          errors: ['Editing project is not allowed.']
         }
       end
 

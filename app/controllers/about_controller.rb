@@ -16,7 +16,8 @@ class AboutController < ApplicationController
       { "hostname": "dpi.localhost", "tenant_name": DPI_TENANT_NAME },
       { "hostname": "dpi.dial.global", "tenant_name": DPI_TENANT_NAME },
       { "hostname": "resource.dial.global", "tenant_name": DPI_TENANT_NAME },
-      { "hostname": "dpi.dial.community", "tenant_name": DPI_TENANT_NAME }
+      { "hostname": "dpi.dial.community", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "dpi.digitalexchange.dev", "tenant_name": DPI_TENANT_NAME }
     ]
 
     default_tenant = default_tenants.find { |t| t[:hostname] == URI.parse(request.referrer).hostname }
@@ -32,8 +33,15 @@ class AboutController < ApplicationController
     current_tenant = ExchangeTenant.find_by(tenant_name: Apartment::Tenant.current)
     render(json: {
       "hostname": request.referrer.blank? ? 'public' : URI.parse(request.referrer).hostname,
-      'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecure_read,
-      "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name
+      'secured': current_tenant.nil? ? false : !current_tenant.allow_unsecured_read,
+      "tenant": current_tenant.nil? ? 'public' : current_tenant.tenant_name,
+      "editable": current_tenant.nil? ? false : current_tenant.editable_landing,
+      "country": if current_tenant.nil?
+                   ''
+                 else
+                   Country.find_by(name: current_tenant.tenant_country)
+                         .as_json(only: %i[name latitude longitude])
+                 end
     })
   end
 

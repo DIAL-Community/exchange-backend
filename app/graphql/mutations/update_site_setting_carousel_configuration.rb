@@ -19,22 +19,14 @@ module Mutations
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
-    def resolve(
-      site_setting_slug:, id:, type:, name:, title:, description:, external:, image_url:,
-      destination_url:, callout_title:, style:
-    )
-      unless an_admin
-        return {
-          site_setting: nil,
-          errors: ['Must have proper rights to update a site setting object.']
-        }
-      end
-
+    def resolve(site_setting_slug:, id:, type:, name:, title:, description:, external:, image_url:,
+      destination_url:, callout_title:, style:)
       site_setting = SiteSetting.find_by(slug: site_setting_slug)
-      if site_setting.nil?
+      site_setting_policy = Pundit.policy(context[:current_user], site_setting || SiteSetting.new)
+      if site_setting.nil? || !site_setting_policy.edit_allowed?
         return {
           site_setting: nil,
-          errors: ['Correct site setting is required.']
+          errors: ['Editing site setting is not allowed.']
         }
       end
 

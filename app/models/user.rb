@@ -7,17 +7,23 @@ class User < ApplicationRecord
 
   acts_as_token_authenticatable
 
+  attribute :user_role, :string
   enum user_role: {
     admin: 'admin',
+    candidate_editor: 'candidate_editor',
+
+    mni: 'mni',
     ict4sdg: 'ict4sdg',
     principle: 'principle',
+
     user: 'user',
-    org_user: 'org_user',
-    org_product_user: 'org_product_user',
-    product_user: 'product_user',
-    mni: 'mni',
+
+    product_owner: 'product_owner',
+    organization_owner: 'organization_owner',
+
     content_writer: 'content_writer',
     content_editor: 'content_editor',
+
     adli_admin: 'adli_admin',
     adli_user: 'adli_user'
   }
@@ -120,7 +126,7 @@ class User < ApplicationRecord
 
     # Find the default organization and allow installation organization to register
     # with their email address.
-    organization_setting = Setting.find_by(slug: Rails.configuration.settings['install_org_key'])
+    organization_setting = Setting.find_by(slug: Rails.configuration.settings['installation_organization_key'])
     if organization_setting
       installation_organization = Organization.find_by(slug: organization_setting.value)
       if installation_organization && email.end_with?(installation_organization.website)
@@ -136,7 +142,7 @@ class User < ApplicationRecord
       verified = organization.website.include?(email_domain)
       if verified
         roles.delete_at(roles.index(User.user_roles[:user]) || roles.length)
-        roles.push(User.user_roles[:org_user])
+        roles.push(User.user_roles[:organization_owner])
       else
         errors.add(:organization_id, I18n.translate('view.devise.organization-nomatch'))
       end
@@ -151,7 +157,7 @@ class User < ApplicationRecord
 
     # Delete the default assigned role
     roles.delete_at(roles.index(User.user_roles[:user]) || roles.length)
-    roles.push(User.user_roles[:product_user])
+    roles.push(User.user_roles[:product_owner])
     skip_confirmation_notification!
   end
 
