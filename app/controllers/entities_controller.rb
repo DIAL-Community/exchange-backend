@@ -18,7 +18,7 @@ class EntitiesController < ApplicationController
     respond_to do |format|
       src = "/assets/images/#{params[:file].original_filename}"
       if successful_operation
-        format.json { render(json: { message: 'File processed.', src: src }, status: :ok) }
+        format.json { render(json: { message: 'File processed.', src: }, status: :ok) }
       else
         format.json { render(json: { message: 'Unable to process file correctly.' }, status: :bad_request) }
       end
