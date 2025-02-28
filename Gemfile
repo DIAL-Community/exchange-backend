@@ -62,7 +62,6 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'combine_pdf'
 gem 'pdfkit'
 
-gem 'google-cloud-translate'
 gem 'ros-apartment', require: 'apartment'
 
 gem 'amoeba'

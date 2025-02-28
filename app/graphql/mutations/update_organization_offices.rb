@@ -36,6 +36,7 @@ module Mutations
         if current_office.nil?
           current_office = Office.new(office_params)
           current_office.organization_id = organization.id
+          current_office.save
         else
           current_office.update(office_params)
         end
@@ -58,27 +59,45 @@ module Mutations
     end
 
     def generate_office_params(office)
-      city = find_city(
-        office['cityName'],
-        office['regionName'],
-        office['countryCode'],
-        Rails.application.credentials.google_api_key
+      #city = find_city(
+      #  office['cityName'],
+      #  office['regionName'],
+      #  office['countryCode'],
+      #  Rails.application.credentials.google_api_key
+      #)
+
+      country = Country.find_by(
+        'name = :param OR code = :param OR code_longer = :param OR :param = ANY(aliases)',
+        param: office['countryCode']
       )
 
-      province = city.province
-      country = province.country
+      province = Province.find_by(
+        '(name = :province_param OR :province_param = ANY(aliases)) AND country_id = :country_param',
+        province_param: office['regionName'],
+        country_param: country.id
+      ) unless country.nil?
 
-      name_string = "#{city.name}, #{province.name}, #{country.code}"
+      if province.nil? and !country.nil?
+        province = Province.new
+        province.name = office['regionName']
+        province.slug = reslug_em(province.name)
+        province.country_id = country.id unless country.nil?
+        province.latitude = office['latitude']
+        province.longitude = office['longitude']
+        province.save!
+      end
+
+      name_string = "#{office['cityName']}, #{office['regionName']}, #{office['countryCode']}"
       office_params = {
         name: name_string,
         slug: reslug_em(name_string),
 
-        province_id: province.id,
-        country_id: country.id,
+        province_id: province&.id,
+        country_id: country&.id,
 
-        city: city.name,
-        latitude: city.latitude,
-        longitude: city.longitude
+        city: office['cityName'],
+        latitude: office['latitude'],
+        longitude: office['longitude']
 
       }
       office_params

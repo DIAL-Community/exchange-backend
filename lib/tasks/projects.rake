@@ -8,7 +8,6 @@
 require 'fileutils'
 require 'modules/projects'
 require 'modules/geocode'
-require 'google/cloud/translate/v2'
 
 include Modules::Projects
 
@@ -440,6 +439,8 @@ namespace :projects do
 
   desc 'Use Google Cloud to update project translations'
   task translate_projects: :environment do |_, _params|
+=begin
+Deprecating the use of Google Translate. Identify another translation service if needed
     translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
                                                  credentials: './utils/translate-key-file.json')
 
@@ -484,9 +485,12 @@ namespace :projects do
 
       puts "Updated project: #{project.name}"
     end
+=end
   end
 
   task translate_proj_prod_org: :environment do |_, _params|
+=begin
+Deprecating the use of Google Translate. Identify another translation service if needed
     translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
                                                  credentials: './utils/translate-key-file.json')
 
@@ -538,6 +542,7 @@ namespace :projects do
         new_desc.save
       end
     end
+=end
   end
 
   task update_project_slugs: :environment do |_, _params|

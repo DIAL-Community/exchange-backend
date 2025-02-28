@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 require 'modules/slugger'
+require 'modules/geocode'
 
 module Mutations
   class CreateProject < Mutations::BaseMutation
     include Modules::Slugger
+    include Modules::Geocode
 
     argument :name, String, required: true
     argument :slug, String, required: true
@@ -14,12 +16,14 @@ module Mutations
     argument :description, String, required: true
     argument :product_id, Integer, required: false, default_value: nil
     argument :organization_id, Integer, required: false, default_value: nil
+    argument :location, GraphQL::Types::JSON, required: false, default_value: nil
     argument :country_slugs, [String], required: true
 
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, start_date:, end_date:, project_url:, description:, product_id:, organization_id:,
+    def resolve(name:, slug:, start_date:, end_date:, project_url:, description:, location:,
+        product_id:, organization_id:,
       country_slugs:)
       project = Project.find_by(slug:)
       project_policy = Pundit.policy(context[:current_user], project || Project.new)
@@ -48,6 +52,12 @@ module Mutations
                                    .first
           project.slug += generate_offset(first_duplicate)
         end
+      end
+
+      unless location.nil?
+        project.location = location['name']
+        project.latitude = location['latitude']
+        project.longitude = location['longitude']
       end
 
       project.countries = []

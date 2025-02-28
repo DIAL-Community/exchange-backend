@@ -17,6 +17,7 @@ module Types
     field :carousel_configurations, GraphQL::Types::JSON, null: false
     field :hero_card_section, GraphQL::Types::JSON, null: false
     field :menu_configurations, GraphQL::Types::JSON, null: false
+    field :site_colors, GraphQL::Types::JSON, null: false
 
     field :item_layouts, GraphQL::Types::JSON, null: false
     field :item_configurations, GraphQL::Types::JSON, null: false
