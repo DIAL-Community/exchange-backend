@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => '/api-docs'
   mount Rswag::Api::Engine => '/api-docs'
 
+  post '/entities/process-image', to: 'entities#process_image'
   post '/entities/process-file', to: 'entities#process_file'
 
   root to: redirect(path: '/api-docs')
