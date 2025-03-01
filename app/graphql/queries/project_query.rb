@@ -89,9 +89,7 @@ module Queries
 
     def resolve(search:, sectors:, products:, tags:, country:)
       projects = filter_projects(search, sectors, products, tags)
-      projects = projects.joins(:countries)
-                          .where(countries: { name: country })
-      puts "projects: #{projects.inspect}"
+      projects = projects.joins(:countries).where(countries: { name: country })
       projects
     end
 

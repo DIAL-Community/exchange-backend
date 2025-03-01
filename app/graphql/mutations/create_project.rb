@@ -22,8 +22,8 @@ module Mutations
     field :project, Types::ProjectType, null: true
     field :errors, [String], null: true
 
-    def resolve(name:, slug:, start_date:, end_date:, project_url:, description:, location:,
-        product_id:, organization_id:,
+    def resolve(name:, slug:, start_date:, end_date:, project_url:,
+      description:, location:, product_id:, organization_id:,
       country_slugs:)
       project = Project.find_by(slug:)
       project_policy = Pundit.policy(context[:current_user], project || Project.new)
