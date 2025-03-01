@@ -59,12 +59,12 @@ module Mutations
     end
 
     def generate_office_params(office)
-      #city = find_city(
+      # city = find_city(
       #  office['cityName'],
       #  office['regionName'],
       #  office['countryCode'],
       #  Rails.application.credentials.google_api_key
-      #)
+      # )
 
       country = Country.find_by(
         'name = :param OR code = :param OR code_longer = :param OR :param = ANY(aliases)',
@@ -77,7 +77,7 @@ module Mutations
         country_param: country.id
       ) unless country.nil?
 
-      if province.nil? and !country.nil?
+      if province.nil? && !country.nil?
         province = Province.new
         province.name = office['regionName']
         province.slug = reslug_em(province.name)

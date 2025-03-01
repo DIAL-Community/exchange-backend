@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class AddLocationToProjects < ActiveRecord::Migration[7.1]
   def change
     add_column(:projects, :location, :string, null: true, default: nil)
