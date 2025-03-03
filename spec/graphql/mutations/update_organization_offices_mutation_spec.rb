@@ -40,14 +40,14 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      provinceName: "Region 1",
+      regionName: "Region 1",
       countryCode: "C1",
       countryName: "Country 1",
       latitude: 93.224,
       longitude: 23.22323
     }, {
       cityName: "City 2",
-      provinceName: "Region 2",
+      regionName: "Region 2",
       countryCode: "C2",
       countryName: "Country 2",
       latitude: -28.423,
