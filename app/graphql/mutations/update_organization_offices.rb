@@ -59,7 +59,6 @@ module Mutations
     end
 
     def generate_office_params(office)
-
       # Note, that we are using 'regionName'. This is actually the province, but it is coming
       # from the geocoding as regionName
 
