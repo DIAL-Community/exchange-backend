@@ -73,13 +73,13 @@ module Mutations
 
       province = Province.find_by(
         '(name = :province_param OR :province_param = ANY(aliases)) AND country_id = :country_param',
-        province_param: office['regionName'],
+        province_param: office['provinceName'],
         country_param: country.id
       ) unless country.nil?
 
       if province.nil? && !country.nil?
         province = Province.new
-        province.name = office['regionName']
+        province.name = office['provinceName']
         province.slug = reslug_em(province.name)
         province.country_id = country.id unless country.nil?
         province.latitude = office['latitude']
@@ -87,7 +87,7 @@ module Mutations
         province.save!
       end
 
-      name_string = "#{office['cityName']}, #{office['regionName']}, #{office['countryCode']}"
+      name_string = "#{office['cityName']}, #{office['provinceName']}, #{office['countryCode']}"
       office_params = {
         name: name_string,
         slug: reslug_em(name_string),
