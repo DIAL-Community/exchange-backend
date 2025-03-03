@@ -59,12 +59,9 @@ module Mutations
     end
 
     def generate_office_params(office)
-      # city = find_city(
-      #  office['cityName'],
-      #  office['regionName'],
-      #  office['countryCode'],
-      #  Rails.application.credentials.google_api_key
-      # )
+
+      # Note, that we are using 'regionName'. This is actually the province, but it is coming
+      # from the geocoding as regionName
 
       country = Country.find_by(
         'name = :param OR code = :param OR code_longer = :param OR :param = ANY(aliases)',
@@ -73,13 +70,13 @@ module Mutations
 
       province = Province.find_by(
         '(name = :province_param OR :province_param = ANY(aliases)) AND country_id = :country_param',
-        province_param: office['provinceName'],
+        province_param: office['regionName'],
         country_param: country.id
       ) unless country.nil?
 
       if province.nil? && !country.nil?
         province = Province.new
-        province.name = office['provinceName']
+        province.name = office['regionName']
         province.slug = reslug_em(province.name)
         province.country_id = country.id unless country.nil?
         province.latitude = office['latitude']
@@ -87,7 +84,7 @@ module Mutations
         province.save!
       end
 
-      name_string = "#{office['cityName']}, #{office['provinceName']}, #{office['countryCode']}"
+      name_string = "#{office['cityName']}, #{office['regionName']}, #{office['countryCode']}"
       office_params = {
         name: name_string,
         slug: reslug_em(name_string),
