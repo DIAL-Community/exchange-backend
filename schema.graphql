@@ -1114,13 +1114,13 @@ type Mutation {
   createPlaybook(audience: String = "", author: String, cover: Upload, draft: Boolean! = true, name: String!, outcomes: String = "", overview: String!, owner: String!, slug: String!, tags: [String!] = []): CreatePlaybookPayload
   createProduct(aliases: JSON, commercialProduct: Boolean = false, contact: String, description: String!, extraAttributes: [ExtraAttribute!], featured: Boolean = false, govStackEntity: Boolean = false, hostingModel: String = null, imageFile: Upload, name: String!, pricingDetails: String = null, pricingModel: String = null, pricingUrl: String = null, productStage: String, slug: String!, website: String): CreateProductPayload
   createProductRepository(absoluteUrl: String!, description: String!, mainRepository: Boolean!, name: String!, productSlug: String!, slug: String!): CreateProductRepositoryPayload
-  createProject(countrySlugs: [String!]!, description: String!, endDate: ISO8601Date = null, name: String!, organizationId: Int = null, productId: Int = null, projectUrl: String = null, slug: String!, startDate: ISO8601Date = null): CreateProjectPayload
+  createProject(countrySlugs: [String!]!, description: String!, endDate: ISO8601Date = null, location: JSON = null, name: String!, organizationId: Int = null, productId: Int = null, projectUrl: String = null, slug: String!, startDate: ISO8601Date = null): CreateProjectPayload
   createRegion(aliases: JSON = [], description: String!, name: String!, slug: String!): CreateRegionPayload
   createResource(authors: [JSON!] = [], description: String = null, featured: Boolean, imageFile: Upload, imageUrl: String = null, linkDescription: String = null, name: String!, organizationSlug: String = null, phase: String = "", publishedDate: ISO8601Date!, resourceFile: Upload, resourceLink: String = null, resourceTopics: [String!] = [], resourceType: String = null, showInExchange: Boolean, showInWizard: Boolean, slug: String!, sourceLogoFile: Upload, sourceName: String = null, sourceWebsite: String = null): CreateResourcePayload
   createResourceTopic(description: String, imageFile: Upload, name: String!, parentTopicId: ID, slug: String!): CreateResourceTopicPayload
   createRubricCategory(description: String!, name: String!, slug: String!, weight: Float!): CreateRubricCategoryPayload
   createSector(isDisplayable: Boolean!, locale: String = null, name: String!, originId: Int = null, parentSectorId: Int = null, slug: String!): CreateSectorPayload
-  createSiteSetting(defaultSetting: Boolean!, description: String!, enableMarketplace: Boolean!, exchangeLogoUrl: String!, faviconUrl: String!, name: String!, openGraphLogoUrl: String!, slug: String!): CreateSiteSettingPayload
+  createSiteSetting(defaultSetting: Boolean!, description: String!, enableMarketplace: Boolean!, exchangeLogoUrl: String!, faviconUrl: String!, name: String!, openGraphLogoUrl: String!, siteColors: JSON, slug: String!): CreateSiteSettingPayload
   createSpreadsheetData(assoc: String = "", spreadsheetData: JSON = {}, spreadsheetType: String!): CreateSpreadsheetDataPayload
   createStarredObject(sourceObjectType: String!, sourceObjectValue: String!, starredObjectType: String!, starredObjectValue: String!): CreateStarredObjectPayload
   createSync(description: String!, destination: String!, name: String!, slug: String!, source: String!, synchronizedModels: [String!]!): CreateSyncPayload
@@ -1656,6 +1656,9 @@ type Project {
   countries: [Country!]
   endDate: ISO8601Date
   id: ID!
+  latitude: Float
+  location: JSON
+  longitude: Float
   name: String!
   organizations: [Organization!]
   origin: Origin
@@ -1836,6 +1839,7 @@ type Query {
   sdgTarget(slug: String!): SustainableDevelopmentGoalTarget
   sdgTargets(search: String = ""): [SustainableDevelopmentGoalTarget!]!
   sdgs(search: String = ""): [SustainableDevelopmentGoal!]!
+  searchCountryProjects(country: String! = "", products: [String!] = [], search: String = "", sectors: [String!] = [], tags: [String!] = []): [Project!]!
   searchHandbook(search: String!, slug: String!): [HandbookSearchPage!]!
   searchMoves(
     """
@@ -2104,6 +2108,7 @@ type SiteSetting {
   menuConfigurations: JSON!
   name: String!
   openGraphLogoUrl: String!
+  siteColors: JSON!
   slug: String!
 }
 
