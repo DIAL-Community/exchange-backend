@@ -8,7 +8,6 @@
 require 'fileutils'
 require 'modules/projects'
 require 'modules/geocode'
-require 'google/cloud/translate/v2'
 
 include Modules::Projects
 
@@ -440,104 +439,106 @@ namespace :projects do
 
   desc 'Use Google Cloud to update project translations'
   task translate_projects: :environment do |_, _params|
-    translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
-                                                 credentials: './utils/translate-key-file.json')
-
-    projects = Project.all
-    projects.each do |project|
-      project_desc = ProjectDescription.where(project_id: project, locale: 'en').first
-      next if project_desc.nil?
-
-      language = translate.detect(project_desc.description)
-      case language.results[0].language
-      when 'en'
-        puts 'Project desc is English'
-        german_desc = ProjectDescription.where(project_id: project, locale: 'de').first || ProjectDescription.new
-        german_desc.locale = 'de'
-        german_desc.project_id = project.id
-        de_translation = translate.translate(project_desc.description, to: 'de')
-        german_desc.description = de_translation
-        german_desc.save
-
-        french_desc = ProjectDescription.where(project_id: project, locale: 'fr').first || ProjectDescription.new
-        french_desc.locale = 'fr'
-        french_desc.project_id = project.id
-        fr_translation = translate.translate(project_desc.description, to: 'fr')
-        french_desc.description = fr_translation
-        french_desc.save
-      when 'de'
-        puts 'Project desc is German'
-        english_desc = ProjectDescription.where(project_id: project, locale: 'en').first || ProjectDescription.new
-        english_desc.locale = 'en'
-        english_desc.project_id = project.id
-        en_translation = translate.translate(project_desc.description, to: 'en')
-        english_desc.description = en_translation
-        english_desc.save
-
-        french_desc = ProjectDescription.where(project_id: project, locale: 'fr').first || ProjectDescription.new
-        french_desc.locale = 'fr'
-        french_desc.project_id = project.id
-        fr_translation = translate.translate(project_desc.description, to: 'fr')
-        french_desc.description = fr_translation
-        french_desc.save
-      end
-
-      puts "Updated project: #{project.name}"
-    end
+    # Deprecating the use of Google Translate. Identify another translation service if needed
+    #     translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
+    #                                                  credentials: './utils/translate-key-file.json')
+    #
+    #     projects = Project.all
+    #     projects.each do |project|
+    #       project_desc = ProjectDescription.where(project_id: project, locale: 'en').first
+    #       next if project_desc.nil?
+    #
+    #       language = translate.detect(project_desc.description)
+    #       case language.results[0].language
+    #       when 'en'
+    #         puts 'Project desc is English'
+    #         german_desc = ProjectDescription.where(project_id: project, locale: 'de').first || ProjectDescription.new
+    #         german_desc.locale = 'de'
+    #         german_desc.project_id = project.id
+    #         de_translation = translate.translate(project_desc.description, to: 'de')
+    #         german_desc.description = de_translation
+    #         german_desc.save
+    #
+    #         french_desc = ProjectDescription.where(project_id: project, locale: 'fr').first || ProjectDescription.new
+    #         french_desc.locale = 'fr'
+    #         french_desc.project_id = project.id
+    #         fr_translation = translate.translate(project_desc.description, to: 'fr')
+    #         french_desc.description = fr_translation
+    #         french_desc.save
+    #       when 'de'
+    #         puts 'Project desc is German'
+    #         english_desc = ProjectDescription.where(project_id: project, locale: 'en').first || ProjectDescription.new
+    #         english_desc.locale = 'en'
+    #         english_desc.project_id = project.id
+    #         en_translation = translate.translate(project_desc.description, to: 'en')
+    #         english_desc.description = en_translation
+    #         english_desc.save
+    #
+    #         french_desc = ProjectDescription.where(project_id: project, locale: 'fr').first || ProjectDescription.new
+    #         french_desc.locale = 'fr'
+    #         french_desc.project_id = project.id
+    #         fr_translation = translate.translate(project_desc.description, to: 'fr')
+    #         french_desc.description = fr_translation
+    #         french_desc.save
+    #       end
+    #
+    #       puts "Updated project: #{project.name}"
+    #     end
   end
 
   task translate_proj_prod_org: :environment do |_, _params|
-    translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
-                                                 credentials: './utils/translate-key-file.json')
-
-    projects = Project.all
-    projects.each do |project|
-      puts "Translating #{project.name}"
-      project_desc = ProjectDescription.where(project_id: project, locale: 'en').first
-      next if project_desc.nil?
-
-      %w[es pt sw].each do |locale|
-        new_desc = ProjectDescription.where(project_id: project, locale:).first || ProjectDescription.new
-        new_desc.locale = locale
-        new_desc.project_id = project.id
-        new_translation = translate.translate(project_desc.description, to: locale)
-        new_desc.description = new_translation
-        new_desc.save
-      end
-    end
-
-    products = Product.all
-    products.each do |product|
-      puts "Translating #{product.name}"
-      product_desc = ProductDescription.where(product_id: product, locale: 'en').first
-      next if product_desc.nil?
-
-      %w[es pt sw].each do |locale|
-        new_desc = ProductDescription.where(product_id: product, locale:).first || ProductDescription.new
-        new_desc.locale = locale
-        new_desc.product_id = product.id
-        new_translation = translate.translate(product_desc.description, to: locale)
-        new_desc.description = new_translation
-        new_desc.save
-      end
-    end
-
-    orgs = Organization.all
-    orgs.each do |org|
-      puts "Translating #{org.name}"
-      org_desc = OrganizationDescription.where(organization_id: org, locale: 'en').first
-      next if org_desc.nil?
-
-      %w[es pt sw].each do |locale|
-        new_desc = OrganizationDescription.where(organization_id: org,
-                                                 locale:).first || OrganizationDescription.new
-        new_desc.locale = locale
-        new_desc.organization_id = org.id
-        new_translation = translate.translate(org_desc.description, to: locale)
-        new_desc.description = new_translation
-        new_desc.save
-      end
-    end
+    # Deprecating the use of Google Translate. Identify another translation service if needed
+    #     translate = Google::Cloud::Translate::V2.new(project_id: 'molten-plate-329021',
+    #                                                  credentials: './utils/translate-key-file.json')
+    #
+    #     projects = Project.all
+    #     projects.each do |project|
+    #       puts "Translating #{project.name}"
+    #       project_desc = ProjectDescription.where(project_id: project, locale: 'en').first
+    #       next if project_desc.nil?
+    #
+    #       %w[es pt sw].each do |locale|
+    #         new_desc = ProjectDescription.where(project_id: project, locale:).first || ProjectDescription.new
+    #         new_desc.locale = locale
+    #         new_desc.project_id = project.id
+    #         new_translation = translate.translate(project_desc.description, to: locale)
+    #         new_desc.description = new_translation
+    #         new_desc.save
+    #       end
+    #     end
+    #
+    #     products = Product.all
+    #     products.each do |product|
+    #       puts "Translating #{product.name}"
+    #       product_desc = ProductDescription.where(product_id: product, locale: 'en').first
+    #       next if product_desc.nil?
+    #
+    #       %w[es pt sw].each do |locale|
+    #         new_desc = ProductDescription.where(product_id: product, locale:).first || ProductDescription.new
+    #         new_desc.locale = locale
+    #         new_desc.product_id = product.id
+    #         new_translation = translate.translate(product_desc.description, to: locale)
+    #         new_desc.description = new_translation
+    #         new_desc.save
+    #       end
+    #     end
+    #
+    #     orgs = Organization.all
+    #     orgs.each do |org|
+    #       puts "Translating #{org.name}"
+    #       org_desc = OrganizationDescription.where(organization_id: org, locale: 'en').first
+    #       next if org_desc.nil?
+    #
+    #       %w[es pt sw].each do |locale|
+    #         new_desc = OrganizationDescription.where(organization_id: org,
+    #                                                  locale:).first || OrganizationDescription.new
+    #         new_desc.locale = locale
+    #         new_desc.organization_id = org.id
+    #         new_translation = translate.translate(org_desc.description, to: locale)
+    #         new_desc.description = new_translation
+    #         new_desc.save
+    #       end
+    #     end
   end
 
   task update_project_slugs: :environment do |_, _params|

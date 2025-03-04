@@ -2755,7 +2755,9 @@ CREATE TABLE dsq.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL,
+    editable_landing boolean DEFAULT false,
+    tenant_country character varying
 );
 
 
@@ -4377,7 +4379,10 @@ CREATE TABLE dsq.projects (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     project_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    location character varying,
+    latitude double precision,
+    longitude double precision
 );
 
 
@@ -7111,7 +7116,9 @@ CREATE TABLE fao.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL,
+    editable_landing boolean DEFAULT false,
+    tenant_country character varying
 );
 
 
@@ -8733,7 +8740,10 @@ CREATE TABLE fao.projects (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     project_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    location character varying,
+    latitude double precision,
+    longitude double precision
 );
 
 
@@ -11467,7 +11477,9 @@ CREATE TABLE government.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL,
+    editable_landing boolean DEFAULT false,
+    tenant_country character varying
 );
 
 
@@ -13089,7 +13101,10 @@ CREATE TABLE government.projects (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     project_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    location character varying,
+    latitude double precision,
+    longitude double precision
 );
 
 
@@ -15823,7 +15838,9 @@ CREATE TABLE health.exchange_tenants (
     postgres_config jsonb,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    allow_unsecured_read boolean DEFAULT true NOT NULL
+    allow_unsecured_read boolean DEFAULT true NOT NULL,
+    editable_landing boolean DEFAULT false,
+    tenant_country character varying
 );
 
 
@@ -17445,7 +17462,10 @@ CREATE TABLE health.projects (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     project_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    location character varying,
+    latitude double precision,
+    longitude double precision
 );
 
 
@@ -21803,7 +21823,10 @@ CREATE TABLE public.projects (
     name character varying NOT NULL,
     slug character varying NOT NULL,
     project_url character varying,
-    tags character varying[] DEFAULT '{}'::character varying[]
+    tags character varying[] DEFAULT '{}'::character varying[],
+    location character varying,
+    latitude double precision,
+    longitude double precision
 );
 
 
@@ -22467,7 +22490,8 @@ CREATE TABLE public.site_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
-    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -46216,6 +46240,8 @@ ALTER TABLE ONLY public.workflows_building_blocks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250228175720'),
+('20250227182034'),
 ('20250226213111'),
 ('20250220151010'),
 ('20250110153801'),

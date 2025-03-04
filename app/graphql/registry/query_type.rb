@@ -29,6 +29,7 @@ module Registry
     field :project, resolver: Queries::ProjectQuery
     field :projects, resolver: Queries::ProjectsQuery
     field :search_projects, resolver: Queries::SearchProjectsQuery
+    field :search_country_projects, resolver: Queries::SearchCountryProjectsQuery
 
     field :building_block, resolver: Queries::BuildingBlockQuery
     field :building_blocks, resolver: Queries::BuildingBlocksQuery
