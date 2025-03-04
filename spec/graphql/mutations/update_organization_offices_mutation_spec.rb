@@ -40,14 +40,18 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      provinceName: "Region 1",
+      regionName: "Region 1",
       countryCode: "C1",
-      countryName: "Country 1"
+      countryName: "Country 1",
+      latitude: 93.224,
+      longitude: 23.22323
     }, {
       cityName: "City 2",
-      provinceName: "Region 2",
+      regionName: "Region 2",
       countryCode: "C2",
-      countryName: "Country 2"
+      countryName: "Country 2",
+      latitude: -28.423,
+      longitude: -100.77
     }]
 
     admin_user = create(:user, email: 'admin-user@gmail.com', roles: ['admin'])
@@ -85,16 +89,23 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
     create(:city, name: "City 3", id: 1, province: province_3)
     create(:city, name: "City 4", id: 2, province: province_4)
 
+    # Note, that we are using 'regionName'. This is actually the province, but it is coming
+    # from the geocoding as regionName
+
     offices_data = [{
       cityName: "City 3",
-      provinceName: "Region 3",
+      regionName: "Region 3",
       countryCode: "C3",
-      countryName: "Country 3"
+      countryName: "Country 3",
+      latitude: 93.224,
+      longitude: 23.22323
     }, {
       cityName: "City 4",
-      provinceName: "Region 4",
+      regionName: "Region 4",
       countryCode: "C4",
-      countryName: "Country 4"
+      countryName: "Country 4",
+      latitude: -28.423,
+      longitude: -100.77
     }]
 
     owner_user = create(
@@ -131,14 +142,18 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      provinceName: "Region 1",
+      regionName: "Region 1",
       countryCode: "C1",
-      countryName: "Country 1"
+      countryName: "Country 1",
+      latitude: 93.224,
+      longitude: 23.22323
     }, {
       cityName: "City 2",
-      provinceName: "Region 2",
+      regionName: "Region 2",
       countryCode: "C2",
-      countryName: "Country 2"
+      countryName: "Country 2",
+      latitude: -28.423,
+      longitude: -100.77
     }]
 
     result = execute_graphql(
@@ -166,14 +181,18 @@ RSpec.describe(Mutations::UpdateOrganizationOffices, type: :graphql) do
 
     offices_data = [{
       cityName: "City 1",
-      provinceName: "Region 1",
+      regionName: "Region 1",
       countryCode: "C1",
-      countryName: "Country 1"
+      countryName: "Country 1",
+      latitude: 93.224,
+      longitude: 23.22323
     }, {
       cityName: "City 2",
-      provinceName: "Region 2",
+      regionName: "Region 2",
       countryCode: "C2",
-      countryName: "Country 2"
+      countryName: "Country 2",
+      latitude: -28.423,
+      longitude: -100.77
     }]
 
     result = execute_graphql(
