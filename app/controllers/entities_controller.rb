@@ -1,10 +1,32 @@
 # frozen_string_literal: true
 
 class EntitiesController < ApplicationController
-  acts_as_token_authentication_handler_for User, only: [:process_file]
+  acts_as_token_authentication_handler_for User, only: [:process_file, :process_image]
+
+  def process_image
+    logger.info('Start of processing image file.')
+    image_uploader = ImageUploader.new(params[:file].original_filename)
+
+    successful_operation = false
+    begin
+      image_uploader.store!(params[:file])
+      successful_operation = true
+    rescue StandardError => e
+      logger.error("Unable to save file. Message: #{e}.")
+    end
+
+    respond_to do |format|
+      src = "/assets/images/#{params[:file].original_filename}"
+      if successful_operation
+        format.json { render(json: { message: 'File processed.', src: }, status: :ok) }
+      else
+        format.json { render(json: { message: 'Unable to process file correctly.' }, status: :bad_request) }
+      end
+    end
+  end
 
   def process_file
-    logger.info('Start of processing entity file ...')
+    logger.info('Start of processing entity file.')
 
     entity_uploader = EntityUploader.new(params[:entity_file].original_filename, current_user)
     begin
@@ -24,11 +46,13 @@ class EntitiesController < ApplicationController
     end
 
     captcha = params[:captcha]
-    captcha_verified = Recaptcha.verify_via_api_call(captcha,
-                                                     {
-                                                       secret_key: Rails.application.credentials.captcha_secret_key,
-                                                       skip_remote_ip: true
-                                                     })
+    captcha_verified = Recaptcha.verify_via_api_call(
+      captcha,
+      {
+        secret_key: Rails.application.credentials.captcha_secret_key,
+        skip_remote_ip: true
+      }
+    )
 
     respond_to do |format|
       if captcha_verified && entity_object.save

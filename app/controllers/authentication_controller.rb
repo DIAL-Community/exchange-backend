@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AuthenticationController < Devise::SessionsController
-  acts_as_token_authentication_handler_for User, only: %i[fetch_token invalidate_token]
+  acts_as_token_authentication_handler_for User, only: %i[invalidate_token]
   prepend_before_action :allow_params_authentication!, only: %i[sign_in_ux sign_in_auth0]
   skip_before_action :verify_authenticity_token, only: %i[sign_in_ux sign_in_auth0]
 
@@ -12,9 +12,7 @@ class AuthenticationController < Devise::SessionsController
     respond_to do |format|
       if user.save
         AdminMailer
-          .with(user: {
-            email: user.email
-          })
+          .with(user: { email: user.email })
           .notify_user_request
           .deliver_now
 
@@ -58,13 +56,8 @@ class AuthenticationController < Devise::SessionsController
 
     if user.nil?
       respond_to do |format|
-        status = :ok
-        json = new_user_response(params['user']['email'])
         format.json do
-          render(
-            json:,
-            status:
-          )
+          render(json: new_user_response(params['user']['email']), status: :ok)
         end
       end
     else
@@ -78,10 +71,7 @@ class AuthenticationController < Devise::SessionsController
           json = ok_response(user, organization)
         end
         format.json do
-          render(
-            json:,
-            status:
-          )
+          render(json:, status:)
         end
       end
     end
@@ -149,7 +139,10 @@ class AuthenticationController < Devise::SessionsController
   end
 
   def invalidate_token
-    user = User.find_by(email: request.headers['X-User-Email'], authentication_token: request.headers['X-User-Token'])
+    user = User.find_by(
+      email: request.headers['X-User-Email'],
+      authentication_token: request.headers['X-User-Token']
+    )
     if user.nil?
       respond_to do |format|
         format.json { render(json: { userToken: nil }, status: :ok) }
