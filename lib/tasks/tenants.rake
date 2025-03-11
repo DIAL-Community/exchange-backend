@@ -37,6 +37,7 @@ namespace :tenants do
           provinces
           districts
           origins
+          resource_types
           sustainable_development_goals
           sdg_targets
           sectors

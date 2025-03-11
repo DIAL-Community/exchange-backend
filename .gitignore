@@ -112,3 +112,9 @@ lib/tasks/local_setup.rake
 /lib/assets/token.yaml
 
 ADLI Welcome Questions.xlsx
+
+/config/credentials/development.key
+
+/config/credentials/test.key
+
+/config/credentials/production.key
