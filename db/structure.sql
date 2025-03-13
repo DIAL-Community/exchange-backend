@@ -1,7 +1,6 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -5046,7 +5045,8 @@ CREATE TABLE dsq.site_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
-    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -9407,7 +9407,8 @@ CREATE TABLE fao.site_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
-    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -13768,7 +13769,8 @@ CREATE TABLE government.site_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
-    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -18129,7 +18131,8 @@ CREATE TABLE health.site_settings (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
-    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL
+    item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
