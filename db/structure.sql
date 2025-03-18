@@ -22494,7 +22494,8 @@ CREATE TABLE public.site_settings (
     updated_at timestamp(6) without time zone NOT NULL,
     item_layouts jsonb DEFAULT '{}'::jsonb NOT NULL,
     item_configurations jsonb DEFAULT '{}'::jsonb NOT NULL,
-    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL
+    site_colors jsonb DEFAULT '{}'::jsonb NOT NULL,
+    section_configurations jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -46243,6 +46244,7 @@ ALTER TABLE ONLY public.workflows_building_blocks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250317221658'),
 ('20250228175720'),
 ('20250227182034'),
 ('20250226213111'),
