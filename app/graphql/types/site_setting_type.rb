@@ -21,5 +21,6 @@ module Types
 
     field :item_layouts, GraphQL::Types::JSON, null: false
     field :item_configurations, GraphQL::Types::JSON, null: false
+    field :section_configurations, GraphQL::Types::JSON, null: false
   end
 end

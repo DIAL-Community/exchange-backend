@@ -203,6 +203,7 @@ module Registry
     field :update_site_setting_menu_configuration, mutation: Mutations::UpdateSiteSettingMenuConfiguration
     field :update_site_setting_menu_configurations, mutation: Mutations::UpdateSiteSettingMenuConfigurations
     field :update_site_setting_item_settings, mutation: Mutations::UpdateSiteSettingItemSettings
+    field :update_site_setting_section_settings, mutation: Mutations::UpdateSiteSettingSectionSettings
 
     field :create_tenant_setting, mutation: Mutations::CreateTenantSetting
     field :delete_tenant_setting, mutation: Mutations::DeleteTenantSetting
