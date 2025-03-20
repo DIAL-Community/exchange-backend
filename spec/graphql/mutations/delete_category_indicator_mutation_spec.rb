@@ -30,7 +30,7 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
 
     aggregate_failures do
       expect(result['data']['deleteCategoryIndicator']['categoryIndicator'])
-        .to(be(nil))
+        .to(eq({ "id" => "1000" }))
       expect(result['data']['deleteCategoryIndicator']['errors'])
         .to(eq([]))
     end
@@ -49,7 +49,7 @@ RSpec.describe(Mutations::DeleteCategoryIndicator, type: :graphql) do
       expect(result['data']['deleteCategoryIndicator']['categoryIndicator'])
         .to(be(nil))
       expect(result['data']['deleteCategoryIndicator']['errors'])
-        .to(eq(['Deleting catagory indicator is not allowed.']))
+        .to(eq(['Deleting category indicator is not allowed.']))
     end
   end
 end
