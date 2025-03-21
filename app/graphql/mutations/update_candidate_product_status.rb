@@ -162,6 +162,9 @@ module Mutations
       # Copy over the extra attributes from the candidate product.
       product.extra_attributes = candidate_product.extra_attributes
 
+      # Copy over the maturity scores from the candidate product.
+      product.maturity_score = candidate_product.maturity_score
+
       # Check if we need to add _dup to the slug.
       first_duplicate = Product.slug_simple_starts_with(product.slug)
                                .order(slug: :desc).first

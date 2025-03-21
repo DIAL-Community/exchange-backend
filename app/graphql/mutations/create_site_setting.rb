@@ -16,11 +16,13 @@ module Mutations
     argument :enable_marketplace, Boolean, required: true
     argument :default_setting, Boolean, required: true
 
+    argument :site_colors, GraphQL::Types::JSON, required: false
+
     field :site_setting, Types::SiteSettingType, null: true
     field :errors, [String], null: true
 
     def resolve(slug:, name:, description:, favicon_url:, exchange_logo_url:, open_graph_logo_url:,
-      enable_marketplace:, default_setting:)
+      enable_marketplace:, default_setting:, site_colors:)
       site_setting = SiteSetting.find_by(slug:)
       site_setting_policy = Pundit.policy(context[:current_user], site_setting || SiteSetting.new)
 
@@ -65,6 +67,14 @@ module Mutations
       site_setting.open_graph_logo_url = open_graph_logo_url
 
       site_setting.enable_marketplace = enable_marketplace
+
+      unless site_colors.nil?
+        site_setting.site_colors = {
+          'primary': site_colors['primary'],
+          'secondary': site_colors['secondary'],
+          'tertiary': site_colors['tertiary']
+        }
+      end
 
       if site_setting.new_record?
         site_setting.menu_configurations = []

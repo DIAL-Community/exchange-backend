@@ -150,6 +150,33 @@ class Product < ApplicationRecord
   scope :name_and_slug_search, ->(name, slug) { where('products.name = ? OR products.slug = ?', name, slug) }
   scope :featured, -> { where(featured: true) }
 
+  def update_extra_attributes(name:, value:, type: nil, index: nil, title: nil, description: nil)
+    self.extra_attributes ||= []
+
+    attribute = extra_attributes.find { |attr| attr['name'] == name }
+
+    if attribute
+      # Update the existing attribute with the new value.
+      attribute['value'] = value
+      # Set the optional fields if they are present.
+      attribute['type'] = type if type
+      attribute['index'] = index if index
+      attribute['title'] = title if title
+      attribute['description'] = description if description
+    else
+      # Add a new extra attribute entry to the extra attribute list.
+      self.extra_attributes << {
+        'name' => name,
+        'value' => value,
+        # Set the optional fields if they are present.
+        'type' => type,
+        'index' => index,
+        'title' => title,
+        'description' => description
+      }
+    end
+  end
+
   def set_extra_attribute(name:, value:, type: nil)
     self.extra_attributes ||= []
 

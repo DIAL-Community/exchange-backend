@@ -14,7 +14,7 @@ module Mutations
         return {
           category_indicator: nil,
           rubric_category_slug: nil,
-          errors: ['Deleting catagory indicator is not allowed.']
+          errors: ['Deleting category indicator is not allowed.']
         }
       end
 
@@ -22,13 +22,13 @@ module Mutations
       if category_indicator.destroy
         # Successful deletion, return the deleted category indicator with no errors
         {
-          category_indicator: nil,
+          category_indicator:,
           errors: []
         }
       else
         # Failed delete, return the errors to the client
         {
-          category_indicator:,
+          category_indicator: nil,
           errors: category_indicator.errors.full_messages
         }
       end
