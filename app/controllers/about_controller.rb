@@ -16,8 +16,9 @@ class AboutController < ApplicationController
       { "hostname": "dpi.localhost", "tenant_name": DPI_TENANT_NAME },
       { "hostname": "dpi.dial.global", "tenant_name": DPI_TENANT_NAME },
       { "hostname": "resource.dial.global", "tenant_name": DPI_TENANT_NAME },
-      { "hostname": "dpi.dial.community", "tenant_name": DPI_TENANT_NAME },
-      { "hostname": "dpi.digitalexchange.dev", "tenant_name": DPI_TENANT_NAME }
+      { "hostname": "adli.dial.global", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "dpi.digitalexchange.dev", "tenant_name": DPI_TENANT_NAME },
+      { "hostname": "adli.digitalexchange.dev", "tenant_name": DPI_TENANT_NAME }
     ]
 
     default_tenant = default_tenants.find { |t| t[:hostname] == URI.parse(request.referrer).hostname }
