@@ -1,0 +1,2 @@
+class ExtraAttribute < ApplicationRecord
+end
