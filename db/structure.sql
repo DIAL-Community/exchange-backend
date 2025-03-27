@@ -2309,7 +2309,8 @@ CREATE TABLE dsq.contacts (
     biography text,
     social_networking_services jsonb DEFAULT '[]'::jsonb,
     source character varying DEFAULT 'exchange'::character varying,
-    extended_data jsonb DEFAULT '[]'::jsonb
+    extended_data jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -6672,7 +6673,8 @@ CREATE TABLE fao.contacts (
     biography text,
     social_networking_services jsonb DEFAULT '[]'::jsonb,
     source character varying DEFAULT 'exchange'::character varying,
-    extended_data jsonb DEFAULT '[]'::jsonb
+    extended_data jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -11035,7 +11037,8 @@ CREATE TABLE government.contacts (
     biography text,
     social_networking_services jsonb DEFAULT '[]'::jsonb,
     source character varying DEFAULT 'exchange'::character varying,
-    extended_data jsonb DEFAULT '[]'::jsonb
+    extended_data jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 
@@ -15398,7 +15401,8 @@ CREATE TABLE health.contacts (
     biography text,
     social_networking_services jsonb DEFAULT '[]'::jsonb,
     source character varying DEFAULT 'exchange'::character varying,
-    extended_data jsonb DEFAULT '[]'::jsonb
+    extended_data jsonb DEFAULT '[]'::jsonb,
+    extra_attributes jsonb DEFAULT '{}'::jsonb NOT NULL
 );
 
 

@@ -62,13 +62,12 @@ module Queries
     type [Types::ContactType], null: false
 
     def resolve(search:, alumni:)
-      validate_access_to_resource(Contact.new)
       contacts = Contact.order(:name)
       contacts = contacts.name_contains(search) unless search.blank?
       contacts = contacts.where(source: DPI_TENANT_NAME)
       contacts.select do |contact|
         consent, _ = contact.extra_attributes.select { |e| e['name'] == 'consent' }
-        puts "Consent: #{consent.inspect}"
+        next if consent.nil? || consent['value'].downcase != 'yes'
 
         adli_years = contact.extra_attributes.select { |e| e['name'] == 'adli-years' }
         if alumni

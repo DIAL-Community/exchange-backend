@@ -289,6 +289,7 @@ type Contact {
   biography: String
   email: String
   extendedData: JSON
+  extraAttributes: JSON
   id: ID!
   imageFile: String!
   mainContact: Boolean!
@@ -1737,7 +1738,7 @@ type Query {
   handbook(slug: String!): Handbook!
   handbooks: [Handbook!]!
   hubContact(email: String!, source: String! = "exchange"): Contact
-  hubContacts(search: String = ""): [Contact!]!
+  hubContacts(alumni: Boolean = false, search: String = ""): [Contact!]!
   initialCandidateStatuses(search: String = ""): [CandidateStatus!]!
   me: User!
   message(slug: String!): Message
