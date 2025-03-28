@@ -1694,6 +1694,7 @@ type Province {
 }
 
 type Query {
+  adliConfiguration: JSON!
   aggregator(slug: String!): Organization
   aggregators(search: String = ""): [Organization!]!
   author(slug: String!): Author
