@@ -27,11 +27,16 @@ module Mutations
 
       play_description = PlayDescription.find_by(play:, locale: I18n.locale)
       if play_description.description == description
+        # Don't try to save if the description is the same.
         return {
           play:,
           errors: []
         }
       end
+
+      updated_description = Nokogiri::HTML.fragment(description)
+      existing_description = Nokogiri::HTML.fragment(play_description.description)
+      validate_equality(updated_description, existing_description)
 
       play_description.description = description
 
@@ -54,6 +59,35 @@ module Mutations
           play: nil,
           errors: play.errors.full_messages
         }
+      end
+    end
+
+    def validate_equality(updated_description, existing_description)
+      if updated_description.children.count != existing_description.children.count
+        # Don't try to save if the number of elements is different.
+        return {
+          play:,
+          errors: []
+        }
+      end
+
+      element_count = updated_description.children.count
+      element_count.times do |index|
+        current_updated_element = updated_description.children[index]
+        current_existing_element = existing_description.children[index]
+
+        if current_existing_element.to_html != current_updated_element.to_html
+          if current_updated_element.name == 'span' && current_updated_element.attributes['data-lexical-poll-question']
+          elsif current_updated_element.children.count > 0 || current_existing_element.children.count > 0
+            validate_equality(current_updated_element, current_existing_element)
+          else
+            # The node is different, but the last node is not a poll element
+            return {
+              play:,
+              errors: []
+            }
+          end
+        end
       end
     end
   end
