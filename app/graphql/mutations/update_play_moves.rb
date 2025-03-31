@@ -55,7 +55,7 @@ module Mutations
         # Failed save, return the errors to the client
         {
           play: nil,
-          errors: playbook.errors.full_messages
+          errors: play.errors.full_messages
         }
       end
     end
