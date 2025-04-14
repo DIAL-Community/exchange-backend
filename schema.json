@@ -43652,6 +43652,17 @@
               "deprecationReason": null
             }
           ]
+<<<<<<< HEAD
+=======
+        },
+        {
+          "name": "oneOf",
+          "description": "Requires that exactly one field must be supplied and that field must not be `null`.",
+          "locations": [
+            "INPUT_OBJECT"
+          ],
+          "args": []
+>>>>>>> 59f1278921198708af4132a8f066bb1fad227e48
         }
       ]
     }
