@@ -18,20 +18,20 @@ def sdg_reader
     elements = line.split("\t")
     if line.start_with?('Goal')
       current_sdg = {}
-      current_sdg['code'] = (elements[1]).to_s
-      current_sdg['description'] = (elements[2]).to_s.strip
+      current_sdg['code'] = elements[1].to_s
+      current_sdg['description'] = elements[2].to_s.strip
       current_sdg['targets'] = []
       sdgs.push(current_sdg)
     elsif line.start_with?('Target')
       current_target = {}
-      current_target['code'] = (elements[1]).to_s
-      current_target['description'] = (elements[2]).to_s.strip
+      current_target['code'] = elements[1].to_s
+      current_target['description'] = elements[2].to_s.strip
       current_target['indicators'] = []
       current_sdg['targets'].push(current_target)
     elsif line.start_with?('Indicator')
       current_indicator = {}
-      current_indicator['code'] = (elements[1]).to_s
-      current_indicator['description'] = (elements[2]).to_s.strip
+      current_indicator['code'] = elements[1].to_s
+      current_indicator['description'] = elements[2].to_s.strip
       current_target['indicators'].push(current_indicator)
     else
       puts "Skipping: #{line}"
