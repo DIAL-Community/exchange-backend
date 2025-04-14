@@ -19766,7 +19766,7 @@ CREATE TABLE public.contacts (
     social_networking_services jsonb DEFAULT '[]'::jsonb,
     source character varying DEFAULT 'exchange'::character varying,
     extended_data jsonb DEFAULT '[]'::jsonb,
-    extra_attributes jsonb DEFAULT '{}'::jsonb NOT NULL
+    extra_attributes jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -46253,6 +46253,7 @@ ALTER TABLE ONLY public.workflows_building_blocks
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20250412234349'),
 ('20250324131041'),
 ('20250317221658'),
 ('20250228175720'),

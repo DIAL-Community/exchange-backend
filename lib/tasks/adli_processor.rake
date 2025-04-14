@@ -31,7 +31,7 @@ namespace :adli_processor do
 
   desc 'Update ADLI password using the first part of their email address'
   task update_adli_password: :environment do
-    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions-2025.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -57,7 +57,7 @@ namespace :adli_processor do
 
   desc 'Read ADLI questionnaire spreadsheet answers and build user & contact records.'
   task parse_adli_file: :environment do
-    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions-2025.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -149,9 +149,22 @@ namespace :adli_processor do
 
         consent_header_title = 'We are creating an ADLI Participant Directory on the DIAL Resource Hub website to ' \
           'profile each participant. This will be publicly viewable. Do you consent to your name, organization, ' \
-          'designation, and'
+          'designation, ...'
         consent_value = current_row_data[consent_header_title]
         update_extra_attribute(existing_contact, 'consent', consent_value)
+
+        adli_years_index = existing_contact.extra_attributes.index { |e| e['name'] == 'adli-years' }
+        if adli_years_index.nil?
+          existing_contact.extra_attributes << {
+            'name': 'adli-years',
+            'value': [Date.current.year]
+          }
+        else
+          existing_attribute = existing_contact.extra_attributes[adli_years_index]
+          unless existing_attribute['value'].include?(Date.current.year)
+            existing_attribute['value'] << Date.current.year
+          end
+        end
 
         existing_contact.save!
         successful_operation = true
@@ -170,7 +183,7 @@ namespace :adli_processor do
       value: extra_attribute_value
     }
 
-    existing_entry_index = contact.extra_attributes.select { |e| e['name'] == extra_attribute_name }
+    existing_entry_index = contact.extra_attributes.index { |e| e['name'] == extra_attribute_name }
     if existing_entry_index.nil?
       contact.extra_attributes << extra_attribute_entry
     else
