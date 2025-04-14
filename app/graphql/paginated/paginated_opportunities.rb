@@ -28,7 +28,6 @@ module Paginated
       show_closed:,
       show_gov_stack_only:,
       offset_attributes:)
-
       # Validate access to the current entity type.
       validate_access_to_resource(Opportunity.new)
 

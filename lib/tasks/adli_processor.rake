@@ -31,7 +31,7 @@ namespace :adli_processor do
 
   desc 'Update ADLI password using the first part of their email address'
   task update_adli_password: :environment do
-    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions-2025.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -55,9 +55,9 @@ namespace :adli_processor do
     end
   end
 
-  desc 'Read ADLI questionaire spredsheet answers and build user & contact records.'
+  desc 'Read ADLI questionnaire spreadsheet answers and build user & contact records.'
   task parse_adli_file: :environment do
-    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions-2025.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -120,13 +120,13 @@ namespace :adli_processor do
             next unless organization.name.downcase.include?(current_organization.downcase)
 
             organization_found = true
-            update_extended_data(existing_contact, 'organization', organization.name)
-            update_extended_data(existing_contact, 'organization-slug', organization.slug)
+            update_extra_attribute(existing_contact, 'organization', organization.name)
+            update_extra_attribute(existing_contact, 'organization-slug', organization.slug)
           end
 
           unless organization_found
-            update_extended_data(existing_contact, 'organization', current_organization)
-            update_extended_data(existing_contact, 'organization-slug', nil)
+            update_extra_attribute(existing_contact, 'organization', current_organization)
+            update_extra_attribute(existing_contact, 'organization-slug', nil)
           end
         end
 
@@ -137,21 +137,34 @@ namespace :adli_processor do
             next unless focus_country.downcase.include?(country.name.downcase)
 
             country_found = true
-            update_extended_data(existing_contact, 'country', country.name)
-            update_extended_data(existing_contact, 'country-slug', country.code)
+            update_extra_attribute(existing_contact, 'country', country.name)
+            update_extra_attribute(existing_contact, 'country-slug', country.code)
           end
 
           unless country_found
-            update_extended_data(existing_contact, 'country', focus_country)
-            update_extended_data(existing_contact, 'country-slug', nil)
+            update_extra_attribute(existing_contact, 'country', focus_country)
+            update_extra_attribute(existing_contact, 'country-slug', nil)
           end
         end
 
         consent_header_title = 'We are creating an ADLI Participant Directory on the DIAL Resource Hub website to ' \
           'profile each participant. This will be publicly viewable. Do you consent to your name, organization, ' \
-          'designation, and'
+          'designation, ...'
         consent_value = current_row_data[consent_header_title]
-        update_extended_data(existing_contact, 'consent', consent_value)
+        update_extra_attribute(existing_contact, 'consent', consent_value)
+
+        adli_years_index = existing_contact.extra_attributes.index { |e| e['name'] == 'adli-years' }
+        if adli_years_index.nil?
+          existing_contact.extra_attributes << {
+            'name': 'adli-years',
+            'value': [Date.current.year]
+          }
+        else
+          existing_attribute = existing_contact.extra_attributes[adli_years_index]
+          unless existing_attribute['value'].include?(Date.current.year)
+            existing_attribute['value'] << Date.current.year
+          end
+        end
 
         existing_contact.save!
         successful_operation = true
@@ -164,17 +177,17 @@ namespace :adli_processor do
     end
   end
 
-  def update_extended_data(contact, extended_data_key, extended_data_value)
-    extended_data_entry = {
-      key: extended_data_key,
-      value: extended_data_value
+  def update_extra_attribute(contact, extra_attribute_name, extra_attribute_value)
+    extra_attribute_entry = {
+      name: extra_attribute_name,
+      value: extra_attribute_value
     }
 
-    existing_entry_index = contact.extended_data.index { |e| e['key'] == extended_data_key }
+    existing_entry_index = contact.extra_attributes.index { |e| e['name'] == extra_attribute_name }
     if existing_entry_index.nil?
-      contact.extended_data << extended_data_entry
+      contact.extra_attributes << extra_attribute_entry
     else
-      contact.extended_data[existing_entry_index] = extended_data_entry
+      contact.extra_attributes[existing_entry_index] = extra_attribute_entry
     end
   end
 
@@ -208,7 +221,7 @@ namespace :adli_processor do
       'G' => 'Golf',
       'H' => 'Hotel',
       'I' => 'India',
-      'J' => 'Juliett',
+      'J' => 'Juliet',
       'K' => 'Kilo',
       'L' => 'Lima',
       'M' => 'Mike',
@@ -232,5 +245,37 @@ namespace :adli_processor do
       random_passwords << nato_phonetic_alphabet[letter.upcase]
     end
     random_passwords.join(" ")
+  end
+
+  desc 'Migrate ADLI alumni information.'
+  task migrate_adli_alumni: :environment do
+    # The previous cohort doesn't have any years associated with it.
+    adli_contacts = Contact.where(source: DPI_TENANT_NAME)
+    adli_contacts.each do |adli_contact|
+      next if adli_contact.extended_data.nil?
+
+      extra_attributes = []
+      adli_contact.extended_data.each do |extended_data|
+        name = extended_data['key']
+        value = extended_data['value']
+        extra_attributes << {
+          'name': name,
+          'value': value
+        }
+      end
+
+      years = adli_contact.extended_data.select { |e| e['key'] == 'years' }
+      if years.nil? || years.empty?
+        extra_attributes << {
+          'name': 'adli-years',
+          'value': [Date.current.year - 1]
+        }
+      end
+
+      adli_contact.extra_attributes = extra_attributes
+      if adli_contact.save
+        puts "Migrated extended_data for #{adli_contact.name} to extra_attributes."
+      end
+    end
   end
 end
