@@ -79,7 +79,6 @@ module Paginated
     def resolve(search:, countries:, use_cases:, building_blocks:, sectors:, tags:, license_types:,
       workflows:, sdgs:, origins:, is_linked_with_dpi:, show_gov_stack_only:, show_dpga_only:,
       product_stage:, software_categories:, software_features:, featured:)
-
       # Validate access to the current entity type.
       validate_access_to_resource(Product.new)
 

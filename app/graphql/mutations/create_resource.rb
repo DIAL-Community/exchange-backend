@@ -42,7 +42,6 @@ module Mutations
       show_in_exchange: false, show_in_wizard: false, featured: false, authors:, organization_slug:,
       resource_file: nil, resource_link:, link_description:, resource_type:, resource_topics:,
       source_name:, source_website:, source_logo_file: nil)
-
       resource = Resource.find_by(slug:)
       resource_policy = Pundit.policy(context[:current_user], resource || Resource.new)
       if resource.nil? && !resource_policy.create_allowed?
