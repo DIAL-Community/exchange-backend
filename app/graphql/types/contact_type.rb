@@ -25,7 +25,10 @@ module Types
       object.social_networking_services
     end
 
+    # Deprecated field. Replaced by extra_attributes.
     field :extended_data, GraphQL::Types::JSON, null: true
+
+    field :extra_attributes, GraphQL::Types::JSON, null: true
     field :organizations, [Types::OrganizationType], null: false
   end
 end

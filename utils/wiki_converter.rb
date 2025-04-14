@@ -229,7 +229,7 @@ class WikiConverter
       usecase['steps'].each_with_index do |step, i|
         output.puts("**~#{i + 1}. #{step['title']} **")
         output.puts
-        output.puts((step['description']).to_s)
+        output.puts(step['description'].to_s)
         output.puts
       end
       output.puts
@@ -248,7 +248,7 @@ class WikiConverter
         output.write('|(% style="width: 33%" %)(((')
         output.puts("**~#{i + 1}. #{mapping['step']['title']}**")
         output.puts
-        output.puts((mapping['step']['description']).to_s)
+        output.puts(mapping['step']['description'].to_s)
         output.write(')))')
         output.write("|(% style='width: 34%' %)(((#{mapping['workflow']})))")
         output.write("|(% style='width: 33%' %)(((#{mapping['building block']})))")

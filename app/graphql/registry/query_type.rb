@@ -2,6 +2,8 @@
 
 module Registry
   class QueryType < Types::BaseObject
+    field :adli_configuration, resolver: Queries::AdliConfigurationQuery
+
     field :handbook, resolver: Queries::HandbookQuery
     field :handbooks, resolver: Queries::HandbooksQuery
     field :page_contents, resolver: Queries::PageContentsQuery
