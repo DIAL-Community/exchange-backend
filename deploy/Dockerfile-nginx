@@ -19,6 +19,7 @@ RUN apt update && \
     cron && \
     curl -L 'https://bootstrap.pypa.io/get-pip.py' | python3 && \
     pip3 install -U cffi certbot==2.11.0 certbot-nginx && \
+    pip3 install -U cffi certbot==2.11.0 certbot-dns-cloudflare && \
     apt remove --purge -y build-essential cargo libffi-dev libssl-dev curl python3-dev && \
     apt-get autoremove -y && \
     apt-get clean && \
