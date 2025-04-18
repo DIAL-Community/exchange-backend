@@ -71,7 +71,7 @@ module Queries
 
         adli_years = contact.extra_attributes.select { |e| e['name'] == 'adli-years' }
         if alumni
-          adli_years.any? { |year| year.select { |y| y.to_i < Date.current.year } }
+          adli_years.any? { |year| year['value'].any? { |y| y.to_i < Date.current.year } }
         else
           adli_years.any? { |year| year['value'].include?(Date.current.year) }
         end
