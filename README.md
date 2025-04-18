@@ -19,7 +19,7 @@ https://gitlab.com/dial/digital-impact-exchange/exchange-front/-/tree/developmen
 
 Complete documentation is available (including detailed installation and configuration
 instructions) at
-[https://docs.dial.community/projects/product-registry/en/latest/](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL's Digital Impact Exchange Documentation")
+[Digital Impact Exchange Documentation](https://docs.dial.community/projects/product-registry/en/latest/ "DIAL's Digital Impact Exchange Documentation")
 
 Please also reference the [Wiki page for the Exchange](https://digital-impact-exchange.atlassian.net/wiki/spaces/SOLUTIONS/overview?homepageId=33072), which contains information about upcoming feature development, releases, and additional documentation.
 
@@ -35,9 +35,9 @@ This approach does not require installing PostgreSQL or Redis manually on the sy
   ```sh
   sudo apt install git curl libssl-dev libreadline-dev zlib1g-dev autoconf bison build-essential libyaml-dev libreadline-dev libncurses5-dev libffi-dev
   ```
-* `Ruby` (version 2.5 or greater) - see [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) for installation instructions.
+* `Ruby` (version 2.6 or greater) - see [Installing Ruby](https://www.ruby-lang.org/en/documentation/installation/) for installation instructions.
 * `Bundler` - install by executing the following command in a terminal: ```gem install bundler:2```
-* `Rails` (version 5.2) - once Ruby is installed, you can install Rails using the following command in a terminal: ```gem install rails```
+* `Rails` (version 7.1) - once Ruby is installed, you can install Rails using the following command in a terminal: ```gem install rails```
 * `Docker` - see [Get Docker](https://docs.docker.com/get-docker/) for installation instructions. Once installed follow [these instructions](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) to manage docker as non-root user.
 
 ### **Step 2** - Install the dependencies specified in Gemfile
@@ -153,7 +153,7 @@ Once the development environment has been set up and run once, fewer steps are r
 * To stop Puma server, press CTRL + C.
 * To stop Docker containers, execute the following command in the terminal:
     ```
-    docker-compose -f docker-compose-dev.yml down
+    docker-compose -f deploy/docker-compose-dev.yml down
     ```
 
 ---
