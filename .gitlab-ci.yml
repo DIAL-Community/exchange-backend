@@ -58,7 +58,7 @@ test_rails:
   stage: test
   timeout: 60m
   before_script:
-    - curl -sL https://deb.nodesource.com/setup_16.x | bash -
+    - curl -sL https://deb.nodesource.com/setup_22.x | bash -
     - apt-get update -yy && apt-get install postgresql postgresql-contrib nodejs -y
     - bundle config set path 'vendor/bundle'
     - bundle check || bundle install
