@@ -34,7 +34,7 @@ module Mutations
       if context[:current_user].nil?
         return {
           play: nil,
-          errors: ['Not allowed to update a play.']
+          errors: ['Not allowed to update description field.']
         }
       end
 
@@ -72,7 +72,7 @@ module Mutations
       else
         # Failed save, return the errors to the client
         {
-          errors: play.errors.full_messages
+          errors: ['Unable to update description.']
         }
       end
     end
