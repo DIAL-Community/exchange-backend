@@ -26,7 +26,9 @@ module Registry
     field :duplicate_play, mutation: Mutations::DuplicatePlay
     field :delete_play_move, mutation: Mutations::DeletePlayMove
     field :update_play_moves, mutation: Mutations::UpdatePlayMoves
-    field :update_play_description, mutation: Mutations::UpdatePlayDescription
+
+    # Update description of playbook, play or move description if they have polls in them
+    field :update_description_entity, mutation: Mutations::UpdateDescriptionEntity
 
     field :create_move, mutation: Mutations::CreatePlayMove
     field :auto_save_move, mutation: Mutations::CreatePlayMove
