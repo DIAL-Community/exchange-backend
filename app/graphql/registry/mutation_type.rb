@@ -214,6 +214,9 @@ module Registry
     field :create_candidate_status, mutation: Mutations::CreateCandidateStatus
     field :delete_candidate_status, mutation: Mutations::DeleteCandidateStatus
 
+    field :create_extra_attribute_definition, mutation: Mutations::CreateExtraAttributeDefinition
+    field :delete_extra_attribute_definition, mutation: Mutations::DeleteExtraAttributeDefinition
+
     field :update_candidate_product_category_indicators, mutation: Mutations::UpdateCandidateProductCategoryIndicators
     field :update_candidate_product_status, mutation: Mutations::UpdateCandidateProductStatus
   end
