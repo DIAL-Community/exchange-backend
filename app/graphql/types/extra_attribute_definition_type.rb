@@ -17,7 +17,7 @@ module Types
 
     field :entity_types, [String], null: false
 
-    field :options, [String], null: false
+    field :choices, [String], null: false
     field :multiple_choice, Boolean, null: false
   end
 end

@@ -49,9 +49,9 @@ module Mutations
       end
 
       if definition.nil?
-        definition = ExtraAttributeDefinition.new(name:, slug: reslug_em(name))
+        definition = ExtraAttributeDefinition.new(name:, slug: reslug_em(title))
         # Check if we need to add _duplicate to the slug.
-        first_duplicate = ExtraAttributeDefinition.slug_simple_starts_with(reslug_em(name))
+        first_duplicate = ExtraAttributeDefinition.slug_simple_starts_with(reslug_em(title))
                                                   .order(slug: :desc)
                                                   .first
         unless first_duplicate.nil?
@@ -60,12 +60,12 @@ module Mutations
       end
 
       # Re-slug if the name is updated (not the same with the one in the db).
-      if definition.name != name
+      if definition.title != title
         definition.name = name
-        definition.slug = reslug_em(name)
+        definition.slug = reslug_em(title)
 
         # Check if we need to add _duplicate to the slug.
-        first_duplicate = ExtraAttributeDefinition.slug_simple_starts_with(reslug_em(name))
+        first_duplicate = ExtraAttributeDefinition.slug_simple_starts_with(reslug_em(title))
                                                   .order(slug: :desc)
                                                   .first
         unless first_duplicate.nil?

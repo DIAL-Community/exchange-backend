@@ -1004,13 +1004,13 @@ input ExtraAttribute {
 type ExtraAttributeDefinition {
   attributeRequired: Boolean!
   attributeType: String!
+  choices: [String!]!
   description: String!
   descriptionFallback: String
   entityTypes: [String!]!
   id: ID!
   multipleChoice: Boolean!
   name: String!
-  options: [String!]!
   slug: String!
   title: String!
   titleFallback: String
