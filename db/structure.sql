@@ -10929,7 +10929,7 @@ CREATE TABLE public.extra_attribute_definitions (
     entity_types character varying[] DEFAULT '{PRODUCT}'::character varying[] NOT NULL,
     choices character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     multiple_choice boolean DEFAULT false NOT NULL,
-    elements character varying[] DEFAULT '{}'::character varying[] NOT NULL,
+    child_extra_attribute_names character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );

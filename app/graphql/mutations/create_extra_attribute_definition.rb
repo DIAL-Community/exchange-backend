@@ -23,12 +23,15 @@ module Mutations
     argument :choices, [String], required: false, default_value: []
     argument :multiple_choice, Boolean, required: false, default_value: false
 
+    argument :child_extra_attribute_names, [String], required: false, default_value: []
+
     field :extra_attribute_definition, Types::ExtraAttributeDefinitionType, null: true
     field :errors, [String], null: true
 
     def resolve(
-      slug:, name:, attribute_type:, attribute_required:, title:, title_fallback:, description:, description_fallback:,
-      entity_types:, multiple_choice:, choices:
+      slug:, name:, attribute_type:, attribute_required:, title:, title_fallback:,
+      description:, description_fallback:, entity_types:, multiple_choice:, choices:,
+      child_extra_attribute_names:
     )
       # Find the extra attribute definition policy
       definition = ExtraAttributeDefinition.find_by(slug:)
@@ -61,7 +64,6 @@ module Mutations
 
       # Re-slug if the name is updated (not the same with the one in the db).
       if definition.title != title
-        definition.name = name
         definition.slug = reslug_em(title)
 
         # Check if we need to add _duplicate to the slug.
@@ -88,6 +90,13 @@ module Mutations
 
         definition.choices = choices
         definition.multiple_choice = multiple_choice
+
+        child_extra_attribute_names.each do |child_extra_attribute_name|
+          extra_attribute_definition = ExtraAttributeDefinition.find_by(name: child_extra_attribute_name)
+          unless extra_attribute_definition.nil?
+            definition.child_extra_attribute_names << extra_attribute_definition.name
+          end
+        end
 
         assign_auditable_user(definition)
         definition.save!

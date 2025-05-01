@@ -19,5 +19,10 @@ module Types
 
     field :choices, [String], null: false
     field :multiple_choice, Boolean, null: false
+
+    field :composite_attributes, [Types::ExtraAttributeDefinitionType], null: false
+    def composite_attributes
+      ExtraAttributeDefinition.where(name: object.child_extra_attribute_names)
+    end
   end
 end

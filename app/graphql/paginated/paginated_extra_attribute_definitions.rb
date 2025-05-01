@@ -10,7 +10,7 @@ module Paginated
       # Validate access to the current entity type.
       validate_access_to_resource(ExtraAttributeDefinition.new)
 
-      extra_attribute_definitions = ExtraAttributeDefinition.order(:name)
+      extra_attribute_definitions = ExtraAttributeDefinition.order(:title)
       unless search.blank?
         extra_attribute_definitions = extra_attribute_definitions.name_contains(search)
       end

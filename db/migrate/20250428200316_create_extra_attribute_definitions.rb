@@ -20,7 +20,7 @@ class CreateExtraAttributeDefinitions < ActiveRecord::Migration[7.1]
       t.string(:choices, null: false, array: true, default: [])
       t.boolean(:multiple_choice, null: false, default: false)
 
-      t.string(:elements, null: false, array: true, default: [])
+      t.string(:child_extra_attribute_names, null: false, array: true, default: [])
 
       t.timestamps
     end
