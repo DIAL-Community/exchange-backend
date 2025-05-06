@@ -88,11 +88,13 @@ module Mutations
     end
 
     def captcha_verification(captcha)
-      Recaptcha.verify_via_api_call(captcha,
-                                    {
-                                      secret_key: Rails.application.credentials.captcha_secret_key,
-                                      skip_remote_ip: true
-                                    })
+      Recaptcha.verify_via_api_call(
+        captcha,
+        {
+          secret_key: Rails.application.credentials.captcha_secret_key,
+          skip_remote_ip: true
+        }
+      )
     end
   end
 end
