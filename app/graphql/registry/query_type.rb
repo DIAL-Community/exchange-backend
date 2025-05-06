@@ -268,5 +268,13 @@ module Registry
     field :initial_candidate_statuses, resolver: Queries::InitialCandidateStatusesQuery
     field :paginated_candidate_statuses, resolver: Paginated::PaginatedCandidateStatuses
     field :pagination_attribute_candidate_status, resolver: Paginated::PaginationAttributeCandidateStatus
+
+    field :extra_attribute_definition, resolver: Queries::ExtraAttributeDefinitionQuery
+    field :extra_attribute_definitions, resolver: Queries::ExtraAttributeDefinitionsQuery
+    field :product_extra_attribute_definitions, resolver: Queries::ProductExtraAttributeDefinitionsQuery
+
+    field :paginated_extra_attribute_definitions, resolver: Paginated::PaginatedExtraAttributeDefinitions
+    field :pagination_attribute_extra_attribute_definition,
+      resolver: Paginated::PaginationAttributeExtraAttributeDefinition
   end
 end

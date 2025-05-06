@@ -12,6 +12,7 @@ module Queries
       id.start_with?(GRAPH_QUERY_CONTEXT_KEY.downcase)
     end
 
+    # Validate whether an operation can access instance of an object or not.
     def validate_access_to_instance(instance)
       operation_context = context[:operation_context] || EDITING_CONTEXT
       current_policy = Pundit.policy(context[:current_user], instance)
@@ -56,6 +57,8 @@ module Queries
       end
     end
 
+    # Validate whether an operation can access a resource or not.
+    # Resource access is usually granted to listing operation, query operation.
     def validate_access_to_resource(resource)
       operation_context = context[:operation_context] || EDITING_CONTEXT
       current_policy = Pundit.policy(context[:current_user], resource)
