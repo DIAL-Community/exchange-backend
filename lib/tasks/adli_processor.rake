@@ -31,7 +31,7 @@ namespace :adli_processor do
 
   desc 'Update ADLI password using the first part of their email address'
   task update_adli_password: :environment do
-    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Welcome-Questions-2025.xlsx')
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Cohort-List-2025.xlsx')
     workbook.default_sheet = workbook.sheets.first
 
     worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
@@ -41,7 +41,9 @@ namespace :adli_processor do
       current_row_sanitized = current_row.map { |cell| cell.to_s.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
       current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
 
-      email_address = current_row_data['Email address:'].downcase
+      email_address = current_row_data['Email'].downcase
+      next if email_address.nil? || email_address.empty?
+
       puts "Processing row with email address: #{email_address}."
 
       existing_user = User.find_by(email: email_address)
@@ -152,6 +154,116 @@ namespace :adli_processor do
           'designation, ...'
         consent_value = current_row_data[consent_header_title]
         update_extra_attribute(existing_contact, 'consent', consent_value)
+
+        adli_years_index = existing_contact.extra_attributes.index { |e| e['name'] == 'adli-years' }
+        if adli_years_index.nil?
+          existing_contact.extra_attributes << {
+            'name': 'adli-years',
+            'value': [Date.current.year]
+          }
+        else
+          existing_attribute = existing_contact.extra_attributes[adli_years_index]
+          unless existing_attribute['value'].include?(Date.current.year)
+            existing_attribute['value'] << Date.current.year
+          end
+        end
+
+        existing_contact.save!
+        successful_operation = true
+      end
+
+      if successful_operation
+        puts "  Successfully created user: #{existing_user.id}:#{existing_user.email}."
+        puts "  Associated contact record: #{existing_contact.id}:#{existing_contact.name}."
+      end
+    end
+  end
+
+  desc 'Read ADLI questionnaire spreadsheet answers and build user & contact records.'
+  task parse_initial_adli_file: :environment do
+    workbook = Roo::Spreadsheet.open('./data/spreadsheet/ADLI-Cohort-List-2025.xlsx')
+    workbook.default_sheet = workbook.sheets.first
+
+    worksheet_headers = workbook.row(1).map { |header| header.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+    puts "Worksheet headers: #{worksheet_headers.inspect}."
+
+    2.upto(workbook.last_row) do |row_count|
+      current_row = workbook.row(row_count)
+      current_row_sanitized = current_row.map { |cell| cell.to_s.gsub(/\A\p{Space}*|\p{Space}*\z/, '') }
+      current_row_data = Hash[worksheet_headers.zip(current_row_sanitized)]
+
+      email_address = current_row_data['Email'].downcase
+      next if email_address.nil? || email_address.empty?
+
+      puts "Processing row with email address: #{email_address}."
+
+      existing_user = User.find_by(email: email_address)
+      existing_contact = Contact.find_by(email: email_address)
+
+      successful_operation = false
+      ActiveRecord::Base.transaction do
+        if existing_user.nil?
+          puts "  Using generated password: #{generate_password(email_address.split('@').first)}."
+          existing_user = User.new(
+            email: email_address,
+            username: email_address,
+            password: generate_password(email_address.split('@').first),
+            password_confirmation: generate_password(email_address.split('@').first),
+            confirmed_at: Time.now
+          )
+          existing_user.save!
+        end
+
+        # Ensure user will be assigned the 'adli_user' role.
+        existing_user.roles << 'adli_user' if existing_user.roles.exclude?('adli_user')
+        existing_user.save!
+
+        if existing_contact.nil?
+          existing_contact = Contact.new(email: email_address, slug: reslug_em(email_address))
+        end
+
+        if existing_contact.name != current_row_data['Name'] ||
+          existing_contact.email != current_row_data['Email']
+          existing_contact.slug = reslug_em(email_address)
+        end
+
+        existing_contact.source = DPI_TENANT_NAME
+        existing_contact.name = current_row_data['Name'].titleize
+        existing_contact.title = current_row_data['Designation']
+
+        current_organization = current_row_data['Organization']
+        unless current_organization.nil? || current_organization.empty?
+          organization_found = false
+          Organization.all.each do |organization|
+            next unless organization.name.downcase.include?(current_organization.downcase)
+
+            organization_found = true
+            update_extra_attribute(existing_contact, 'organization', organization.name)
+            update_extra_attribute(existing_contact, 'organization-slug', organization.slug)
+          end
+
+          unless organization_found
+            update_extra_attribute(existing_contact, 'organization', current_organization)
+            update_extra_attribute(existing_contact, 'organization-slug', nil)
+          end
+        end
+
+        focus_country = current_row_data['Country']
+        unless focus_country.nil? || focus_country.empty?
+          country_found = false
+          Country.all.each do |country|
+            next unless focus_country.downcase.include?(country.name.downcase)
+
+            country_found = true
+            update_extra_attribute(existing_contact, 'country', country.name)
+            update_extra_attribute(existing_contact, 'country-slug', country.code)
+          end
+
+          unless country_found
+            update_extra_attribute(existing_contact, 'country', focus_country)
+            update_extra_attribute(existing_contact, 'country-slug', nil)
+          end
+        end
 
         adli_years_index = existing_contact.extra_attributes.index { |e| e['name'] == 'adli-years' }
         if adli_years_index.nil?

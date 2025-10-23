@@ -69,11 +69,10 @@ module Queries
         consent, _ = contact.extra_attributes.select { |e| e['name'] == 'consent' }
         next if consent.nil? || consent['value'].downcase != 'yes'
 
-        adli_years = contact.extra_attributes.select { |e| e['name'] == 'adli-years' }
         if alumni
-          adli_years.any? { |year| year['value'].any? { |y| y.to_i < Date.current.year } }
+          contact.created_at <= 6.months.ago
         else
-          adli_years.any? { |year| year['value'].include?(Date.current.year) }
+          contact.created_at > 6.months.ago
         end
       end
     end
