@@ -11,10 +11,6 @@ module Queries
       # Only logged in user can execute this graph query.
       return nil if context[:current_user].nil?
 
-      current_user_slug = context[:current_user].slug
-      # Prevent accessing other contact if the current context is not an admin user.
-      return nil if !an_admin && !an_adli_admin && current_user_slug != slug
-
       contact = Contact.find_by(slug:, source:) if valid_slug?(slug)
       validate_access_to_instance(contact || Contact.new)
       contact
